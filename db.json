@@ -1,0 +1,55 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "product 1",
+      "size": "10cm x 10cm x 10cm",
+      "weight": "10kg",
+      "material": "stainless steel",
+      "features": [
+        "Giá treo balo",
+        "bàn tháo lắp nhanh"
+      ],
+      "warranty": 1
+    },
+    {
+      "id": "2",
+      "name": "product 2",
+      "size": "20cm x 20cm x 20cm",
+      "weight": "20kg",
+      "material": "stainless steel",
+      "features": [
+        "Giá treo balo",
+        "bàn tháo lắp nhanh"
+      ],
+      "warranty": 5
+    },
+    {
+      "id": "4a15",
+      "name": "sad",
+      "material": "fssd",
+      "weight": "fsd",
+      "features": [
+        "fsd",
+        "dsdsf"
+      ],
+      "warranty": "2",
+      "size": "21cm x 12cm x 21cm"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "text": "a comment about post 1",
+      "postId": "1"
+    },
+    {
+      "id": "2",
+      "text": "another comment about post 1",
+      "postId": "1"
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
