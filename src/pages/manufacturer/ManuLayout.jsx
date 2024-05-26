@@ -1,23 +1,57 @@
-import { FaBell } from "react-icons/fa";
 import { Outlet } from "react-router-dom";
-import ManuSideBar from "../../components/Sidebar";
+import Header from "../../components/Header";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 function ManuLayout() {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-6 h-screen">
-      <div className="md:col-span-1 h-full">
-        <ManuSideBar className="fixed md:w-1/6 w-full h-full" />
-      </div>
-      <div className="md:col-span-5 ml-4 md:ml-1/6 mt-4 overflow-auto">
-        <div className="flex flex-col">
-          <div className="flex justify-between mb-2 mr-8 pb-2 border-b-2">
-            <div>Breadcrumb</div>
-            <div><FaBell className="text-3xl text-gray-500" /></div>
-          </div>
+  const mainContent = (
+    <>
+      <section>
+        <Breadcrumbs />
+      </section>
+      <main>
+        <div className="container mx-auto">
           <Outlet />
         </div>
+      </main>
+    </>
+  );
+
+  const sidebar = (
+    <aside>
+      <label
+        htmlFor="my-drawer-2"
+        aria-label="close sidebar"
+        className="drawer-overlay"
+      ></label>
+      <ul className="menu p-4 w-52 min-h-full bg-base-100 text-base-content">
+        {/* Sidebar content here */}
+        <li>
+          <a>Sidebar Item 1</a>
+        </li>
+        <li>
+          <a>Sidebar Item 2</a>
+        </li>
+      </ul>
+    </aside>
+  );
+
+  const header = (
+    <header>
+      <Header />
+    </header>
+  );
+
+  return (
+    <>
+      <div className="max-h-[10svh]">{header}</div>
+      <div className="drawer md:drawer-open">
+        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col overflow-auto">
+          {mainContent}
+        </div>
+        <div className="drawer-side max-h-[90svh]">{sidebar}</div>
       </div>
-    </div>
+    </>
   );
 }
 
