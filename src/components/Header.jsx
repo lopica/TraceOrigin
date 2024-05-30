@@ -3,6 +3,7 @@ import { CONSTANTS } from "../services/Constants";
 import Bell from "./Bell";
 import Avatar from "./Avatar";
 import ThemeBtn from "./ThemeBtn";
+import Hamburger from "./UI/Hamburger";
 
 function Header() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -47,20 +48,7 @@ function Header() {
         className="btn btn-ghost btn-circle"
         onClick={toggleDropdown} // Attach the toggle function to the click event
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-10 w-10"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h16M4 18h7"
-          />
-        </svg>
+        <Hamburger />
       </div>
       {isOpen && ( // Conditional rendering based on the isOpen state
         <ul

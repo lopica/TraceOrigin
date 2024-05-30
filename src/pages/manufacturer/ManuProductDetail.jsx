@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function ManuProductDetail() {
   const { productId } = useParams();
@@ -52,11 +52,7 @@ function ManuProductDetail() {
             </tr>
             <tr>
               <th>công dụng</th>
-              <td>
-                {Array.isArray(product.features)
-                  ? product.features.join(", ")
-                  : "Ko rõ"}
-              </td>
+              <td>{product?.features || "Ko rõ"}</td>
             </tr>
             <tr>
               <th>công dụng</th>

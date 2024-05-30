@@ -12,15 +12,7 @@ function Card({ card }) {
   }
 
   return (
-    // <div className="flex flex-col w-44 row-span-1 border p-2 shadow-lg hover:shadow-sky-300">
-    //   <img
-    //     src={card.image || emptyProductImage}
-    //     alt={card.name}
-    //     className="h-44 w-full object-cover"
-    //   />
-    //   <p className="text-center">{card.name}</p>
-    // </div>
-    <div className="card w-44 glass shadow-lg hover:shadow-sky-300">
+    <div className="card w-44 h-52 glass shadow-lg hover:shadow-sky-300">
       <figure>
         <img
           src={card.image || emptyProductImage}

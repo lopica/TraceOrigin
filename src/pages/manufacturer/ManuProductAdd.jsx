@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
+import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function ManuProductAdd() {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
+  const [images, setImages] = useState([]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -13,8 +14,47 @@ function ManuProductAdd() {
     material: "",
     weight: 0,
     features: "",
-    warranty: 0,
+    images: "",
   });
+
+  const fileInputRef = useRef(null);
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImages = (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) {
+      setImages([]);
+      setFormData({ ...formData, images: [] });
+    } else if (images.length + files.length > 5) {
+      alert("You cannot upload more than 5 images.");
+      return;
+    } else {
+      const imageUrls = [];
+
+      files.forEach((file) => {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          const base64String = e.target.result;
+          imageUrls.push(base64String); // Create blob URL for preview
+
+          // Check if all files are processed
+          if (imageUrls.length === files.length) {
+            setImages((prev) => [...prev, ...imageUrls]);
+            setFormData((prevFormData) => ({
+              ...prevFormData,
+              images: [...prevFormData.images, ...imageUrls],
+            }));
+          }
+        };
+
+        reader.readAsDataURL(file); // Convert the file to a Base64 string
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,26 +69,17 @@ function ManuProductAdd() {
     else setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    console.log(file); // Process the file as needed
-  };
-
-  const handleClick = () => {
-    fileInputRef.current.click(); // Simulate click on the hidden file input
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const productData = {
       ...formData,
       size: `${formData.length}cm x ${formData.width}cm x ${formData.height}cm`,
-      features: formData.features.split(",").map((feature) => feature.trim()),
     };
 
     delete productData.length;
     delete productData.width;
     delete productData.height;
+
     try {
       const response = await fetch("http://localhost:3001/products", {
         method: "POST",
@@ -104,6 +135,7 @@ function ManuProductAdd() {
                     className="w-24 text-right"
                     name="length"
                     value={formData.length || ""}
+                    max={1000}
                     onChange={handleChange}
                     required
                   />
@@ -116,6 +148,7 @@ function ManuProductAdd() {
                     className="w-24 text-right"
                     name="width"
                     value={formData.width || ""}
+                    max={1000}
                     onChange={handleChange}
                     required
                   />
@@ -128,6 +161,7 @@ function ManuProductAdd() {
                     className="w-24 text-right"
                     name="height"
                     value={formData.height || ""}
+                    max={1000}
                     onChange={handleChange}
                     required
                   />
@@ -156,6 +190,7 @@ function ManuProductAdd() {
                 className="w-24 text-right"
                 name="weight"
                 value={formData.weight || ""}
+                max={1000}
                 onChange={handleChange}
                 required
               />
@@ -182,34 +217,39 @@ function ManuProductAdd() {
                 className="w-24 text-right"
                 name="warranty"
                 value={formData.warranty || ""}
+                max={100}
                 onChange={handleChange}
                 required
               />
               <span className="badge badge-info">năm</span>
             </label>
           </div>
-          <hr className="col-span-5" /> 
+          <hr className="col-span-5" />
           <div className="col-span-1">
             <p>Các hình ảnh minh họa</p>
           </div>
           <div className="col-span-4">
-            <div>
-              <label className="block mb-2">Lựa chọn tối đa 5 ảnh</label>
-              <div>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  style={{ display: "none" }} // Hide the file input
-                  accept="image/png, image/jpeg" // Accept only image files
-                />
+            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2">
+              {console.log(images)}
+              {images.map((image, i) => (
+                <img key={i} src={image} className="w-24 h-24 object-cover" />
+              ))}
+              {images.length < 5 && (
                 <div
-                  className="w-20 h-20 border flex items-center justify-center cursor-pointer"
-                  onClick={handleClick} // Set up the click handler
+                  className="w-24 h-24 bg-sky-200 flex items-center justify-center shadow-lg hover:shadow-sky-300"
+                  onClick={triggerFileInput}
                 >
-                  <span className="text-2xl">+</span>
+                  <FaPlus className="text-2xl fill-white" />
+                  <input
+                    ref={fileInputRef}
+                    name="images"
+                    type="file"
+                    className="file-input hidden"
+                    multiple
+                    onChange={handleImages}
+                  />
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

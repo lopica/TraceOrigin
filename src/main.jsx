@@ -1,32 +1,41 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ManuLayout from "./pages/manufacturer/ManuLayout";
-import "./index.css";
-import ManuProductList from "./pages/manufacturer/ManuProductList";
-import ManuProductDetail from "./pages/manufacturer/ManuProductDetail";
-import ManuProductAdd from "./pages/manufacturer/ManuProductAdd";
 import { Provider } from "react-redux";
+import "./index.css";
 import { store } from "./store";
+import {
+  ManuLayout,
+  ManuProductList,
+  ManuProductDetail,
+  ManuProductAdd,
+  PublicLayout,
+  Home,
+  Login,
+  ForgotPassword,
+  Register
+} from './pages';
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <PublicLayout />,
+    // errorElement: <ErrorPage />,
+    children: [
+      {path: '', element: <Home />},
+      {path: '/login', element: <Login />},
+      {path: '/change-password', element: <ForgotPassword />},
+      {path: '/register', element: <Register />},
+    ],
+  },
   {
     path: "/manufacturer",
     element: <ManuLayout />,
     // errorElement: <ErrorPage />,
     children: [
-      {
-        path: "",
-        element: <ManuProductList />,
-      },
-      {
-        path: ":productId",
-        element: <ManuProductDetail />,
-      },
-      {
-        path: "add",
-        element: <ManuProductAdd />,
-      },
+      { path: "", element: <ManuProductList /> },
+      { path: ":productId", element: <ManuProductDetail /> },
+      { path: "add", element: <ManuProductAdd /> },
     ],
   },
 ]);
