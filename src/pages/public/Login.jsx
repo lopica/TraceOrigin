@@ -13,14 +13,28 @@ function Login() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    login(inputs)
-    .unwrap()
-      .then(() => {
-        navigate("/");
+    // login(inputs)
+    // .unwrap()
+    //   .then((res) => {
+    //     console.log(res)
+    //     // navigate("/");
+    //   })
+    //   .catch((error) => {
+    //     console.error("Failed to login:", error);
+    //   });
+    async function login(){
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: 'POST',
+        body: JSON.stringify({
+          email: inputs.email,
+          password: inputs.password
+        }),
+        credentials: 'include',
       })
-      .catch((error) => {
-        console.error("Failed to login:", error);
-      });
+      console.log(response.headers)
+      console.log(response.headers.getSetCookie())
+    }
+    login()
   };
 
   const handleChange = (identifier, e) => {
@@ -52,7 +66,7 @@ function Login() {
                 <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
               </svg>
               <input
-                type="text"
+                type="email"
                 className="grow"
                 placeholder="Email"
                 value={inputs.email}

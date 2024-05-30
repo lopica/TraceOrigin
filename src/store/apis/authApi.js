@@ -7,10 +7,10 @@ const pause = (duration) => {
   });
 };
 
-const usersApi = createApi({
-  reducerPath: "users",
+const authApi = createApi({
+  reducerPath: "auth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/auth",
+    baseUrl: "http://localhost:8080/api",
     // baseUrl: "http://localhost:3001",
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
@@ -33,20 +33,13 @@ const usersApi = createApi({
         },
         query: (newUser) => {
           return {
-            url: "/signup",
+            url: "/auth/signup",
             // url: "/users",
             method: "POST",
             body: {
-              email: newUser.email,
-              firstName: newUser.firstName,
-              lastName: newUser.lastName,
+              ...newUser,
               role: 2,
-              address: newUser.address,
-              city: newUser.city,
-              country: "Vietnam",
-              phone: newUser.phone,
-              dateOfBirth: newUser.dateOfBirth,
-              password: newUser.password,
+              country: 'Vietnam'
             },
           };
         },
@@ -54,12 +47,9 @@ const usersApi = createApi({
       login: builder.mutation({
         query: (user) => {
           return {
-            url: "/login",
+            url: "/auth/login",
             method: "POST",
-            body: {
-              email: user.email,
-              password: user.password,
-            },
+            body: user,
           };
         },
       }),
@@ -67,5 +57,5 @@ const usersApi = createApi({
   },
 });
 
-export const { useCreateUserMutation, useLoginMutation } = usersApi;
-export { usersApi };
+export const { useCreateUserMutation, useLoginMutation } = authApi;
+export { authApi };

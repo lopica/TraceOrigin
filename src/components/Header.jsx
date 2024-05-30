@@ -4,11 +4,15 @@ import Bell from "./Bell";
 import Avatar from "./Avatar";
 import ThemeBtn from "./ThemeBtn";
 import Hamburger from "./UI/Hamburger";
+import { Link, useLocation } from "react-router-dom";
+
 
 function Header() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [isOpen, setIsOpen] = useState(false); // State to track dropdown visibility
   const dropdownRef = useRef(null);
+  // const { data, error, isFetching } = useFetchUserQuery();
+  let location = useLocation();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen); // Toggle the state between true and false
@@ -40,6 +44,57 @@ function Header() {
     };
   }, []);
 
+  useEffect(()=>{
+    async function fetchUser() {
+      try {
+        const response = await fetch('http://localhost:8080/api/user/me', {
+          credentials: "include"  // Correct value for including cookies
+        });
+        const data = await response.json();  // Properly handle the JSON promise
+        console.log('o day');
+        console.log(data);
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      }
+    }
+    fetchUser();
+  },[])
+
+  let userContent;
+
+  // Check if the current path is /login or /register
+  // if (
+  //   location.pathname === "/login" ||
+  //   location.pathname === "/register" ||
+  //   location.pathname === "/change-password"
+  // ) {
+  //   userContent = null; // Render nothing if on /login or /register
+  // } else if (isFetching) {
+  //   // Check if content is being fetched
+  //   userContent = (
+  //     <>
+  //       <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+  //       <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+  //     </>
+  //   );
+  // } else if (error) {
+  //   // Handle error state
+  //   console.log(error);
+  //   userContent = (
+  //     <Link to="/login">
+  //       <p className="ml-4">Đăng nhập</p>
+  //     </Link>
+  //   );
+  // } else {
+  //   // Default content when data is loaded and path is not /login or /register
+  //   userContent = (
+  //     <>
+  //       <Bell />
+  //       <Avatar />
+  //     </>
+  //   );
+  // }
+
   const menuMobile = (
     <div className="dropdown" ref={dropdownRef}>
       <div
@@ -70,14 +125,13 @@ function Header() {
   );
 
   const desktopHeader = (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-base-100 px-4">
       <div className="flex-1">
         <a className="btn btn-ghost text-xl">{CONSTANTS?.brand}</a>
       </div>
       <div className="flex-none gap-4">
         <ThemeBtn theme={theme} handleClick={handleToggle} />
-        <Bell />
-        <Avatar />
+        {userContent}
       </div>
     </div>
   );
@@ -88,10 +142,7 @@ function Header() {
       <div className="navbar-center">
         <ThemeBtn theme={theme} handleClick={handleToggle} />
       </div>
-      <div className="navbar-end">
-        <Bell />
-        <Avatar />
-      </div>
+      <div className="navbar-end">{userContent}</div>
     </div>
   );
 
