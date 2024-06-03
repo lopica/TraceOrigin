@@ -8,7 +8,7 @@ const pause = (duration) => {
 };
 
 const userApi = createApi({
-  reducerPath: "users",
+  reducerPath: "user",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api/user",
     // baseUrl: "http://localhost:3001",
@@ -24,10 +24,6 @@ const userApi = createApi({
       } else {
         return response.text(); // Otherwise, return as text
       }
-    },
-    prepareHeaders: (headers) => {
-      // bạn có thể thêm headers ở đây nếu cần, ví dụ xác thực
-      return headers;
     },
   }),
   endpoints(builder) {

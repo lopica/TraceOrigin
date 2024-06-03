@@ -11,6 +11,7 @@ const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
+    credentials: 'include',
     // baseUrl: "http://localhost:3001",
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
@@ -25,6 +26,7 @@ const authApi = createApi({
       }
     },
   }),
+  
   endpoints(builder) {
     return {
       createUser: builder.mutation({
@@ -49,7 +51,10 @@ const authApi = createApi({
           return {
             url: "/auth/login",
             method: "POST",
-            body: user,
+            body: {
+              email: user.email,
+              password: user.password
+            },
           };
         },
       }),

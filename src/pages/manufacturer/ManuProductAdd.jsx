@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function ManuProductAdd() {
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
+  
 
   const [formData, setFormData] = useState({
     name: "",
@@ -94,7 +95,7 @@ function ManuProductAdd() {
       const data = await response.json();
       console.log("Product created successfully:", data);
       // Redirect to /manufacturer
-      navigate("/manufacturer/");
+      navigate("/manufacturer");
     } catch (error) {
       console.error("Failed to create product:", error);
     }

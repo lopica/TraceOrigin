@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../../store";
+import { hideToast, showToast, useLoginMutation } from "../../store";
 import Button from '../../components/UI/Button'
+import { useDispatch, useSelector } from "react-redux";
+import Toast from '../../components/UI/Toast'
 
 function Login() {
   const navigate = useNavigate();
@@ -10,31 +12,39 @@ function Login() {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch()
+  const { show, content } = useSelector(state => state.toast)
+  console.log(show, content)
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    // login(inputs)
-    // .unwrap()
-    //   .then((res) => {
-    //     console.log(res)
-    //     // navigate("/");
-    //   })
-    //   .catch((error) => {
-    //     console.error("Failed to login:", error);
-    //   });
-    async function login(){
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: 'POST',
-        body: JSON.stringify({
-          email: inputs.email,
-          password: inputs.password
-        }),
-        credentials: 'include',
+    login(inputs)
+      .unwrap()
+      .then((res) => {
+        console.log(res)
+        navigate("/manufacturer");
       })
-      console.log(response.headers)
-      console.log(response.headers.getSetCookie())
-    }
-    login()
+      .catch((error) => {
+        console.error("Failed to login:", error);
+        dispatch(showToast(error))
+        setTimeout(() => {
+          dispatch(hideToast());
+        }, 4000);
+      });
+    // async function login(){
+    //   const response = await fetch("http://localhost:8080/api/auth/login", {
+    //     method: 'POST',
+    //     body: JSON.stringify({
+    //       email: inputs.email,
+    //       password: inputs.password
+    //     }),
+    //     credentials: 'include',
+    //   })
+    //   navigate("/");
+    //   console.log(response.headers)
+    //   console.log(response.headers.getSetCookie())
+    // }
+    // login()
   };
 
   const handleChange = (identifier, e) => {
@@ -46,6 +56,9 @@ function Login() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <Toast show={show}>
+      {content}
+    </Toast>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         {/* Logo */}
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">

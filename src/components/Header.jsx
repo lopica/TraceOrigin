@@ -5,14 +5,17 @@ import Avatar from "./Avatar";
 import ThemeBtn from "./ThemeBtn";
 import Hamburger from "./UI/Hamburger";
 import { Link, useLocation } from "react-router-dom";
+import { useFetchUserQuery } from "../store";
+// import { getCookie } from "../utils/getCookie";
 
 
 function Header() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [isOpen, setIsOpen] = useState(false); // State to track dropdown visibility
   const dropdownRef = useRef(null);
-  // const { data, error, isFetching } = useFetchUserQuery();
+  const { data, error, isFetching } = useFetchUserQuery();
   let location = useLocation();
+
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen); // Toggle the state between true and false
@@ -24,6 +27,10 @@ function Header() {
     }
   };
 
+  const handleToggle = (e) => {
+    return e.target.checked ? setTheme("dark") : setTheme("light");
+  };
+
   useEffect(() => {
     localStorage.setItem("theme", theme);
     document
@@ -31,69 +38,68 @@ function Header() {
       .setAttribute("data-theme", localStorage.getItem("theme"));
   }, [theme]);
 
-  const handleToggle = (e) => {
-    return e.target.checked ? setTheme("dark") : setTheme("light");
-  };
+  
 
   useEffect(() => {
-    // Add when the component mounts
     document.addEventListener("mousedown", handleClickOutside);
-    // Remove when the component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  useEffect(()=>{
-    async function fetchUser() {
-      try {
-        const response = await fetch('http://localhost:8080/api/user/me', {
-          credentials: "include"  // Correct value for including cookies
-        });
-        const data = await response.json();  // Properly handle the JSON promise
-        console.log('o day');
-        console.log(data);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
-      }
-    }
-    fetchUser();
-  },[])
+
+  // useEffect(()=>{
+  //   async function fetchUser() {
+  //     try {
+  //       const response = await fetch('http://localhost:8080/api/user/me', {
+  //         credentials: "include"  // Correct value for including cookies
+  //       });
+  //       const data = await response.json();  // Properly handle the JSON promise
+  //       console.log('o day');
+  //       console.log(data);
+  //     } catch (error) {
+  //       console.error('Failed to fetch user:', error);
+  //     }
+  //   }
+  //   fetchUser();
+  // },[])
 
   let userContent;
+  // userContent = (
+  //       <Link to="/login">
+  //         <p className="ml-4">Đăng nhập</p>
+  //       </Link>
+  //     );
 
   // Check if the current path is /login or /register
-  // if (
-  //   location.pathname === "/login" ||
-  //   location.pathname === "/register" ||
-  //   location.pathname === "/change-password"
-  // ) {
-  //   userContent = null; // Render nothing if on /login or /register
-  // } else if (isFetching) {
-  //   // Check if content is being fetched
-  //   userContent = (
-  //     <>
-  //       <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
-  //       <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
-  //     </>
-  //   );
-  // } else if (error) {
-  //   // Handle error state
-  //   console.log(error);
-  //   userContent = (
-  //     <Link to="/login">
-  //       <p className="ml-4">Đăng nhập</p>
-  //     </Link>
-  //   );
-  // } else {
-  //   // Default content when data is loaded and path is not /login or /register
-  //   userContent = (
-  //     <>
-  //       <Bell />
-  //       <Avatar />
-  //     </>
-  //   );
-  // }
+  if (
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/change-password"
+  ) {
+    userContent = null; 
+  } else if (isFetching) {
+    userContent = (
+      <>
+        <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+        <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+      </>
+    );
+  } else if (error) {
+    console.log(error);
+    userContent = (
+      <Link to="/login">
+        <p className="ml-4">Đăng nhập</p>
+      </Link>
+    );
+  } else {
+    userContent = (
+      <>
+        <Bell />
+        <Avatar />
+      </>
+    );
+  }
 
   const menuMobile = (
     <div className="dropdown" ref={dropdownRef}>

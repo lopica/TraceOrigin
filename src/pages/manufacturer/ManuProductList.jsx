@@ -5,6 +5,22 @@ import { Link } from "react-router-dom";
 function ManuProductList() {
   const [products, setProducts] = useState([]);
 
+  useEffect(()=>{
+    async function fetchUser() {
+      try {
+        const response = await fetch('http://localhost:8080/api/user/me', {
+          credentials: "include"  // Correct value for including cookies
+        });
+        const data = await response.json();  // Properly handle the JSON promise
+        console.log('o day');
+        console.log(data);
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      }
+    }
+    fetchUser();
+  },[])
+
   useEffect(() => {
     async function fetchProducts() {
       const response = await fetch("http://localhost:3001/products");
