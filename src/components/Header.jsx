@@ -38,7 +38,7 @@ function Header() {
       .setAttribute("data-theme", localStorage.getItem("theme"));
   }, [theme]);
 
-  
+
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -65,6 +65,7 @@ function Header() {
   // },[])
 
   let userContent;
+  let menuMobile;
   // userContent = (
   //       <Link to="/login">
   //         <p className="ml-4">Đăng nhập</p>
@@ -77,7 +78,8 @@ function Header() {
     location.pathname === "/register" ||
     location.pathname === "/change-password"
   ) {
-    userContent = null; 
+    userContent = null;
+    menuMobile = <p>{CONSTANTS.brand}</p>;
   } else if (isFetching) {
     userContent = (
       <>
@@ -85,6 +87,7 @@ function Header() {
         <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
       </>
     );
+    menuMobile = <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
   } else if (error) {
     console.log(error);
     userContent = (
@@ -92,6 +95,7 @@ function Header() {
         <p className="ml-4">Đăng nhập</p>
       </Link>
     );
+    menuMobile = <p>{CONSTANTS.brand}</p>;
   } else {
     userContent = (
       <>
@@ -99,36 +103,38 @@ function Header() {
         <Avatar />
       </>
     );
+    menuMobile = (
+      <div className="dropdown" ref={dropdownRef}>
+        <div
+          tabIndex={0}
+          role="button"
+          className="btn btn-ghost btn-circle"
+          onClick={toggleDropdown} // Attach the toggle function to the click event
+        >
+          <Hamburger />
+        </div>
+        {isOpen && ( // Conditional rendering based on the isOpen state
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-[97vw]"
+          >
+            <li>
+              <a>Homepage</a>
+            </li>
+            <li>
+              <a>Portfolio</a>
+            </li>
+            <li>
+              <a>About</a>
+            </li>
+          </ul>
+        )}
+      </div>
+    );
   }
 
-  const menuMobile = (
-    <div className="dropdown" ref={dropdownRef}>
-      <div
-        tabIndex={0}
-        role="button"
-        className="btn btn-ghost btn-circle"
-        onClick={toggleDropdown} // Attach the toggle function to the click event
-      >
-        <Hamburger />
-      </div>
-      {isOpen && ( // Conditional rendering based on the isOpen state
-        <ul
-          tabIndex={0}
-          className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-[97vw]"
-        >
-          <li>
-            <a>Homepage</a>
-          </li>
-          <li>
-            <a>Portfolio</a>
-          </li>
-          <li>
-            <a>About</a>
-          </li>
-        </ul>
-      )}
-    </div>
-  );
+
+
 
   const desktopHeader = (
     <div className="navbar bg-base-100 px-4">

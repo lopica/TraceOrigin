@@ -14,6 +14,8 @@ import {
   ForgotPassword,
   Register
 } from './pages';
+import Item from "./pages/public/Item";
+import ManuItems from "./pages/manufacturer/ManuItems";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,7 @@ const router = createBrowserRouter([
       {path: 'login', element: <Login />},
       {path: 'change-password', element: <ForgotPassword />},
       {path: 'register', element: <Register />},
+      {path: 'item/:itemId', element: <Item />},
     ],
   },
   {
@@ -32,9 +35,10 @@ const router = createBrowserRouter([
     element: <ManuLayout />,
     // errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <ManuProductList /> },
+      { index: true, element: <ManuProductList /> },
       { path: ":productId", element: <ManuProductDetail /> },
       { path: "add", element: <ManuProductAdd /> },
+      { path: "items", element: <ManuItems /> },
     ],
   },
 ]);
