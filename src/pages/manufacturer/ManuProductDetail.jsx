@@ -1,6 +1,24 @@
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import SortableTable from "../../components/SortableTable";
+import { Canvas, useLoader } from '@react-three/fiber';
+import { OrbitControls, PresentationControls, Stage } from '@react-three/drei';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { MeshStandardMaterial } from 'three';
+import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
+
+function Model() {
+  const stl = useLoader(STLLoader, '/Tam-Nen-Phai-V6.4.stl'); // Load the STL file
+  // const ply = useLoader(PLYLoader, '/Tam-Nen-Phai-V6.4.ply');
+  console.log(stl)
+  return (
+    <mesh geometry={stl}>
+      <meshStandardMaterial attach="material" color={'gray'} />
+    </mesh>
+  );
+}
 
 function ManuProductDetail() {
   const { productId } = useParams();
@@ -15,12 +33,51 @@ function ManuProductDetail() {
     fetchProduct();
   }, [productId]);
 
+  const data = [
+    { id: "sadas", time: "2/8/2021", address: 'Hanoi', status: 'Created' },
+    { id: "sasfsa", time: "10/8/2021", address: 'Hanoi', status: 'Created' },
+    { id: "sasds", time: "12/8/2021", address: 'Hanoi', status: 'Created' },
+    { id: "safdgs", time: "14/8/2021", address: 'Hanoi', status: 'Created' },
+    { id: "sadsdg", time: "16/8/2021", address: 'Hanoi', status: 'Created' },
+
+  ];
+  const config = [
+    {
+      label: "Mã Item",
+      render: (item) => item.id,
+      sortValue: (item) => item.id,
+    },
+    {
+      label: "Thời gian tạo",
+      render: (item) => item.time,
+      sortValue: (item) => item.time,
+    },
+    {
+      label: "Địa điểm hiện tại",
+      render: (item) => item.address,
+    },
+    {
+      label: "Trạng thái",
+      render: (item) => item.status,
+    },
+  ];
+
+  const keyFn = (item) => {
+    return item.name;
+  };
+
+  const items = <div className="w-full">
+    <SortableTable data={data} config={config} keyFn={keyFn} />
+  </div>
+
   return (
     <div className="p-4">
       {/* Image Placeholder */}
-      <div className="w-full h-52 bg-sky-00 rounded-md flex items-center justify-center mb-4">
-        <div className="w-full h-full bg-gradient-to-r from-green-400 to-blue-500 rounded-md"></div>
-      </div>
+      <Canvas style={{ height: '50vh', background: 'lightblue' }} dpr={[1, 2]} shadows camera={{ fov: 45 }}>
+        <PresentationControls speed={1.5} global zoom={.5} polar={[-0.1, Math.PI / 4]}>
+          <Stage environment={'sunset'}><Model /></Stage>
+        </PresentationControls>
+      </Canvas>
 
       {/* Product Name */}
       <p className="text-center text-lg mb-4">{product?.name || "no name"}</p>
@@ -55,8 +112,8 @@ function ManuProductDetail() {
               <td>{product?.features || "Ko rõ"}</td>
             </tr>
             <tr>
-              <th>công dụng</th>
-              <td>{product?.warranty} năm</td>
+              <th>Bảo hành</th>
+              <td>{product?.warranty || "Ko rõ"}</td>
             </tr>
           </tbody>
         </table>
@@ -76,54 +133,7 @@ function ManuProductDetail() {
       {/* Item List */}
       <div>
         <p className="mb-2">Các item</p>
-        <div className="overflow-x-auto">
-          <table className="table table-zebra">
-            {/* head */}
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>ID1</th>
-                <th>Last Modified</th>
-                <th>Last Event</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* row 1 */}
-              <tr>
-                <th>1</th>
-                <td>Cy Ganderton</td>
-                <td>Quality Control Specialist</td>
-                <td>Blue</td>
-              </tr>
-              {/* row 2 */}
-              <tr>
-                <th>2</th>
-                <td>Hart Hagerty</td>
-                <td>Desktop Support Technician</td>
-                <td>Purple</td>
-              </tr>
-              {/* row 3 */}
-              <tr>
-                <th>3</th>
-                <td>Brice Swyre</td>
-                <td>Tax Accountant</td>
-                <td>Red</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        {/* <div className="mb-2">
-          <Link to="/item1">
-            <button className="w-full bg-blue-200 p-2 rounded-md text-left">
-              item 1
-            </button>
-          </Link>
-        </div>
-        <Link to="/create-item">
-          <button className="w-full border-dashed border-2 border-green-400 p-2 text-center rounded-md">
-            tạo item mới
-          </button>
-        </Link> */}
+        {items}
       </div>
     </div>
   );

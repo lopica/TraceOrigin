@@ -8,14 +8,12 @@ import { Link, useLocation } from "react-router-dom";
 import { useFetchUserQuery } from "../store";
 // import { getCookie } from "../utils/getCookie";
 
-
 function Header() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [isOpen, setIsOpen] = useState(false); // State to track dropdown visibility
   const dropdownRef = useRef(null);
-  const { data, error, isFetching } = useFetchUserQuery();
+  const { error, isFetching } = useFetchUserQuery();
   let location = useLocation();
-
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen); // Toggle the state between true and false
@@ -38,15 +36,12 @@ function Header() {
       .setAttribute("data-theme", localStorage.getItem("theme"));
   }, [theme]);
 
-
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
 
   // useEffect(()=>{
   //   async function fetchUser() {
@@ -73,13 +68,9 @@ function Header() {
   //     );
 
   // Check if the current path is /login or /register
-  if (
-    location.pathname === "/login" ||
-    location.pathname === "/register" ||
-    location.pathname === "/change-password"
-  ) {
+  if (!location.pathname.startsWith("/manufacturer")) {
     userContent = null;
-    menuMobile = <p>{CONSTANTS.brand}</p>;
+    menuMobile = <a className="btn btn-ghost text-xl">{CONSTANTS?.brand}</a>;
   } else if (isFetching) {
     userContent = (
       <>
@@ -87,11 +78,13 @@ function Header() {
         <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
       </>
     );
-    menuMobile = <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+    menuMobile = (
+      <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+    );
   } else if (error) {
     console.log(error);
     userContent = (
-      <Link to="/login">
+      <Link to="/portal/login">
         <p className="ml-4">Đăng nhập</p>
       </Link>
     );
@@ -132,9 +125,6 @@ function Header() {
       </div>
     );
   }
-
-
-
 
   const desktopHeader = (
     <div className="navbar bg-base-100 px-4">

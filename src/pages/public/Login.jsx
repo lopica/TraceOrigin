@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { hideToast, showToast, useLoginMutation } from "../../store";
 import Button from '../../components/UI/Button'
@@ -16,13 +16,15 @@ function Login() {
   const { show, content } = useSelector(state => state.toast)
   console.log(show, content)
 
+
+
   const submitHandler = async (e) => {
     e.preventDefault();
     login(inputs)
       .unwrap()
       .then((res) => {
         console.log(res)
-        navigate("/manufacturer");
+        navigate("/manufacturer/products");
       })
       .catch((error) => {
         console.error("Failed to login:", error);
@@ -57,8 +59,8 @@ function Login() {
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <Toast show={show}>
-      {content}
-    </Toast>
+        {content}
+      </Toast>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         {/* Logo */}
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">

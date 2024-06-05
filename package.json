@@ -2,7 +2,7 @@
   "name": "capstone",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://lopica.github.io/TraceOrigin",
+  "homepage": "https://lopica.github.io/TraceOrigin/",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
@@ -21,6 +21,7 @@
     "@tensorflow-models/coco-ssd": "^2.2.3",
     "@tensorflow/tfjs": "^4.19.0",
     "@types/three": "^0.164.0",
+    "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
