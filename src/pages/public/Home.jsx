@@ -12,6 +12,7 @@ function Home() {
         <button className="btn btn-error">Admin</button>
       </Link>
     </div>
+  else <Link to='/manufacturer/products/test'>Test</Link>
   return <>{content}</>
 }
 
