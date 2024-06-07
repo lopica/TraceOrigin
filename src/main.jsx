@@ -15,7 +15,6 @@ import {
   Register
 } from './pages';
 import Item from "./pages/public/Item";
-import ManuItems from "./pages/manufacturer/ManuItems";
 import PortalLayout from "./pages/public/PortalLayout";
 import RequireAuth from './services/RequireAuth'
 
@@ -48,7 +47,6 @@ const router = createBrowserRouter([
       { path: 'products', element: <ManuProductList /> },
       { path: "products/:productId", element: <ManuProductDetail /> },
       { path: "products/add", element: <ManuProductAdd /> },
-      { path: "items", element: <ManuItems /> },
     ]
   },
   {
