@@ -49,7 +49,7 @@ function ForgotPassword() {
         <p className="mt-10 text-center text-sm text-gray-500">
           Đã có tài khoản?{" "}
           <Link
-            to="/login"
+            to="/portal/login"
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
             Đăng nhập ngay

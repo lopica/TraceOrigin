@@ -2,6 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import Header from "../../components/Header";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import { useFetchUserQuery } from "../../store";
+import { CONSTANTS } from "../../services/Constants";
 
 function ManuLayout() {
   const { error, isFetching } = useFetchUserQuery();
@@ -45,15 +46,11 @@ function ManuLayout() {
         ></label>
         <ul className="menu p-4 w-52 min-h-full bg-base-100 text-base-content">
           {/* Sidebar content here */}
-          <li>
-            <Link to='/manufacturer/products'>Products</Link>
-          </li>
-          <li>
-            <Link to='#'>Report</Link>
-          </li>
-          <li>
-            <Link to='#'>Warranty</Link>
-          </li>
+          {CONSTANTS.menu.map(item => {
+            return <li key={item.name}>
+              <Link to={item.url}>{item.name}</Link>
+            </li>
+          })}
         </ul>
       </aside>
     );

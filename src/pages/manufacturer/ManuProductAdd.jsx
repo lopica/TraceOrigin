@@ -257,7 +257,7 @@ function ManuProductAdd() {
 
         {/* Submit Button */}
         <div className="flex justify-end">
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          <button type="submit" className="btn">
             Tạo mới
           </button>
         </div>

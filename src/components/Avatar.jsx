@@ -21,7 +21,6 @@ function Avatar() {
         <li>
           <a className="justify-between">
             Profile
-            <span className="badge">New</span>
           </a>
         </li>
         <li>

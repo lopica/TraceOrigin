@@ -93,7 +93,7 @@ function Login() {
           <div>
             <p className="mt-2 text-right text-sm text-gray-500">
               <Link
-                to="/change-password"
+                to="/portal/change-password"
                 className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
               >
                 Quên mật khẩu?
@@ -132,7 +132,7 @@ function Login() {
         <p className="mt-10 text-center text-sm text-gray-500">
           Chưa có tài khoản?{" "}
           <Link
-            to="/register"
+            to="/portal/register"
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
             Đăng ký ngay

@@ -69,7 +69,11 @@ function Header() {
 
   // Check if the current path is /login or /register
   if (!location.pathname.startsWith("/manufacturer")) {
-    userContent = null;
+    userContent = (
+      <Link to="/portal/login">
+        <p className="btn btn-ghost text-xl ml-4">Portal</p>
+      </Link>
+    );;
     menuMobile = <a className="btn btn-ghost text-xl">{CONSTANTS?.brand}</a>;
   } else if (isFetching) {
     userContent = (
@@ -84,9 +88,13 @@ function Header() {
   } else if (error) {
     console.log(error);
     userContent = (
-      <Link to="/portal/login">
-        <p className="ml-4">Đăng nhập</p>
-      </Link>
+      <ul>
+        <li>
+          <Link to="/portal/login">
+            <p className="ml-4">Đăng nhập</p>
+          </Link>
+        </li>
+      </ul>
     );
     menuMobile = <p>{CONSTANTS.brand}</p>;
   } else {
@@ -111,15 +119,11 @@ function Header() {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-[97vw]"
           >
-            <li>
-              <a>Homepage</a>
+          {CONSTANTS.menu.map(item=>{
+            return <li key={item.name}>
+              <Link to={item.url}>{item.name}</Link>
             </li>
-            <li>
-              <a>Portfolio</a>
-            </li>
-            <li>
-              <a>About</a>
-            </li>
+          })}
           </ul>
         )}
       </div>

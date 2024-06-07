@@ -17,6 +17,7 @@ import {
 import Item from "./pages/public/Item";
 import ManuItems from "./pages/manufacturer/ManuItems";
 import PortalLayout from "./pages/public/PortalLayout";
+import RequireAuth from './services/RequireAuth'
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/portal",
-    element: <PortalLayout />,
+    element: <RequireAuth><PortalLayout /></RequireAuth>,
     // errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/manufacturer",
-    element: <ManuLayout />,
+    element: <RequireAuth><ManuLayout /></RequireAuth>,
     children: [
       { index: true, element: <p>Hello Manufacturer</p> },
       { path: 'products', element: <ManuProductList /> },
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <ManuLayout />,
     children: [
-      
+
     ]
   }
 ]);

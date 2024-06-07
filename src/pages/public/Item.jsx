@@ -16,6 +16,11 @@ const origin = {
 }
 
 function Item() {
+    //get id
+    //find origin by id
+    //find itemlogs by id
+    //find itemlogs detail
+
     const itemLogs = [
         { date: '2/6/2024', place: 'Xưởng anh Hoàng' },
         { date: '4/6/2024', place: 'Shop xe may Long Bien' },
@@ -24,7 +29,7 @@ function Item() {
 
     const itemLine = <ul className="timeline w-svw sm:w-[640px] overflow-x-auto">
         {itemLogs.map((log, index) => (
-            <li key={index}>
+            <li key={index} className='h-[15svh]'>
                 {index !== 0 && <hr className="bg-base-content" />}  {/* Render <hr> before, except for the first item */}
                 <div className="timeline-start">{log.date}</div>
                 <div className="timeline-middle">

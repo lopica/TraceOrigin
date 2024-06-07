@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 function ThemeBtn({theme, handleClick}) {
   return (
-    <label className="swap swap-rotate">
+    <label className="swap swap-rotate btn btn-ghost">
       {/* this hidden checkbox controls the state */}
       <input
         type="checkbox"

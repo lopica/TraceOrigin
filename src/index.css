@@ -7,3 +7,9 @@
   min-height: 0;
   box-sizing: border-box;
 }
+
+body, html {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+

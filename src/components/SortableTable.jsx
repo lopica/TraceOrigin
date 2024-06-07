@@ -34,16 +34,16 @@ function getIcons(label, sortBy, sortOrder) {
   if (label !== sortBy) {
     return (
       <div>
-        {upArrow}
-        {downArrow}
+        {/* {upArrow}
+        {downArrow} */}
       </div>
     );
   }
   if (sortOrder === null) {
     return (
       <div>
-        {upArrow}
-        {downArrow}
+        {/* {upArrow}
+        {downArrow} */}
       </div>
     );
   } else if (sortOrder === "asc") {
