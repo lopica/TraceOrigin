@@ -26,7 +26,7 @@ function SortableTable(props) {
       ),
     };
   });
-  console.log(sortedData)
+  // console.log(sortedData)
   return <Table {...props} data={sortedData} config={updatedConfig} />;
 }
 

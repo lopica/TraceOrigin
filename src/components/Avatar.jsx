@@ -1,5 +1,11 @@
-
+import { useLogoutMutation } from "../store"
 function Avatar() {
+  const [logout, results] = useLogoutMutation()
+
+  function handleLogout() {
+    logout()
+  }
+
   return (
     <div className="dropdown dropdown-end">
       <div
@@ -27,7 +33,7 @@ function Avatar() {
           <a>Settings</a>
         </li>
         <li>
-          <a>Logout</a>
+          <a onClick={handleLogout}>Logout</a>
         </li>
       </ul>
     </div>

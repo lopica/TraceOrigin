@@ -37,7 +37,7 @@ function Register() {
     createUser(formData)
       .unwrap()
       .then(() => {
-        navigate("/login");
+        navigate("/portal/login");
       })
       .catch((error) => {
         console.error("Failed to create user:", error);

@@ -10,7 +10,7 @@ const pause = (duration) => {
 const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
+    baseUrl: "http://localhost:8080/api/auth",
     credentials: 'include',
     // baseUrl: "http://localhost:3001",
     fetchFn: async (...args) => {
@@ -35,7 +35,7 @@ const authApi = createApi({
         },
         query: (newUser) => {
           return {
-            url: "/auth/signup",
+            url: "/signup",
             // url: "/users",
             method: "POST",
             body: {
@@ -47,20 +47,25 @@ const authApi = createApi({
         },
       }),
       login: builder.mutation({
-        query: (user) => {
+        query: (input) => {
           return {
-            url: "/auth/login",
+            url: "/login",
             method: "POST",
-            body: {
-              email: user.email,
-              password: user.password
-            },
+            body: {...input},
           };
         },
       }),
+      logout: builder.mutation({
+        query: () => {
+          return {
+            url: '/logout',
+            method: 'POST',
+          }
+        }
+      })
     };
   },
 });
 
-export const { useCreateUserMutation, useLoginMutation } = authApi;
+export const { useCreateUserMutation, useLoginMutation, useLogoutMutation } = authApi;
 export { authApi };

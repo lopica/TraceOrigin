@@ -74,7 +74,7 @@ function Header() {
         <p className="btn btn-ghost text-xl ml-4">Portal</p>
       </Link>
     );;
-    menuMobile = <a className="btn btn-ghost text-xl">{CONSTANTS?.brand}</a>;
+    menuMobile = <Link to='/' className="btn btn-ghost text-xl">{CONSTANTS?.brand}</Link>;
   } else if (isFetching) {
     userContent = (
       <>
@@ -91,7 +91,7 @@ function Header() {
       <ul>
         <li>
           <Link to="/portal/login">
-            <p className="ml-4">Đăng nhập</p>
+            <p className="ml-4">Portal</p>
           </Link>
         </li>
       </ul>
@@ -133,7 +133,7 @@ function Header() {
   const desktopHeader = (
     <div className="navbar bg-base-100 px-4">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">{CONSTANTS?.brand}</a>
+        <Link to='/' className="btn btn-ghost text-xl">{CONSTANTS?.brand}</Link>
       </div>
       <div className="flex-none gap-4">
         <ThemeBtn theme={theme} handleClick={handleToggle} />

@@ -31,7 +31,10 @@ function Home() {
               <p className="mb-5">
                 Hiểu về sản phẩm của bạn chưa bao giờ dễ dàng hơn với giải pháp truy xuất vòng đời sản phẩm của TraceOrigin.
               </p>
-              <Link to="item/1"><button className="btn btn-info">Quét QR</button></Link>
+              <div className="flex gap-4 justify-center">
+                <Link to="item/1"><button className="btn btn-info">Quét QR</button></Link>
+                <Link to="item/1"><button className="btn btn-info">Tải ảnh QR</button></Link>
+              </div>
             </div>
           </div>
         </div>

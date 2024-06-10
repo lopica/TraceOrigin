@@ -60,13 +60,13 @@ function ManuLayout() {
 
   return (
     <>
-      <div className="max-h-[10svh]">{header}</div>
+      <div className="max-h-[8svh]">{header}</div>
       <div className="drawer md:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col overflow-auto">
           {mainContent}
         </div>
-        <div className="drawer-side max-h-[90svh]">{sidebar}</div>
+        <div className="drawer-side max-h-[92svh]">{sidebar}</div>
       </div>
     </>
   );

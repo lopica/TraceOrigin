@@ -10,7 +10,8 @@ const pause = (duration) => {
 const productApi = createApi({
     reducerPath: 'product',
     baseQuery: fetchBaseQuery({
-        baseUrl: '/api/product',
+        baseUrl: 'http://localhost:8080/api/product',
+        credentials: 'include',
         fetchFn: async (...args) => {
             // REMOVE FOR PRODUCTION
             await pause(3000);
@@ -36,10 +37,37 @@ const productApi = createApi({
                         }
                     }
                 }
+            }),
+            searchProduct: builder.query({
+                query: (request) => {
+                    return {
+                        url: '/findAllProductByManufacturerId',
+                        method: 'POST',
+                        body: {
+                            "pageNumber": request.pageNumber || 0, //trang dau la 0
+                            "pageSize": request.pageSize || 2, //so product 1 trang
+                            "type": request.type || 'asc', //asc vs desc
+                            "startDate": request.startDate || 0, //epoch
+                            "endDate":request.endDate || 0, //epoch
+                            "name": request.searchTerm || ''  //contain
+                        }
+                    }
+                }
+            }),
+            viewProductDetail: builder.query({
+                query: (productId) => {
+                    return {
+                        url: '/findProductById',
+                        method: 'POST',
+                        body: {
+                            id: productId,
+                        }
+                    }
+                }
             })
         }
     }
 })
 
 export {productApi}
-export const { useAddProductMutation } = productApi
+export const { useAddProductMutation, useSearchProductQuery, useViewProductDetailQuery } = productApi

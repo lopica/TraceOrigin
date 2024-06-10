@@ -9,7 +9,7 @@ const toastSlice = createSlice({
     reducers: {
         showToast(state, action) {
             state.show = true,
-                state.content = action.payload.message || 'Lỗi Không xác định'
+                state.content = action.payload || 'Lỗi Không xác định'
         },
         hideToast(state) {
             state.show = false
