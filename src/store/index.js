@@ -18,6 +18,7 @@ const store = configureStore({
     [itemApi.reducerPath]: itemApi.reducer,
     [itemLogApi.reducerPath]: itemLogApi.reducer,
     [mapApi.reducerPath]: mapApi.reducer,
+    [manhTest.reducerPath]: manhTest.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
@@ -27,6 +28,7 @@ const store = configureStore({
         itemApi.middleware, 
         itemLogApi.middleware,
         mapApi.middleware,
+        manhTest.middleware,
       )
   },
 });
@@ -41,3 +43,4 @@ export { showToast, hideToast } from './slices/toastSlice'
 export { useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useSearchItemsByProductIdQuery } from './apis/itemApi'
 export { useFetchEventByItemLogIdQuery } from './apis/itemLogApi'
 export { useGetMapQuery } from './apis/mapApi'
+export { useGetUsersQuery } from './apis/manhTest'

@@ -18,6 +18,7 @@ import {
 import Item from "./pages/public/Item";
 import PortalLayout from "./pages/public/PortalLayout";
 import RequireAuth from './services/RequireAuth'
+import AdminLayout from "./pages/admin/AdminLayout";
 
 const router = createBrowserRouter([
   {
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
   ,
   {
     path: "/manh",
-    element: <PortalLayout />,
+    element: <RequireAuth><AdminLayout /></RequireAuth>,
     children: [
       { path: 'test', element: <UserList /> },
     ]

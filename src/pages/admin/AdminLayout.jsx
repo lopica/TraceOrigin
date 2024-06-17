@@ -1,11 +1,10 @@
+//manhtest
 import { Link, Outlet } from "react-router-dom";
 import Header from "../../components/Header";
 import Breadcrumbs from "../../components/Breadcrumbs";
-import { useFetchUserQuery } from "../../store";
 import { CONSTANTS } from "../../services/Constants";
 
-function ManuLayout() {
-  const { error, isFetching } = useFetchUserQuery();
+function AdminLayout() {
   let mainContent;
   let sidebar;
   const header = (
@@ -13,17 +12,6 @@ function ManuLayout() {
       <Header />
     </header>
   );
-  if (isFetching) {
-    mainContent = <div className="flex flex-col gap-4 mx-8">
-      <div className="skeleton h-10 w-full"></div>
-      <div className="skeleton h-10 w-full"></div>
-      <div className="skeleton h-10 w-full"></div>
-    </div>
-    sidebar = <></>
-  } else if (error) {
-    mainContent = <div><Outlet /></div>
-    sidebar = <></>
-  } else {
     mainContent = (
       <>
         <section>
@@ -54,10 +42,6 @@ function ManuLayout() {
         </ul>
       </aside>
     );
-  }
-
-
-
   return (
     <>
       <div className="max-h-[8svh]">{header}</div>
@@ -72,4 +56,4 @@ function ManuLayout() {
   );
 }
 
-export default ManuLayout;
+export default AdminLayout;
