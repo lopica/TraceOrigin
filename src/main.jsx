@@ -12,7 +12,8 @@ import {
   Home,
   Login,
   ForgotPassword,
-  Register
+  Register,
+  UserList
 } from './pages';
 import Item from "./pages/public/Item";
 import PortalLayout from "./pages/public/PortalLayout";
@@ -53,7 +54,14 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <ManuLayout />,
     children: [
-
+    ]
+  }
+  ,
+  {
+    path: "/manh",
+    element: <PortalLayout />,
+    children: [
+      { path: 'test', element: <UserList /> },
     ]
   }
 ]);
