@@ -6,6 +6,7 @@ import { productApi } from "./apis/productApi";
 import { toastReducer } from './slices/toastSlice'
 import { itemApi } from "./apis/itemApi";
 import { itemLogApi } from "./apis/itemLogApi";
+import { mapApi } from "./apis/mapApi";
 
 const store = configureStore({
   reducer: {
@@ -15,10 +16,17 @@ const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [itemApi.reducerPath]: itemApi.reducer,
     [itemLogApi.reducerPath]: itemLogApi.reducer,
+    [mapApi.reducerPath]: mapApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
-      .concat(authApi.middleware, userApi.middleware, productApi.middleware, itemApi.middleware, itemLogApi.middleware)
+      .concat(authApi.middleware, 
+        userApi.middleware, 
+        productApi.middleware, 
+        itemApi.middleware, 
+        itemLogApi.middleware,
+        mapApi.middleware,
+      )
   },
 });
 
@@ -31,3 +39,4 @@ export { useAddProductMutation, useSearchProductQuery, useViewProductDetailQuery
 export { showToast, hideToast } from './slices/toastSlice'
 export { useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useSearchItemsByProductIdQuery } from './apis/itemApi'
 export { useFetchEventByItemLogIdQuery } from './apis/itemLogApi'
+export { useGetMapQuery } from './apis/mapApi'
