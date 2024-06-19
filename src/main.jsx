@@ -30,7 +30,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/portal",
-    element: <RequireAuth><PortalLayout /></RequireAuth>,
+    element: <PortalLayout />,
     // errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/manufacturer",
-    element: <RequireAuth><ManuLayout /></RequireAuth>,
+    element: <ManuLayout />,
     children: [
       { index: true, element: <p>Hello Manufacturer</p> },
       { path: 'products', element: <ManuProductList /> },

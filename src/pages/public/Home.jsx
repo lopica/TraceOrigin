@@ -1,12 +1,33 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import Button from "../../components/UI/Button";
+import Modal from "../../components/UI/Modal";
 
 function Home() {
   let location = useLocation();
+  const [showModal, setShowModal] = useState(false);
+  const handleClick = () => {
+    setShowModal(true);
+  };
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  const actionBar = (
+    <Button primary onClick={handleClose}>
+      I accept
+    </Button>
+  );
+
+  const modal = (
+    <Modal onClose={handleClose} actionBar={actionBar}>
+      <p>Here is somthing</p>
+    </Modal>
+  );
   const [predict, setPredict] = useState()
 
   let renderedPredict;
-  function handleChange(e){
+  function handleChange(e) {
     //lay anh
     //show anh
     //gui anh den server
@@ -60,6 +81,10 @@ function Home() {
                 <Link to="item?productRecognition=FGHTCZ3123GJV"><button className="btn btn-info">Quét QR</button></Link>
                 <Link to="item?productRecognition=FGHTCZ3123GJV"><button className="btn btn-info">Tải ảnh QR</button></Link>
                 {predictModal}
+                <Button primary onClick={handleClick} rounded>
+                  Open Modal
+                </Button>
+                {showModal && modal}
               </div>
             </div>
           </div>

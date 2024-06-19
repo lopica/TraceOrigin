@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getDateFromEpochTime } from '../../utils/getDateFromEpochTime.js'
-import { useFetchEventByItemLogIdQuery, useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useGetMapQuery } from '../../store';
+import { useFetchEventByItemLogIdQuery, useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideToast, showToast } from "../../store";
 import Toast from '../../components/UI/Toast'

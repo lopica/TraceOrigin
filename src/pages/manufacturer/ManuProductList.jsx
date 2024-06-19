@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link } from "react-router-dom";
 import { useSearchProductQuery } from "../../store";
+import Input from "../../components/UI/Input";
 
 function ManuProductList() {
   const { data, isError, isFetching } = useSearchProductQuery({
@@ -13,6 +14,10 @@ function ManuProductList() {
     "name": ''
   })
 
+  const categoties = [
+    'cate1, cate2', 'cate3'
+  ]
+
   let cards;
   let renderedCards;
   if (isFetching) {
@@ -20,9 +25,18 @@ function ManuProductList() {
       {Array.from({ length: 5 }).map((_, index) => (
         <div key={index} className="skeleton w-44 h-52"></div>
       ))}
+
     </>
   } else if (isError) {
     //fetch product loi
+    renderedCards = <>
+      <Link to={`test`}>
+        <Card card={{ id: 'test', name: 'Test', image: '' }} />
+      </Link>
+      <Link to="add">
+        <Card />
+      </Link>
+    </>
   } else {
     const products = data.content
     cards = products?.map(product => {
@@ -34,6 +48,9 @@ function ManuProductList() {
           <Card card={card} />
         </Link>
       ))}
+      <Link to={`test`}>
+        <Card card={{ id: 'test', name: 'Test', image: '' }} />
+      </Link>
       <Link to="add">
         <Card />
       </Link>
@@ -42,8 +59,20 @@ function ManuProductList() {
 
   return (
     <div className="flex flex-col gap-8 justify-between py-2">
+      <div className="flex justify-between gap-12 px-4">
+        <Input
+          label='Tên sản phẩm'
+          type='search'
+        />
+        <Input
+          label='Loại sản phẩm'
+          type='select'
+          data={categoties}
+        />
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center">
         {renderedCards}
+
       </div>
       <div className="flex justify-end mr-4">
         {/* footer */}

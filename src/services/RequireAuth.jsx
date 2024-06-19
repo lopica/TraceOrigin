@@ -3,11 +3,11 @@ import { useFetchUserQuery } from '../store';  // Adjust the path as necessary
 import Loading from '../pages/public/Loading';
 
 function RequireAuth({ children }) {
-  const { data: user, isLoading, isError } = useFetchUserQuery();
+  const { data: user, isError, isFetching } = useFetchUserQuery();
   const location = useLocation();
 
   // Handle loading state
-  if (isLoading) {
+  if (isFetching) {
     return <Loading /> // Consider a more robust loading component here
   }
 
@@ -16,6 +16,7 @@ function RequireAuth({ children }) {
     // If there's an error or no user data, and the user is trying to access a protected route
     if (location.pathname !== '/portal/login' && location.pathname !== '/portal/register' && location.pathname !== '/portal/change-password') {
       return <Navigate to="/portal/login" replace />;
+      // console.log('cannot get user')
     }
   } else {
     // If the user is authenticated but on the login page, redirect them to the manufacturer page

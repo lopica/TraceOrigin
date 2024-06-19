@@ -39,4 +39,4 @@ export { useAddProductMutation, useSearchProductQuery, useViewProductDetailQuery
 export { showToast, hideToast } from './slices/toastSlice'
 export { useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useSearchItemsByProductIdQuery } from './apis/itemApi'
 export { useFetchEventByItemLogIdQuery } from './apis/itemLogApi'
-export { useGetMapQuery } from './apis/mapApi'
+export { useGetAllProvincesQuery, useGetDistrictByProvinceIdQuery, useGetWardByDistrictIdQuery } from './apis/mapApi'

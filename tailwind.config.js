@@ -11,5 +11,10 @@ export default {
   plugins: [ 
     daisyui,
   ],
+  variants: {
+    extend: {
+      display: ['responsive', 'valid', 'invalid'],
+    },
+  },
 }
 

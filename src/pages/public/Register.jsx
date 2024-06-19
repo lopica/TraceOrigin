@@ -141,6 +141,7 @@ function Register() {
               className="grow"
               placeholder="xác nhận mật khẩu"
               value={enteredValues.cf_password}
+              pattern={enteredValues.password}
               onChange={(e) => handleInputChange("cf_password", e)}
             />
           </label>
