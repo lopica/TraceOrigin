@@ -1,22 +1,83 @@
 import { useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Input from "../../components/UI/Input";
 
 function ManuProductAdd() {
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
-  
 
-  const [formData, setFormData] = useState({
+  const [inputs, setInputs] = useState({
     name: "",
     length: 0,
     width: 0,
     height: 0,
+    category: '',
     material: "",
     weight: 0,
     features: "",
     images: "",
   });
+
+  // const formConfig = [
+  //   {
+  //     label: 'Tên sản phẩm',
+  //     type: "text",
+  //     name: "name",
+  //     placeholder: "Type here",
+  //     value: inputs.name,
+  //   },
+  //   {
+  //     label: 'Kích thước',
+  //     type: "size",
+  //   },
+  //   {
+  //     label: 'Loại sản phẩm',
+  //     type: "select",
+  //     name: "category",
+  //     value: inputs.category,
+  //     max: 1000,
+  //     placeholder: "Chọn 1 trong các loại",
+  //     data: categories
+  //   },
+  //   {
+  //     label: 'Chất liệu',
+  //     type: "text",
+  //     placeholder: "Type here",
+  //     name: "material",
+  //     value: inputs.material,
+  //   },
+  //   {
+  //     label: 'Cân nặng',
+  //     type: "number",
+  //     placeholder: "Type here",
+  //     name: "weight",
+  //     value: inputs.weight || "" ,
+  //     unit: 'kg',
+  //   },
+  //   {
+  //     label: "Công dụng",
+  //     type: "text",
+  //     placeholder: "Type here",
+  //     name: "features",
+  //     value: inputs.features,
+  //     tooltip: 'liệt kê ngắn gọn',
+  //   },
+  //   {
+  //     label: 'Thời gian bảo hành',
+  //     type: "number",
+  //     name: "warranty",
+  //     placeholder: "Type here",
+  //     value: inputs.warranty || "",
+  //     max: 100,
+  //     unit: 'tháng',
+  //     tooltip: 'tính theo tháng',
+  //   },
+  //   {
+  //     label: 'Các hình ảnh minh họa',
+  //     type: "images",
+  //   },
+  // ]
 
   const fileInputRef = useRef(null);
 
@@ -28,7 +89,7 @@ function ManuProductAdd() {
     const files = Array.from(e.target.files);
     if (!files.length) {
       setImages([]);
-      setFormData({ ...formData, images: [] });
+      setInputs({ ...inputs, images: [] });
     } else if (images.length + files.length > 5) {
       alert("You cannot upload more than 5 images.");
       return;
@@ -45,7 +106,7 @@ function ManuProductAdd() {
           // Check if all files are processed
           if (imageUrls.length === files.length) {
             setImages((prev) => [...prev, ...imageUrls]);
-            setFormData((prevFormData) => ({
+            setInputs((prevFormData) => ({
               ...prevFormData,
               images: [...prevFormData.images, ...imageUrls],
             }));
@@ -65,16 +126,28 @@ function ManuProductAdd() {
       name === "height" ||
       name === "weight" ||
       name === "warranty"
-    )
-      setFormData({ ...formData, [name]: parseInt(value) || 0 });
-    else setFormData({ ...formData, [name]: value });
+    ) {
+      const intValue = parseInt(value) || 0;
+      if (intValue > 999) {
+        setInputs({ ...inputs, [name]: 999 });
+      } else if (intValue < 0) {
+        setInputs({ ...inputs, [name]: 0 });
+      } else {
+        setInputs({ ...inputs, [name]: intValue });
+      }
+    } else {
+      if (value.length >= 100 && name === "name") return
+      else if (value.length >=200 && name === "features") return
+      else setInputs({ ...inputs, [name]: value });
+    }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const productData = {
-      ...formData,
-      size: `${formData.length}cm x ${formData.width}cm x ${formData.height}cm`,
+      ...inputs,
+      size: `${inputs.length}cm x ${inputs.width}cm x ${inputs.height}cm`,
     };
 
     delete productData.length;
@@ -101,154 +174,187 @@ function ManuProductAdd() {
     }
   };
 
+  const categories = [
+    'cate1', 'cate2', 'cate3'
+  ]
+
   return (
     <div className="p-4">
       {/* <h1 className="text-xl mb-4">Thêm sản phẩm</h1> */}
 
-      <form className="space-y-4 px-8" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-5 gap-8 mb-16">
-          <div>
+      <form className="px-8" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 gap-4 mb-16">
+          <div className="text-center">
             <p>Thông tin cơ bản</p>
           </div>
-          <div className="col-span-4">
-            <label className="input input-bordered flex items-center gap-4">
-              Tên sản phẩm
-              <input
-                type="text"
-                className="grow"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </label>
+          <Input
+            label='Tên sản phẩm'
+            type="text"
+            placeholder="Type here"
+            name="name"
+            value={inputs.name}
+            onChange={handleChange}
+            maxLength={100}
+            required
+            tooltip='Tối đa 100 ký tự'
+          />
 
-            {/* Kích thước */}
-            <div className="mb-4">
-              <div className="label">
-                <span className="label-text">Kích thước</span>
-              </div>
-              <div className="flex items-center gap-16">
-                <label className="input input-bordered flex items-center">
-                  Dài
-                  <input
-                    type="number"
-                    className="w-24 text-right"
-                    name="length"
-                    value={formData.length || ""}
-                    max={1000}
-                    onChange={handleChange}
-                    required
-                  />
-                  <span className="badge badge-info">cm</span>
-                </label>
-                <label className="input input-bordered flex items-center">
-                  Rộng
-                  <input
-                    type="number"
-                    className="w-24 text-right"
-                    name="width"
-                    value={formData.width || ""}
-                    max={1000}
-                    onChange={handleChange}
-                    required
-                  />
-                  <span className="badge badge-info">cm</span>
-                </label>
-                <label className="input input-bordered flex items-center">
-                  Cao
-                  <input
-                    type="number"
-                    className="w-24 text-right"
-                    name="height"
-                    value={formData.height || ""}
-                    max={1000}
-                    onChange={handleChange}
-                    required
-                  />
-                  <span className="badge badge-info">cm</span>
-                </label>
-              </div>
-            </div>
-
-            {/* Chất liệu */}
-            <label className="input input-bordered flex items-center gap-4 mb-4">
-              Chất liệu
-              <input
-                type="text"
-                className="grow"
-                name="material"
-                value={formData.material}
-                onChange={handleChange}
-                required
-              />
-            </label>
-
-            <label className="input input-bordered flex items-center mb-4 w-60">
-              Cân nặng
-              <input
+          {/* Kích thước */}
+          <div className="">
+            {/* <div className="label">
+              <span className="label-text">Kích thước</span>
+            </div> */}
+            <div className="flex items-center gap-4">
+              <Input
+                label='Kích thước'
                 type="number"
-                className="w-24 text-right"
-                name="weight"
-                value={formData.weight || ""}
+                name="length"
+                value={inputs.length || ""}
+                min={0}
                 max={1000}
                 onChange={handleChange}
+                placeholder="Dài"
                 required
+                unit='cm'
+                tooltip='Bé hơn 999 và lớn hơn 0'
               />
-              <span className="badge badge-info">kg</span>
-            </label>
-            {/* Công dụng */}
-            <label className="input input-bordered flex items-center gap-4 mb-4">
-              Công dụng
-              <input
-                type="text"
-                className="grow"
-                name="features"
-                value={formData.features}
-                onChange={handleChange}
-                required
-              />
-            </label>
-
-            {/* Bảo hành */}
-            <label className="input input-bordered flex items-center mb-4 w-64">
-              Bảo hành
-              <input
+              <Input
+                label='&nbsp;'
                 type="number"
-                className="w-24 text-right"
-                name="warranty"
-                value={formData.warranty || ""}
-                max={100}
+                name="width"
+                value={inputs.width || ""}
+                min={0}
+                max={1000}
                 onChange={handleChange}
+                placeholder="Rộng"
                 required
+                unit='cm'
               />
-              <span className="badge badge-info">năm</span>
-            </label>
+              <Input
+                label='&nbsp;'
+                type="number"
+                name="height"
+                value={inputs.height || ""}
+                min={0}
+                max={1000}
+                onChange={handleChange}
+                placeholder="Cao"
+                required
+                unit='cm'
+              />
+            </div>
           </div>
-          <hr className="col-span-5" />
+          {/* loại sản phẩm */}
+          <Input
+            label='Loại sản phẩm'
+            type="select"
+            name="height"
+            value={inputs.category}
+            onChange={handleChange}
+            placeholder="Chọn 1 trong các loại"
+            required
+            data={categories}
+          />
+          {/* Chất liệu */}
+          <Input
+            label='Chất liệu'
+            type="text"
+            placeholder="Type here"
+            name="material"
+            maxLength={200}
+            value={inputs.material}
+            onChange={handleChange}
+            required
+            tooltip='Tối đa 200 ký tự'
+          />
+          <Input
+            label='Cân nặng'
+            type="number"
+            placeholder="Type here"
+            name="weight"
+            value={inputs.weight || ""}
+            min={0}
+            max={1000}
+            onChange={handleChange}
+            required
+            unit='kg'
+            tooltip='Bé hơn 999 và lớn hơn 0'
+          />
+          {/* Công dụng */}
+          <Input
+            label="Công dụng"
+            type="text"
+            placeholder="Type here"
+            name="features"
+            value={inputs.features}
+            maxLength={200}
+            onChange={handleChange}
+            required
+            tooltip='Liệt kê, cánh nhau dấu phẩy'
+          />
+          {/* Bảo hành */}
+          <Input
+            label='Thời gian bảo hành'
+            type="number"
+            name="warranty"
+            placeholder="Type here"
+            value={inputs.warranty || ""}
+            max={100}
+            onChange={handleChange}
+            required
+            unit='tháng'
+            tooltip='Bé hơn 999 và lớn hơn 0'
+          />
+          <hr className="" />
           <div className="col-span-1">
-            <p>Các hình ảnh minh họa</p>
+            <div className="tooltip" data-tip='Chọn tối đa 5 ảnh'>
+              <p>Các hình ảnh minh họa</p>
+            </div>
           </div>
-          <div className="col-span-4">
+          <div className="">
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2">
-              {console.log(images)}
               {images.map((image, i) => (
-                <img key={i} src={image} className="w-24 h-24 object-cover" />
-              ))}
-              {images.length < 5 && (
-                <div
-                  className="w-24 h-24 bg-sky-200 flex items-center justify-center shadow-lg hover:shadow-sky-300"
-                  onClick={triggerFileInput}
-                >
-                  <FaPlus className="text-2xl fill-white" />
-                  <input
-                    ref={fileInputRef}
-                    name="images"
-                    type="file"
-                    className="file-input hidden"
-                    multiple
-                    onChange={handleImages}
+                <div key={i}>
+                  <img
+                    src={image}
+                    className="w-24 h-24 object-cover  shadow-lg hover:shadow-sky-300"
+                    onClick={() => document.getElementById(i).showModal()}
                   />
+                  <dialog id={i} className="modal">
+                    <div className="modal-box">
+                      <img
+                        src={image}
+                        className="w-full h-full"
+                      />
+                      <div className="flex justify-between mt-4">
+                        <button className="btn">Bỏ chọn</button>
+                        <button className="btn">Đặt làm ảnh chính</button>
+                      </div>
+                    </div>
+                    <form method="dialog" className="modal-backdrop">
+                      <button>close</button>
+                    </form>
+                  </dialog>
+                </div>
+              ))}
+
+              {images.length < 5 && (
+                <div className="tooltip" data-tip='Chọn tối đa 5 ảnh'>
+                  <div
+                    className="w-24 h-24 bg-sky-200 flex items-center justify-center shadow-lg hover:shadow-sky-300"
+                    onClick={triggerFileInput}
+                  >
+                    <FaPlus className="text-2xl fill-white" />
+                    <input
+                      ref={fileInputRef}
+                      name="images"
+                      type="file"
+                      className="file-input hidden"
+                      accept="image/png, image/gif, image/jpeg"
+                      multiple
+                      onChange={handleImages}
+                    />
+                  </div>
                 </div>
               )}
             </div>

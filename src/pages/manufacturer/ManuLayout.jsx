@@ -14,7 +14,7 @@ function ManuLayout() {
     </header>
   );
   if (isFetching) {
-    mainContent = <div className="flex flex-col gap-4 mx-8">
+    mainContent = <div className="flex flex-col gap-4 mx-8 mt-8">
       <div className="skeleton h-10 w-full"></div>
       <div className="skeleton h-10 w-full"></div>
       <div className="skeleton h-10 w-full"></div>

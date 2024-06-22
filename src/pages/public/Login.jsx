@@ -105,18 +105,18 @@ function Login() {
                 />
               </svg>
               <input
-                  type={showPassword ? 'text' : "password"}
-                  className="grow"
-                  placeholder="Mật khẩu"
-                  value={inputs.password}
-                  onChange={(e) => handleChange("password", e)}
-                />
-                <a onMouseDown={()=>setShowPassword(true)} onMouseUp={()=>setShowPassword(false)}>👀</a>
+                type={showPassword ? 'text' : "password"}
+                className="grow"
+                placeholder="Mật khẩu"
+                value={inputs.password}
+                onChange={(e) => handleChange("password", e)}
+              />
+              <a onMouseDown={() => setShowPassword(true)} onMouseUp={() => setShowPassword(false)}>👀</a>
             </label>
           </div>
 
           <div>
-            <Button isLoading={results.isLoading}>
+            <Button isLoading={results.isLoading} login rounded className='flex w-full justify-center bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
               Đăng nhập
             </Button>
           </div>

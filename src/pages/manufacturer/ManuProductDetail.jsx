@@ -8,8 +8,10 @@ import { PresentationControls, Stage } from '@react-three/drei';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 // import { MeshStandardMaterial } from 'three';
 // import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
-import { useSearchItemsByProductIdQuery, useViewProductDetailQuery } from '../../store'
+import { useGetAllProvincesQuery, useGetDistrictByProvinceIdQuery, useGetWardByDistrictIdQuery, useSearchItemsByProductIdQuery, useViewProductDetailQuery } from '../../store'
 import { getDateFromEpochTime } from '../../utils/getDateFromEpochTime.js'
+import Input from "../../components/UI/Input.jsx";
+import { useForm } from "react-hook-form"
 
 function Model() {
   const stl = useLoader(STLLoader, '/Tam-Nen-Phai-V6.4.stl'); // Load the STL file
@@ -24,10 +26,105 @@ function Model() {
 function ManuProductDetail() {
   // const [product, setProduct] = useState({});
   const { productId } = useParams();
+  const [currentLocationId, setCurrentLocationId] = useState({
+    provinceId: '',
+    districtId: '',
+  })
+  const {
+    register,
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+  let provincesData = [];
+  let districtsData = [];
+  let wardsData = [];
   const { data: productDetail, isError: isProductError, isFetching: isProductFetch } = useViewProductDetailQuery(productId)
   const { data: itemsData, isError: isItemError, isFetching: isItemFetch } = useSearchItemsByProductIdQuery(productId)
+  const { data: provinces, isError: isProvinceError, error: provinceError, isFetching: isProvinceFetch } = useGetAllProvincesQuery()
+  const { data: districts, isError: isDistrictError, isFetching: isDistrictFetch } = useGetDistrictByProvinceIdQuery(currentLocationId.provinceId, {
+    skip: currentLocationId.provinceId === ''
+  })
+  const { data: wards, isError: isWardError, isFetching: isWardFetch } = useGetWardByDistrictIdQuery(currentLocationId.districtId, {
+    skip: currentLocationId.districtId === ''
+  })
+
+
+  if (isProvinceFetch) {
+    console.log('load province')
+  } else if (isProvinceError) {
+    // console.log(provinceError)
+  } else {
+    // console.log(provinces)
+    if (provinces) {
+      const data = provinces.data
+      provincesData = data.map(prov => {
+        return { id: prov.id, content: prov.name }
+      })
+    }
+  }
+
+  if (isDistrictFetch) {
+    console.log('load district')
+  } else if (isDistrictError) {
+    // console.log(districtError)
+  } else {
+    if (districts) {
+      console.log(districts)
+      const data = districts.data
+      districtsData = data.map(prov => {
+        return { id: prov.id, content: prov.name }
+      })
+    }
+  }
+
+  if (isWardFetch) {
+    console.log('ward district')
+  } else if (isWardError) {
+    // console.log(districtError)
+  } else {
+    if (wards) {
+      console.log(wards)
+      const data = wards.data
+      wardsData = data.map(prov => {
+        return { id: prov.id, content: prov.name }
+      })
+    }
+  }
+
+  useEffect(() => {
+    // console.log(watch('province')) 
+    if (provinces)
+      setCurrentLocationId((prev) => {
+        return { ...prev, provinceId: watch('province') }
+      })
+    //reset district value
+    //reset ward value
+    setValue('district', ''); // Reset district when province changes
+    setValue('ward', '');
+  }, [watch('province')])
+
+  useEffect(() => {
+    // console.log(watch('province')) 
+    if (districts)
+      setCurrentLocationId((prev) => {
+        return { ...prev, districtId: watch('district') }
+      })
+    //reset ward value
+    setValue('ward', '');
+  }, [watch('district')])
+
+
+  const onSubmit = (data) => {
+    console.log(data)
+  }
 
   let product
+  const status = [
+    'status 1', 'status 2'
+  ]
+
   if (isProductFetch) {
     product = <div className="flex flex-col gap-4 mt-4">
       <div className="skeleton w-full h-10"></div>
@@ -133,89 +230,77 @@ function ManuProductDetail() {
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <h3 className="font-bold text-lg text-center">Tạo sản phẩm</h3>
-        <form>
-          <label className="form-control w-full max-w-xl">
-            <div className="label">
-              <span className="label-text">Số lượng sản phẩm</span>
-            </div>
-            <input type="number" placeholder="Type here" className="input input-bordered w-full max-w-xl" />
-          </label>
-          <label className="form-control w-full max-w-xl">
-            <div className="label">
-              <span className="label-text">Địa điểm sản xuất:</span>
-            </div>
-            <div className="join">
-              <select className="select select-bordered join-item">
-                <option disabled selected>Tỉnh</option>
-                <option>Sci-fi</option>
-                <option>Drama</option>
-                <option>Action</option>
-              </select>
-              <select className="select select-bordered join-item">
-                <option disabled selected>Quận, Huyện</option>
-                <option>Sci-fi</option>
-                <option>Drama</option>
-                <option>Action</option>
-              </select>
-              <select className="select select-bordered join-item">
-                <option disabled selected>Phường, Xã</option>
-                <option>Sci-fi</option>
-                <option>Drama</option>
-                <option>Action</option>
-              </select>
-            </div>
-            <input className="input input-bordered join-item" placeholder="Số nhà, tên đường,..." />
-          </label>
-          <label className="form-control">
-            <div className="label">
-              <span className="label-text">Mô tả sản phẩm</span>
-            </div>
-            <textarea className="textarea textarea-bordered h-24" placeholder="Treo đồ, bàn tháo lắp nhanh,..."></textarea>
-          </label>
-          <label className="form-control w-full max-w-xl">
-            <div className="label">
-              <span className="label-text">Thời gian bảo hành</span>
-            </div>
-            <div className="join">
-              <label className="input input-bordered flex items-center gap-2">
-                <input type="text" className="grow" placeholder="Search" />
-                <span className="badge badge-info">Tháng</span>
-              </label>
-            </div>
-          </label>
-          <p className="py-4">Ảnh sản phẩm</p>
-          <div className="flex justify-end"><button className="btn">Tạo mới</button></div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label='Số lượng sản phẩm'
+            type='number'
+            unit='cái'
+            {...register('quantity')}
+          />
+
+          <div className="join w-full">
+            <Input
+              label='Địa điểm sản xuất:'
+              type='select'
+              data={provincesData}
+              placeholder='Tỉnh, thành phố'
+              {...register('province')}
+            />
+            <Input
+              label='&nbsp;'
+              type='select'
+              data={districtsData}
+              placeholder='Quận, huyện'
+              {...register('district')}
+            />
+            <Input
+              label='&nbsp;'
+              type='select'
+              data={wardsData}
+              placeholder='Phường, xã'
+              {...register('ward')}
+            />
+          </div>
+          <Input
+            type='text'
+            className="input input-bordered join-item"
+            placeholder="Số nhà, tên đường,..."
+            {...register('address')}
+          />
+          <Input
+            label='Mô tả tình trạng sản phẩm'
+            type='text'
+            placeholder="Treo đồ, bàn tháo lắp nhanh,..."
+            {...register('origin-description')}
+          />
+          <Input
+            label='Thời gian bảo hành'
+            type='number'
+            placeholder="Treo đồ, bàn tháo lắp nhanh,..."
+            unit='Tháng'
+            {...register('warranty')}
+          />
+          <div className="flex justify-end mt-4"><button className="btn">Tạo mới</button></div>
         </form>
       </div>
     </dialog>
   </>
 
   let itemFeatures = <form className="grid grid-cols-2 gap-2 lg:grid-cols-3 mb-4">
-    <label className="form-control w-full max-w-xs">
-      <div className="label">
-        <span className="label-text">Từ</span>
-      </div>
-      <input type="date" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-    </label>
-    <label className="form-control w-full max-w-xs">
-      <div className="label">
-        <span className="label-text">Đến</span>
-      </div>
-      <input type="date" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-    </label>
-    <label className="form-control w-full max-w-xs">
-      <div className="label">
-        <span className="label-text">Trạng thái:</span>
-      </div>
-      <select className="select select-bordered">
-        <option disabled selected></option>
-        <option>Star Wars</option>
-        <option>Harry Potter</option>
-        <option>Lord of the Rings</option>
-        <option>Planet of the Apes</option>
-        <option>Star Trek</option>
-      </select>
-    </label>
+    <Input
+      label='Từ'
+      type='date'
+    />
+    <Input
+      label='Đến'
+      type='date'
+    />
+    <Input
+      label='Trạng thái'
+      type='select'
+      data={status}
+      placeholder='Lựa chọn trạng thái'
+    />
   </form>
 
 

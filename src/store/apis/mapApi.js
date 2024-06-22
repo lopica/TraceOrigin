@@ -11,7 +11,8 @@ const pause = (duration) => {
 const mapApi = createApi({
   reducerPath: "map",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.opencagedata.com/geocode/v1",
+    baseUrl: "https://esgoo.net/api-tinhthanh",
+    // mode: "no-cors",
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
       await pause(3000);
@@ -28,11 +29,26 @@ const mapApi = createApi({
   
   endpoints(builder) {
     return {
-      getMap: builder.query({
-        query: ({address}) => {
+      getAllProvinces: builder.query({
+        query: () => {
           return {
-            url: `/v1/json?q=${encodeURIComponent(address)}&key=${CONSTANTS.openCage_API_KEY}`,
+            url: `/1/0.htm`,
             method: 'GET',
+          }
+        }
+      }),
+      getDistrictByProvinceId: builder.query({
+        query: (province_id) => {
+          return {
+            url: `/2/${province_id}.htm`,
+            method: 'GET',
+          }
+        }
+      }),
+      getWardByDistrictId: builder.query({
+        query: (district_id) => {
+          return {
+            url: `/3/${district_id}.htm`
           }
         }
       })
@@ -40,5 +56,5 @@ const mapApi = createApi({
   },
 });
 
-export const { useGetMapQuery } = mapApi;
+export const { useGetAllProvincesQuery, useGetDistrictByProvinceIdQuery, useGetWardByDistrictIdQuery } = mapApi;
 export { mapApi };
