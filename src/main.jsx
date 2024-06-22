@@ -19,6 +19,7 @@ import Item from "./pages/public/Item";
 import PortalLayout from "./pages/public/PortalLayout";
 import RequireAuth from './services/RequireAuth'
 import AdminLayout from "./pages/admin/AdminLayout";
+import Manhtest from "./pages/admin/AdminLayout";
 
 const router = createBrowserRouter([
   {
@@ -53,18 +54,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <ManuLayout />,
+    element: <RequireAuth><AdminLayout /></RequireAuth>,
     children: [
+      { path: 'userList', element: <UserList /> },
     ]
-  }
+    }
   ,
   {
     path: "/manh",
-    element: <RequireAuth><AdminLayout /></RequireAuth>,
     children: [
-      { path: 'test', element: <UserList /> },
+      { path: 'test', element: <Manhtest /> },
     ]
-  }
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

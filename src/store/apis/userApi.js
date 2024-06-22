@@ -15,7 +15,7 @@ const userApi = createApi({
     credentials: 'include',
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
-      await pause(3000);
+      await pause(2000);
       return fetch(...args);
     },
     responseHandler: async (response) => {
@@ -36,9 +36,37 @@ const userApi = createApi({
           };
         },
       }),
+      getUserDetail: builder.query({
+        query: (userId) => {
+          return{
+            url: '/getUserById',
+            method: 'POST',
+            body:{
+              "userId" : userId
+            }
+          }
+        }
+      }),
+      getUsers: builder.query({
+        query: (options) => ({
+          url: '/getDataToTable',
+          method: 'POST',
+          body: {
+            email: options.email || "",
+            roleId: options.roleId || "",
+            status: options.status || "",
+            dateFrom: options.dateFrom || "",
+            dateTo: options.dateTo || "",
+            orderBy: options.orderBy || "createAt",
+            isAsc: options.isAsc || "true",
+            page: options.page || "0",
+            size: options.size || "10"
+          }
+        }),
+      }),
     };
   },
 });
 
-export const { useFetchUserQuery } = userApi;
 export { userApi };
+export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery  } = userApi;

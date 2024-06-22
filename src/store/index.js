@@ -6,7 +6,6 @@ import { productApi } from "./apis/productApi";
 import { toastReducer } from './slices/toastSlice';
 import { itemApi } from "./apis/itemApi";
 import { itemLogApi } from "./apis/itemLogApi";
-import manhTest from "./apis/manhTest";
 import { mapApi } from "./apis/mapApi";
 
 const store = configureStore({
@@ -18,7 +17,6 @@ const store = configureStore({
     [itemApi.reducerPath]: itemApi.reducer,
     [itemLogApi.reducerPath]: itemLogApi.reducer,
     [mapApi.reducerPath]: mapApi.reducer,
-    [manhTest.reducerPath]: manhTest.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
@@ -28,7 +26,6 @@ const store = configureStore({
         itemApi.middleware, 
         itemLogApi.middleware,
         mapApi.middleware,
-        manhTest.middleware,
       )
   },
 });
@@ -37,10 +34,9 @@ setupListeners(store.dispatch);
 
 export { store };
 export { useCreateUserMutation, useLoginMutation, useLogoutMutation } from "./apis/authApi";
-export { useFetchUserQuery } from "./apis/userApi";
+export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery  } from "./apis/userApi";
 export { useAddProductMutation, useSearchProductQuery, useViewProductDetailQuery } from './apis/productApi'
 export { showToast, hideToast } from './slices/toastSlice'
 export { useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useSearchItemsByProductIdQuery } from './apis/itemApi'
 export { useFetchEventByItemLogIdQuery } from './apis/itemLogApi'
 export { useGetMapQuery } from './apis/mapApi'
-export { useGetUsersQuery } from './apis/manhTest'
