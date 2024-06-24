@@ -7,6 +7,9 @@ import { toastReducer } from './slices/toastSlice'
 import { itemApi } from "./apis/itemApi";
 import { itemLogApi } from "./apis/itemLogApi";
 import { mapApi } from "./apis/mapApi";
+import { locationApi } from "./apis/locationApi";
+import { categoryApi } from "./apis/categoryApi";
+import { classifierApi } from "./apis/classifierApi";
 
 const store = configureStore({
   reducer: {
@@ -17,15 +20,21 @@ const store = configureStore({
     [itemApi.reducerPath]: itemApi.reducer,
     [itemLogApi.reducerPath]: itemLogApi.reducer,
     [mapApi.reducerPath]: mapApi.reducer,
+    [locationApi.reducerPath]: locationApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [classifierApi.reducerPath]: classifierApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
-      .concat(authApi.middleware, 
-        userApi.middleware, 
-        productApi.middleware, 
-        itemApi.middleware, 
+      .concat(authApi.middleware,
+        userApi.middleware,
+        productApi.middleware,
+        itemApi.middleware,
         itemLogApi.middleware,
         mapApi.middleware,
+        locationApi.middleware,
+        categoryApi.middleware,
+        classifierApi.middleware,
       )
   },
 });
@@ -39,4 +48,6 @@ export { useAddProductMutation, useSearchProductQuery, useViewProductDetailQuery
 export { showToast, hideToast } from './slices/toastSlice'
 export { useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useSearchItemsByProductIdQuery } from './apis/itemApi'
 export { useFetchEventByItemLogIdQuery } from './apis/itemLogApi'
-export { useGetAllProvincesQuery, useGetDistrictByProvinceIdQuery, useGetWardByDistrictIdQuery } from './apis/mapApi'
+export { useGetAllProvincesQuery, useGetDistrictByProvinceIdQuery, useGetWardByDistrictIdQuery } from './apis/locationApi'
+export { useGetAllCategoriesQuery } from './apis/categoryApi'
+export { usePredictMutation } from './apis/classifierApi'

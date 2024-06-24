@@ -147,7 +147,7 @@ function Register() {
           </label>
 
           <div>
-            <Button isLoading={results.isLoading}>Đăng ký</Button>
+            <Button login rounded isLoading={results.isLoading}>Đăng ký</Button>
           </div>
         </form>
 

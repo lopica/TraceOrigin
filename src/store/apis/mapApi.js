@@ -29,29 +29,29 @@ const mapApi = createApi({
   
   endpoints(builder) {
     return {
-      getAllProvinces: builder.query({
-        query: () => {
-          return {
-            url: `/1/0.htm`,
-            method: 'GET',
-          }
-        }
-      }),
-      getDistrictByProvinceId: builder.query({
-        query: (province_id) => {
-          return {
-            url: `/2/${province_id}.htm`,
-            method: 'GET',
-          }
-        }
-      }),
-      getWardByDistrictId: builder.query({
-        query: (district_id) => {
-          return {
-            url: `/3/${district_id}.htm`
-          }
-        }
-      })
+      // getAllProvinces: builder.query({
+      //   query: () => {
+      //     return {
+      //       url: `/1/0.htm`,
+      //       method: 'GET',
+      //     }
+      //   }
+      // }),
+      // getDistrictByProvinceId: builder.query({
+      //   query: (province_id) => {
+      //     return {
+      //       url: `/2/${province_id}.htm`,
+      //       method: 'GET',
+      //     }
+      //   }
+      // }),
+      // getWardByDistrictId: builder.query({
+      //   query: (district_id) => {
+      //     return {
+      //       url: `/3/${district_id}.htm`
+      //     }
+      //   }
+      // })
     };
   },
 });

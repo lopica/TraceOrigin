@@ -16,7 +16,7 @@ function Button({ children, primary,
   else renderedContent = children
 
   const classes = twMerge(className(props.className, 'flex items-center px-3 py-1.5 border', {
-    'border-blue-500 bg-blue-500 text-white': primary,
+    'border-blue-500 bg-sky-500 text-white': primary,
     'border-gray-900 bg-gray-900 text-white': secondary,
     'border-green-500 bg-green-500 text-white': success,
     'border-yellow-400 bg-yellow-400 text-white': warning,
@@ -28,6 +28,7 @@ function Button({ children, primary,
     'text-green-500': outline && success,
     'text-yellow-400': outline && warning,
     'text-red-500': outline && danger,
+    'flex w-full justify-center bg-sky-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600': login
   }))
 
   return (

@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../store"
 function Avatar() {
-  const [logout, results] = useLogoutMutation()
+  const [logout] = useLogoutMutation()
+  const navigate = useNavigate();
 
   function handleLogout() {
-    logout()
+    logout().unwrap().then(navigate("/"))
   }
 
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link } from "react-router-dom";
-import { useSearchProductQuery } from "../../store";
+import { useGetAllCategoriesQuery, useSearchProductQuery } from "../../store";
 import Input from "../../components/UI/Input";
 
 function ManuProductList() {
@@ -13,10 +13,19 @@ function ManuProductList() {
     "endDate": 0,
     "name": ''
   })
+  const {data: categories, isError: isCategoryError, isFetching: iscategoryFetching} = useGetAllCategoriesQuery()
+  let categoriesData = []
+  if (iscategoryFetching) {
+    //
+  } else if (isCategoryError) {
 
-  const categoties = [
-    'cate1, cate2', 'cate3'
-  ]
+  } else {
+    if (categories) {
+      categoriesData = categories.map(cate=>{
+        return {id: cate.id, content: cate.name}
+      })
+    }
+  }
 
   let cards;
   let renderedCards;
@@ -63,11 +72,13 @@ function ManuProductList() {
         <Input
           label='Tên sản phẩm'
           type='search'
+          placeholder='sản phẩm A'
         />
         <Input
           label='Loại sản phẩm'
           type='select'
-          data={categoties}
+          data={categoriesData}
+          placeholder='Chọn danh mục'
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center">
