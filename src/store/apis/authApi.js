@@ -19,10 +19,13 @@ const authApi = createApi({
       return fetch(...args);
     },
     responseHandler: async (response) => {
-      if (response.headers.get("Content-Type")?.includes("application/json")) {
-        return await response.json(); // Parse as JSON if content-type is json
-      } else {
-        return response.text(); // Otherwise, return as text
+      if (response.ok && response.headers.get("Content-Type")?.includes("application/json")) {
+        return await response.json(); 
+      } else if (!response.ok) {
+        return JSON.parse(response?.data).description
+      } 
+      else {
+        return response.text(); 
       }
     },
   }),

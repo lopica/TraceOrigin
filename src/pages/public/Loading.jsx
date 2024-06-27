@@ -1,6 +1,3 @@
-import PortalLayout from "./PortalLayout";
-import PublicLayout from "./PublicLayout";
-
 function Loading() {
     return <PublicLayout>
         <div className="flex flex-col gap-4 mt-8">

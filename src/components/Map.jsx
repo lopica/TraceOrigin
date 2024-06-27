@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -12,8 +11,6 @@ L.Icon.Default.mergeOptions({
 });
 
 const Map = ({location, setMarkup}) => {
-//   const [position, setPosition] = useState(location);
-
   const LocationMarker = () => {
     useMapEvents({
       click(e) {

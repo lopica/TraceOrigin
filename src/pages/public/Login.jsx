@@ -1,45 +1,36 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { hideToast, showToast, useLoginMutation } from "../../store";
-import Button from '../../components/UI/Button'
-import { useDispatch, useSelector } from "react-redux";
-import Toast from '../../components/UI/Toast'
+import { useLoginMutation } from "../../store";
+import Button from "../../components/UI/Button";
+import useToast from "../../hooks/use-toast";
+import { HiEye } from "react-icons/hi";
 
 function Login() {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false)
-  const [login, results] = useLoginMutation()
+  const [showPassword, setShowPassword] = useState(false);
+  const [login, results] = useLoginMutation();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
-  const dispatch = useDispatch()
-  const { show, content } = useSelector(state => state.toast)
-  // console.log(show, content)
-
+  const { getToast } = useToast();
   const submitHandler = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       await login(inputs)
         .unwrap()
         .then(() => {
           navigate("/manufacturer/products");
         })
-        .catch((error) => {
-          const { data } = error;
-          dispatch(showToast(JSON.parse(data).description));
-          setTimeout(() => {
-            dispatch(hideToast());
-          }, 2000);
+        .catch((res) => {
+          console.log(res);
+          getToast(res.error);
         });
     } catch (error) {
       // Handle network errors or other uncaught errors
-      dispatch(showToast("Không thể kết nối đến server."));
-      setTimeout(() => {
-        dispatch(hideToast());
-      }, 6000);
+      getToast("Không thể kết nối đến server.");
     }
-  }
+  };
 
   const handleChange = (identifier, e) => {
     setInputs((prevValues) => ({
@@ -50,16 +41,13 @@ function Login() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <Toast show={show}>
-        {content}
-      </Toast>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         {/* Logo */}
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
+        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
           Đăng nhập
         </h2>
       </div>
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="py-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" onSubmit={submitHandler}>
           <div>
             <label className="input input-bordered flex items-center gap-2">
@@ -83,14 +71,11 @@ function Login() {
           </div>
 
           <div>
-            <p className="mt-2 text-right text-sm text-gray-500">
-              <Link
-                to="/portal/change-password"
-                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-              >
-                Quên mật khẩu?
+            <div className="text-sm flex justify-end">
+              <Link to="/portal/change-password">
+                <Button link>Quên mật khẩu?</Button>
               </Link>
-            </p>
+            </div>
             <label className="input input-bordered flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -105,13 +90,18 @@ function Login() {
                 />
               </svg>
               <input
-                type={showPassword ? 'text' : "password"}
+                type={showPassword ? "text" : "password"}
                 className="grow"
                 placeholder="Mật khẩu"
                 value={inputs.password}
                 onChange={(e) => handleChange("password", e)}
               />
-              <a onMouseDown={() => setShowPassword(true)} onMouseUp={() => setShowPassword(false)}>👀</a>
+              <a
+                onMouseDown={() => setShowPassword(true)}
+                onMouseUp={() => setShowPassword(false)}
+              >
+                <HiEye opacity='70%' />
+              </a>
             </label>
           </div>
 
@@ -122,15 +112,14 @@ function Login() {
           </div>
         </form>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
-          Chưa có tài khoản?{" "}
-          <Link
-            to="/portal/register"
-            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-          >
-            Đăng ký ngay
+        <div className="mt-5 text-sm flex justify-center items-center">
+          <p>Chưa có tài khoản?</p>
+          <Link to="/portal/register">
+            <Button link className="p-2">
+              Đăng ký ngay
+            </Button>
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

@@ -131,7 +131,7 @@ function Home() {
                 <Link to="item?productRecognition=FGHTCZ3123GJV"><Button primary rounded>Tải ảnh QR</Button></Link>
                 {/* {predictModal} */}
                 <Button primary onClick={handleClick} rounded>
-                  Nhận diện dình ảnh
+                  Nhận diện hình ảnh
                 </Button>
                 {showModal && modal}
               </div>
