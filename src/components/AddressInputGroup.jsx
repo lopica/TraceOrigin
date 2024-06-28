@@ -1,8 +1,9 @@
+import { useSelector } from "react-redux";
 import useAddress from "../hooks/use-address";
 import Map from "./Map";
 import Input from "./UI/Input";
 
-export default function AddressInputGroup({enteredValues, setEnterValues}) {
+export default function AddressInputGroup({ register }) {
   const {
     coordinate,
     setCoordinate,
@@ -12,46 +13,27 @@ export default function AddressInputGroup({enteredValues, setEnterValues}) {
     setCurrentLocationId,
   } = useAddress();
 
+  const locationState = useSelector(state => state.locationData);
+  // Retrieve data from Redux store
+  const { currentLocationId } = locationState
+
+
   const handleInputChange = (identifier, event) => {
     const value = event.target.value.split(",");
     if (identifier === "province") {
-      setCurrentLocationId((prev) => ({
-        ...prev,
+      setCurrentLocationId({
         provinceId: value[0],
-        districtId: "",
-      }));
-      setEnterValues((prevValues) => ({
-        ...prevValues,
-        province: {
-          id: value[0],
-          name: value[1],
-        },
-        district: "",
-      }));
+        districtId: "", // Reset district when province changes
+      });
     } else if (identifier === "district") {
-      setCurrentLocationId((prev) => ({
-        ...prev,
+      setCurrentLocationId({
+        ...currentLocationId,
         districtId: value[0],
-      }));
-      setEnterValues((prevValues) => ({
-        ...prevValues,
-        district: {
-          id: value[0],
-          name: value[1],
-        },
-        ward: "",
-      }));
-    } else if (identifier === "ward") {
-      setCurrentLocationId((prev) => ({ ...prev, wardId: value[0] }));
-      setEnterValues((prevValues) => ({
-        ...prevValues,
-        ward: {
-          id: value[0],
-          name: value[1],
-        },
-      }));
-    } 
+      });
+    }
   };
+
+  console.log("render address group");
 
   return (
     <>
@@ -60,15 +42,15 @@ export default function AddressInputGroup({enteredValues, setEnterValues}) {
           label="Địa chỉ:"
           type="select"
           data={provinces}
-          value={`${enteredValues.province.id},${enteredValues.province.name}`}
-          onChange={(e) => handleInputChange("province", e)}
           placeholder="Tỉnh, thành phố"
+          {...register("province")}
+          onChange={(e) => handleInputChange("province", e)}
         />
         <Input
           label="&nbsp;"
           type="select"
           data={districts}
-          value={`${enteredValues.district.id},${enteredValues.district.name}`}
+          {...register("district")}
           onChange={(e) => handleInputChange("district", e)}
           placeholder="Quận, huyện"
         />
@@ -76,7 +58,7 @@ export default function AddressInputGroup({enteredValues, setEnterValues}) {
           label="&nbsp;"
           type="select"
           data={wards}
-          value={`${enteredValues.ward.id},${enteredValues.ward.name}`}
+          {...register("ward")}
           onChange={(e) => handleInputChange("ward", e)}
           placeholder="Phường, xã"
         />
@@ -85,7 +67,7 @@ export default function AddressInputGroup({enteredValues, setEnterValues}) {
         type="text"
         className="input input-bordered join-item"
         placeholder="Số nhà, tên đường,..."
-        value={enteredValues.address}
+        {...register("address")}
         onChange={(e) => handleInputChange("address", e)}
       />
       <Map location={coordinate} setMarkup={setCoordinate} />

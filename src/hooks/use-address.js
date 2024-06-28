@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import {
   useGetAllProvincesQuery,
   useGetDistrictByProvinceIdQuery,
   useGetWardByDistrictIdQuery,
 } from "../store";
+import { updateProvinces, updateDistricts, updateWards, updateCurrentLocationId } from '../store';
 
 export default function useAddress() {
+  const dispatch = useDispatch();
   const [coordinate, setCoordinate] = useState([51.505, -0.09]);
-  const [currentLocationId, setCurrentLocationId] = useState({
-    provinceId: "",
-    districtId: "",
-  });
-  let provincesData = [],
-    districtsData = [],
-    wardsData = [];
+
+  const locationState = useSelector(state => state.locationData);
+  // Retrieve data from Redux store
+  const { provincesData, districtsData, wardsData, currentLocationId } = locationState
+  console.log(locationState)
+
   const {
     data: provinces,
     isError: isProvinceError,
@@ -36,43 +38,35 @@ export default function useAddress() {
     skip: currentLocationId.districtId === "",
   });
 
-  // Process provinces data
-  provincesData =
-    isProvinceError || !provinces
-      ? []
-      : provinces.data.map((province) => ({
-          id: province.id,
-          content: province.name,
-        }));
+  // Update Redux state when data is fetched
+  useEffect(() => {
+    // Update state with fetched data when available
+    if (!isProvinceFetch && provinces) {
+      dispatch(updateProvinces(provinces.data.map(p => ({ id: p.id, content: p.name }))));
+    }
+    if (!isDistrictFetch && districts) {
+      dispatch(updateDistricts(districts.data.map(d => ({ id: d.id, content: d.name }))));
+    }
+    if (!isWardFetch && wards) {
+      dispatch(updateWards(wards.data.map(w => ({ id: w.id, content: w.name }))));
+    }
 
-  // Process districts data
-  districtsData =
-    isDistrictError || !districts
-      ? []
-      : districts.data.map((district) => ({
-          id: district.id,
-          content: district.name,
-        }));
+    // Update state to loading when data is fetching
+    if (isProvinceFetch) dispatch(updateProvinces([{ id: 'loading', content: 'Đang load dữ liệu' }]));
+    if (isDistrictFetch) dispatch(updateDistricts([{ id: 'loading', content: 'Đang load dữ liệu' }]));
+    if (isWardFetch) dispatch(updateWards([{ id: 'loading', content: 'Đang load dữ liệu' }]));
 
-  // Process wards data
-  wardsData =
-    isWardError || !wards
-      ? []
-      : wards.data.map((ward) => ({
-          id: ward.id,
-          content: ward.name,
-        }));
+    if (isProvinceError) dispatch(updateProvinces([{ id: 'error', content: 'Không thể tải dữ liệu' }]));
+    if (isDistrictError) dispatch(updateDistricts([{ id: 'error', content: 'Không thể tải dữ liệu' }]));
+    if (isWardError) dispatch(updateWards([{ id: 'error', content: 'Không thể tải dữ liệu' }]));
+  }, [dispatch, provinces, districts, wards, isProvinceFetch, isDistrictFetch, isWardFetch, isProvinceError, isDistrictError, isWardError]);
 
-  if (isProvinceError)
-    provincesData = [{ id: "error", content: "Không tải được dữ liệu" }];
-  if (isDistrictError)
-    districtsData = [{ id: "error", content: "Không tải được dữ liệu" }];
-  if (isWardError) wardsData = [{ id: "d", content: "Không tải được dữ liệu" }];
-  if (isProvinceFetch)
-    provincesData = [{ id: "load", content: "Đang tải dữ liệu" }];
-  if (isDistrictFetch)
-    districtsData = [{ id: "load", content: "Đang tải dữ liệu" }];
-  if (isWardFetch) wardsData = [{ id: "load", content: "Đang tải dữ liệu" }];
+
+
+  // Function to update location IDs
+  const setCurrentLocationId = (newLocationId) => {
+    dispatch(updateCurrentLocationId(newLocationId));
+  };
 
   return {
     coordinate,

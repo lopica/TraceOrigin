@@ -1,16 +1,28 @@
 import { useState } from "react";
 import Button from "./UI/Button";
+import { useDispatch } from "react-redux";
 
-function Wizzard({ stepList, children }) {
+
+function Wizzard({ stepList, children, onSubmitStep, onSubmit }) {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const handleWizzard = (identifier, e) => {
+  const handleWizzard = async (identifier, e) => {
     e.preventDefault();
     if (identifier === "next") {
-      
-      setCurrentStep(currentStep + 1);
+      // const isValid = await validateStep(currentStep);
+      const isValid = true;
+      if (isValid) {
+        if (currentStep < stepList.length - 1) {
+          //add to redux
+          onSubmitStep()
+          setCurrentStep(currentStep + 1);
+        } else {
+          onSubmit();
+        }
+      }
+    } else {
+      setCurrentStep(currentStep - 1);
     }
-    else setCurrentStep(currentStep - 1);
   };
 
   return (
@@ -82,7 +94,7 @@ Wizzard.Action = ({ stepList, currentStep, handleWizzard }) => {
         <Button outline primary onClick={(e) => handleWizzard("back", e)}>
           Quay lại
         </Button>
-        <Button primary rounded type="submit">
+        <Button primary rounded onClick={(e) => handleWizzard("submit", e)}>
           Đăng ký
         </Button>
       </div>
