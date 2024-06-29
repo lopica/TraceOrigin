@@ -65,6 +65,7 @@ export {
   updateWards,
   updateCurrentLocationId,
   updateCoordinate,
+  updateNewAddress,
 } from "./slices/locationDataSlice";
 export {
   useFetchItemLogsByProductRecognitionQuery,

@@ -2,10 +2,20 @@ import { useDispatch, useSelector } from "react-redux";
 import useAddress from "../hooks/use-address";
 import Map from "./Map";
 import Input from "./UI/Input";
-import { updateCoordinate, updateWards, useGetCoordinateByAddressMutation } from "../store";
+import {
+  updateCoordinate,
+  updateWards,
+  useGetCoordinateByAddressMutation,
+} from "../store";
 import { useEffect, useState } from "react";
 
-export default function AddressInputGroup({ register, getValues, setValue, watch }) {
+let map;
+export default function AddressInputGroup({
+  register,
+  getValues,
+  setValue,
+  watch,
+}) {
   const dispatch = useDispatch();
   const [getCoordinate, results] = useGetCoordinateByAddressMutation();
   const [addressBlurred, setAddressBlurred] = useState(false);
@@ -16,11 +26,10 @@ export default function AddressInputGroup({ register, getValues, setValue, watch
     setCurrentLocationId,
   } = useAddress();
   const locationState = useSelector((state) => state.locationData);
-  // Retrieve data from Redux store
-  const { currentLocationId, coordinate } = locationState;
+  const { currentLocationId, coordinate, loadingNewAddress } = locationState;
 
   const handleAddressBlur = () => {
-    setAddressBlurred(true);  // Set to true when the input loses focus
+    setAddressBlurred(true); // Set to true when the input loses focus
   };
 
   const handleInputChange = (identifier, event) => {
@@ -37,7 +46,7 @@ export default function AddressInputGroup({ register, getValues, setValue, watch
         districtId: value[0],
       });
     }
-    console.log(currentLocationId)
+    console.log(currentLocationId);
   };
 
   useEffect(() => {
@@ -46,26 +55,38 @@ export default function AddressInputGroup({ register, getValues, setValue, watch
     console.log(getValues("ward"));
     console.log(getValues("address"));
 
-    if (addressBlurred && // Check if address field has lost focus
-        getValues("province") &&
-        getValues("district") &&
-        getValues("ward") &&
-        getValues("address")) {
-      console.log('vo day'); // Log when all fields are filled and address has lost focus
+    if (
+      addressBlurred && // Check if address field has lost focus
+      getValues("province") &&
+      getValues("district") &&
+      getValues("ward") &&
+      getValues("address")
+    ) {
+      console.log("vo day"); // Log when all fields are filled and address has lost focus
       getCoordinate({
-        address: `${getValues("address")}, ${getValues("ward")}, ${getValues("district")}, ${getValues("province")}`,
+        address: `${getValues("address")}, ${getValues("ward")}, ${getValues(
+          "district"
+        )}, ${getValues("province")}`,
       })
-      .unwrap()
-      .then(res => {
-        const {lat, lng} = res[0].geometry
-        dispatch(updateCoordinate({lat, lng}))
-      })
-      .catch(err => console.log(err));
+        .unwrap()
+        .then((res) => {
+          const { lat, lng } = res[0].geometry;
+          dispatch(updateCoordinate({ lat, lng }));
+        })
+        .catch((err) => console.log(err));
     }
 
     // Reset addressBlurred to allow for re-checking if needed
     setAddressBlurred(false);
-  }, [addressBlurred]); 
+  }, [addressBlurred]);
+
+  if (results.isLoading) {
+    map = <div className="skeleton h-64 w-full"></div>;
+  } else if (results.isError) {
+    <p>Không thể tải được bản đồ</p>;
+  } else if (coordinate.length > 0) {
+    <Map location={coordinate} setValue={setValue} />;
+  }
 
   return (
     <>
@@ -100,8 +121,13 @@ export default function AddressInputGroup({ register, getValues, setValue, watch
         placeholder="Số nhà, tên đường,..."
         {...register("address")}
         onBlur={handleAddressBlur}
+        unit={loadingNewAddress && <span className="loading loading-spinner loading-sm"></span>}
       />
-      {coordinate.length > 0 && <Map location={coordinate} setValue={setValue} />}
+      {(coordinate.length > 0 && !results.isLoading) && (
+        <Map location={coordinate} setValue={setValue} />
+      )}
+      {results.isLoading && <div className="skeleton h-[40svh] w-full"></div>}
+      {results.isError && <p>Không thể tải được bản đồ</p>}
     </>
   );
 }

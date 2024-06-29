@@ -12,7 +12,7 @@ const mapApi = createApi({
   reducerPath: "map",
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/location`,
-    mode: "no-cors",
+    // mode: "no-cors",
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
       await pause(3000);

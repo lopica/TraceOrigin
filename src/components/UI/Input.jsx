@@ -72,7 +72,7 @@ const Input = React.forwardRef(
               className="max-w-xl invalid:input-bordered"
               style={{ width: inputWidth }}
             />
-            <span className="badge bg-sky-200">{unit}</span>
+            <span className="badge">{unit}</span>
           </label>
         ) : (
           <input
