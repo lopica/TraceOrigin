@@ -1,6 +1,9 @@
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { useDispatch } from 'react-redux';
+import { updateCoordinate, useGetAddressByCoordinateMutation } from '../store';
 
 // Fix the default icon issue with Leaflet in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -10,21 +13,39 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
-const Map = ({location, setMarkup}) => {
+const Map = ({ location, setValue }) => {
+  const [getAddress] = useGetAddressByCoordinateMutation()
+  const dispatch = useDispatch();
+
   const LocationMarker = () => {
+    const map = useMap();
+
     useMapEvents({
       click(e) {
-        setMarkup(e.latlng);
+        dispatch(updateCoordinate({ lat: e.latlng.lat, lng: e.latlng.lng }));
+        //update address base on new mark
+        getAddress({ lat: e.latlng.lat, lng: e.latlng.lng })
+        .unwrap()
+        .then(res=>{
+          const newaddress = res[0].formatted.split(',')
+          setValue('address', newaddress[0])
+          console.log(res[0].formatted)
+        })
+        .catch(err=>console.log(err))
       },
     });
 
-    return location === null ? null : (
-      <Marker position={location}></Marker>
-    );
+    useEffect(() => {
+      if (location) {
+        map.flyTo(location, map.getZoom());
+      }
+    }, [location, map]);
+
+    return location ? <Marker position={location}></Marker> : null;
   };
 
   return (
-    <MapContainer center={location} zoom={20} style={{ height: "40svh", width: "100%", marginTop: '2rem' }}>
+    <MapContainer center={location || [0, 0]} zoom={20} style={{ height: "40svh", width: "100%", marginTop: '2rem' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

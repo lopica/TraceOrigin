@@ -10,6 +10,7 @@ const locationDataSlice = createSlice({
       provinceId: "",
       districtId: "",
     },
+    coordinate: [],
   },
   reducers: {
     // Action to update the list of provinces
@@ -27,8 +28,11 @@ const locationDataSlice = createSlice({
     updateCurrentLocationId(state, action) {
       state.currentLocationId = action.payload;
     },
+    updateCoordinate(state, action) {
+      state.coordinate = [action.payload.lat, action.payload.lng]
+    }
   },
 });
 
-export const { updateProvinces, updateDistricts, updateWards, updateCurrentLocationId } = locationDataSlice.actions;
+export const { updateProvinces, updateDistricts, updateWards, updateCurrentLocationId, updateCoordinate } = locationDataSlice.actions;
 export const locationDataReducer = locationDataSlice.reducer;

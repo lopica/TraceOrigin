@@ -21,7 +21,7 @@ let province, district, ward
 function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { register, handleSubmit, getValues } = useForm();
+  const { register, handleSubmit, getValues, setValue, watch } = useForm();
   const formState = useSelector((state) => state.registerForm);
   const [createUser, results] = useCreateUserMutation();
 
@@ -77,7 +77,7 @@ function Register() {
                 {...register("firstName")}
               />
             </div>
-            <AddressInputGroup register={register} />
+            <AddressInputGroup register={register} getValues={getValues} setValue={setValue} watch={watch} />
           </>
           <>
             <Input

@@ -9,12 +9,10 @@ import { updateProvinces, updateDistricts, updateWards, updateCurrentLocationId 
 
 export default function useAddress() {
   const dispatch = useDispatch();
-  const [coordinate, setCoordinate] = useState([51.505, -0.09]);
 
   const locationState = useSelector(state => state.locationData);
   // Retrieve data from Redux store
   const { provincesData, districtsData, wardsData, currentLocationId } = locationState
-  console.log(locationState)
 
   const {
     data: provinces,
@@ -69,8 +67,6 @@ export default function useAddress() {
   };
 
   return {
-    coordinate,
-    setCoordinate,
     provincesData,
     districtsData,
     wardsData,

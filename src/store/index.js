@@ -63,7 +63,8 @@ export {
   updateProvinces,
   updateDistricts,
   updateWards,
-  updateCurrentLocationId
+  updateCurrentLocationId,
+  updateCoordinate,
 } from "./slices/locationDataSlice";
 export {
   useFetchItemLogsByProductRecognitionQuery,
@@ -78,3 +79,4 @@ export {
 } from "./apis/locationApi";
 export { useGetAllCategoriesQuery } from "./apis/categoryApi";
 export { usePredictMutation } from "./apis/classifierApi";
+export { useGetCoordinateByAddressMutation, useGetAddressByCoordinateMutation } from "./apis/mapApi";
