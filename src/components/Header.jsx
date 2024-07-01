@@ -44,8 +44,9 @@ function Header() {
   let menuMobile;
 
   // Check if the current path is /login or /register
+  console.log(location.pathname.startsWith("/admin"))
   if (
-    !location.pathname.startsWith("/manufacturer") ||
+    !location.pathname.startsWith("/manufacturer") &&
     !location.pathname.startsWith("/admin")
   ) {
     menuMobile = (

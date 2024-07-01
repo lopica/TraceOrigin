@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CONSTANTS } from "../../services/Constants";
 
 // DEV ONLY!!!
 const pause = (duration) => {
@@ -10,7 +11,7 @@ const pause = (duration) => {
 const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/auth",
+    baseUrl: `${CONSTANTS.domain}/auth`,
     credentials: 'include',
     // baseUrl: "http://localhost:3001",
     fetchFn: async (...args) => {
@@ -43,8 +44,6 @@ const authApi = createApi({
             method: "POST",
             body: {
               ...newUser,
-              role: 2,
-              country: 'Vietnam'
             },
           };
         },

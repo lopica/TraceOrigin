@@ -32,7 +32,7 @@ const Input = React.forwardRef(
         <label className="form-control w-full max-w-xl">
           <div className="label">
             <div className="tooltip" data-tip={tooltip}>
-              <span className="label-text">{label}</span>
+              <span className="label-text text-base">{label}</span>
             </div>
           </div>
           <select
@@ -51,6 +51,13 @@ const Input = React.forwardRef(
                 </option>
               ))}
           </select>
+          {error && (
+            <div className="label">
+              <span className="label-text-alt text-left text-error text-sm">
+                {error}
+              </span>
+            </div>
+          )}
         </label>
       );
     }
@@ -59,7 +66,7 @@ const Input = React.forwardRef(
       <label className="form-control w-full max-w-xl">
         <div className="label">
           <div className="tooltip" data-tip={tooltip}>
-            <span className="label-text">{label}</span>
+            <span className="label-text text-base">{label}</span>
           </div>
         </div>
         {unit ? (
@@ -85,7 +92,9 @@ const Input = React.forwardRef(
         )}
         {error && (
           <div className="label">
-            <span className="label-text-alt">{error}</span>
+            <span className="label-text-alt text-left text-error text-sm">
+              {error}
+            </span>
           </div>
         )}
       </label>

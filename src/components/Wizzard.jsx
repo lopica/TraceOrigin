@@ -1,34 +1,39 @@
 import { useState } from "react";
 import Button from "./UI/Button";
-import { useDispatch } from "react-redux";
 
-
-function Wizzard({ stepList, children, onSubmitStep, onSubmit }) {
+function Wizzard({ stepList, children, onStepSubmit, onSubmit, validateStep, trigger, isLoading }) {
   const [currentStep, setCurrentStep] = useState(0);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent the default form submit behavior
+    }
+  };
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
+    const valid = await trigger(validateStep[currentStep]);
+    console.log(valid);
     if (identifier === "next") {
-      // const isValid = await validateStep(currentStep);
-      const isValid = true;
-      if (isValid) {
-        if (currentStep < stepList.length - 1) {
-          //add to redux
-          onSubmitStep()
-          setCurrentStep(currentStep + 1);
-        } else {
-          onSubmit();
-        }
+      //add to redux
+      if (valid) {
+        //save localstorage by redux
+        onStepSubmit(e)
+        setCurrentStep(currentStep + 1);
       }
-    } else {
+    } else if (identifier === "back") {
       setCurrentStep(currentStep - 1);
+    } else if (identifier === "submit") {
+      if (valid) {
+        onSubmit();
+      }
     }
   };
 
   return (
     <>
       <Wizzard.Step stepList={stepList} currentStep={currentStep} />
-      <form className="space-y-6 mt-4">
+      <form className="space-y-6 mt-4" noValidate onKeyDown={handleKeyDown} key={`form-step-${currentStep}`}>
         <div className="card bg-white md:max-w-xl mx-auto">
           <div className="card-body text-center">
             <h2 className="card-title mb-6">{stepList[currentStep]}</h2>
@@ -38,6 +43,7 @@ function Wizzard({ stepList, children, onSubmitStep, onSubmit }) {
                 stepList={stepList}
                 currentStep={currentStep}
                 handleWizzard={handleWizzard}
+                isLoading={isLoading}
               />
             </div>
           </div>
@@ -79,7 +85,7 @@ Wizzard.Step = ({ stepList, currentStep }) => {
   );
 };
 
-Wizzard.Action = ({ stepList, currentStep, handleWizzard }) => {
+Wizzard.Action = ({ stepList, currentStep, handleWizzard, isLoading }) => {
   if (currentStep === 0) {
     return (
       <div className="flex justify-end w-full mt-4">
@@ -94,7 +100,7 @@ Wizzard.Action = ({ stepList, currentStep, handleWizzard }) => {
         <Button outline primary onClick={(e) => handleWizzard("back", e)}>
           Quay lại
         </Button>
-        <Button primary rounded onClick={(e) => handleWizzard("submit", e)}>
+        <Button primary rounded isLoading={isLoading} onClick={(e) => handleWizzard("submit", e)}>
           Đăng ký
         </Button>
       </div>

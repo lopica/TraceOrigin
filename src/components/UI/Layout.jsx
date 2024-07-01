@@ -17,11 +17,22 @@ export default function Layout() {
       <header className="fixed top-0 left-0 right-0 w-full h-[8svh] z-10">
         <Header />
       </header>
-      <section className="pt-[8svh]">
-        <aside>{matchPaterm && <SideBar />}</aside>
-        <main>
-          <Outlet />
-        </main>
+      <section className="pt-[8svh] grid grid-cols-4">
+        {matchPaterm && (
+          <aside className="hidden md:block">
+            <SideBar />
+          </aside>
+        )}
+        {matchPaterm && (
+          <main className="col-span-4 md:col-span-3">
+            <Outlet />
+          </main>
+        )}
+        {!matchPaterm && (
+          <main className="col-span-4">
+            <Outlet />
+          </main>
+        )}
       </section>
       <footer></footer>
     </Fragment>

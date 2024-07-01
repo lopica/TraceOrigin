@@ -6,22 +6,12 @@ const registerFormSlice = createSlice({
     email: "",
     firstName: "",
     lastName: "",
-    province: {
-      id: "",
-      name: "",
-    },
-    district: {
-      id: "",
-      name: "",
-    },
-    ward: {
-      id: "",
-      name: "",
-    },
+    province: "",
+    district: "",
+    ward: "",
     address: "",
     phone: "",
     password: "",
-    cf_password: "",
   },
   reducers: {
     updateForm(state, action) {
