@@ -12,24 +12,49 @@ import { categoryApi } from "./apis/categoryApi";
 import { classifierApi } from "./apis/classifierApi";
 import { registerFormReducer } from "./slices/registerFormSlice";
 import { locationDataReducer } from "./slices/locationDataSlice";
+import { productFormReducer } from "./slices/productForm";
+import authSliceReducer from "./slices/authSlice";
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; 
+import { combineReducers } from '@reduxjs/toolkit';
+
+// Define the persist configuration
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+  whitelist: ['authSlice'] // List of reducers to persist, add more as needed
+};
+
+const rootReducer = combineReducers({
+  toast: toastReducer,
+  registerForm: registerFormReducer,
+  locationData: locationDataReducer,
+  productForm: productFormReducer,
+  authSlice: authSliceReducer,
+  [authApi.reducerPath]: authApi.reducer,
+  [userApi.reducerPath]: userApi.reducer,
+  [productApi.reducerPath]: productApi.reducer,
+  [itemApi.reducerPath]: itemApi.reducer,
+  [itemLogApi.reducerPath]: itemLogApi.reducer,
+  [mapApi.reducerPath]: mapApi.reducer,
+  [locationApi.reducerPath]: locationApi.reducer,
+  [categoryApi.reducerPath]: categoryApi.reducer,
+  [classifierApi.reducerPath]: classifierApi.reducer,
+});
+
+// Apply persistReducer wrapper
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 
 const store = configureStore({
-  reducer: {
-    toast: toastReducer,
-    registerForm: registerFormReducer,
-    locationData: locationDataReducer,
-    [authApi.reducerPath]: authApi.reducer,
-    [userApi.reducerPath]: userApi.reducer,
-    [productApi.reducerPath]: productApi.reducer,
-    [itemApi.reducerPath]: itemApi.reducer,
-    [itemLogApi.reducerPath]: itemLogApi.reducer,
-    [mapApi.reducerPath]: mapApi.reducer,
-    [locationApi.reducerPath]: locationApi.reducer,
-    [categoryApi.reducerPath]: categoryApi.reducer,
-    [classifierApi.reducerPath]: classifierApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/PAUSE', 'persist/PERSIST', 'persist/PURGE', 'persist/REGISTER'],
+      },
+    }).concat(
       authApi.middleware,
       userApi.middleware,
       productApi.middleware,
@@ -39,13 +64,15 @@ const store = configureStore({
       locationApi.middleware,
       categoryApi.middleware,
       classifierApi.middleware
-    );
-  },
+    ),
 });
+
 
 setupListeners(store.dispatch);
 
-export { store };
+const persistor = persistStore(store);
+
+export { store, persistor };
 export {
   useCreateUserMutation,
   useLoginMutation,
@@ -80,4 +107,16 @@ export {
 } from "./apis/locationApi";
 export { useGetAllCategoriesQuery } from "./apis/categoryApi";
 export { usePredictMutation } from "./apis/classifierApi";
-export { useGetCoordinateByAddressMutation, useGetAddressByCoordinateMutation } from "./apis/mapApi";
+export {
+  useGetCoordinateByAddressMutation,
+  useGetAddressByCoordinateMutation,
+} from "./apis/mapApi";
+export {
+  updateCategories,
+  removeImage,
+  updateImages,
+  removeImageData,
+  updateImagesData,
+  updateAvatar,
+} from "./slices/productForm";
+export { requireLogin, loginSuccess, logout } from "./slices/authSlice";

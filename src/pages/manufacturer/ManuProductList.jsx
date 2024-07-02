@@ -3,6 +3,7 @@ import Card from "../../components/UI/Card";
 import { Link } from "react-router-dom";
 import { useGetAllCategoriesQuery, useSearchProductQuery } from "../../store";
 import Input from "../../components/UI/Input";
+import useCategory from "../../hooks/use-category";
 
 function ManuProductList() {
   const { data, isError, isFetching } = useSearchProductQuery({
@@ -13,19 +14,7 @@ function ManuProductList() {
     "endDate": 0,
     "name": ''
   })
-  const {data: categories, isError: isCategoryError, isFetching: iscategoryFetching} = useGetAllCategoriesQuery()
-  let categoriesData = []
-  if (iscategoryFetching) {
-    //
-  } else if (isCategoryError) {
-
-  } else {
-    if (categories) {
-      categoriesData = categories.map(cate=>{
-        return {id: cate.id, content: cate.name}
-      })
-    }
-  }
+  const { categoriesData } = useCategory();
 
   let cards;
   let renderedCards;
@@ -53,7 +42,7 @@ function ManuProductList() {
     })
     renderedCards = <>
       {cards?.map((card) => (
-        <Link key={card.name} to={`${card.id}`}>
+        <Link key={card.id} to={`${card.id}`}>
           <Card card={card} />
         </Link>
       ))}

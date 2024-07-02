@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CONSTANTS } from "../../services/Constants";
 
 // DEV ONLY!!!
 const pause = (duration) => {
@@ -10,7 +11,7 @@ const pause = (duration) => {
 const itemApi = createApi({
     reducerPath: 'item',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/item',
+        baseUrl: `${CONSTANTS.domain}/item`,
         // credentials: 'include',
         fetchFn: async (input, init, ...args) => {
             // REMOVE FOR PRODUCTION

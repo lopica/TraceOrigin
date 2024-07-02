@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../../store";
+import { loginSuccess, useLoginMutation } from "../../store";
 import Button from "../../components/UI/Button";
 import useToast from "../../hooks/use-toast";
 import { HiEye } from "react-icons/hi";
+import { useDispatch } from "react-redux";
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
   const [login, results] = useLoginMutation();
   const [inputs, setInputs] = useState({
@@ -20,6 +22,8 @@ function Login() {
       await login(inputs)
         .unwrap()
         .then(() => {
+          dispatch(loginSuccess())
+          getToast('Đăng nhập thành công')
           navigate("/manufacturer/products");
         })
         .catch((res) => {
@@ -100,7 +104,7 @@ function Login() {
                 onMouseDown={() => setShowPassword(true)}
                 onMouseUp={() => setShowPassword(false)}
               >
-                <HiEye opacity='70%' />
+                <HiEye opacity="70%" />
               </a>
             </label>
           </div>

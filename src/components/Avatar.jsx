@@ -1,12 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import { useLogoutMutation } from "../store"
+import { useFetchUserQuery, useLogoutMutation } from "../store";
 function Avatar() {
-  const [logout] = useLogoutMutation()
+  const { data, isError, isFetching } = useFetchUserQuery();
+  const [logout] = useLogoutMutation();
   const navigate = useNavigate();
 
   function handleLogout() {
-    logout().unwrap().then(navigate("/"))
+    logout().unwrap().then(navigate("/"));
   }
+
+  if (isFetching) {
+    return <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>
+  }
+
+
 
   return (
     <div className="dropdown dropdown-end">
@@ -27,9 +34,7 @@ function Avatar() {
         className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
       >
         <li>
-          <a className="justify-between">
-            Profile
-          </a>
+          <a className="justify-between">Profile</a>
         </li>
         <li>
           <a>Settings</a>

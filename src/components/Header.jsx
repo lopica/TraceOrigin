@@ -43,8 +43,6 @@ function Header() {
   let userContent;
   let menuMobile;
 
-  // Check if the current path is /login or /register
-  console.log(location.pathname.startsWith("/admin"))
   if (
     !location.pathname.startsWith("/manufacturer") &&
     !location.pathname.startsWith("/admin")
@@ -55,7 +53,7 @@ function Header() {
       </Link>
     );
     userContent = (
-      <Link to="/portal/login">
+      <Link to="/manufacturer/products">
         <p className="btn btn-ghost text-xl ml-4">Portal</p>
       </Link>
     );

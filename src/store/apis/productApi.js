@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CONSTANTS } from "../../services/Constants";
 
 // DEV ONLY!!!
 const pause = (duration) => {
@@ -10,7 +11,7 @@ const pause = (duration) => {
 const productApi = createApi({
     reducerPath: 'product',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/product',
+        baseUrl: `${CONSTANTS.domain}/product`,
         credentials: 'include',
         fetchFn: async (...args) => {
             // REMOVE FOR PRODUCTION
@@ -57,7 +58,7 @@ const productApi = createApi({
             viewProductDetail: builder.query({
                 query: (productId) => {
                     return {
-                        url: '/findProductById',
+                        url: '/findProductDetailById',
                         method: 'POST',
                         body: {
                             id: productId,

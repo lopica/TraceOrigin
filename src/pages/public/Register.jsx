@@ -104,7 +104,7 @@ function Register() {
   alert = <Alert {...{ [alertContent.type]: true }}>{alertContent.content}</Alert>
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex flex-1 flex-col justify-center py-12 lg:px-8">
       {/* {alert} */}
       <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
         Đăng ký tài khoản

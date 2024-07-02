@@ -1,7 +1,10 @@
 import { useState } from "react";
 import Button from "./UI/Button";
 
-function Wizzard({ stepList, children, onStepSubmit, onSubmit, validateStep, trigger, isLoading }) {
+let valid
+let images
+
+function Wizzard({ stepList, children, onStepSubmit, onSubmit, validateStep, trigger, isLoading, getValues }) {
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleKeyDown = (event) => {
@@ -12,13 +15,17 @@ function Wizzard({ stepList, children, onStepSubmit, onSubmit, validateStep, tri
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
-    const valid = await trigger(validateStep[currentStep]);
-    console.log(valid);
+    if(validateStep[currentStep][0] === 'images') {
+      images = getValues('images')
+      if (!images.length > 0) alert("Bạn hãy chọn ít nhất 1 ảnh.");
+    } else {
+      valid = await trigger(validateStep[currentStep]);
+    }
     if (identifier === "next") {
       //add to redux
       if (valid) {
         //save localstorage by redux
-        onStepSubmit(e)
+        // onStepSubmit(e)
         setCurrentStep(currentStep + 1);
       }
     } else if (identifier === "back") {
@@ -34,7 +41,7 @@ function Wizzard({ stepList, children, onStepSubmit, onSubmit, validateStep, tri
     <>
       <Wizzard.Step stepList={stepList} currentStep={currentStep} />
       <form className="space-y-6 mt-4" noValidate onKeyDown={handleKeyDown} key={`form-step-${currentStep}`}>
-        <div className="card bg-white md:max-w-xl mx-auto">
+        <div className="card bg-white md:max-w-2xl mx-auto">
           <div className="card-body text-center">
             <h2 className="card-title mb-6">{stepList[currentStep]}</h2>
             {children[currentStep]}
@@ -71,10 +78,10 @@ Wizzard.Step = ({ stepList, currentStep }) => {
   };
 
   return (
-    <ul className="steps steps-horizontal flex justify-center max-w-md mx-auto">
+    <ul className="steps steps-horizontal flex justify-center max-w-lg mx-auto">
       {stepList.map((item, idx) => {
         const stepClass =
-          idx <= currentStep ? "step step-info flex-grow" : "step flex-grow";
+          idx <= currentStep ? "step step-neutral flex-grow z-1" : "step flex-grow";
         return (
           <li className={stepClass} key={idx}>
             {splitWords(item)}

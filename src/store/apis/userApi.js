@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CONSTANTS } from "../../services/Constants";
 
 // DEV ONLY!!!
 const pause = (duration) => {
@@ -10,7 +11,7 @@ const pause = (duration) => {
 const userApi = createApi({
   reducerPath: "user",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/user",
+    baseUrl: `${CONSTANTS.domain}/user`,
     // baseUrl: "http://localhost:3001",
     credentials: 'include',
     fetchFn: async (...args) => {
@@ -18,9 +19,9 @@ const userApi = createApi({
       await pause(3000);
       return fetch(...args);
     },
-    responseHandler: async (response) => {
+    responseHandler: (response) => {
       if (response.headers.get("Content-Type")?.includes("application/json")) {
-        return await response.json(); // Parse as JSON if content-type is json
+        return response.json(); // Parse as JSON if content-type is json
       } else {
         return response.text(); // Otherwise, return as text
       }

@@ -63,41 +63,57 @@ const Input = React.forwardRef(
     }
 
     return (
-      <label className="form-control w-full max-w-xl">
-        <div className="label">
-          <div className="tooltip" data-tip={tooltip}>
-            <span className="label-text text-base">{label}</span>
-          </div>
-        </div>
+      <>
         {unit ? (
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="form-control w-fit max-w-xl">
+            <div className="label">
+              <div className="tooltip" data-tip={tooltip}>
+                <span className="label-text text-base">{label}</span>
+              </div>
+            </div>
+            <label className="input input-bordered flex items-center gap-2">
+              <input
+                ref={inputRef}
+                {...props}
+                onChange={handleInputChange}
+                onBlur={onBlur}
+                className="max-w-xl invalid:input-bordered"
+                style={{ width: inputWidth }}
+              />
+              <span className="badge">{unit}</span>
+            </label>
+            {error && (
+              <div className="label">
+                <span className="label-text-alt text-left text-error text-sm">
+                  {error}
+                </span>
+              </div>
+            )}
+          </label>
+        ) : (
+          <label className="form-control w-full max-w-xl">
+            <div className="label">
+              <div className="tooltip" data-tip={tooltip}>
+                <span className="label-text text-base">{label}</span>
+              </div>
+            </div>
             <input
               ref={inputRef}
               {...props}
               onChange={handleInputChange}
               onBlur={onBlur}
-              className="max-w-xl invalid:input-bordered"
-              style={{ width: inputWidth }}
+              className="input input-bordered w-full max-w-xl"
             />
-            <span className="badge">{unit}</span>
+            {error && (
+              <div className="label">
+                <span className="label-text-alt text-left text-error text-sm">
+                  {error}
+                </span>
+              </div>
+            )}
           </label>
-        ) : (
-          <input
-            ref={inputRef}
-            {...props}
-            onChange={handleInputChange}
-            onBlur={onBlur}
-            className="input input-bordered w-full max-w-xl"
-          />
         )}
-        {error && (
-          <div className="label">
-            <span className="label-text-alt text-left text-error text-sm">
-              {error}
-            </span>
-          </div>
-        )}
-      </label>
+      </>
     );
   }
 );
