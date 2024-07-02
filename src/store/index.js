@@ -34,7 +34,7 @@ setupListeners(store.dispatch);
 
 export { store };
 export { useCreateUserMutation, useLoginMutation, useLogoutMutation } from "./apis/authApi";
-export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery  } from "./apis/userApi";
+export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery, useLockUserMutation  } from "./apis/userApi";
 export { useAddProductMutation, useSearchProductQuery, useViewProductDetailQuery } from './apis/productApi'
 export { showToast, hideToast } from './slices/toastSlice'
 export { useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useSearchItemsByProductIdQuery } from './apis/itemApi'

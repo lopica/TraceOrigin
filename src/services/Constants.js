@@ -4,6 +4,7 @@ export const CONSTANTS = {
         {name: 'Product', url: '/manufacturer/products'},
         {name: 'Report', url: '/manufacturer/products'},
         {name: 'Warranty', url: '/manufacturer/products'},
+        {name: 'Manager Manufacturer', url: '/admin/userList'}
     ],
     openCage_API_KEY: '322f7bf039244925a233610a1e61360a',
 }

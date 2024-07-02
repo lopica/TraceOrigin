@@ -20,7 +20,7 @@ function Table({ data, config, keyFn }) {
       );
     });
     return (
-      <tr className="border-b" key={keyFn(rowData)}>
+      <tr className="" key={keyFn(rowData)}>
         {renderedCells}
       </tr>
     );

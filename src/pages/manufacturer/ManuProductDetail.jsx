@@ -11,7 +11,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { useGetAllProvincesQuery, useGetDistrictByProvinceIdQuery, useGetWardByDistrictIdQuery, useSearchItemsByProductIdQuery, useViewProductDetailQuery } from '../../store'
 import { getDateFromEpochTime } from '../../utils/getDateFromEpochTime.js'
 import Input from "../../components/UI/Input.jsx";
-import { useForm } from "react-hook-form"
+// import { useForm } from "react-hook-form"
 
 function Model() {
   const stl = useLoader(STLLoader, '/Tam-Nen-Phai-V6.4.stl'); // Load the STL file

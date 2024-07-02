@@ -64,9 +64,19 @@ const userApi = createApi({
           }
         }),
       }),
+      lockUser: builder.mutation({
+        query: (options) => ({
+          url: '/lockUser',
+          method: 'POST',
+          body: {
+            userId: options.userId || "0",
+            status: options.status || "0"
+          }
+        }),
+      }),
     };
   },
 });
 
 export { userApi };
-export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery  } = userApi;
+export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation } = userApi;

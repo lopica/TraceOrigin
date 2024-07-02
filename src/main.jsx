@@ -19,7 +19,7 @@ import Item from "./pages/public/Item";
 import PortalLayout from "./pages/public/PortalLayout";
 import RequireAuth from './services/RequireAuth'
 import AdminLayout from "./pages/admin/AdminLayout";
-import Manhtest from "./pages/admin/AdminLayout";
+import Manhtest from "./pages/admin/manhTest";
 
 const router = createBrowserRouter([
   {
@@ -54,7 +54,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <RequireAuth><AdminLayout /></RequireAuth>,
+    element: <AdminLayout />,
     children: [
       { path: 'userList', element: <UserList /> },
     ]
@@ -62,6 +62,7 @@ const router = createBrowserRouter([
   ,
   {
     path: "/manh",
+    element: <AdminLayout />,
     children: [
       { path: 'test', element: <Manhtest /> },
     ]

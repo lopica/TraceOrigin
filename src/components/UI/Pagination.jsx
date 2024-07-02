@@ -6,19 +6,67 @@ function Pagination({ active, totalPages, onPageChange }) {
     return index === active ? 'join-item btn btn-active' : 'join-item btn';
   };
 
-  return (
-    <div className="join">
-      {Array.from({ length: totalPages }, (_, index) => (
-        <button
-          key={index}
-          className={getItemClassName(index)}
-          onClick={() => onPageChange(index)}
-        >
-          {index + 1}
+  const renderPaginationButtons = () => {
+    let buttons = [];
+    const delta = 2; // Number of buttons to show around the current page
+
+    // Always show the first page and the last page
+    buttons.push(
+      <button
+        key={0}
+        className={getItemClassName(0)}
+        onClick={() => onPageChange(0)}
+      >
+        1
+      </button>
+    );
+
+    if (active > delta + 1) {
+      buttons.push(
+        <button key="start-ellipsis" className="join-item btn btn-disabled">
+          ...
         </button>
-      ))}
-    </div>
-  );
+      );
+    }
+
+    // Show buttons around the current page
+    for (let i = Math.max(active - delta, 1); i <= Math.min(active + delta, totalPages - 2); i++) {
+      buttons.push(
+        <button
+          key={i}
+          className={getItemClassName(i)}
+          onClick={() => onPageChange(i)}
+        >
+          {i + 1}
+        </button>
+      );
+    }
+
+    if (active < totalPages - delta - 2) {
+      buttons.push(
+        <button key="end-ellipsis" className="join-item btn btn-disabled">
+          ...
+        </button>
+      );
+    }
+
+    // Always show the last page if there are more than one page
+    if (totalPages > 1) {
+      buttons.push(
+        <button
+          key={totalPages - 1}
+          className={getItemClassName(totalPages - 1)}
+          onClick={() => onPageChange(totalPages - 1)}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+
+  return <div className="join">{renderPaginationButtons()}</div>;
 }
 
 Pagination.propTypes = {
