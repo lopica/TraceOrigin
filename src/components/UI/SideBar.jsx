@@ -16,7 +16,7 @@ export default function SideBar() {
         {CONSTANTS.menu.map((item) => {
           return (
             <li key={item.name}>
-              <Link to={item.url} className="focus:text-white">{item.name}</Link>
+              <Link to={item.url} className="focus:text-white text-lg xl:text-2xl">{item.name}</Link>
             </li>
           );
         })}
