@@ -1,10 +1,20 @@
 import { useState } from "react";
 import Button from "./UI/Button";
 
-let valid
-let images
+let valid;
+let images;
 
-function Wizzard({ stepList, children, onStepSubmit, onSubmit, validateStep, trigger, isLoading, getValues }) {
+function Wizzard({
+  stepList,
+  children,
+  onStepSubmit,
+  onSubmit,
+  validateStep,
+  trigger,
+  isLoading,
+  getValues,
+  avatar,
+}) {
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleKeyDown = (event) => {
@@ -15,32 +25,48 @@ function Wizzard({ stepList, children, onStepSubmit, onSubmit, validateStep, tri
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
-    if(validateStep[currentStep][0] === 'images') {
-      images = getValues('images')
-      if (!images.length > 0) alert("Bạn hãy chọn ít nhất 1 ảnh.");
-    } else {
-      valid = await trigger(validateStep[currentStep]);
-    }
+    valid = false; // Declare valid variable
+
     if (identifier === "next") {
-      //add to redux
+      if (validateStep[currentStep][0] === "images") {
+        const images = getValues("images"); // Assuming getValues is a function that retrieves the values
+        const avatar = getValues("avatar"); // Assuming getValues is a function that retrieves the values
+
+        if (!images.length > 0) {
+          alert("Bạn hãy chọn ít nhất 1 ảnh.");
+          return;
+        } else if (avatar === "") {
+          alert("Bạn hãy chọn ít nhất 1 ảnh làm ảnh chính.");
+          return;
+        } else {
+          valid = true;
+        }
+      } else {
+        valid = await trigger(validateStep[currentStep]);
+      }
+
+      // Add to Redux
       if (valid) {
-        //save localstorage by redux
-        // onStepSubmit(e)
+        // Save to local storage by Redux
+        // onStepSubmit(e) // Uncomment this if you have a function to submit the step
         setCurrentStep(currentStep + 1);
       }
     } else if (identifier === "back") {
       setCurrentStep(currentStep - 1);
     } else if (identifier === "submit") {
-      if (valid) {
         onSubmit();
-      }
     }
   };
 
   return (
     <>
       <Wizzard.Step stepList={stepList} currentStep={currentStep} />
-      <form className="space-y-6 mt-4" noValidate onKeyDown={handleKeyDown} key={`form-step-${currentStep}`}>
+      <form
+        className="space-y-6 mt-4"
+        noValidate
+        onKeyDown={handleKeyDown}
+        key={`form-step-${currentStep}`}
+      >
         <div className="card bg-white md:max-w-2xl mx-auto">
           <div className="card-body text-center">
             <h2 className="card-title mb-6">{stepList[currentStep]}</h2>
@@ -81,7 +107,9 @@ Wizzard.Step = ({ stepList, currentStep }) => {
     <ul className="steps steps-horizontal flex justify-center max-w-lg mx-auto">
       {stepList.map((item, idx) => {
         const stepClass =
-          idx <= currentStep ? "step step-neutral flex-grow z-1" : "step flex-grow";
+          idx <= currentStep
+            ? "step step-neutral flex-grow z-1"
+            : "step flex-grow";
         return (
           <li className={stepClass} key={idx}>
             {splitWords(item)}
@@ -107,7 +135,12 @@ Wizzard.Action = ({ stepList, currentStep, handleWizzard, isLoading }) => {
         <Button outline primary onClick={(e) => handleWizzard("back", e)}>
           Quay lại
         </Button>
-        <Button primary rounded isLoading={isLoading} onClick={(e) => handleWizzard("submit", e)}>
+        <Button
+          primary
+          rounded
+          isLoading={isLoading}
+          onClick={(e) => handleWizzard("submit", e)}
+        >
           Đăng ký
         </Button>
       </div>

@@ -6,7 +6,6 @@ import { FaPlus } from "react-icons/fa";
 import { twMerge } from "tailwind-merge";
 import className from "classnames";
 import useImage from "../../hooks/use-image";
-import {Controller} from 'react-hook-form'
 
 function ImageBox({ image, actionBar, show, add, idx, setValue, ...props }) {
   const {
@@ -14,7 +13,7 @@ function ImageBox({ image, actionBar, show, add, idx, setValue, ...props }) {
     handleOpen: handleClick,
     handleClose,
   } = useShow(false);
-  const { handleImages: addImage, deleteImage, changeAvatar, isAvatar, isValid } = useImage(setValue);
+  const { handleImages: addImage, deleteImage, changeAvatar, isAvatar } = useImage(setValue);
   const fileInputRef = useRef(null);
 
   const triggerFileInput = () => {

@@ -42,7 +42,7 @@ const Input = React.forwardRef(
             onBlur={onBlur}
             className="select select-bordered"
           >
-            <option value="">{placeholder}</option>
+            <option key='placeholder' value="">{placeholder}</option>
             {Array.isArray(data) &&
               data.length &&
               data.map((option, _) => (

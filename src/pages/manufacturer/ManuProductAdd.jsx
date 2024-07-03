@@ -6,6 +6,7 @@ import ImageBox from "../../components/UI/ImageBox";
 import { useForm } from "react-hook-form";
 import Wizzard from "../../components/Wizzard";
 import useCategory from "../../hooks/use-category";
+import useToast from "../../hooks/use-toast";
 
 const stepList = [
   "Thông tin cơ bản",
@@ -17,17 +18,18 @@ const stepList = [
 const validateStep = [
   ["productName", "category", "description", "warranty"],
   ["length", "width", "height", "weight", "material"],
-  ['images']
+  ["images"],
 ];
 
 let request;
 
 function ManuProductAdd() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { avatar } = useSelector((state) => state.productForm);
   const { categoriesData } = useCategory();
   const { images } = useSelector((state) => state.productForm);
   const [addProduct, results] = useAddProductMutation();
+  const { getToast } = useToast();
   const {
     register,
     handleSubmit,
@@ -42,26 +44,28 @@ function ManuProductAdd() {
   const onSubmit = (data) => {
     request = {
       ...data,
-      avatar: data.avatar.split(',')[1],
-      categoryId: data.category.split(',')[0],
+      avatar: data.avatar.split(",")[1],
+      categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
       file3D: "",
     };
-    delete request.length
-    delete request.width 
-    delete request.height
-    delete request.category
+    delete request.length;
+    delete request.width;
+    delete request.height;
+    delete request.category;
 
     console.log(request);
     addProduct(request)
-    .unwrap()
-    .then(res=>{
-      console.log(res)
-      // navigate('/manufacturer/products')
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        getToast('Tạo mới thành công sản phẩm')
+        navigate('/manufacturer/products')
+      })
+      .catch((err) => {
+        getToast('Gặp lỗi khi tạo mới sản phẩm')
+        console.log(err);
+      });
   };
 
   return (
@@ -73,6 +77,7 @@ function ManuProductAdd() {
         trigger={trigger}
         isLoading={results.isLoading}
         getValues={getValues}
+        avatar={avatar}
       >
         <>
           <div className="grid grid-cols-3 gap-4">
@@ -82,11 +87,11 @@ function ManuProductAdd() {
                 type="text"
                 placeholder="Sản phẩm A"
                 {...register("productName", {
-                  required: 'Bạn cần nhập tên sản phẩm',
+                  required: "Bạn cần nhập tên sản phẩm",
                   maxLength: {
                     value: 100,
-                    message: '',
-                  }
+                    message: "",
+                  },
                 })}
                 tooltip="Tối đa 100 ký tự"
                 error={errors.productName?.message}
@@ -96,7 +101,7 @@ function ManuProductAdd() {
               label="Loại sản phẩm"
               type="select"
               {...register("category", {
-                required: 'Bạn cần chọn loại sản phẩm',
+                required: "Bạn cần chọn loại sản phẩm",
               })}
               placeholder="Chọn 1 trong các loại"
               data={categoriesData}
@@ -108,7 +113,7 @@ function ManuProductAdd() {
             type="text"
             placeholder="Công dụng"
             {...register("description", {
-              required: 'Bạn cần điền công dụng sản phẩm'
+              required: "Bạn cần điền công dụng sản phẩm",
             })}
             tooltip="Liệt kê, cánh nhau dấu phẩy"
             error={errors.description?.message}
@@ -118,7 +123,11 @@ function ManuProductAdd() {
             type="number"
             placeholder="12"
             {...register("warranty", {
-              required: 'Bạn cần chọn thời hạn bảo hành'
+              required: "Bạn cần chọn thời hạn bảo hành",
+              min: {
+                value: 0,
+                message: "Thời gian bảo hành không thể âm",
+              },
             })}
             unit="tháng"
             tooltip="Bé hơn 999 và lớn hơn 0"
@@ -132,7 +141,11 @@ function ManuProductAdd() {
                 label="Kích thước"
                 type="number"
                 {...register("length", {
-                  required: 'Bạn cần điền chiều dài sản phẩm'
+                  required: "Bạn cần điền chiều dài sản phẩm",
+                  min: {
+                    value: 1,
+                    message: "Chiều dài sản phẩm phải là 1 số dương",
+                  },
                 })}
                 placeholder="Dài"
                 unit="cm"
@@ -143,7 +156,11 @@ function ManuProductAdd() {
                 label="&nbsp;"
                 type="number"
                 {...register("width", {
-                  required: 'Bạn cần điền chiều rộng sản phẩm'
+                  required: "Bạn cần điền chiều rộng sản phẩm",
+                  min: {
+                    value: 1,
+                    message: "Chiều rộng sản phẩm phải là 1 số dương",
+                  },
                 })}
                 placeholder="Rộng"
                 unit="cm"
@@ -153,7 +170,11 @@ function ManuProductAdd() {
                 label="&nbsp;"
                 type="number"
                 {...register("height", {
-                  required: 'Bạn cần điền chiều cao sản phẩm'
+                  required: "Bạn cần điền chiều cao sản phẩm",
+                  min: {
+                    value: 1,
+                    message: "Chiều cao sản phẩm phải là 1 số dương",
+                  },
                 })}
                 placeholder="Cao"
                 unit="cm"
@@ -165,11 +186,11 @@ function ManuProductAdd() {
             label="Chất liệu"
             type="text"
             {...register("material", {
-              required: 'Bạn cần điền chất liệu của sản phẩm',
+              required: "Bạn cần điền chất liệu của sản phẩm",
               maxLength: {
                 value: 200,
-                message: ''
-              }
+                message: "",
+              },
             })}
             placeholder="nhôm"
             error={errors.material?.message}
@@ -180,7 +201,11 @@ function ManuProductAdd() {
             type="number"
             placeholder="10"
             {...register("weight", {
-              required: 'Bạn cần điền cân nặng sản phẩm'
+              required: "Bạn cần điền cân nặng sản phẩm",
+              min: {
+                value: 1,
+                message: "Cân nặng sản phẩm phải là 1 số dương",
+              },
             })}
             unit="kg"
             error={errors.weight?.message}

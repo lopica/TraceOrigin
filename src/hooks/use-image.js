@@ -6,12 +6,13 @@ import {
   updateImages,
   updateImagesData,
 } from "../store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 let imageUrls = [];
 let imagesShow = [];
 
 export default function useImage(setValue) {
+  // const [isAvatar, setIsAvatar] = useState(false)
   const dispatch = useDispatch();
   const { images, imagesData, avatar } = useSelector(
     (state) => state.productForm
@@ -80,10 +81,7 @@ export default function useImage(setValue) {
     return image === avatar;
   };
 
-  const isValid = () => {
-    console.log(imagesData.length > 0);
-    return imagesData.length > 0;
-  };
+  
 
   useEffect(() => {
     setValue("images", imagesData);
@@ -93,5 +91,5 @@ export default function useImage(setValue) {
     setValue("avatar", avatar);
   }, [avatar]);
 
-  return { handleImages, deleteImage, changeAvatar, isAvatar, isValid };
+  return { handleImages, deleteImage, changeAvatar, isAvatar };
 }
