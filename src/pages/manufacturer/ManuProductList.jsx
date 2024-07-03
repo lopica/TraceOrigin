@@ -30,14 +30,14 @@ function ManuProductList() {
           label="Tên sản phẩm"
           type="search"
           placeholder="sản phẩm A"
-          onChange={(e) => searchHandler("nameSearch", e)}
+          onBlur={(e) => searchHandler("nameSearch", e)}
         />
         <Input
           label="Loại sản phẩm"
           type="select"
           data={categoriesData}
           placeholder="Chọn danh mục"
-          onChange={(e)=>searchHandler('categoryIdSearch', e)}
+          onBlur={(e)=>searchHandler('categoryIdSearch', e)}
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center">
