@@ -34,7 +34,8 @@ function AdminLayout() {
         ></label>
         <ul className="menu p-4 w-52 min-h-full bg-base-100 text-base-content">
           {/* Sidebar content here */}
-          {CONSTANTS.menu.map(item => {
+          {/* {CONSTANTS.menu.filter(item => item.isAdmin).map(item => { */}
+               {CONSTANTS.menu.map(item => {
             return <li key={item.name}>
               <Link to={item.url}>{item.name}</Link>
             </li>

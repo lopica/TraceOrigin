@@ -7,7 +7,7 @@ import { Tooltip, Typography } from "@material-tailwind/react";
 import ProfileModal from "../user/userProfile";
 import SortableTable from "../../components/SortableTable";
 
-function UserList() {
+function VerifyManufacturer() {
   const [page, setPage] = useState(0);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -29,105 +29,6 @@ function UserList() {
     page: page.toString(),
     size: "10"
   });
-
-  const status0Msg = "Bạn cần phê duyệt chứng chỉ để kích hoạt";
-  const status1Msg = "Đang hoạt động, Click để khóa tài khoản";
-  const status2Msg = "Tài khoản đang bị khóa, Click để mở khóa";
-
-  const getStatusColumnContent = (item) => {
-    const statusMap = {
-      0: (
-        <Tooltip content={status0Msg}>
-          <span className="text-secondary">
-            &#8226; <Link to="#" className="text-secondary">Chưa kích hoạt</Link>
-          </span>
-        </Tooltip>
-      ),
-      1: (
-        <Tooltip content={status1Msg}>
-          <span className="text-success cursor-pointer" onClick={() => handleStatusColumnClick(item)}>
-            &#8226; <Link to="#" className="text-success">Đã kích hoạt</Link>
-          </span>
-        </Tooltip>
-      ),
-      2: (
-        <Tooltip
-          className="border border-blue-gray-50 bg-white px-4 py-3 shadow-xl shadow-black/10"
-          content={
-            <div className="w-80">
-              <Typography color="blue-gray" className="font-medium">
-                Material Tailwind
-              </Typography>
-              <Typography variant="small" color="blue-gray" className="font-normal opacity-80">
-                Material Tailwind is an easy to use components library for Tailwind CSS and Material Design.
-              </Typography>
-            </div>
-          }
-        >
-          <span className="text-error cursor-pointer" onClick={() => handleStatusColumnClick(item)}>
-            &#8226; <Link to="#" className="text-error">Đang khóa</Link>
-          </span>
-        </Tooltip>
-      )
-    };
-  
-    return statusMap[item.status];
-  };
-
-  
-
-  let items;
-  if (isFetching) {
-    items = <div className="skeleton h-40 w-full"></div>;
-  } else if (isError) {
-    items = (
-      <div className="text-center text-red-500">
-        Error fetching data.
-      </div>
-    );
-  } else {
-    const config = [
-      // {
-      //   label: "#",
-      //   render:  (item, index) => index + 1
-      // },
-      {
-        label: "Tên",
-        render: (item) => (
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleUserClick(item.userId);
-            }}
-          >
-            {item.name}
-          </a>
-        )
-      },
-      {
-        label: "Email",
-        render: (item) => item.email
-      },
-      {
-        label: "Thành Phố",
-        render: (item) => item.city
-      },
-      {
-        label: "Trạng thái",
-        render: (item) => getStatusColumnContent(item),
-        sortValue: (item) => item?.status,
-      },
-    ];
-
-    const keyFn = (item) => item.userId;
-
-    items = (
-      <div className="w-full">
-        <SortableTable data={data.content} config={config} keyFn={keyFn} />
-      </div>
-    );
-  }
 
   const [lockUser] = useLockUserMutation();
 
@@ -169,6 +70,57 @@ function UserList() {
     setIsConfirmationModalOpen(true);
   };
 
+  const status0Msg = () => (
+    <span>Bạn cần phê duyệt chứng chỉ để kích hoạt</span>
+  );
+
+  const status1Msg = () => (
+    <span>Đang hoạt động, Click để khóa tài khoản</span>
+  );
+
+  const status2Msg = () => (
+    <span>Tài khoản đang bị khóa, Click để mở khóa</span>
+  );
+  const statusMap = {
+    default: (
+      <Tooltip content={status0Msg}>
+        <span className="text-secondary">
+          &#8226; <Link to="#" className="text-secondary">Chưa kích hoạt</Link>
+        </span>
+      </Tooltip>
+    ),
+    1: (
+      <Tooltip content={status1Msg}>
+        <span className="text-success cursor-pointer" onClick={() => handleStatusColumnClick(item)}>
+          &#8226; <Link to="#" className="text-success">Đã kích hoạt</Link>
+        </span>
+      </Tooltip>
+    ),
+    2: (
+      <Tooltip
+        className="border border-blue-gray-50 bg-white px-4 py-3 shadow-xl shadow-black/10"
+        content={
+          <div className="w-80">
+            <Typography color="blue-gray" className="font-medium">
+              Material Tailwind
+            </Typography>
+            <Typography variant="small" color="blue-gray" className="font-normal opacity-80">
+              Material Tailwind is an easy to use components library for Tailwind CSS and Material Design.
+            </Typography>
+          </div>
+        }
+      >
+        <span className="text-info">
+          &#8226; <Link to="#" className="text-info">Đang xử lý</Link>
+        </span>
+      </Tooltip>
+    )
+  };
+  
+  const getStatusComponent = (status) => {
+    return statusMap[status] || statusMap.default;
+  };
+
   const handleLockUnlock = async (userId, status) => {
     setIsLoading(true);
     try {
@@ -182,6 +134,60 @@ function UserList() {
     }
   };
 
+
+  const renderTableBody = () => {
+    if (isFetching) {
+      return (
+        <tbody>
+          <tr>
+            <td colSpan="5" className="text-center">
+              <span className="loading loading-spinner loading-lg"></span>
+            </td>
+          </tr>
+        </tbody>
+      );
+    }
+
+    if (isError) {
+      return (
+        <tbody>
+          <tr>
+            <td colSpan="5" className="text-center text-red-500">
+              Error fetching data.
+            </td>
+          </tr>
+        </tbody>
+      );
+    }
+
+    const users = data?.content || [];
+    return (
+      <tbody>
+        {users.map((user, index) => (
+          <tr key={user.userId} className="hover">
+            <td>{index + 1 + page * 10}</td>
+            <td>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleUserClick(user.userId);
+                }}
+              >
+                {user.name}
+              </a>
+            </td>
+            <td>{user.email}</td>
+            <td>{user.city}</td>
+            <td>
+            {getStatusComponent(user.status)}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    );
+  };
+
   const handlePageChange = (newPage) => {
     setPage(newPage);
     refetch();
@@ -193,7 +199,18 @@ function UserList() {
 
   return (
     <div className="table-responsive">
-      {items}
+      <table className="table table-zebra">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Thành Phố</th>
+            <th>Trạng Thái</th>
+          </tr>
+        </thead>
+        {renderTableBody()}
+      </table>
       <div className="flex justify-end mt-4">
         <Pagination
           active={page}
@@ -216,4 +233,4 @@ function UserList() {
   );
 }
 
-export default UserList;
+export default VerifyManufacturer;

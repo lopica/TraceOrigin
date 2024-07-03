@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./apis/authApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { userApi } from "./apis/userApi";
+import { certificateApi } from "./apis/certificateApi";
 import { productApi } from "./apis/productApi";
 import { toastReducer } from './slices/toastSlice';
 import { itemApi } from "./apis/itemApi";
@@ -17,6 +18,7 @@ const store = configureStore({
     [itemApi.reducerPath]: itemApi.reducer,
     [itemLogApi.reducerPath]: itemLogApi.reducer,
     [mapApi.reducerPath]: mapApi.reducer,
+    [certificateApi.reducerPath]: certificateApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
@@ -26,6 +28,7 @@ const store = configureStore({
         itemApi.middleware, 
         itemLogApi.middleware,
         mapApi.middleware,
+        certificateApi.middleware
       )
   },
 });
@@ -34,7 +37,8 @@ setupListeners(store.dispatch);
 
 export { store };
 export { useCreateUserMutation, useLoginMutation, useLogoutMutation } from "./apis/authApi";
-export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery, useLockUserMutation  } from "./apis/userApi";
+export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery, useLockUserMutation , useUpdateStatusMutation  } from "./apis/userApi";
+export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery} from "./apis/certificateApi";
 export { useAddProductMutation, useSearchProductQuery, useViewProductDetailQuery } from './apis/productApi'
 export { showToast, hideToast } from './slices/toastSlice'
 export { useFetchItemLogsByProductRecognitionQuery, useFetchOriginByItemLogIdQuery, useSearchItemsByProductIdQuery } from './apis/itemApi'

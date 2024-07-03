@@ -10,6 +10,19 @@ function Pagination({ active, totalPages, onPageChange }) {
     let buttons = [];
     const delta = 2; // Number of buttons to show around the current page
 
+    // Add "Previous" arrow button
+    if (active > 0) {
+      buttons.push(
+        <button
+          key="prev"
+          className="join-item btn"
+          onClick={() => onPageChange(active - 1)}
+        >
+          &lt;
+        </button>
+      );
+    }
+
     // Always show the first page and the last page
     buttons.push(
       <button
@@ -59,6 +72,19 @@ function Pagination({ active, totalPages, onPageChange }) {
           onClick={() => onPageChange(totalPages - 1)}
         >
           {totalPages}
+        </button>
+      );
+    }
+
+    // Add "Next" arrow button
+    if (active < totalPages - 1) {
+      buttons.push(
+        <button
+          key="next"
+          className="join-item btn"
+          onClick={() => onPageChange(active + 1)}
+        >
+          &gt;
         </button>
       );
     }

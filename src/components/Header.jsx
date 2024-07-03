@@ -68,7 +68,7 @@ function Header() {
   //     );
 
   // Check if the current path is /login or /register
-  if (!location.pathname.startsWith("/manufacturer") && !location.pathname.startsWith("/admin")) {
+  if (!location.pathname.startsWith("/manufacturer")) {
     userContent = (
       <Link to="/portal/login">
         <p className="btn btn-ghost text-xl ml-4">Portal</p>

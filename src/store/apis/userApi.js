@@ -74,9 +74,19 @@ const userApi = createApi({
           }
         }),
       }),
+      updateStatus: builder.mutation({
+        query: (options) => ({
+          url: '/updateStatus',
+          method: 'POST',
+          body: {
+            id: options.id || "0",
+            status: options.status || "0"
+          }
+        }),
+      }),
     };
   },
 });
 
 export { userApi };
-export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation } = userApi;
+export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation } = userApi;

@@ -1,23 +1,16 @@
+import CarouselModal  from "../../components/UI/CarouselModal";
+import React, { useState } from 'react';
+
 function manhTest() {
-  const openModal = () => {
-    document.getElementById('my_modal_3').showModal();
-  };
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
 
   return (
     <div>
-      <a onClick={(e) => {
-        e.preventDefault();
-        openModal();
-      }}>open modal</a>
-      <dialog id="my_modal_3" className="modal">
-        <div className="modal-box">
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click on ✕ button to close</p>
-        </div>
-      </dialog>
+      <button onClick={handleOpenModal} className="btn btn-primary">Open Carousel Modal</button>
+      <CarouselModal isOpen={isModalOpen} onClose={handleCloseModal} headerContent="Carousel Header" />
     </div>
   );
 }

@@ -13,7 +13,8 @@ import {
   Login,
   ForgotPassword,
   Register,
-  UserList
+  ManufacturerList,
+  VerifyManufacturer
 } from './pages';
 import Item from "./pages/public/Item";
 import PortalLayout from "./pages/public/PortalLayout";
@@ -56,7 +57,8 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <AdminLayout />,
     children: [
-      { path: 'userList', element: <UserList /> },
+      { path: 'manufacturerList', element: <ManufacturerList /> },
+      { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
     ]
     }
   ,
