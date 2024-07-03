@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CONSTANTS } from "../../services/Constants";
 
 // DEV ONLY!!!
 const pause = (duration) => {
@@ -10,7 +11,7 @@ const pause = (duration) => {
 const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/auth",
+    baseUrl: `${CONSTANTS.domain}/auth`,
     credentials: 'include',
     // baseUrl: "http://localhost:3001",
     fetchFn: async (...args) => {
@@ -18,13 +19,7 @@ const authApi = createApi({
       await pause(3000);
       return fetch(...args);
     },
-    responseHandler: async (response) => {
-      if (response.headers.get("Content-Type")?.includes("application/json")) {
-        return await response.json(); // Parse as JSON if content-type is json
-      } else {
-        return response.text(); // Otherwise, return as text
-      }
-    },
+    
   }),
   
   endpoints(builder) {
@@ -40,18 +35,20 @@ const authApi = createApi({
             method: "POST",
             body: {
               ...newUser,
-              role: 2,
-              country: 'Vietnam'
             },
           };
         },
       }),
       login: builder.mutation({
+        // invalidatesTags: ['Products'],
         query: (input) => {
           return {
             url: "/login",
             method: "POST",
             body: {...input},
+            responseHandler: (res) => {
+
+            }
           };
         },
       }),
@@ -60,6 +57,9 @@ const authApi = createApi({
           return {
             url: '/logout',
             method: 'POST',
+            responseHandler: (res) => {
+
+            }
           }
         }
       })

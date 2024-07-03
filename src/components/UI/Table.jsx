@@ -19,11 +19,7 @@ function Table({ data, config, keyFn }) {
         </td>
       );
     });
-    return (
-      <tr className="" key={keyFn(rowData)}>
-        {renderedCells}
-      </tr>
-    );
+    return <tr key={keyFn(rowData)}>{renderedCells}</tr>;
   });
 
   return (
@@ -34,6 +30,7 @@ function Table({ data, config, keyFn }) {
         </thead>
         <tbody>{renderedRows}</tbody>
       </table>
+      <p className="text-center">Chưa có item</p>
     </div>
   );
 }

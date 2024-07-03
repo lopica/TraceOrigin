@@ -11,44 +11,39 @@ const pause = (duration) => {
 const mapApi = createApi({
   reducerPath: "map",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://esgoo.net/api-tinhthanh",
+    baseUrl: `${CONSTANTS.domain}/location`,
     // mode: "no-cors",
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
       await pause(3000);
       return fetch(...args);
     },
-    responseHandler: async (response) => {
-      if (response.headers.get("Content-Type")?.includes("application/json")) {
-        return await response.json(); // Parse as JSON if content-type is json
-      } else {
-        return response.text(); // Otherwise, return as text
-      }
-    },
+    // responseHandler: async (response) => {
+    //   if (response.headers.get("Content-Type")?.includes("application/json")) {
+    //     return await response.json(); // Parse as JSON if content-type is json
+    //   } else {
+    //     return response.text(); // Otherwise, return as text
+    //   }
+    // },
   }),
   
   endpoints(builder) {
     return {
-      getAllProvinces: builder.query({
-        query: () => {
+      getAddressByCoordinate: builder.mutation({
+        query: (coordinate) => {
           return {
-            url: `/1/0.htm`,
-            method: 'GET',
+            url: `/verifyCoordinates`,
+            method: 'POST',
+            body: coordinate
           }
         }
       }),
-      getDistrictByProvinceId: builder.query({
-        query: (province_id) => {
+      getCoordinateByAddress: builder.mutation({
+        query: (address) => {
           return {
-            url: `/2/${province_id}.htm`,
-            method: 'GET',
-          }
-        }
-      }),
-      getWardByDistrictId: builder.query({
-        query: (district_id) => {
-          return {
-            url: `/3/${district_id}.htm`
+            url: '/verifyLocation',
+            method: 'POST',
+            body: address
           }
         }
       })
@@ -56,5 +51,5 @@ const mapApi = createApi({
   },
 });
 
-export const { useGetAllProvincesQuery, useGetDistrictByProvinceIdQuery, useGetWardByDistrictIdQuery } = mapApi;
+export const { useGetCoordinateByAddressMutation, useGetAddressByCoordinateMutation } = mapApi;
 export { mapApi };

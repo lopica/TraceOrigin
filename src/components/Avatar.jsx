@@ -1,9 +1,29 @@
-import { useLogoutMutation } from "../store"
+import { useNavigate } from "react-router-dom";
+import {
+  requireLogin,
+  updateUser,
+  useFetchUserQuery,
+  useLogoutMutation,
+} from "../store";
+import { useDispatch } from "react-redux";
+import useUser from "../hooks/use-user";
 function Avatar() {
-  const [logout, results] = useLogoutMutation()
+  const { isFetching } = useUser();
+  const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
 
   function handleLogout() {
+    dispatch(requireLogin());
+    dispatch(updateUser({}));
     logout()
+      .unwrap()
+      .then(navigate("/"))
+      .catch((res) => console.log(res));
+  }
+
+  if (isFetching) {
+    return <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
   }
 
   return (
@@ -25,9 +45,7 @@ function Avatar() {
         className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
       >
         <li>
-          <a className="justify-between">
-            Profile
-          </a>
+          <a className="justify-between">Profile</a>
         </li>
         <li>
           <a>Settings</a>

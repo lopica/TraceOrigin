@@ -1,165 +1,253 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCreateUserMutation } from "../../store";
+import { updateCoordinate, updateForm, useCreateUserMutation } from "../../store";
 import Button from "../../components/UI/Button";
+import Input from "../../components/UI/Input";
+import Wizzard from "../../components/Wizzard";
+import AddressInputGroup from "../../components/AddressInputGroup";
+import {
+  emailRegex,
+  passwordRegex,
+  phoneRegex,
+  stringRegex,
+} from "../../services/Validation.js";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import Alert from "../../components/UI/Alert.jsx";
+import useToast from "../../hooks/use-toast";
+
+
+const stepList = ["Thông tin cơ bản", "Thông tin liên hệ", "Tạo mật khẩu"];
+
+const validateStep = [
+  ["firstName", "lastName", "province", "district", "ward", "address"],
+  ["email", "phone"],
+  ["password", "cfPassword"],
+];
+
+let province, district, ward;
+let alert
 
 function Register() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [enteredValues, setEnterValues] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    city: "",
-    address: "",
-    phone: "",
-    dateOfBirth: "",
-    password: "",
-    cf_password: "",
+  const { coordinate } = useSelector((state) => state.locationData);
+  const { getToast } = useToast();
+  const {
+    register,
+    formState: { errors, touchedFields },
+    handleSubmit,
+    getValues,
+    setValue,
+    trigger,
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      email: "",
+      phone: "",
+      password: "",
+      cfPassword: "",
+    },
+  });
+  const [createUser, results] = useCreateUserMutation();
+  const [alertContent, setAlertContent] = useState({
+    type: null,  // 'error', 'success', or 'info'
+    content: ''
   });
 
-  const [createUser, results] = useCreateUserMutation(enteredValues);
-
-  const handleInputChange = (identifier, e) => {
-    setEnterValues((prevValues) => ({
-      ...prevValues,
-      [identifier]: e.target.value,
-    }));
+  const onStepSubmit = () => {
+    //get data and save to local storage
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = {
-      ...enteredValues,
-      dateOfBirth: new Date(enteredValues.dateOfBirth).getTime(),
+  const onSubmit = (data) => {
+    console.log(data);
+    province = getValues("province").split(",");
+    district = getValues("district").split(",");
+    ward = getValues("ward").split(",");
+    // dispatch(
+    //   updateForm({
+    //     ...data,
+    //     province: province[1],
+    //     district: district[1],
+    //     ward: ward[1],
+    //   })
+    // );
+    let request = {
+      ...data,
+      city: province[1],
+      district: district[1],
+      ward: ward[1],
+      country: "Vietnam",
+      coordinateX: coordinate[0],
+      coordinateY: coordinate[1],
     };
-
-    console.log(formData);
-    createUser(formData)
-      .unwrap()
-      .then(() => {
-        navigate("/portal/login");
+    console.log(request);
+    // console.log(formStateRedux)
+    //get data from redux and call
+    createUser(request)
+    .unwrap()
+    .then(res=>{
+      console.log(res)
+      dispatch(updateCoordinate([]))
+      navigate('/portal/login')
+    })
+    .catch(err=>{
+      console.log(err.error)
+      setAlertContent({
+        type: 'error',
+        content: err.error
       })
-      .catch((error) => {
-        console.error("Failed to create user:", error);
-      });
+      getToast(err.error);
+    })
   };
+
+  alert = <Alert {...{ [alertContent.type]: true }}>{alertContent.content}</Alert>
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
+    <div className="flex flex-1 flex-col justify-center py-12 lg:px-8">
+      {/* {alert} */}
+      <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
         Đăng ký tài khoản
       </h2>
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label className="input input-bordered flex items-center gap-2">
-              ✉️
-              <input
-                type="email"
-                required
+      <div className="mt-10 sm:mx-auto sm:w-full">
+        <Wizzard
+          stepList={stepList}
+          onSubmit={handleSubmit(onSubmit)}
+          validateStep={validateStep}
+          trigger={trigger}
+          onStepSubmit={onStepSubmit}
+          isLoading={results.isLoading}
+        >
+          <>
+            <div className="join w-full gap-2">
+              <Input
+                label="Tên họ"
+                type="text"
                 className="grow"
-                placeholder="Email"
-                value={enteredValues.email}
-                onChange={(e) => handleInputChange("email", e)}
+                placeholder="Nguyễn"
+                {...register("lastName", {
+                  required: "Bạn cần nhập tên họ",
+                  maxLength: {
+                    value: 20,
+                    message: "Tên họ không thể quá 20 ký tự nhỉ?",
+                  },
+                  pattern: {
+                    value: stringRegex,
+                    message: "Tên không nên có những ký tự khác ngoài chữ",
+                  },
+                  validate: (value) => {
+                    if (value.endsWith(" ")) {
+                      return "Tên không nên kết thúc với dấu cách";
+                    }
+                    return true;
+                  },
+                })}
+                error={errors.lastName?.message}
               />
-            </label>
-          </div>
-          <label className="input input-bordered flex items-center gap-2">
-            👨‍👩‍👧‍👦
-            <input
-              type="text"
-              className="grow"
-              placeholder="Tên họ"
-              value={enteredValues.lastName}
-              onChange={(e) => handleInputChange("lastName", e)}
+              <Input
+                label="Tên đệm và chính"
+                type="text"
+                placeholder="Văn A"
+                {...register("firstName", {
+                  required: "Bạn cần nhập tên họ",
+                  maxLength: {
+                    value: 40,
+                    message: "Tên họ không thể quá 40 ký tự nhỉ?",
+                  },
+                  pattern: {
+                    value: stringRegex,
+                    message: "Tên không nên có những ký tự khác ngoài chữ",
+                  },
+                  validate: (value) => {
+                    if (value.endsWith(" ")) {
+                      return "Tên không nên kết thúc với dấu cách";
+                    }
+                    return true;
+                  },
+                })}
+                error={errors.firstName?.message}
+              />
+            </div>
+            <AddressInputGroup
+              register={register}
+              getValues={getValues}
+              setValue={setValue}
+              errors={errors}
             />
-          </label>
-          <label className="input input-bordered flex items-center gap-2">
-            🙍
-            <input
-              type="text"
+          </>
+          <>
+            <Input
+              label="Email"
+              type="email"
+              required
               className="grow"
-              placeholder="Tên đệm và tên chính"
-              value={enteredValues.firstName}
-              onChange={(e) => handleInputChange("firstName", e)}
+              placeholder="Email"
+              {...register("email", {
+                required: "Bạn cần nhập email",
+                pattern: {
+                  value: emailRegex,
+                  message: "Email chưa đúng format",
+                },
+              })}
+              error={errors.email?.message}
             />
-          </label>
-          <label className="input input-bordered flex items-center gap-2">
-            🏙️
-            <input
-              type="text"
-              className="grow"
-              placeholder="Thành phố"
-              value={enteredValues.city}
-              onChange={(e) => handleInputChange("city", e)}
-            />
-          </label>
-          <label className="input input-bordered flex items-center gap-2">
-            🏠
-            <input
-              type="text"
-              className="grow"
-              placeholder="Địa chỉ"
-              value={enteredValues.address}
-              onChange={(e) => handleInputChange("address", e)}
-            />
-          </label>
-          <label className="input input-bordered flex items-center gap-2">
-            📞
-            <input
+            <Input
+              label="Số điện thoại"
               type="tel"
               className="grow"
               placeholder="Số điện thoại"
-              value={enteredValues.phone}
-              onChange={(e) => handleInputChange("phone", e)}
+              {...register("phone", {
+                required: "Bạn cần nhập số điện thoại",
+                pattern: {
+                  value: phoneRegex,
+                  message:
+                    "Số điện thoại luôn có 10 số, chỉ bao gồm số và bắt đầu băng 0",
+                },
+              })}
+              error={errors.phone?.message}
             />
-          </label>
-          <label className="input input-bordered flex items-center gap-2">
-            📆
-            <input
-              type="date"
-              className="grow"
-              placeholder="Ngày sinh"
-              value={enteredValues.dateOfBirth}
-              onChange={(e) => handleInputChange("dateOfBirth", e)}
-            />
-          </label>
-          <label className="input input-bordered flex items-center gap-2">
-            🔑
-            <input
+          </>
+          <>
+            <Input
+              label="Mật khẩu"
               type="password"
               className="grow"
-              placeholder="Mật khẩu"
-              value={enteredValues.password}
-              onChange={(e) => handleInputChange("password", e)}
+              {...register("password", {
+                required: "Bạn cần tạo mật khẩu",
+                minLength: {
+                  value: 6,
+                  message: "Nhập khẩu cần ít nhất 6 ký tự",
+                },
+                pattern: {
+                  value: passwordRegex,
+                  message:
+                    "Mật khẩu cần chứa ít nhất 1 chữ hoa, 1 số và 1 ký tự đặc biệt",
+                },
+              })}
+              error={errors.password?.message}
             />
-          </label>
-          <label className="input input-bordered flex items-center gap-2">
-            🔑
-            <input
+            <Input
+              label="Xác nhận mật khẩu"
               type="password"
               className="grow"
-              placeholder="xác nhận mật khẩu"
-              value={enteredValues.cf_password}
-              pattern={enteredValues.password}
-              onChange={(e) => handleInputChange("cf_password", e)}
+              {...register("cfPassword", {
+                required: "Bạn cần xác nhận mật khẩu",
+                validate: (value) =>
+                  value === getValues("password") || "Mật khẩu nhập không khớp",
+              })}
+              error={errors.cfPassword?.message}
             />
-          </label>
+          </>
+        </Wizzard>
 
-          <div>
-            <Button isLoading={results.isLoading}>Đăng ký</Button>
-          </div>
-        </form>
-
-        <p className="mt-10 text-center text-sm text-gray-500">
-          Đã tài khoản?{" "}
-          <Link
-            to="/portal/login"
-            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-          >
-            Đăng nhập ngay
+        <div className="mt-5 text-sm flex justify-center items-center">
+          <p>Đã tài khoản?</p>
+          <Link to="/portal/login">
+            <Button link className="p-2">
+              Đăng nhập ngay
+            </Button>
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

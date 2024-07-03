@@ -1,78 +1,88 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 import "./index.css";
 import { store } from "./store";
 import {
-  ManuLayout,
   ManuProductList,
   ManuProductDetail,
   ManuProductAdd,
-  PublicLayout,
   Home,
   Login,
   ForgotPassword,
   Register,
-  ManufacturerList,
-  VerifyManufacturer
-} from './pages';
+ManufacturerList,
+VerifyManufacturer
+} from "./pages";
 import Item from "./pages/public/Item";
-import PortalLayout from "./pages/public/PortalLayout";
-import RequireAuth from './services/RequireAuth'
-import AdminLayout from "./pages/admin/AdminLayout";
-import Manhtest from "./pages/admin/manhTest";
+import Layout from "./components/UI/Layout";
+import Splash from "./pages/public/Splash";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <PublicLayout />,
-    // errorElement: <ErrorPage />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: 'item', element: <Item /> },
-    ],
-  },
-  {
-    path: "/portal",
-    element: <PortalLayout />,
-    // errorElement: <ErrorPage />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: 'login', element: <Login /> },
-      { path: 'change-password', element: <ForgotPassword /> },
-      { path: 'register', element: <Register /> },
-    ],
-  },
-  {
-    path: "/manufacturer",
-    element: <ManuLayout />,
-    children: [
-      { index: true, element: <p>Hello Manufacturer</p> },
-      { path: 'products', element: <ManuProductList /> },
-      { path: "products/:productId", element: <ManuProductDetail /> },
-      { path: "products/add", element: <ManuProductAdd /> },
-    ]
-  },
-  {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-      { path: 'manufacturerList', element: <ManufacturerList /> },
-      { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
-    ]
-    }
-  ,
-  {
-    path: "/manh",
-    element: <AdminLayout />,
-    children: [
-      { path: 'test', element: <Manhtest /> },
-    ]
-  },
-]);
+const persistor = persistStore(store);
+
+function AppRouter() {
+  const user = useSelector((state) => state.userSlice);
+  // console.log(user.userId)
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        {
+          index: true,
+          element: <Home />,
+        },
+        {
+          path: "item",
+          element: <Item />,
+        },
+        {
+          path: "/portal",
+          children: [
+            { index: true, element: <Home /> },
+            { path: "login", element: <Login /> },
+            { path: "change-password", element: <ForgotPassword /> },
+            { path: "register", element: <Register /> },
+          ],
+        },
+        {
+          path: "/manufacturer",
+          children: [
+            { index: true, element: <p>Hello Manufacturer</p> },
+            { path: "products", element: <ManuProductList key={user.userId} /> },
+            { path: "products/:productId", element: <ManuProductDetail /> },
+            { path: "products/add", element: <ManuProductAdd /> },
+          ],
+        },
+        {
+          path: "/admin",
+          element: <AdminLayout />,
+          children: [
+            { path: 'manufacturerList', element: <ManufacturerList /> },
+            { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
+          ]
+          }
+        ,
+        {
+          path: "/manh",
+          element: <AdminLayout />,
+          children: [
+            { path: 'test', element: <Manhtest /> },
+          ]
+        },
+      ],
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <PersistGate loading={<Splash />} persistor={persistor}>
+      <AppRouter />
+    </PersistGate>
   </Provider>
 );
