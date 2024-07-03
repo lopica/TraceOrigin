@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
 import { useAddProductMutation } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import ImageBox from "../../components/UI/ImageBox";
-import Button from "../../components/UI/Button";
 import { useForm } from "react-hook-form";
 import Wizzard from "../../components/Wizzard";
 import useCategory from "../../hooks/use-category";

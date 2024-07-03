@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import { useFetchUserQuery, useLogoutMutation } from "../store";
+import { requireLogin, useFetchUserQuery, useLogoutMutation } from "../store";
+import { useDispatch } from "react-redux";
 function Avatar() {
   const { data, isError, isFetching } = useFetchUserQuery();
+  const dispatch = useDispatch()
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
 
   function handleLogout() {
+    dispatch(requireLogin())
     logout().unwrap().then(navigate("/"));
   }
 

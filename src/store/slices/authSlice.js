@@ -14,12 +14,9 @@ const authSlice = createSlice({
       console.log('login true')
       state.isAuthenticated = true;
     },
-    logout(state, action) {
-      state.isAuthenticated = false;
-    }
   }
 });
 
-export const { requireLogin, loginSuccess, logout } = authSlice.actions;
+export const { requireLogin, loginSuccess } = authSlice.actions;
 
 export default authSlice.reducer;

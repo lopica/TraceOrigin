@@ -18,11 +18,10 @@ export default function Layout() {
     if (currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin")) {
       console.log(isAuthenticated)
       if (!isAuthenticated) {
-        console.log(isAuthenticated)
         navigate('/portal/login')
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentPath]);
 
   return (
     <Fragment>

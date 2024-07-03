@@ -1,16 +1,27 @@
 import { FaPlus } from "react-icons/fa";
 import emptyProductImage from "/no_product.jpg";
 import dogBox from "/dog_box.jpg";
+import useToast from "../../hooks/use-toast";
 
 function Card({ card }) {
+  const { getToast } = useToast();
   if (!card) {
     return (
       <div className="card w-44 h-52 bg-white md:max-w-xl mx-auto ">
         <div className="card-body flex flex-col items-center justify-center">
-            <FaPlus className="text-6xl fill-blue-500" />
+          <FaPlus className="text-6xl fill-blue-500" />
         </div>
       </div>
     );
+  }
+
+  if (card === "loading") {
+    return <div className="skeleton w-44 h-52"></div>;
+  }
+
+  if (card === "error") {
+    getToast('Không thể tải dữ liệu')
+    return;
   }
 
   return (

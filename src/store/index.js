@@ -119,4 +119,4 @@ export {
   updateImagesData,
   updateAvatar,
 } from "./slices/productForm";
-export { requireLogin, loginSuccess, logout } from "./slices/authSlice";
+export { requireLogin, loginSuccess } from "./slices/authSlice";

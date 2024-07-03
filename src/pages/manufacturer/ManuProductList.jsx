@@ -1,78 +1,54 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link } from "react-router-dom";
-import { useGetAllCategoriesQuery, useSearchProductQuery } from "../../store";
 import Input from "../../components/UI/Input";
 import useCategory from "../../hooks/use-category";
+import useProduct from "../../hooks/use-product";
 
 function ManuProductList() {
-  const { data, isError, isFetching } = useSearchProductQuery({
-    "pageNumber": 0,
-    "pageSize": 6,
-    "type": 'asc',
-    "startDate": 0,
-    "endDate": 0,
-    "name": ''
-  })
+  const [inputSearch, setInputSearch] = useState({
+    nameSearch: "",
+    categoryIdSearch: "",
+  });
   const { categoriesData } = useCategory();
+  const { productsData } = useProduct(inputSearch);
 
-  let cards;
-  let renderedCards;
-  if (isFetching) {
-    renderedCards = <>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <div key={index} className="skeleton w-44 h-52"></div>
-      ))}
-
-    </>
-  } else if (isError) {
-    //fetch product loi
-    renderedCards = <>
-      <Link to={`test`}>
-        <Card card={{ id: 'test', name: 'Test', image: '' }} />
-      </Link>
-      <Link to="add">
-        <Card />
-      </Link>
-    </>
-  } else {
-    const products = data.content
-    cards = products?.map(product => {
-      return { id: product.productId, name: product.productName, image: '' }
+  const searchHandler = (identifier, e) => {
+    setInputSearch(prev=>{
+      return {...prev, [identifier]: e.target.value}
     })
-    renderedCards = <>
-      {cards?.map((card) => (
-        <Link key={card.id} to={`${card.id}`}>
-          <Card card={card} />
-        </Link>
-      ))}
-      <Link to={`test`}>
-        <Card card={{ id: 'test', name: 'Test', image: '' }} />
-      </Link>
-      <Link to="add">
-        <Card />
-      </Link>
-    </>
-  }
+  };
+
+  useEffect(()=>{
+    console.log(inputSearch)
+  },[inputSearch])
 
   return (
     <div className="flex flex-col gap-8 justify-between py-2 px-8">
       <div className="flex justify-between gap-12 px-4">
         <Input
-          label='Tên sản phẩm'
-          type='search'
-          placeholder='sản phẩm A'
+          label="Tên sản phẩm"
+          type="search"
+          placeholder="sản phẩm A"
+          onChange={(e) => searchHandler("nameSearch", e)}
         />
         <Input
-          label='Loại sản phẩm'
-          type='select'
+          label="Loại sản phẩm"
+          type="select"
           data={categoriesData}
-          placeholder='Chọn danh mục'
+          placeholder="Chọn danh mục"
+          onChange={(e)=>searchHandler('categoryIdSearch', e)}
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center">
-        {renderedCards}
-
+        <Link to="add">
+          <Card />
+        </Link>
+        {productsData?.map((card, idx) => (
+          <Link key={idx} to={`${card.id}`}>
+            <Card card={card} />
+          </Link>
+        ))}
       </div>
       <div className="flex justify-end mr-4">
         {/* footer */}

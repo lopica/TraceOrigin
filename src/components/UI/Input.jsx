@@ -45,8 +45,8 @@ const Input = React.forwardRef(
             <option value="">{placeholder}</option>
             {Array.isArray(data) &&
               data.length &&
-              data.map((option, idx) => (
-                <option key={idx} value={`${option.id},${option.content}`}>
+              data.map((option, _) => (
+                <option key={option.id} value={`${option.id},${option.content}`}>
                   {option.content}
                 </option>
               ))}
