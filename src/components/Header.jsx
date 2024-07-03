@@ -5,12 +5,14 @@ import Avatar from "./Avatar";
 import ThemeBtn from "./ThemeBtn";
 import Hamburger from "./UI/Hamburger";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Header() {
   // const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   let location = useLocation();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen); // Toggle the state between true and false
@@ -53,7 +55,7 @@ function Header() {
       </Link>
     );
     userContent = (
-      <Link to="/manufacturer/products">
+      <Link to={isAuthenticated ? "/manufacturer/products" : '/portal/login'}>
         <p className="btn btn-ghost text-xl ml-4">Portal</p>
       </Link>
     );
@@ -109,9 +111,7 @@ function Header() {
 
   const mobileHeader = (
     <div className="navbar bg-white px-4 border">
-      <div className="navbar-start">
-        {menuMobile}
-      </div>
+      <div className="navbar-start">{menuMobile}</div>
       <div className="navbar-center">
         {/* <ThemeBtn theme={theme} handleClick={handleToggle} /> */}
       </div>

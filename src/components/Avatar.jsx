@@ -1,22 +1,30 @@
 import { useNavigate } from "react-router-dom";
-import { requireLogin, useFetchUserQuery, useLogoutMutation } from "../store";
+import {
+  requireLogin,
+  updateUser,
+  useFetchUserQuery,
+  useLogoutMutation,
+} from "../store";
 import { useDispatch } from "react-redux";
+import useUser from "../hooks/use-user";
 function Avatar() {
-  const { data, isError, isFetching } = useFetchUserQuery();
-  const dispatch = useDispatch()
+  const { isFetching } = useUser();
+  const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
 
   function handleLogout() {
-    dispatch(requireLogin())
-    logout().unwrap().then(navigate("/"));
+    dispatch(requireLogin());
+    dispatch(updateUser({}));
+    logout()
+      .unwrap()
+      .then(navigate("/"))
+      .catch((res) => console.log(res));
   }
 
   if (isFetching) {
-    return <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>
+    return <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
   }
-
-
 
   return (
     <div className="dropdown dropdown-end">

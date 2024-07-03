@@ -4,8 +4,12 @@ import { Link } from "react-router-dom";
 import Input from "../../components/UI/Input";
 import useCategory from "../../hooks/use-category";
 import useProduct from "../../hooks/use-product";
+import Button from "../../components/UI/Button";
+import handleKeyDown from "../../utils/handleKeyDown";
+import { useForm } from "react-hook-form";
 
 function ManuProductList() {
+  const {handleSubmit, register} = useForm({mode: 'onTouched'})
   const [inputSearch, setInputSearch] = useState({
     nameSearch: "",
     categoryIdSearch: "",
@@ -13,34 +17,40 @@ function ManuProductList() {
   const { categoriesData } = useCategory();
   const { productsData } = useProduct(inputSearch);
 
-  const searchHandler = (identifier, e) => {
+  const searchHandler = (data) => {
+    console.log(data)
     setInputSearch(prev=>{
-      return {...prev, [identifier]: e.target.value}
+      return {
+        nameSearch: data.nameSearch,
+        categorySearch: data.categorySearch.split(',')[0]
+      }
     })
   };
+  
 
-  useEffect(()=>{
-    console.log(inputSearch)
-  },[inputSearch])
+  // useEffect(()=>{
+  //   console.log(inputSearch)
+  // },[inputSearch])
 
   return (
-    <div className="flex flex-col gap-8 justify-between py-2 px-8">
-      <div className="flex justify-between xl:justify-around gap-12 px-4">
+    <div className="flex flex-col gap-8 justify-between py-4">
+      <form className="flex justify-between items-end xl:justify-around gap-12 px-4" onKeyDown={handleKeyDown} onSubmit={handleSubmit(searchHandler)}>
         <Input
           label="Tên sản phẩm"
+          {...register('nameSearch')}
           type="search"
           placeholder="sản phẩm A"
-          onBlur={(e) => searchHandler("nameSearch", e)}
         />
         <Input
           label="Loại sản phẩm"
           type="select"
+          {...register('categorySearch')}
           data={categoriesData}
           placeholder="Chọn danh mục"
-          onBlur={(e)=>searchHandler('categoryIdSearch', e)}
         />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center">
+        <Button primary rounded className='w-[8rem] h-[5svh] mb-2 p-2 '>Tìm kiếm</Button>
+      </form>
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
         <Link to="add">
           <Card />
         </Link>

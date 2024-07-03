@@ -14,16 +14,17 @@ import { registerFormReducer } from "./slices/registerFormSlice";
 import { locationDataReducer } from "./slices/locationDataSlice";
 import { productFormReducer } from "./slices/productForm";
 import authSliceReducer from "./slices/authSlice";
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; 
-import { combineReducers } from '@reduxjs/toolkit';
+import { userSliceReducer } from "./slices/userSlice";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { combineReducers } from "@reduxjs/toolkit";
 
 // Define the persist configuration
 const persistConfig = {
-  key: 'root',
+  key: "root",
   version: 1,
   storage,
-  whitelist: ['authSlice'] // List of reducers to persist, add more as needed
+  whitelist: ["authSlice"], // List of reducers to persist, add more as needed
 };
 
 const rootReducer = combineReducers({
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   locationData: locationDataReducer,
   productForm: productFormReducer,
   authSlice: authSliceReducer,
+  userSlice: userSliceReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -46,13 +48,19 @@ const rootReducer = combineReducers({
 // Apply persistReducer wrapper
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/PAUSE', 'persist/PERSIST', 'persist/PURGE', 'persist/REGISTER'],
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/PAUSE",
+          "persist/PERSIST",
+          "persist/PURGE",
+          "persist/REGISTER",
+        ],
       },
     }).concat(
       authApi.middleware,
@@ -66,7 +74,6 @@ const store = configureStore({
       classifierApi.middleware
     ),
 });
-
 
 setupListeners(store.dispatch);
 
@@ -120,3 +127,4 @@ export {
   updateAvatar,
 } from "./slices/productForm";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
+export { updateUser } from "./slices/userSlice";

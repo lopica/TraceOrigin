@@ -19,16 +19,7 @@ const authApi = createApi({
       await pause(3000);
       return fetch(...args);
     },
-    responseHandler: async (response) => {
-      if (response.ok && response.headers.get("Content-Type")?.includes("application/json")) {
-        return await response.json(); 
-      } else if (!response.ok) {
-        return JSON.parse(response?.data).description
-      } 
-      else {
-        return response.text(); 
-      }
-    },
+    
   }),
   
   endpoints(builder) {
@@ -49,11 +40,15 @@ const authApi = createApi({
         },
       }),
       login: builder.mutation({
+        // invalidatesTags: ['Products'],
         query: (input) => {
           return {
             url: "/login",
             method: "POST",
             body: {...input},
+            responseHandler: (res) => {
+
+            }
           };
         },
       }),
@@ -62,6 +57,9 @@ const authApi = createApi({
           return {
             url: '/logout',
             method: 'POST',
+            responseHandler: (res) => {
+
+            }
           }
         }
       })

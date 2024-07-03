@@ -18,13 +18,6 @@ const productApi = createApi({
             await pause(3000);
             return fetch(...args);
         },
-        responseHandler: async (response) => {
-            if (response.headers.get("Content-Type")?.includes("application/json")) {
-                return await response.json(); // Parse as JSON if content-type is json
-            } else {
-                return response.text(); // Otherwise, return as text
-            }
-        },
     }),
     endpoints(builder) {
         return {
@@ -40,6 +33,7 @@ const productApi = createApi({
                 }
             }),
             searchProduct: builder.query({
+                // providesTags: ['Products'],
                 query: (request) => {
                     return {
                         url: '/findAllProductByManufacturerId',
@@ -53,7 +47,7 @@ const productApi = createApi({
                             "name": request.searchTerm || ''  //contain
                         }
                     }
-                }
+                },
             }),
             viewProductDetail: builder.query({
                 query: (productId) => {

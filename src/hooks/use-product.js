@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { requireLogin, useSearchProductQuery } from "../store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function useProduct (inputSearch) {
   const dispatch = useDispatch()
   const [productsData, setProductData] = useState([]);
-  const { data, isError, isFetching, error } = useSearchProductQuery({
+  const user = useSelector(state=>state.userSlice) 
+  const { data, isError, isFetching, error, refetch } = useSearchProductQuery({
     pageNumber: 0,
     pageSize: 6,
     type: "asc",
@@ -36,6 +37,10 @@ export default function useProduct (inputSearch) {
       );
     }
   }, [isFetching, isError, data]);
+
+  useEffect(()=>{
+    if (user.userId) refetch()
+  },[user.userId])
   
   return { productsData };
 }
