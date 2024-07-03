@@ -29,7 +29,7 @@ const Input = React.forwardRef(
 
     if (type === "select") {
       return (
-        <label className="form-control w-full max-w-xl">
+        <label className="form-control w-full max-w-sm">
           <div className="label">
             <div className="tooltip" data-tip={tooltip}>
               <span className="label-text text-base">{label}</span>
@@ -65,7 +65,7 @@ const Input = React.forwardRef(
     return (
       <>
         {unit ? (
-          <label className="form-control w-fit max-w-xl">
+          <label className="form-control w-fit max-w-sm">
             <div className="label">
               <div className="tooltip" data-tip={tooltip}>
                 <span className="label-text text-base">{label}</span>
@@ -84,14 +84,14 @@ const Input = React.forwardRef(
             </label>
             {error && (
               <div className="label">
-                <span className="label-text-alt text-left text-error text-sm">
+                <span className="label-text-alt text-left text-error text-md">
                   {error}
                 </span>
               </div>
             )}
           </label>
         ) : (
-          <label className="form-control w-full max-w-xl">
+          <label className="form-control w-full max-w-sm">
             <div className="label">
               <div className="tooltip" data-tip={tooltip}>
                 <span className="label-text text-base">{label}</span>
@@ -102,7 +102,7 @@ const Input = React.forwardRef(
               {...props}
               onChange={handleInputChange}
               onBlur={onBlur}
-              className="input input-bordered w-full max-w-xl"
+              className="input input-bordered w-full max-w-sm"
             />
             {error && (
               <div className="label">

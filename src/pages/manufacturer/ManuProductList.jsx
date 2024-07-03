@@ -25,7 +25,7 @@ function ManuProductList() {
 
   return (
     <div className="flex flex-col gap-8 justify-between py-2 px-8">
-      <div className="flex justify-between gap-12 px-4">
+      <div className="flex justify-between xl:justify-around gap-12 px-4">
         <Input
           label="Tên sản phẩm"
           type="search"

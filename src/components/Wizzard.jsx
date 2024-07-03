@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Button from "./UI/Button";
+import handleKeyDown from "../utils/handleKeyDown";
+import useToast from "../hooks/use-toast";
 
 let valid;
 let images;
@@ -16,12 +18,7 @@ function Wizzard({
   avatar,
 }) {
   const [currentStep, setCurrentStep] = useState(0);
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault(); // Prevent the default form submit behavior
-    }
-  };
+  const { getToast } = useToast();
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
@@ -33,10 +30,12 @@ function Wizzard({
         const avatar = getValues("avatar"); // Assuming getValues is a function that retrieves the values
 
         if (!images.length > 0) {
-          alert("Bạn hãy chọn ít nhất 1 ảnh.");
+          // alert("Bạn hãy chọn ít nhất 1 ảnh.");
+          getToast("Bạn hãy chọn ít nhất 1 ảnh.")
           return;
         } else if (avatar === "") {
-          alert("Bạn hãy chọn ít nhất 1 ảnh làm ảnh chính.");
+          // alert("Bạn hãy chọn ít nhất 1 ảnh làm ảnh chính.");
+          getToast("Bạn hãy chọn ít nhất 1 ảnh làm ảnh chính.")
           return;
         } else {
           valid = true;
@@ -54,7 +53,7 @@ function Wizzard({
     } else if (identifier === "back") {
       setCurrentStep(currentStep - 1);
     } else if (identifier === "submit") {
-        onSubmit();
+      onSubmit();
     }
   };
 

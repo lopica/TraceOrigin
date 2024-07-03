@@ -29,13 +29,6 @@ const itemApi = createApi({
 
             return fetch(input, init, ...args);
         },
-        responseHandler: async (response) => {
-            if (response.headers.get("Content-Type")?.includes("application/json")) {
-                return await response.json(); // Parse as JSON if content-type is json
-            } else {
-                return response.text(); // Otherwise, return as text
-            }
-        },
     }),
     endpoints(builder) {
         return {

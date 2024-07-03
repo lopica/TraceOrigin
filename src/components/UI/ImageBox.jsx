@@ -66,7 +66,6 @@ function ImageBox({ image, actionBar, show, add, idx, setValue, ...props }) {
             onChange={addImage}
           />
         </div>
-        {/* {!isValid && <p className="text-error text-left">Bạn cần chọn ít nhất 1 ảnh</p>} */}
         </>
       ) : (
         <div className="indicator">

@@ -132,7 +132,6 @@ function ManuProductDetail() {
   //   console.log(data);
   // };
 
-  const status = ["status 1", "status 2"];
 
   
 

@@ -31,12 +31,12 @@ export default function Layout() {
       </header>
       <section className="pt-[8svh] grid grid-cols-5">
         {matchPaterm && (
-          <aside className="hidden md:block">
+          <aside className="hidden md:block md:h-[92svh] md:fixed md:w-[15svw] bg-slate-500 text-white">
             <SideBar />
           </aside>
         )}
         {matchPaterm && (
-          <main className="col-span-5 md:col-span-4">
+          <main className="col-span-5 md:col-span-4 md:col-start-2">
             {/* <Breadcrumps /> */}
             <Outlet />
           </main>

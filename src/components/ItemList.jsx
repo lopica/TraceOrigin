@@ -3,7 +3,7 @@ import SortableTable from "./SortableTable";
 import useCategory from "../hooks/use-category";
 import Input from "./UI/Input";
 
-export default function ItemList(productId) {
+export default function ItemList({productId}) {
   const { itemsData, itemConfig } = useItem(productId);
   const { categoriesData } = useCategory();
   return (

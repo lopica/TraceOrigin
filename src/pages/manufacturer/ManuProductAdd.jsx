@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
-import { useAddProductMutation } from "../../store";
+import { updateAvatar, updateImages, useAddProductMutation } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import ImageBox from "../../components/UI/ImageBox";
 import { useForm } from "react-hook-form";
 import Wizzard from "../../components/Wizzard";
 import useCategory from "../../hooks/use-category";
 import useToast from "../../hooks/use-toast";
+import { useEffect } from "react";
 
 const stepList = [
   "Thông tin cơ bản",
@@ -24,6 +25,7 @@ const validateStep = [
 let request;
 
 function ManuProductAdd() {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const { avatar } = useSelector((state) => state.productForm);
   const { categoriesData } = useCategory();
@@ -67,6 +69,13 @@ function ManuProductAdd() {
         console.log(err);
       });
   };
+
+  useEffect(()=>{
+    return () => {
+      dispatch(updateImages([]))
+      dispatch(updateAvatar(''))
+    }
+  },[dispatch])
 
   return (
     <div className="p-4 mx-auto">
@@ -203,7 +212,7 @@ function ManuProductAdd() {
             {...register("weight", {
               required: "Bạn cần điền cân nặng sản phẩm",
               min: {
-                value: 1,
+                value: 0.1,
                 message: "Cân nặng sản phẩm phải là 1 số dương",
               },
             })}

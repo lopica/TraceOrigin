@@ -5,6 +5,7 @@ import Button from "../../components/UI/Button";
 import useToast from "../../hooks/use-toast";
 import { HiEye } from "react-icons/hi";
 import { useDispatch } from "react-redux";
+import handleKeyDown from "../../utils/handleKeyDown";
 
 function Login() {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ function Login() {
         </h2>
       </div>
       <div className="py-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={submitHandler}>
+        <form className="space-y-6" onSubmit={submitHandler} onKeyDown={handleKeyDown}>
           <div>
             <label className="input input-bordered flex items-center gap-2">
               <svg

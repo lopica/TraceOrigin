@@ -48,7 +48,7 @@ export default function useProductDetail(productId) {
       // setImages(prev => {
       //   return [...prev, productDetail.avatar]
       // })
-      dispatch(updateAvatar(productDetail.avatar))
+      // dispatch(updateAvatar(productDetail.avatar))
       console.log(productDetail.listImages)
       console.log(productDetail.avatar)
     }

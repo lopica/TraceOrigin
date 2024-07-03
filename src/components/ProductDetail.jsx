@@ -19,7 +19,7 @@ export default function ProductList({ productId }) {
         <p className="mb-2 xl:ml-4">Các ảnh minh họa</p>
 
         <div className="flex space-x-4 mb-8 xl:ml-4">
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-4 justify-items-center">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-4  2xl:grid-cols-5 gap-4 justify-items-center">
             {images.map((image, i) => (
               <div key={i}>
                 <ImageBox
