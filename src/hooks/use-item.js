@@ -43,7 +43,10 @@ export default function useItem(productId) {
     if (isItemError) {
       setItemsData([{}]);
       getToast("Gặp lỗi khi tải dữ liệu item");
-      if (error.status === 401) dispatch(requireLogin());
+      if (error.status === 401) {
+        console.log('vo day item')
+        dispatch(requireLogin());
+      }
     }
     if (!isItemError && !isItemFetch && data) {
       setItemsData(data);

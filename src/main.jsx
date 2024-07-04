@@ -22,7 +22,7 @@ const persistor = persistStore(store);
 
 function AppRouter() {
   const user = useSelector((state) => state.userSlice);
-  // console.log(user.userId)
+  // console.log(user)
   const router = createBrowserRouter([
     {
       path: "/",
@@ -49,7 +49,7 @@ function AppRouter() {
           path: "/manufacturer",
           children: [
             { index: true, element: <p>Hello Manufacturer</p> },
-            { path: "products", element: <ManuProductList key={user.userId} /> },
+            { path: "products", element: <ManuProductList /> },
             { path: "products/:productId", element: <ManuProductDetail /> },
             { path: "products/add", element: <ManuProductAdd /> },
           ],
@@ -69,7 +69,7 @@ function AppRouter() {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <PersistGate loading={<Splash />} persistor={persistor}>
+    <PersistGate key={'key'} loading={<Splash />} persistor={persistor}>
       <AppRouter />
     </PersistGate>
   </Provider>

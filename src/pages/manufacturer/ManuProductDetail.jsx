@@ -249,15 +249,10 @@ function ManuProductDetail() {
   // );
 
   return (
-    <div className="p-2 lg:w-[800px] lg:mx-auto xl:w-[1000px] xl:grid xl:grid-cols-2 xl:gap-4 2xl:w-[1200px]">
-      <Canvas3D />
+    <div className="px-4 py-4">
       {/* Product Name */}
-      <div className="overflow-x-auto mb-8">
         <ProductDetail productId={productId} />
-      </div>
-      <div className="xl:col-span-2" />
-      <div className="xl:col-span-2">
-        <p className="mb-2">Các item</p>
+
         {/* {itemFeatures} */}
         {/* <div className="flex justify-end">
           <Button primary onClick={handleClick} rounded>
@@ -266,7 +261,6 @@ function ManuProductDetail() {
         </div>
         {showModal && addItemModal} */}
         <ItemList productId={productId} />
-      </div>
     </div>
   );
 }

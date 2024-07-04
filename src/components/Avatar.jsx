@@ -7,55 +7,62 @@ import {
 } from "../store";
 import { useDispatch } from "react-redux";
 import useUser from "../hooks/use-user";
+import useToast from "../hooks/use-toast";
 function Avatar() {
-  const { isFetching } = useUser();
+  const { isFetching, data, isError } = useUser();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
+  const { getToast } = useToast();
 
   function handleLogout() {
     dispatch(requireLogin());
     dispatch(updateUser({}));
     logout()
       .unwrap()
+      .then((res) => {
+        getToast(res);
+      })
       .then(navigate("/"))
       .catch((res) => console.log(res));
   }
 
   if (isFetching) {
     return <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
-  }
-
-  return (
-    <div className="dropdown dropdown-end">
-      <div
-        tabIndex={0}
-        role="button"
-        className="btn btn-ghost btn-circle avatar"
-      >
-        <div className="w-10 rounded-full">
-          <img
-            alt="Tailwind CSS Navbar component"
-            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-          />
+  } else if (isError) {
+    return <p>Loi load ava</p>;
+  } else {
+    return (
+      <div className="dropdown dropdown-end">
+        <div
+          tabIndex={0}
+          role="button"
+          className="btn btn-ghost btn-circle avatar"
+        >
+          <div className="w-10 rounded-full">
+            <img
+              alt="Tailwind CSS Navbar component"
+              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+            />
+          </div>
         </div>
+        <ul
+          tabIndex={0}
+          className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+        >
+          <li>
+            <a className="justify-between">Profile</a>
+          </li>
+          <li>
+            <a>Settings</a>
+          </li>
+          <li>
+            <a onClick={handleLogout}>Logout</a>
+          </li>
+        </ul>
       </div>
-      <ul
-        tabIndex={0}
-        className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
-      >
-        <li>
-          <a className="justify-between">Profile</a>
-        </li>
-        <li>
-          <a>Settings</a>
-        </li>
-        <li>
-          <a onClick={handleLogout}>Logout</a>
-        </li>
-      </ul>
-    </div>
-  );
+    );
+  }
 }
 
 export default Avatar;

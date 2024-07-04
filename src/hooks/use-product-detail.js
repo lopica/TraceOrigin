@@ -32,7 +32,10 @@ export default function useProductDetail(productId) {
     }
     if (isProductError) {
       setProductData(["error"]);
-      if (error.status === 401) dispatch(requireLogin());
+      if (error.status === 401) {
+        console.log('vo day product detail')
+        dispatch(requireLogin());
+      }
     }
     if (!isProductError && !isProductFetch && productDetail) {
       console.log(productDetail)

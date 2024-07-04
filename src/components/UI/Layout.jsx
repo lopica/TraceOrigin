@@ -29,20 +29,19 @@ export default function Layout() {
       <header className="fixed top-0 left-0 right-0 w-full h-[8svh] z-10">
         <Header />
       </header>
-      <section className="pt-[8svh] grid grid-cols-5">
+      <section className="pt-[8svh]">
         {matchPaterm && (
           <aside className="hidden md:block md:h-[92svh] md:fixed md:w-[15svw] bg-slate-500 text-white">
             <SideBar />
           </aside>
         )}
         {matchPaterm && (
-          <main className="col-span-5 md:col-span-4 md:col-start-2">
-            {/* <Breadcrumps /> */}
+          <main className="md:ml-[15svw]">
             <Outlet />
           </main>
         )}
         {!matchPaterm && (
-          <main className="col-span-5">
+          <main className="">
             <Outlet />
           </main>
         )}
