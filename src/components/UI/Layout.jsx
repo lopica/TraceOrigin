@@ -16,7 +16,7 @@ export default function Layout() {
 
   useEffect(() => {
     if (currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin")) {
-      console.log(isAuthenticated)
+      // console.log(isAuthenticated)
       if (!isAuthenticated) {
         navigate('/portal/login')
       }

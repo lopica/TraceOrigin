@@ -7,26 +7,39 @@ import useProduct from "../../hooks/use-product";
 import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { requireLogin } from "../../store";
 
 let renderedProducts;
+let count = 0;
 function ManuProductList() {
+  const dispatch = useDispatch();
   const { handleSubmit, register } = useForm({ mode: "onTouched" });
   const { categoriesData } = useCategory();
   const {
     isFetching: isProductsFetch,
     isError: isProductsError,
     data: products,
+    error,
   } = useProduct();
+  count++;
 
   const searchHandler = (data) => {
-    setInputSearch((_) => {
-      return {
-        nameSearch: data.nameSearch,
-        categorySearch: data.categorySearch.split(",")[0],
-      };
+    setInputSearch({
+      nameSearch: data.nameSearch,
+      categorySearch: data.categorySearch.split(",")[0],
     });
   };
+
+  useEffect(() => {
+    if (count > 6 && isProductsError) {
+      if (error.status === 401) {
+        console.log(isProductsError);
+        console.log(count);
+        dispatch(requireLogin());
+      }
+    }
+  }, [isProductsError]);
 
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (

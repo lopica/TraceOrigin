@@ -8,12 +8,16 @@ import {
 import { useDispatch } from "react-redux";
 import useUser from "../hooks/use-user";
 import useToast from "../hooks/use-toast";
+import { useEffect } from "react";
+
+let count = 0;
 function Avatar() {
-  const { isFetching, data, isError } = useUser();
+  const { isFetching, data, isError, error } = useUser();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const { getToast } = useToast();
+  count++;
 
   function handleLogout() {
     dispatch(requireLogin());
@@ -26,6 +30,16 @@ function Avatar() {
       .then(navigate("/"))
       .catch((res) => console.log(res));
   }
+
+  useEffect(() => {
+    if (count > 6 && isError) {
+      if (error.status === 401) {
+        console.log(isError);
+        console.log(count);
+        dispatch(requireLogin());
+      }
+    }
+  }, [isError]);
 
   if (isFetching) {
     return <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;

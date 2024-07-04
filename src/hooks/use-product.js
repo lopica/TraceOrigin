@@ -15,5 +15,5 @@ export default function useProduct() {
 
   
 
-  return { isFetching, isError, data };
+  return { isFetching, isError, data, error };
 }
