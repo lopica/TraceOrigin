@@ -8,18 +8,15 @@ function Table({ data, config, keyFn }) {
   });
 
   const renderedRows = data.map((rowData) => {
-    // console.log('rowData:')
-    // console.log(rowData)
+    const rowKey = keyFn(rowData); // Get a unique key for the row
     const renderedCells = config.map((column) => {
-      // console.log('column:')
-      // console.log(column)
       return (
-        <td className="p-3" key={column.label}>
+        <td className="p-3" key={`${rowKey}-${column.label}`}>
           {column.render(rowData)}
         </td>
       );
     });
-    return <tr key={keyFn(rowData)}>{renderedCells}</tr>;
+    return <tr key={rowKey}>{renderedCells}</tr>;
   });
 
   return (
@@ -28,7 +25,9 @@ function Table({ data, config, keyFn }) {
         <thead>
           <tr className="border-b-2">{renderedHeaders}</tr>
         </thead>
-        <tbody>{renderedRows}</tbody>
+        <tbody>
+          {renderedRows}
+        </tbody>
       </table>
       {data.length === 0 && <p className="text-center">Chưa có item</p>}
     </div>

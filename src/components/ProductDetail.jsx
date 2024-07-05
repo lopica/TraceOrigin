@@ -3,9 +3,11 @@ import useProductDetail from "../hooks/use-product-detail";
 import ImageBox from "./UI/ImageBox";
 import { useForm } from "react-hook-form";
 import Carousel from "./UI/Carousel";
+import { useEffect, useState } from "react";
 
 let renderedProductDetail;
-export default function ProductList({ productId }) {
+export default function ProductDetail({ productId }) {
+  const [slides, setSlides] = useState([]);
   const {
     productData,
     productConfig,
@@ -16,6 +18,13 @@ export default function ProductList({ productId }) {
   } = useProductDetail(productId);
   const { setValue } = useForm({ mode: "onTouched" });
 
+  useEffect(() => {
+    if (images.length > 0) {
+      setSlides(images.map((image, idx) => <img src={image} alt={`${name} ${idx}`} />));
+    }
+  }, [images, isProductFetch, isProductError]);
+
+  let renderedProductDetail;
   if (isProductFetch) {
     renderedProductDetail = <div className="skeleton h-[40svh] w-full"></div>;
   } else if (isProductError) {
@@ -37,7 +46,7 @@ export default function ProductList({ productId }) {
 
   return (
     <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-28">
-      <Carousel images={images} />
+      <Carousel slides={slides} />
       {renderedProductDetail}
     </section>
   );

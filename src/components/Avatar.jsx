@@ -33,7 +33,7 @@ function Avatar() {
   }
 
   useEffect(() => {
-    if (count > 6 && isError) {
+    if (count > 10 && isError) {
       if (error.status === 401) {
         console.log(isError);
         console.log(count);

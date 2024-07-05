@@ -1,62 +1,79 @@
-import React from 'react';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';  
+import useEmblaCarousel from 'embla-carousel-react';
 
-const Carousel = ({ images }) => {
-  const settings = {
-    customPaging: function (i) {
-      return (
-        <Link className='block w-14 h-14'>
-          <img src={images[i]} alt={`Thumbnail ${i}`} className="w-30 h-30 object-cover border border-gray-300 mx-1" />
-          {/* <div className=''>sdas</div> */}
-        </Link>
-      );
+const Carousel = ({ slides, options }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
+  const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
+    containScroll: 'keepSnaps',
+    dragFree: true,
+  });
+
+  const onThumbClick = useCallback(
+    (index) => {
+      if (!emblaMainApi || !emblaThumbsApi) return;
+      emblaMainApi.scrollTo(index);
     },
-    dots: true,
-    dotsClass: "slick-dots slick-thumb",
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />
-  };
+    [emblaMainApi, emblaThumbsApi]
+  );
+
+  const onSelect = useCallback(() => {
+    if (!emblaMainApi || !emblaThumbsApi) return;
+    setSelectedIndex(emblaMainApi.selectedScrollSnap());
+    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
+  }, [emblaMainApi, emblaThumbsApi]);
+
+  useEffect(() => {
+    if (!emblaMainApi) return;
+    onSelect();
+    emblaMainApi.on('select', onSelect).on('reInit', onSelect);
+  }, [emblaMainApi, onSelect]);
 
   return (
-    <div className="slider-container mb-32 md:mb-20 lg:mb-0 max-w-lg mx-auto lg:w-full">
-      <Slider {...settings}>
-        {images.map((image, index) => (
-          <div key={index}>
-            <img src={image} alt={`Slide ${index}`} className="w-full h-auto" />
+    <div className="embla">
+      <div className="embla__viewport" ref={emblaMainRef}>
+        <div className="embla__container">
+          {slides.map((slide, index) => (
+            <div className="embla__slide" key={index}>
+              {slide}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="embla-thumbs">
+        <div className="embla-thumbs__viewport" ref={emblaThumbsRef}>
+          <div className="embla-thumbs__container">
+            {slides.map((slide, index) => (
+              <Thumb
+                key={index}
+                onClick={() => onThumbClick(index)}
+                selected={index === selectedIndex}
+                index={index}
+                slide={slide}
+              />
+            ))}
           </div>
-        ))}
-      </Slider>
+        </div>
+      </div>
     </div>
   );
 };
 
-function SampleNextArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block", background: "rgb(56 189 248)",  }}
+const Thumb = ({ selected, index, onClick, slide }) => {
+  return (
+    <div
+      className={`embla-thumbs__slide ${selected ? 'embla-thumbs__slide--selected' : ''}`}
+    >
+      <button
         onClick={onClick}
-      />
-    );
-  }
-  
-  function SamplePrevArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block", background: "rgb(56 189 248)", }}
-        onClick={onClick}
-      />
-    );
-  }
+        type="button"
+        className="embla-thumbs__slide__number"
+      >
+        {/* {index + 1} */}
+        {slide}
+      </button>
+    </div>
+  );
+};
 
 export default Carousel;
