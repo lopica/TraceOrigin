@@ -13,11 +13,11 @@ const productApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/product`,
     credentials: "include",
-    fetchFn: async (...args) => {
-      // REMOVE FOR PRODUCTION
-      await pause(3000);
-      return fetch(...args);
-    },
+    // fetchFn: async (...args) => {
+    //   // REMOVE FOR PRODUCTION
+    //   await pause(3000);
+    //   return fetch(...args);
+    // },
   }),
   endpoints(builder) {
     return {
@@ -41,14 +41,7 @@ const productApi = createApi({
           return {
             url: "/findAllProductByManufacturerId",
             method: "POST",
-            body: {
-              pageNumber: request.pageNumber || 0, //trang dau la 0
-              pageSize: request.pageSize || 2, //so product 1 trang
-              type: request.type || "asc", //asc vs desc
-              startDate: request.startDate || 0, //epoch
-              endDate: request.endDate || 0, //epoch
-              name: request.searchTerm || "", //contain
-            },
+            body: request
           };
         },
       }),

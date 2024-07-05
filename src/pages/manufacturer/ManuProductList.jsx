@@ -8,7 +8,7 @@ import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { requireLogin } from "../../store";
+import { requireLogin, updateCategorySearch, updateNameSearch } from "../../store";
 
 let renderedProducts;
 let count = 0;
@@ -16,19 +16,19 @@ function ManuProductList() {
   const dispatch = useDispatch();
   const { handleSubmit, register } = useForm({ mode: "onTouched" });
   const { categoriesData } = useCategory();
+  const {list: products} = useSelector(state=>state.productSlice)
   const {
     isFetching: isProductsFetch,
     isError: isProductsError,
-    data: products,
+    data,
     error,
   } = useProduct();
   count++;
 
   const searchHandler = (data) => {
-    setInputSearch({
-      nameSearch: data.nameSearch,
-      categorySearch: data.categorySearch.split(",")[0],
-    });
+    console.log(data)
+    dispatch(updateNameSearch(data.nameSearch))
+    dispatch(updateCategorySearch(data.categorySearch.split(',')[1] || ''))
   };
 
   useEffect(() => {
@@ -48,10 +48,11 @@ function ManuProductList() {
   } else if (isProductsError) {
     renderedProducts = <p>Không thể tải danh sách sản phẩm</p>;
   } else {
+    console.log(products)
     if (products) {
-      renderedProducts = products.map((card, idx) => (
-        <Link key={idx} to={`${card.id}`}>
-          <Card card={card} />
+      renderedProducts = products.map((product, idx) => (
+        <Link key={idx} to={`${product.id}`}>
+          <Card card={product} />
         </Link>
       ));
     }
@@ -60,7 +61,7 @@ function ManuProductList() {
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
       <form
-        className="flex justify-between items-end xl:justify-around gap-12 px-4"
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto"
         onKeyDown={handleKeyDown}
         onSubmit={handleSubmit(searchHandler)}
       >
@@ -77,11 +78,11 @@ function ManuProductList() {
           data={categoriesData}
           placeholder="Chọn danh mục"
         />
-        <Button primary rounded className="w-[8rem] h-[5svh] mb-2 p-2 ">
+        <Button primary rounded className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0">
           Tìm kiếm
         </Button>
       </form>
-      <div className="flex flex-start px-4">
+      <div className="flex flex-start px-4 md:ml-12">
         <Button primary rounded>
           Tạo sản phẩm
         </Button>

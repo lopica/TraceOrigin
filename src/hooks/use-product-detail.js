@@ -27,16 +27,6 @@ export default function useProductDetail(productId) {
   ];
 
   useEffect(() => {
-    if (isProductFetch) {
-      setProductData(["loading"]);
-    }
-    if (isProductError) {
-      setProductData(["error"]);
-      if (error.status === 401) {
-        console.log('vo day product detail')
-        dispatch(requireLogin());
-      }
-    }
     if (!isProductError && !isProductFetch && productDetail) {
       console.log(productDetail)
       setName(productDetail.productName);
@@ -57,5 +47,5 @@ export default function useProductDetail(productId) {
     }
   }, [isProductFetch, isProductError, productDetail]);
 
-  return { productData, productConfig, name, images };
+  return { productData, productConfig, name, images, isProductFetch, isProductError };
 }

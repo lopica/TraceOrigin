@@ -30,7 +30,7 @@ function Table({ data, config, keyFn }) {
         </thead>
         <tbody>{renderedRows}</tbody>
       </table>
-      <p className="text-center">Chưa có item</p>
+      {data.length === 0 && <p className="text-center">Chưa có item</p>}
     </div>
   );
 }

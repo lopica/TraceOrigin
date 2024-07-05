@@ -69,7 +69,7 @@ function AppRouter() {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <PersistGate key={'key'} loading={<Splash />} persistor={persistor}>
+    <PersistGate loading={<Splash />} persistor={persistor}>
       <AppRouter />
     </PersistGate>
   </Provider>
