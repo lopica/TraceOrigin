@@ -8,6 +8,6 @@ export const CONSTANTS = {
         {name: 'Verify Manufacturer', url: '/admin/VerifyManufacturers', isAdmin: true}
     ],
     openCage_API_KEY: '322f7bf039244925a233610a1e61360a',
-    domain: 'https://traceorigin.click/api',
+    domain: 'http://localhost:8080/api',
     
 }

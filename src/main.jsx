@@ -19,7 +19,8 @@ VerifyManufacturer
 import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
-
+import AdminLayout from "../src/pages/admin/AdminLayout"
+import manhTest from "./pages/admin/manhTest";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -69,7 +70,7 @@ function AppRouter() {
           path: "/manh",
           element: <AdminLayout />,
           children: [
-            { path: 'test', element: <Manhtest /> },
+            { path: 'test', element: <manhTest /> },
           ]
         },
       ],
