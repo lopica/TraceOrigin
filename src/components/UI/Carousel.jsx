@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';  
-import useEmblaCarousel from 'embla-carousel-react';
+import { useState, useEffect, useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 
 const Carousel = ({ slides, options }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
-    containScroll: 'keepSnaps',
+    containScroll: "keepSnaps",
     dragFree: true,
   });
 
@@ -26,7 +26,7 @@ const Carousel = ({ slides, options }) => {
   useEffect(() => {
     if (!emblaMainApi) return;
     onSelect();
-    emblaMainApi.on('select', onSelect).on('reInit', onSelect);
+    emblaMainApi.on("select", onSelect).on("reInit", onSelect);
   }, [emblaMainApi, onSelect]);
 
   return (
@@ -35,7 +35,7 @@ const Carousel = ({ slides, options }) => {
         <div className="embla__container">
           {slides.map((slide, index) => (
             <div className="embla__slide" key={index}>
-              {slide}
+              <div className="max-h-[60svh] overflow-y-auto">{slide}</div>
             </div>
           ))}
         </div>
@@ -62,7 +62,9 @@ const Carousel = ({ slides, options }) => {
 const Thumb = ({ selected, index, onClick, slide }) => {
   return (
     <div
-      className={`embla-thumbs__slide ${selected ? 'embla-thumbs__slide--selected' : ''}`}
+      className={`embla-thumbs__slide ${
+        selected ? "embla-thumbs__slide--selected" : ""
+      }`}
     >
       <button
         onClick={onClick}

@@ -8,31 +8,34 @@ import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { requireLogin, updateCategorySearch, updateNameSearch } from "../../store";
+import {
+  requireLogin,
+  updateCategorySearch,
+  updateNameSearch,
+} from "../../store";
 
 let renderedProducts;
-let count = 0;
 function ManuProductList() {
   const dispatch = useDispatch();
   const { handleSubmit, register } = useForm({ mode: "onTouched" });
   const { categoriesData } = useCategory();
-  const {list: products} = useSelector(state=>state.productSlice)
+  const { list: products } = useSelector((state) => state.productSlice);
   const {
     isFetching: isProductsFetch,
     isError: isProductsError,
     data,
     error,
+    isSuccess
   } = useProduct();
-  count++;
 
   const searchHandler = (data) => {
-    console.log(data)
-    dispatch(updateNameSearch(data.nameSearch))
-    dispatch(updateCategorySearch(data.categorySearch.split(',')[1] || ''))
+    console.log(data);
+    dispatch(updateNameSearch(data.nameSearch));
+    dispatch(updateCategorySearch(data.categorySearch.split(",")[1] || ""));
   };
 
   useEffect(() => {
-    if (count > 6 && isProductsError) {
+    if (isSuccess && isProductsError) {
       if (error.status === 401) {
         console.log(isProductsError);
         console.log(count);
@@ -48,7 +51,7 @@ function ManuProductList() {
   } else if (isProductsError) {
     renderedProducts = <p>Không thể tải danh sách sản phẩm</p>;
   } else {
-    console.log(products)
+    console.log(products);
     if (products) {
       renderedProducts = products.map((product, idx) => (
         <Link key={idx} to={`${product.id}`}>
@@ -78,14 +81,20 @@ function ManuProductList() {
           data={categoriesData}
           placeholder="Chọn danh mục"
         />
-        <Button primary rounded className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0">
+        <Button
+          primary
+          rounded
+          className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0"
+        >
           Tìm kiếm
         </Button>
       </form>
       <div className="flex flex-start px-4 md:ml-12">
-        <Button primary rounded>
-          Tạo sản phẩm
-        </Button>
+        <Link to="add">
+          <Button primary rounded>
+            Tạo sản phẩm
+          </Button>
+        </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
         {/* <Link to="add">

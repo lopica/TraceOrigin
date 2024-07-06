@@ -16,11 +16,10 @@ export default function ProductDetail({ productId }) {
     isProductFetch,
     isProductError,
   } = useProductDetail(productId);
-  const { setValue } = useForm({ mode: "onTouched" });
 
   useEffect(() => {
     if (images.length > 0) {
-      setSlides(images.map((image, idx) => <img src={image} alt={`${name} ${idx}`} />));
+      setSlides(images.map((image, idx) => <img src={image} alt={`${name} ${idx}`} className="" />));
     }
   }, [images, isProductFetch, isProductError]);
 
@@ -33,7 +32,7 @@ export default function ProductDetail({ productId }) {
     if (productData.length > 0) {
       renderedProductDetail = (
         <div>
-          <h1 className="text-center text-lg mb-4">{name || "no name"}</h1>
+          <h1 className="text-center text-4xl mb-4">{name || "no name"}</h1>
           <Table
             data={productData}
             config={productConfig}

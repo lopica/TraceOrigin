@@ -1,6 +1,4 @@
-import { update } from "@react-spring/three";
 import { createSlice } from "@reduxjs/toolkit";
-import { updateCategories } from "./productForm";
 
 const productSlice = createSlice({
   name: "productSlice",
@@ -8,6 +6,7 @@ const productSlice = createSlice({
     nameSearch: "",
     categorySearch: "",
     list: [],
+    productDetail: {}
   },
   reducers: {
     updateList(state, action) {
@@ -19,9 +18,12 @@ const productSlice = createSlice({
     updateCategorySearch(state, action) {
       state.categorySearch = action.payload;
     },
+    updateProductDetail(state, action) {
+      state.productDetail = action.payload;
+    }
   },
 });
 
-export const { updateNameSearch, updateCategorySearch, updateList } =
+export const { updateNameSearch, updateCategorySearch, updateList, updateProductDetail } =
   productSlice.actions;
 export const productSliceReducer = productSlice.reducer;

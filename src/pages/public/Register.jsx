@@ -81,6 +81,7 @@ function Register() {
       coordinateX: coordinate[0],
       coordinateY: coordinate[1],
     };
+    delete request.province
     console.log(request);
     // console.log(formStateRedux)
     //get data from redux and call

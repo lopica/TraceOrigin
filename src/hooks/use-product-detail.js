@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { requireLogin, updateAvatar, useViewProductDetailQuery } from "../store";
+import { requireLogin, updateAvatar, updateProductDetail, useViewProductDetailQuery } from "../store";
 import { useDispatch } from "react-redux";
 
 export default function useProductDetail(productId) {
@@ -11,6 +11,7 @@ export default function useProductDetail(productId) {
     data: productDetail,
     isError: isProductError,
     isFetching: isProductFetch,
+    isSuccess,
     error,
   } = useViewProductDetailQuery(productId);
 
@@ -27,7 +28,7 @@ export default function useProductDetail(productId) {
   ];
 
   useEffect(() => {
-    if (!isProductError && !isProductFetch && productDetail) {
+    if (!isProductError && !isProductFetch && isSuccess) {
       console.log(productDetail)
       setName(productDetail.productName);
       setProductData([
@@ -37,6 +38,7 @@ export default function useProductDetail(productId) {
         { label: "công dụng", value: productDetail.description },
         { label: "Bảo hành", value: productDetail.warranty },
       ]);
+      dispatch(updateProductDetail(productDetail))
       setImages(productDetail.listImages)
       // setImages(prev => {
       //   return [...prev, productDetail.avatar]
@@ -44,6 +46,9 @@ export default function useProductDetail(productId) {
       // dispatch(updateAvatar(productDetail.avatar))
       console.log(productDetail.listImages)
       console.log(productDetail.avatar)
+    }
+    if (isSuccess && isProductError) {
+      if(error.status === 401) dispatch(requireLogin()) 
     }
   }, [isProductFetch, isProductError, productDetail]);
 

@@ -20,6 +20,7 @@ import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
 import { serialRequestMiddleware } from "./serialRequestMiddleware";
 import { productSliceReducer } from "./slices/productSlice";
+import { itemSliceReducer } from "./slices/itemSlice";
 
 // Define the persist configuration
 const persistConfig = {
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   authSlice: authSliceReducer,
   userSlice: userSliceReducer,
   productSlice: productSliceReducer,
+  itemSlice: itemSliceReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -109,6 +111,7 @@ export {
   useFetchItemLogsByProductRecognitionQuery,
   useFetchOriginByItemLogIdQuery,
   useSearchItemsByProductIdQuery,
+  useAddItemMutation,
 } from "./apis/itemApi";
 export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";
 export {
@@ -132,4 +135,5 @@ export {
 } from "./slices/productForm";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
-export {updateCategorySearch, updateList, updateNameSearch} from './slices/productSlice'
+export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice'
+export {updateItemDetail, updateItemList} from './slices/itemSlice'

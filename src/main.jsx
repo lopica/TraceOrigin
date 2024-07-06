@@ -13,6 +13,7 @@ import {
   Login,
   ForgotPassword,
   Register,
+  ManuItemDetail,
 } from "./pages";
 import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
@@ -52,6 +53,7 @@ function AppRouter() {
             { path: "products", element: <ManuProductList /> },
             { path: "products/:productId", element: <ManuProductDetail /> },
             { path: "products/add", element: <ManuProductAdd /> },
+            { path: "products/:productId/:itemId", element: <ManuItemDetail /> },
           ],
         },
         {

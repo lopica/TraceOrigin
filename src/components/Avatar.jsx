@@ -9,16 +9,15 @@ import useUser from "../hooks/use-user";
 import useToast from "../hooks/use-toast";
 import { useEffect } from "react";
 
-let count = 0;
 let avatar;
 function Avatar() {
-  const { isFetching, isError, error } = useUser();
+  const { isFetching, isError, error, isSuccess } = useUser();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const { getToast } = useToast();
   const user = useSelector(state=>state.userSlice)
-  count++;
+  const {isAuthenticated} = useSelector(state=>state.authSlice)
 
   function handleLogout() {
     dispatch(requireLogin());
@@ -33,14 +32,15 @@ function Avatar() {
   }
 
   useEffect(() => {
-    if (count > 10 && isError) {
+    if (isSuccess && isError) {
       if (error.status === 401) {
         console.log(isError);
         console.log(count);
         dispatch(requireLogin());
       }
     }
-  }, [isError]);
+  }, [isError, isSuccess]);
+
 
   if (isFetching) {
     avatar = <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;

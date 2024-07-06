@@ -8,7 +8,7 @@ export default function useProduct() {
     (state) => state.productSlice
   );
   console.log(categorySearch)
-  const { data, isError, isFetching, error } = useSearchProductQuery({
+  const { data, isError, isFetching, error, isSuccess } = useSearchProductQuery({
     pageNumber: 0,
     pageSize: 6,
     type: "asc",
@@ -19,7 +19,7 @@ export default function useProduct() {
   });
 
   useEffect(() => {
-    if (data) {
+    if (isSuccess && !isError) {
       dispatch(
         updateList(
           data.content.map((product) => {
@@ -32,7 +32,7 @@ export default function useProduct() {
         )
       );
     }
-  }, [data]);
+  }, [isSuccess, isError]);
 
-  return { isFetching, isError, data, error };
+  return { isFetching, isError, data, error, isSuccess };
 }
