@@ -25,7 +25,7 @@ function ManuProductList() {
     isError: isProductsError,
     data,
     error,
-    isSuccess
+    isSuccess,
   } = useProduct();
 
   const searchHandler = (data) => {
@@ -64,7 +64,8 @@ function ManuProductList() {
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
       <form
-        className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto"
+        className="flex items-end flex-col justify-between gap-2 mx-auto 
+        md:flex-row md:justify-start md:gap-2 md:items-end"
         onKeyDown={handleKeyDown}
         onSubmit={handleSubmit(searchHandler)}
       >
@@ -72,7 +73,7 @@ function ManuProductList() {
           label="Tên sản phẩm"
           {...register("nameSearch")}
           type="search"
-          placeholder="sản phẩm A"
+          placeholder="Tên sản phẩm"
         />
         <Input
           label="Loại sản phẩm"
@@ -81,27 +82,39 @@ function ManuProductList() {
           data={categoriesData}
           placeholder="Chọn danh mục"
         />
+        <Input
+          label="Từ ngày"
+          type="date"
+          {...register("startDate")}
+          placeholder="Chọn ngày bắt đầu"
+        />
+        <Input
+          label="Đến ngày"
+          type="date"
+          {...register("endDate")}
+          placeholder="Chọn ngày kết thúc"
+        />
         <Button
           primary
           rounded
-          className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0"
+          className="whitespace-nowrap h-[5svh] w-full md:w-fit md:py-6 md:px-10"
         >
           Tìm kiếm
         </Button>
       </form>
-      <div className="flex flex-start px-4 md:ml-12">
-        <Link to="add">
-          <Button primary rounded>
-            Tạo sản phẩm
-          </Button>
-        </Link>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
-        {/* <Link to="add">
+      <div className="flex flex-start px-4 md:ml-12"></div>
+      <div class="flex justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
+          {/* <Link to="add">
           <Card />
         </Link> */}
-        {renderedProducts}
+          {renderedProducts}
+          <Link to="add">
+            <Card/>
+          </Link>
+        </div>
       </div>
+
       <div className="flex justify-end mr-4">
         {/* footer */}
         {/* <div className="join">
