@@ -9,7 +9,6 @@ import {
 } from "../store";
 import { useEffect, useState } from "react";
 
-let map;
 export default function AddressInputGroup({
   register,
   getValues,
@@ -79,12 +78,13 @@ export default function AddressInputGroup({
     setAddressBlurred(false);
   }, [addressBlurred]);
 
+  let map = null;
   if (results.isLoading) {
     map = <div className="skeleton h-64 w-full"></div>;
   } else if (results.isError) {
-    <p>Không thể tải được bản đồ</p>;
+    map = <p>Không thể tải được bản đồ</p>;
   } else if (coordinate.length > 0) {
-    <Map location={coordinate} setValue={setValue} />;
+    map = <Map location={coordinate} setValue={setValue} />;
   }
 
   return (
@@ -138,17 +138,7 @@ export default function AddressInputGroup({
         }
         error={errors.address?.message}
       />
-      {coordinate.length > 0 && !results.isLoading && (
-        <div className="mt-4">
-          <p>
-            Bạn hãy xem địa chỉ của mình có hiển thị đúng trên bản đồ không nhé
-          </p>
-          <Map location={coordinate} setValue={setValue} />
-          <p>(bạn có thể click trên bản đồ để chọn lại vị trí đúng)</p>
-        </div>
-      )}
-      {results.isLoading && <div className="skeleton h-[40svh] w-full"></div>}
-      {results.isError && <p>Không thể tải được bản đồ</p>}
+      {map && <div className="mt-4">{map}</div>}
     </>
   );
 }

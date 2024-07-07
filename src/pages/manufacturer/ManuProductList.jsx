@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Card from "../../components/UI/Card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
 import useCategory from "../../hooks/use-category";
 import useProduct from "../../hooks/use-product";
@@ -23,30 +23,47 @@ function ManuProductList() {
   const dispatch = useDispatch();
   const { handleSubmit, register } = useForm({ mode: "onTouched" });
   const { categoriesData } = useCategory();
-  const { list: products } = useSelector((state) => state.productSlice);
+  const {
+    list: products,
+    nameSearch,
+    categorySearch,
+  } = useSelector((state) => state.productSlice);
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const {
     isFetching: isProductsFetch,
     isError: isProductsError,
-    data,
+    searchProduct,
     error,
     isSuccess,
   } = useProduct();
+  const { handleSubmit, register } = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      nameSearch,
+      categorySearch,
+    },
+  });
 
   const searchHandler = (data) => {
-    console.log(data);
-    dispatch(updateNameSearch(data.nameSearch));
-    dispatch(updateCategorySearch(data.categorySearch.split(",")[1] || ""));
+    searchProduct(data);
   };
 
   useEffect(() => {
-    if (isSuccess && isProductsError) {
-      if (error.status === 401) {
-        console.log(isProductsError);
-        console.log(count);
-        dispatch(requireLogin());
-      }
-    }
+    if (error?.status === 401) navigate("/portal/login");
   }, [isProductsError]);
+
+  useEffect(() => {
+    if (!isProductsFetch && !isAuthenticated) {
+      getToast('Phiên dăng nhập đã hết hạn');
+      navigate("/portal/login");
+    }
+  }, [isProductsFetch, isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refetch(); 
+    }
+  }, [isAuthenticated, refetch]);
 
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (
@@ -55,7 +72,6 @@ function ManuProductList() {
   } else if (isProductsError) {
     renderedProducts = <p>Không thể tải danh sách sản phẩm</p>;
   } else {
-    console.log(products);
     if (products) {
       renderedProducts = products.map((product, idx) => (
         <Link key={idx} to={`${product.id}`}>

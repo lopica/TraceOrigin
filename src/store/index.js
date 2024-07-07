@@ -81,8 +81,12 @@ const store = configureStore({
       locationApi.middleware,
       categoryApi.middleware,
       classifierApi.middleware,
+<<<<<<< HEAD
       certificateApi.middleware,
       serialRequestMiddleware,
+=======
+      // serialRequestMiddleware,
+>>>>>>> de47cf4fe6249c2c73cd37203094ded9aea4ff44
     ),
 });
 
@@ -95,6 +99,7 @@ export {
   useCreateUserMutation,
   useLoginMutation,
   useLogoutMutation,
+  useSendOtpMutation,
 } from "./apis/authApi";
 export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery, useLockUserMutation , useUpdateStatusMutation  } from "./apis/userApi";
 export {
@@ -103,7 +108,7 @@ export {
   useViewProductDetailQuery,
 } from "./apis/productApi";
 export { showToast, hideToast } from "./slices/toastSlice";
-export { updateForm } from "./slices/registerFormSlice";
+export { updateRegisterForm } from "./slices/registerFormSlice";
 export {
   updateProvinces,
   updateDistricts,
@@ -115,7 +120,7 @@ export {
 export {
   useFetchItemLogsByProductRecognitionQuery,
   useFetchOriginByItemLogIdQuery,
-  useSearchItemsByProductIdQuery,
+  useSearchItemsQuery,
   useAddItemMutation,
 } from "./apis/itemApi";
 export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";

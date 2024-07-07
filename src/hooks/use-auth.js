@@ -7,12 +7,9 @@ import {
   useLogoutMutation,
 } from "../store";
 import { useEffect } from "react";
-import useToast from "./use-toast";
 
 export default function useAuth() {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const { getToast } = useToast();
   const [
     login,
     {
@@ -27,39 +24,52 @@ export default function useAuth() {
     {
       isLoading: isLogoutLoading,
       isError: isLogoutError,
-      error: logoutError,
       isSuccess: isLogoutSuccess,
     },
   ] = useLogoutMutation();
 
-  function handleLogin(inputs) {
-    login(inputs);
+  async function handleLogin(inputs) {
+    return login(inputs)
+      .unwrap()
+      .then(() => {
+        dispatch(loginSuccess())
+      })
+      .catch((err) => console.log(err));
   }
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    return logout()
+      .unwrap()
+      .then(() => {
+        dispatch(requireLogin());
+        dispatch(updateUser({}));
+      })
+      .catch((res) => console.log(res));
   }
 
   useEffect(() => {
-    if (isLoginSuccess && !isLoginLoading) dispatch(loginSuccess())
-  }, [isLoginSuccess]);
-
-  useEffect(()=>{
-    if (isLogoutSuccess && !isLogoutLoading) {
-      dispatch(updateUser({}))
-      dispatch(requireLogin())
+    if (isLoginSuccess && !isLoginError) dispatch(loginSuccess());
+    if (isLoginSuccess && isLoginError && loginError.status === 401) {
+      dispatch(requireLogin());
     }
-  }, [isLogoutSuccess])
- 
+  }, [isLoginSuccess, isLoginError]);
 
+  useEffect(() => {
+    if (isLogoutSuccess && !isLogoutLoading) {
+      dispatch(updateUser({}));
+      dispatch(requireLogin());
+    }
+    if (isLogoutSuccess && isLogoutError) {
+      dispatch(loginSuccess());
+    }
+  }, [isLogoutSuccess, isLogoutError]);
 
   return {
-    login,
+    handleLogin,
     handleLogout,
     isLoginLoading,
     isLogoutLoading,
-    isAuthenticated,
-    isLoginSuccess,
-    isLogoutSuccess,
+    isLoginError,
+    isLogoutError,
   };
 }

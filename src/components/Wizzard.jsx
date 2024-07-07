@@ -131,7 +131,7 @@ Wizzard.Action = ({ stepList, currentStep, handleWizzard, isLoading }) => {
   } else if (currentStep === stepList.length - 1) {
     return (
       <div className="flex justify-between w-full mt-4">
-        <Button outline primary onClick={(e) => handleWizzard("back", e)}>
+        <Button  primary outline onClick={(e) => handleWizzard("back", e)}>
           Quay lại
         </Button>
         <Button

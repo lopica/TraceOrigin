@@ -30,7 +30,7 @@ function Button({
     'border-red-500 bg-red-500 text-white': danger,
     'rounded-md': rounded,
     'bg-white': outline,
-    'text-blue-500': outline && primary,
+    'text-blue-500 hover:text-blue-300 hover:bg-white': outline && primary,
     'text-gray-900': outline && secondary,
     'text-green-500': outline && success,
     'text-yellow-400': outline && warning,
