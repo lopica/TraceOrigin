@@ -37,7 +37,7 @@ function Card({ card }) {
     </div>
     <div className="p-4">
       <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
-      <p className="mt-2 text-gray-500">{card.description}</p>
+      <p className="mt-2 text-xs text-gray-500">{card.description}</p>
     </div>
   </div>
 </div>

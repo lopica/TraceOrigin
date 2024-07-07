@@ -63,7 +63,7 @@ function ManuProductList() {
 
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (
-      <div key={index} className="skeleton w-44 h-52"></div>
+      <div key={index} className="skeleton w-70 h-65"></div>
     ));
   } else if (isProductsError) {
     renderedProducts = <p>Không thể tải danh sách sản phẩm</p>;
@@ -136,17 +136,9 @@ function ManuProductList() {
         <Link to="add">
           <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
             <FiPlus size={20} className="mr-2" />
-            Thêm
+            Thêm sản phẩm
           </button>
         </Link>
-        <button className="bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
-          <FiEdit size={20} className="mr-2" />
-          Sửa
-        </button>
-        <button className="bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
-          <FiTrash size={20} className="mr-2" />
-          Xoá
-        </button>
       </div>
       <div className="border-b border-gray-300"></div>
 
