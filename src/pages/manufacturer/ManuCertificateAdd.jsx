@@ -1,79 +1,49 @@
 import { useNavigate } from "react-router-dom";
-import Input from "../../components/UI/Input";
-import { updateAvatar, updateImages, useAddProductMutation } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
-import ImageBox from "../../components/UI/ImageBox";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import Input from "../../components/UI/Input";
+import ImageBox from "../../components/UI/ImageBox";
 import Wizzard from "../../components/Wizzard";
 import useCategory from "../../hooks/use-category";
 import useToast from "../../hooks/use-toast";
-import { useEffect } from "react";
+import { updateAvatar, updateImages, useAddCertificateMutation } from "../../store";
 
-const stepList = [
-  "Thông tin cơ bản",
-  "Hình ảnh chứng chỉ"
-];
-
-const validateStep = [
-  ["productName", "category", "description", "warranty"],
-  ["length", "width", "height", "weight", "material"],
-  ["images"],
-];
-
-let request;
+const stepList = ["Thông tin cơ bản", "Hình ảnh chứng chỉ"];
+const validateStep = [["productName", "category", "description", "warranty"], ["length", "width", "height", "weight", "material"], ["images"]];
 
 function ManuCertificateAdd() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { avatar } = useSelector((state) => state.productForm);
-  const { categoriesData } = useCategory();
   const { images } = useSelector((state) => state.productForm);
-  const [addProduct, results] = useAddProductMutation();
+  const [addProduct, results] = useAddCertificateMutation();
   const { getToast } = useToast();
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    mode: "onTouched",
-  });
+  const { register, handleSubmit, trigger, getValues, setValue, formState: { errors } } = useForm({ mode: "onTouched" });
 
   const onSubmit = (data) => {
-    request = {
+    const request = {
       ...data,
-      avatar: data.avatar.split(",")[1],
-      categoryId: data.category.split(",")[0],
-      dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
-      file3D: "",
+      issuanceDate: new Date(data.issuanceDate).getTime()
     };
-    delete request.length;
-    delete request.width;
-    delete request.height;
-    delete request.category;
-
-    console.log(request);
     addProduct(request)
       .unwrap()
-      .then((res) => {
-        console.log(res);
-        getToast('Tạo mới thành công sản phẩm')
-        navigate('/manufacturer/products')
+      .then(() => {
+        getToast('Tạo mới thành công chứng chỉ');
+        navigate('/manufacturer/certificate');
       })
       .catch((err) => {
-        getToast('Gặp lỗi khi tạo mới sản phẩm')
-        console.log(err);
+        getToast('Gặp lỗi khi tạo mới chứng chỉ');
+        console.error(err);
       });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     return () => {
-      dispatch(updateImages([]))
-      dispatch(updateAvatar(''))
-    }
-  },[dispatch])
+      dispatch(updateImages([]));
+      dispatch(updateAvatar(''));
+    };
+  }, [dispatch]);
 
   return (
     <div className="p-4 mx-auto">
@@ -93,13 +63,7 @@ function ManuCertificateAdd() {
                 label="Tên chứng chỉ"
                 type="text"
                 placeholder="Chứng nhận an toàn vệ sinh"
-                {...register("productName", {
-                  required: "Bạn cần nhập tên chứng chỉ",
-                  maxLength: {
-                    value: 100,
-                    message: "",
-                  },
-                })}
+                {...register("name", { required: "Bạn cần nhập tên chứng chỉ", maxLength: { value: 100, message: "" } })}
                 tooltip="Tối đa 100 ký tự"
                 error={errors.productName?.message}
               />
@@ -107,9 +71,7 @@ function ManuCertificateAdd() {
             <Input
               label="Ngày cấp"
               type="date"
-              {...register("category", {
-                required: "Bạn cần chọn ngày cấp",
-              })}
+              {...register("issuanceDate", { required: "Bạn cần chọn ngày cấp" })}
               error={errors.category?.message}
             />
           </div>
@@ -117,9 +79,7 @@ function ManuCertificateAdd() {
             label="Cơ quan cấp"
             type="text"
             placeholder="Bộ y tế"
-            {...register("description", {
-              required: "Bạn cần điền công dụng sản phẩm",
-            })}
+            {...register("issuanceAuthority", { required: "Bạn cần điền công dụng sản phẩm" })}
             tooltip="Liệt kê, cánh nhau dấu phẩy"
             error={errors.description?.message}
           />
@@ -127,9 +87,8 @@ function ManuCertificateAdd() {
             label="Ghi chú"
             type="textarea"
             placeholder=""
-            {...register("warranty", {
-            })}
-            tooltip="Bé hơn 999 và lớn hơn 0"
+            {...register("test", {})}
+            tooltip="Ghi chú cho sản phẩm"
             error={errors.warranty?.message}
           />
         </>

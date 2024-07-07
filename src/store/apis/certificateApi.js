@@ -49,9 +49,23 @@ const certificateApi = createApi({
           }
         }),
       }),
+      addCertificate: builder.mutation({
+        query: (newCer) => {
+          return {
+            url: "/createCertificate",
+            method: "POST",
+            body: {
+              ...newCer,
+            },
+            responseHandler: (response) => {
+              return response.text();
+            },
+          };
+        },
+      }),
     };
   },
 });
 
 export { certificateApi };
-export const { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery} = certificateApi;
+export const { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation} = certificateApi;

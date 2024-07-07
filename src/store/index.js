@@ -140,7 +140,7 @@ export {
 } from "./slices/productForm";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
-export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery} from "./apis/certificateApi";
+export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation} from "./apis/certificateApi";
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
 export {updateItemDetail, updateItemList} from './slices/itemSlice';
 export {updateNameCertiSearch, updateCertiList, updateCertificateDetail } from './slices/certificateSlice'
