@@ -61,15 +61,6 @@ const itemApi = createApi({
           };
         },
       }),
-      // get itemlog detail
-      fetchEventByItemLogId: builder.query({
-        query: (itemLogId) => {
-          return {
-            url: `/viewOrigin?itemLogId=${itemLogId}`,
-            method: "GET",
-          };
-        },
-      }),
 
       addItem: builder.mutation({
         query: (request) => {
