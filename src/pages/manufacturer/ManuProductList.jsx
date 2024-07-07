@@ -140,10 +140,8 @@ function ManuProductList() {
           </button>
         </Link>
       </div>
-      <div className="border-b border-gray-300"></div>
-
       {/* phần paging  */}
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center ">
         <Pagination
           active={page}
           totalPages={data?.totalPages || 0}
