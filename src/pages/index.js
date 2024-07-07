@@ -8,3 +8,5 @@ export {default as Login} from "./public/Login"
 export {default as ForgotPassword} from "./public/ForgotPassword"
 export {default as Register} from "./public/Register"
 
+export {default as ManufacturerList} from "./admin/ManufacturerList"
+export {default as VerifyManufacturer} from "./admin/VerifyManufacturers"

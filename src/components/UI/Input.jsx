@@ -62,6 +62,35 @@ const Input = React.forwardRef(
       );
     }
 
+    if(type == "textarea")
+      { return (
+        <>
+           
+            <label className="form-control w-full max-w-sm">
+              <div className="label">
+                <div className="tooltip" data-tip={tooltip}>
+                  <span className="label-text text-base">{label}</span>
+                </div>
+              </div>
+              <textarea
+                ref={inputRef}
+                {...props}
+                onChange={handleInputChange}
+                onBlur={onBlur}
+                className="input input-bordered w-full max-w-sm height_125"
+              />
+              {error && (
+                <div className="label">
+                  <span className="label-text-alt text-left text-error text-sm">
+                    {error}
+                  </span>
+                </div>
+              )}
+            </label>
+          
+        </>
+      );}
+
     return (
       <>
         {unit ? (

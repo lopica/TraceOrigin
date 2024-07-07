@@ -13,12 +13,16 @@ import {
   Login,
   ForgotPassword,
   Register,
-  ManuItemDetail,
+ManufacturerList,
+VerifyManufacturer,
+  ManuItemDetail
 } from "./pages";
+import ManuCertificateList from "./pages/manufacturer/ManuCertificateList";
+import ManuCertificateAdd from "./pages/manufacturer/ManuCertificateAdd";
 import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
-
+import manhTest from "./pages/admin/manhTest";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -50,6 +54,8 @@ function AppRouter() {
           path: "/manufacturer",
           children: [
             { index: true, element: <p>Hello Manufacturer</p> },
+            { path: "certificate", element: <ManuCertificateList /> },
+            { path: "certificate/add", element: <ManuCertificateAdd /> },
             { path: "products", element: <ManuProductList /> },
             { path: "products/:productId", element: <ManuProductDetail /> },
             { path: "products/add", element: <ManuProductAdd /> },
@@ -59,8 +65,16 @@ function AppRouter() {
         {
           path: "/admin",
           children: [
-            // Define children for the admin route here if needed
-          ],
+            { path: 'manufacturerList', element: <ManufacturerList /> },
+            { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
+          ]
+          }
+        ,
+        {
+          path: "/manh",
+          children: [
+            { path: 'test', element: <manhTest /> },
+          ]
         },
       ],
     },

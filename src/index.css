@@ -96,5 +96,7 @@ body, html {
 .embla-thumbs__slide--selected .embla-thumbs__slide__number {
   color: var(--text-body);
 }
-
+.height_125{
+  height: 125px;
+}
 

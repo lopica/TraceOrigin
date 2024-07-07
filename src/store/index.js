@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./apis/authApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { userApi } from "./apis/userApi";
+import { certificateApi } from "./apis/certificateApi";
 import { productApi } from "./apis/productApi";
 import { toastReducer } from "./slices/toastSlice";
 import { itemApi } from "./apis/itemApi";
@@ -21,6 +22,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { serialRequestMiddleware } from "./serialRequestMiddleware";
 import { productSliceReducer } from "./slices/productSlice";
 import { itemSliceReducer } from "./slices/itemSlice";
+import { certificateSliceReducer } from "./slices/certificateSlice";
 
 // Define the persist configuration
 const persistConfig = {
@@ -39,6 +41,7 @@ const rootReducer = combineReducers({
   userSlice: userSliceReducer,
   productSlice: productSliceReducer,
   itemSlice: itemSliceReducer,
+  certificateSlice: certificateSliceReducer, 
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -48,6 +51,7 @@ const rootReducer = combineReducers({
   [locationApi.reducerPath]: locationApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
   [classifierApi.reducerPath]: classifierApi.reducer,
+  [certificateApi.reducerPath]: certificateApi.reducer,
 });
 
 // Apply persistReducer wrapper
@@ -77,6 +81,7 @@ const store = configureStore({
       locationApi.middleware,
       categoryApi.middleware,
       classifierApi.middleware,
+      certificateApi.middleware,
       serialRequestMiddleware,
     ),
 });
@@ -91,7 +96,7 @@ export {
   useLoginMutation,
   useLogoutMutation,
 } from "./apis/authApi";
-export { useFetchUserQuery } from "./apis/userApi";
+export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery, useLockUserMutation , useUpdateStatusMutation  } from "./apis/userApi";
 export {
   useAddProductMutation,
   useSearchProductQuery,
@@ -135,5 +140,7 @@ export {
 } from "./slices/productForm";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
-export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice'
-export {updateItemDetail, updateItemList} from './slices/itemSlice'
+export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery} from "./apis/certificateApi";
+export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
+export {updateItemDetail, updateItemList} from './slices/itemSlice';
+export {updateNameCertiSearch, updateCertiList, updateCertificateDetail } from './slices/certificateSlice'

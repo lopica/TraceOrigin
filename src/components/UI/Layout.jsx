@@ -11,12 +11,11 @@ export default function Layout() {
   const navigate = useNavigate()
   const currentPath = location.pathname;
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const matchPaterm = currentPath.startsWith("/manufacturer");
+  const matchPaterm = currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
   const { show, content } = useSelector((state) => state.toast);
 
   useEffect(() => {
     if (currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin")) {
-      // console.log(isAuthenticated)
       if (!isAuthenticated) {
         navigate('/portal/login')
       }
