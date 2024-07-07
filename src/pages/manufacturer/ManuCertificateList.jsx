@@ -8,10 +8,6 @@ import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  requireLogin,
-  updateNameCertiSearch,
-} from "../../store";
 import { useGetListCertificateByManuIdQuery } from '../../store/apis/certificateApi';
 import Pagination from '../../components/UI/Pagination';
 
@@ -81,8 +77,8 @@ function ManuCertificateList() {
       </div>
       <div className="flex justify-between mr-4 px-8">
       <div>
-        <Button primary>
-          them moi
+        <Button primary rounded>
+          Gửi xác thực
         </Button>
         </div>
         <div>
