@@ -8,6 +8,9 @@ import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../components/UI/Pagination";
+import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
+
 import {
   requireLogin,
   updateCategorySearch,
@@ -16,6 +19,7 @@ import {
 
 let renderedProducts;
 function ManuProductList() {
+  const [page, setPage] = useState(0);
   const dispatch = useDispatch();
   const { handleSubmit, register } = useForm({ mode: "onTouched" });
   const { categoriesData } = useCategory();
@@ -60,6 +64,10 @@ function ManuProductList() {
       ));
     }
   }
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    refetch();
+  };
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
@@ -104,25 +112,39 @@ function ManuProductList() {
       </form>
       <div className="flex flex-start px-4 md:ml-12"></div>
       <div class="flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
           {/* <Link to="add">
           <Card />
         </Link> */}
           {renderedProducts}
-          <Link to="add">
-            <Card/>
-          </Link>
         </div>
       </div>
+      {/* các nút actions  */}
+      <div className="flex gap-4 justify-center items-center">
+        <Link to="add">
+          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+            <FiPlus size={20} className="mr-2" />
+            Thêm
+          </button>
+        </Link>
+        <button className="bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+          <FiEdit size={20} className="mr-2" />
+          Sửa
+        </button>
+        <button className="bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+          <FiTrash size={20} className="mr-2" />
+          Xoá
+        </button>
+      </div>
+      <div className="border-b border-gray-300"></div>
 
-      <div className="flex justify-end mr-4">
-        {/* footer */}
-        {/* <div className="join">
-          <button className="join-item btn">1</button>
-          <button className="join-item btn btn-active">2</button>
-          <button className="join-item btn">3</button>
-          <button className="join-item btn">4</button>
-        </div> */}
+      {/* phần paging  */}
+      <div className="flex justify-center items-center">
+        <Pagination
+          active={page}
+          totalPages={data?.totalPages || 0}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );
