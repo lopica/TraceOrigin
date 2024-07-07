@@ -35,7 +35,7 @@ let alert;
 
 function Register() {
   const { show: showOtp, handleOpen, handleClose } = useShow();
-  const [sendOtp, {isLoading: isOtpLoading}] = useSendOtpMutation();
+  const [sendOtp, { isLoading: isOtpLoading }] = useSendOtpMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const registerForm = useSelector((state) => state.registerForm);
@@ -57,11 +57,12 @@ function Register() {
       cfPassword: "",
     },
   });
-  const [createUser, {isLoading: isRegisterLoading}] = useCreateUserMutation();
+  const [createUser, { isLoading: isRegisterLoading }] = useCreateUserMutation();
   const [alertContent, setAlertContent] = useState({
     type: null, // 'error', 'success', or 'info'
     content: "",
   });
+  const [inputsDisabled, setInputsDisabled] = useState(false); // State to manage input disabled status
 
   const onStepSubmit = () => {
     //get data and save to local storage
@@ -108,12 +109,13 @@ function Register() {
       .then((res) => {
         console.log(res);
         dispatch(updateCoordinate([]));
-        getToast('Tạo tài khoản thành công')
+        getToast('Tạo tài khoản thành công');
         navigate("/portal/login");
       })
       .catch((err) => {
         console.log(err.error);
         getToast('Gặp lỗi khi khi gửi yêu cầu');
+        setInputsDisabled(false); // Enable inputs again if creation fails
       });
   };
 
@@ -259,7 +261,7 @@ function Register() {
             />
           </>
         </Wizzard>
-        {showOtp && <Otp handleClose={handleClose} onSubmit={handleRegister} isLoading={isRegisterLoading} />}
+        {showOtp && <Otp handleClose={handleClose} onSubmit={handleRegister} isLoading={isRegisterLoading} sendOtp={sendOtp} inputsDisabled={inputsDisabled} setInputsDisabled={setInputsDisabled} />}
         <div className="mt-5 text-sm flex justify-center items-center">
           <p>Đã tài khoản?</p>
           <Link to="/portal/login">
