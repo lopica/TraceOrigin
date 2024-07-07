@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
@@ -10,15 +10,15 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
-import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
 
 let renderedProducts;
 function ManuProductList() {
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
-  const {
+  const { 
     list: products,
     nameSearch,
     categorySearch,
@@ -28,6 +28,7 @@ function ManuProductList() {
     isFetching: isProductsFetch,
     isError: isProductsError,
     searchProduct,
+    data,
     error,
     refetch,
   } = useProduct();
