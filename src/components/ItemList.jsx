@@ -9,16 +9,16 @@ import Button from "./UI/Button";
 
 let renderedListItem;
 export default function ItemList({ productId }) {
-  const { itemsData, isItemError, isSuccess, isItemFetch } = useItem(productId);
+  const { itemsData, isItemError, isItemFetch } = useItem(productId);
   const { categoriesData } = useCategory();
 
   const itemConfig = [
     {
       label: "Mã Item",
       render: (item) => (
-        <Link to={`${item?.itemId}`}>
+        <Link to={`${item?.productRecognition}`}>
           <Button primary rounded>
-            {item?.itemId}
+            {item?.productRecognition}
           </Button>
         </Link>
       ),
@@ -40,7 +40,7 @@ export default function ItemList({ productId }) {
     },
     {
       label: "Trạng thái",
-      render: (item) => item.status,
+      render: (item) => item.statusEventType,
     },
   ];
 

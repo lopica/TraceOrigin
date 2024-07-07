@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { updateCoordinate, updateForm, useCreateUserMutation } from "../../store";
+import {
+  updateRegisterForm,
+  useCreateUserMutation,
+  useSendOtpMutation,
+} from "../../store";
 import Button from "../../components/UI/Button";
 import Input from "../../components/UI/Input";
 import Wizzard from "../../components/Wizzard";
@@ -15,7 +19,8 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "../../components/UI/Alert.jsx";
 import useToast from "../../hooks/use-toast";
-
+import Otp from "../../components/Otp.jsx";
+import useShow from "../../hooks/use-show.js";
 
 const stepList = ["Thông tin cơ bản", "Thông tin liên hệ", "Tạo mật khẩu"];
 
@@ -26,11 +31,14 @@ const validateStep = [
 ];
 
 let province, district, ward;
-let alert
+let alert;
 
 function Register() {
+  const { show: showOtp, handleOpen, handleClose } = useShow();
+  const [sendOtp, {isLoading: isOtpLoading}] = useSendOtpMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const registerForm = useSelector((state) => state.registerForm);
   const { coordinate } = useSelector((state) => state.locationData);
   const { getToast } = useToast();
   const {
@@ -49,10 +57,10 @@ function Register() {
       cfPassword: "",
     },
   });
-  const [createUser, results] = useCreateUserMutation();
+  const [createUser, {isLoading: isRegisterLoading}] = useCreateUserMutation();
   const [alertContent, setAlertContent] = useState({
-    type: null,  // 'error', 'success', or 'info'
-    content: ''
+    type: null, // 'error', 'success', or 'info'
+    content: "",
   });
 
   const onStepSubmit = () => {
@@ -60,18 +68,10 @@ function Register() {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
     province = getValues("province").split(",");
     district = getValues("district").split(",");
     ward = getValues("ward").split(",");
-    // dispatch(
-    //   updateForm({
-    //     ...data,
-    //     province: province[1],
-    //     district: district[1],
-    //     ward: ward[1],
-    //   })
-    // );
+
     let request = {
       ...data,
       city: province[1],
@@ -81,28 +81,45 @@ function Register() {
       coordinateX: coordinate[0],
       coordinateY: coordinate[1],
     };
-    delete request.province
-    console.log(request);
-    // console.log(formStateRedux)
-    //get data from redux and call
-    createUser(request)
-    .unwrap()
-    .then(res=>{
-      console.log(res)
-      dispatch(updateCoordinate([]))
-      navigate('/portal/login')
+    delete request.province;
+    delete request.cfPassword;
+    // console.log(request)
+    dispatch(updateRegisterForm(request));
+    handleOpen();
+    sendOtp({
+      email: request.email,
     })
-    .catch(err=>{
-      console.log(err.error)
-      setAlertContent({
-        type: 'error',
-        content: err.error
+      .then(() => {
+        getToast("Hãy kiểm tra email của bạn");
       })
-      getToast(err.error);
-    })
+      .catch((res) => console.log(res));
   };
 
-  alert = <Alert {...{ [alertContent.type]: true }}>{alertContent.content}</Alert>
+  const handleRegister = (otp) => {
+    console.log({
+      ...registerForm,
+      otpVerify: otp.join(''),
+    });
+    createUser({
+      ...registerForm,
+      otpVerify: otp.join('')
+    })
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        dispatch(updateCoordinate([]));
+        getToast('Tạo tài khoản thành công')
+        navigate("/portal/login");
+      })
+      .catch((err) => {
+        console.log(err.error);
+        getToast('Gặp lỗi khi khi gửi yêu cầu');
+      });
+  };
+
+  alert = (
+    <Alert {...{ [alertContent.type]: true }}>{alertContent.content}</Alert>
+  );
 
   return (
     <div className="flex flex-1 flex-col justify-center py-12 lg:px-8">
@@ -117,7 +134,7 @@ function Register() {
           validateStep={validateStep}
           trigger={trigger}
           onStepSubmit={onStepSubmit}
-          isLoading={results.isLoading}
+          isLoading={isOtpLoading}
         >
           <>
             <div className="join w-full gap-2">
@@ -225,6 +242,7 @@ function Register() {
                     "Mật khẩu cần chứa ít nhất 1 chữ hoa, 1 số và 1 ký tự đặc biệt",
                 },
               })}
+              autoComplete='new-password'
               error={errors.password?.message}
             />
             <Input
@@ -236,11 +254,12 @@ function Register() {
                 validate: (value) =>
                   value === getValues("password") || "Mật khẩu nhập không khớp",
               })}
+              autoComplete='new-password'
               error={errors.cfPassword?.message}
             />
           </>
         </Wizzard>
-
+        {showOtp && <Otp handleClose={handleClose} onSubmit={handleRegister} isLoading={isRegisterLoading} />}
         <div className="mt-5 text-sm flex justify-center items-center">
           <p>Đã tài khoản?</p>
           <Link to="/portal/login">
