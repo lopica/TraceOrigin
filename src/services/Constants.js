@@ -1,7 +1,8 @@
 export const CONSTANTS = {
     brand: 'TraceOrigin',
     menu: [
-        {name: 'Product', url: '/manufacturer/products'},
+        {name: 'Sản phẩm', url: '/manufacturer/products'},
+        {name: 'Chứng chỉ', url: '/manufacturer/certificate'},
         // {name: 'Report', url: '/manufacturer/products'},
         // {name: 'Warranty', url: '/manufacturer/products'},
         {name: 'Manager Manufacturer', url: '/admin/ManufacturerList', isAdmin: true},

@@ -3,7 +3,6 @@ import { useGetUsersQuery, useLockUserMutation } from "../../store/apis/userApi"
 import Pagination from "../../components/UI/Pagination";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
 import { Link } from "react-router-dom";
-import { Tooltip, Typography } from "@material-tailwind/react";
 import ProfileModal from "../user/userProfile";
 import SortableTable from "../../components/SortableTable";
 
@@ -83,37 +82,19 @@ function VerifyManufacturer() {
   );
   const statusMap = {
     default: (
-      <Tooltip content={status0Msg}>
         <span className="text-secondary">
           &#8226; <Link to="#" className="text-secondary">Chưa kích hoạt</Link>
         </span>
-      </Tooltip>
     ),
     1: (
-      <Tooltip content={status1Msg}>
         <span className="text-success cursor-pointer" onClick={() => handleStatusColumnClick(item)}>
           &#8226; <Link to="#" className="text-success">Đã kích hoạt</Link>
         </span>
-      </Tooltip>
     ),
     2: (
-      <Tooltip
-        className="border border-blue-gray-50 bg-white px-4 py-3 shadow-xl shadow-black/10"
-        content={
-          <div className="w-80">
-            <Typography color="blue-gray" className="font-medium">
-              Material Tailwind
-            </Typography>
-            <Typography variant="small" color="blue-gray" className="font-normal opacity-80">
-              Material Tailwind is an easy to use components library for Tailwind CSS and Material Design.
-            </Typography>
-          </div>
-        }
-      >
         <span className="text-info">
           &#8226; <Link to="#" className="text-info">Đang xử lý</Link>
         </span>
-      </Tooltip>
     )
   };
   
@@ -198,7 +179,7 @@ function VerifyManufacturer() {
   };
 
   return (
-    <div className="table-responsive">
+    <div className="table-responsive p-5">
       <table className="table table-zebra">
         <thead>
           <tr>

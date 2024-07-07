@@ -15,15 +15,6 @@ function Card({ card }) {
     );
   }
 
-  if (card === "loading") {
-    return <div className="skeleton w-44 h-52"></div>;
-  }
-
-  if (card === "error") {
-    getToast('Không thể tải dữ liệu')
-    return;
-  }
-
   return (
     <div className="card w-44 h-52 bg-white md:max-w-xl mx-auto">
       <figure>

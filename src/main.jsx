@@ -14,18 +14,20 @@ import {
   ForgotPassword,
   Register,
 ManufacturerList,
-VerifyManufacturer
+VerifyManufacturer,
+  ManuItemDetail
 } from "./pages";
+import ManuCertificateList from "./pages/manufacturer/ManuCertificateList";
+import ManuCertificateAdd from "./pages/manufacturer/ManuCertificateAdd";
 import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
-import AdminLayout from "../src/pages/admin/AdminLayout"
 import manhTest from "./pages/admin/manhTest";
 const persistor = persistStore(store);
 
 function AppRouter() {
   const user = useSelector((state) => state.userSlice);
-  // console.log(user.userId)
+  // console.log(user)
   const router = createBrowserRouter([
     {
       path: "/",
@@ -52,14 +54,16 @@ function AppRouter() {
           path: "/manufacturer",
           children: [
             { index: true, element: <p>Hello Manufacturer</p> },
-            { path: "products", element: <ManuProductList key={user.userId} /> },
+            { path: "certificate", element: <ManuCertificateList /> },
+            { path: "certificate/add", element: <ManuCertificateAdd /> },
+            { path: "products", element: <ManuProductList /> },
             { path: "products/:productId", element: <ManuProductDetail /> },
             { path: "products/add", element: <ManuProductAdd /> },
+            { path: "products/:productId/:itemId", element: <ManuItemDetail /> },
           ],
         },
         {
           path: "/admin",
-          element: <AdminLayout />,
           children: [
             { path: 'manufacturerList', element: <ManufacturerList /> },
             { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
@@ -68,7 +72,6 @@ function AppRouter() {
         ,
         {
           path: "/manh",
-          element: <AdminLayout />,
           children: [
             { path: 'test', element: <manhTest /> },
           ]

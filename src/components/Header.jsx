@@ -51,11 +51,11 @@ function Header() {
   ) {
     menuMobile = (
       <Link to="/" className="btn btn-ghost text-xl">
-        {CONSTANTS?.brand}
+        <img src="/logo_full.png" alt="logo" />
       </Link>
     );
     userContent = (
-      <Link to={isAuthenticated ? "/manufacturer/products" : '/portal/login'}>
+      <Link to={isAuthenticated ? "/manufacturer/products" : "/portal/login"}>
         <p className="btn btn-ghost text-xl ml-4">Portal</p>
       </Link>
     );
@@ -82,6 +82,9 @@ function Header() {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-[97vw]"
           >
+            <li key="brand">
+              <Link to="/">{CONSTANTS.brand}</Link>
+            </li>
             {CONSTANTS.menu.map((item) => {
               return (
                 <li key={item.name}>
@@ -96,10 +99,10 @@ function Header() {
   }
 
   const desktopHeader = (
-    <div className="navbar bg-white px-4 border">
+    <div className="navbar bg-white border">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost text-xl">
-          {CONSTANTS?.brand}
+          <img src="/logo_full.png" alt="logo" />
         </Link>
       </div>
       <div className="flex-none gap-4">
@@ -110,7 +113,7 @@ function Header() {
   );
 
   const mobileHeader = (
-    <div className="navbar bg-white px-4 border">
+    <div className="navbar bg-white border">
       <div className="navbar-start">{menuMobile}</div>
       <div className="navbar-center">
         {/* <ThemeBtn theme={theme} handleClick={handleToggle} /> */}

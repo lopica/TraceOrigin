@@ -1,6 +1,9 @@
 export function getDateFromEpochTime(epoch) {
-    // Create a new Date object using the epoch time
-    const date = new Date(epoch * 1000); // Convert seconds to milliseconds
+    // Check if the epoch time is in milliseconds or seconds
+    const isMilliseconds = epoch.toString().length === 13;
+
+    // Create a new Date object using the correct epoch time
+    const date = isMilliseconds ? new Date(epoch) : new Date(epoch * 1000);
 
     // Get the day, month, and year from the date object
     const day = date.getDate();  // Get the day as a number (1-31)

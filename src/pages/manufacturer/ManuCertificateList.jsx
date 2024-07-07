@@ -10,52 +10,35 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
   requireLogin,
-  updateCategorySearch,
-  updateNameSearch,
+  updateNameCertiSearch,
 } from "../../store";
+import { useGetListCertificateByManuIdQuery } from '../../store/apis/certificateApi';
 
-let renderedProducts;
-function ManuProductList() {
-  const dispatch = useDispatch();
-  const { handleSubmit, register } = useForm({ mode: "onTouched" });
-  const { categoriesData } = useCategory();
-  const { list: products } = useSelector((state) => state.productSlice);
+
+let renderedCertificate;
+function ManuCertificateList() {
+  const {userId} = useSelector(state => state.userSlice);
   const {
-    isFetching: isProductsFetch,
-    isError: isProductsError,
+    isFetching: isCertificateFetch,
+    isError: isCertificateError,
     data,
     error,
     isSuccess
-  } = useProduct();
+  } = useGetListCertificateByManuIdQuery(userId);
 
-  const searchHandler = (data) => {
-    console.log(data);
-    dispatch(updateNameSearch(data.nameSearch));
-    dispatch(updateCategorySearch(data.categorySearch.split(",")[1] || ""));
-  };
 
-  useEffect(() => {
-    if (isSuccess && isProductsError) {
-      if (error.status === 401) {
-        console.log(isProductsError);
-        console.log(count);
-        dispatch(requireLogin());
-      }
-    }
-  }, [isProductsError]);
-
-  if (isProductsFetch) {
-    renderedProducts = Array.from({ length: 5 }).map((_, index) => (
+  if (isCertificateFetch) {
+    renderedCertificate = Array.from({ length: 5 }).map((_, index) => (
       <div key={index} className="skeleton w-44 h-52"></div>
     ));
-  } else if (isProductsError) {
-    renderedProducts = <p>Không thể tải danh sách sản phẩm</p>;
+  } else if (isCertificateError) {
+    renderedCertificate = <p>Không thể tải danh sách chứng chỉ</p>;
   } else {
-    console.log(products);
-    if (products) {
-      renderedProducts = products.map((product, idx) => (
-        <Link key={idx} to={`${product.id}`}>
-          <Card card={product} />
+    console.log(data);
+    if (data) {
+      renderedCertificate = data.map((certi, idx) => (
+        <Link key={idx} to={`${certi.certId}`}>
+           <Card card={{image: certi.images[0], name: certi.name}} />
         </Link>
       ));
     }
@@ -66,20 +49,11 @@ function ManuProductList() {
       <form
         className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto"
         onKeyDown={handleKeyDown}
-        onSubmit={handleSubmit(searchHandler)}
       >
         <Input
-          label="Tên sản phẩm"
-          {...register("nameSearch")}
+          label="Tên chứng chỉ"
           type="search"
           placeholder="sản phẩm A"
-        />
-        <Input
-          label="Loại sản phẩm"
-          type="select"
-          {...register("categorySearch")}
-          data={categoriesData}
-          placeholder="Chọn danh mục"
         />
         <Button
           primary
@@ -92,7 +66,7 @@ function ManuProductList() {
       <div className="flex flex-start px-4 md:ml-12">
         <Link to="add">
           <Button primary rounded>
-            Tạo sản phẩm
+            Thêm mới chứng chỉ
           </Button>
         </Link>
       </div>
@@ -100,7 +74,7 @@ function ManuProductList() {
         {/* <Link to="add">
           <Card />
         </Link> */}
-        {renderedProducts}
+        {renderedCertificate}
       </div>
       <div className="flex justify-end mr-4">
         {/* footer */}
@@ -115,4 +89,4 @@ function ManuProductList() {
   );
 }
 
-export default ManuProductList;
+export default ManuCertificateList;

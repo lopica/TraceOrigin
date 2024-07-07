@@ -19,6 +19,10 @@ import { userSliceReducer } from "./slices/userSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
+import { serialRequestMiddleware } from "./serialRequestMiddleware";
+import { productSliceReducer } from "./slices/productSlice";
+import { itemSliceReducer } from "./slices/itemSlice";
+import { certificateSliceReducer } from "./slices/certificateSlice";
 
 // Define the persist configuration
 const persistConfig = {
@@ -35,6 +39,9 @@ const rootReducer = combineReducers({
   productForm: productFormReducer,
   authSlice: authSliceReducer,
   userSlice: userSliceReducer,
+  productSlice: productSliceReducer,
+  itemSlice: itemSliceReducer,
+  certificateSlice: certificateSliceReducer, 
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -74,7 +81,8 @@ const store = configureStore({
       locationApi.middleware,
       categoryApi.middleware,
       classifierApi.middleware,
-      certificateApi.middleware
+      certificateApi.middleware,
+      serialRequestMiddleware,
     ),
 });
 
@@ -108,6 +116,7 @@ export {
   useFetchItemLogsByProductRecognitionQuery,
   useFetchOriginByItemLogIdQuery,
   useSearchItemsByProductIdQuery,
+  useAddItemMutation,
 } from "./apis/itemApi";
 export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";
 export {
@@ -132,3 +141,6 @@ export {
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
 export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery} from "./apis/certificateApi";
+export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
+export {updateItemDetail, updateItemList} from './slices/itemSlice';
+export {updateNameCertiSearch, updateCertiList, updateCertificateDetail } from './slices/certificateSlice'

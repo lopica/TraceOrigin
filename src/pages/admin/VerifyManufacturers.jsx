@@ -124,7 +124,7 @@ function VerifyManufacturer() {
   };
 
   return (
-    <div className="table-responsive">
+    <div className="table-responsive p-5">
       <table className="table table-zebra">
         <thead>
           <tr>

@@ -1,40 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginSuccess, useLoginMutation } from "../../store";
 import Button from "../../components/UI/Button";
-import useToast from "../../hooks/use-toast";
 import { HiEye } from "react-icons/hi";
-import { useDispatch } from "react-redux";
 import handleKeyDown from "../../utils/handleKeyDown";
+import useAuth from "../../hooks/use-auth";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../store";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
-  const [login, results] = useLoginMutation();
+  const { isAuthenticated, login, isLoginSuccess, isLoginLoading } = useAuth();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
-  const { getToast } = useToast();
+
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
-      await login(inputs)
-        .unwrap()
-        .then(() => {
-          dispatch(loginSuccess())
-          getToast('Đăng nhập thành công')
-          navigate("/manufacturer/products");
-        })
-        .catch((res) => {
-          console.log(res);
-          getToast(res.error);
-        });
-    } catch (error) {
-      // Handle network errors or other uncaught errors
-      getToast("Không thể kết nối đến server.");
-    }
+    login(inputs)
+    .unwrap()
+    .then(()=>dispatch(loginSuccess()))
+    .then(()=>navigate('/manufacturer/products'))
+    .catch(err=>console.log(err))
   };
 
   const handleChange = (identifier, e) => {
@@ -44,16 +33,20 @@ function Login() {
     }));
   };
 
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        {/* Logo */}
         <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
           Đăng nhập
         </h2>
       </div>
       <div className="py-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={submitHandler} onKeyDown={handleKeyDown}>
+        <form
+          className="space-y-6"
+          onSubmit={submitHandler}
+          onKeyDown={handleKeyDown}
+        >
           <div>
             <label className="input input-bordered flex items-center gap-2">
               <svg
@@ -111,7 +104,7 @@ function Login() {
           </div>
 
           <div>
-            <Button isLoading={results.isLoading} login rounded>
+            <Button isLoading={isLoginLoading} login rounded>
               Đăng nhập
             </Button>
           </div>

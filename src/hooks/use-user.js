@@ -1,20 +1,15 @@
-import { useEffect } from "react";
-import { updateUser, useFetchUserQuery } from "../store";
+import { useFetchUserQuery, updateUser } from "../store";
 import { useDispatch } from "react-redux";
+import {useEffect} from 'react'
 
-export default function useUser () {
-    const dispatch = useDispatch()
-  const { data, isError, isFetching } = useFetchUserQuery();
-    
+
+export default function useUser() {
+  const dispatch = useDispatch()
+  const { data, isError, isFetching, error, isSuccess } = useFetchUserQuery();
+  // if (isSuccess) dispatch(updateUser())
   useEffect(()=>{
-    if (isFetching) {
-        //
-    } else if (isError) {
-        //
-    } else if (!isError && !isFetching && data) {
-        dispatch(updateUser(data))
-    }
-  },[isFetching, isError, data])
+    if (isSuccess) dispatch(updateUser(data))
+  },[isSuccess])
 
-  return {isFetching}
+  return {  isError, isFetching, error, isSuccess };
 }

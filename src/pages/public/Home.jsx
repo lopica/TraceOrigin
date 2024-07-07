@@ -49,13 +49,6 @@ function Home() {
     }
   }
 
-
-  const actionBar = (
-    <Button primary onClick={handleClose}>
-      I accept
-    </Button>
-  );
-
   const modal = (
     <Modal onClose={handleClose}>
       <form className="flex justify-between w-[50svw] mx-auto">

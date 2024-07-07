@@ -13,7 +13,7 @@ const categoryApi = createApi({
   reducerPath: "category",
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/category`,
-    credentials: "include",
+    // credentials: "include",
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
       await pause(3000);

@@ -6,8 +6,7 @@ import {
 } from "../store";
 import { useEffect } from "react";
 
-let data = [],
-  categoriesData = [];
+let data = [];
 export default function useCategory() {
   const dispatch = useDispatch();
   const {
@@ -16,6 +15,9 @@ export default function useCategory() {
     isFetching: isCategoryFetch,
     error,
   } = useGetAllCategoriesQuery();
+  const {isAuthenticated} = useSelector(state=>state.authSlice)
+
+
 
   useEffect(() => {
     if (!isCategoryFetch && categories) {
@@ -34,7 +36,11 @@ export default function useCategory() {
       dispatch(
         updateCategories([{ id: "error", content: "Không thể tải dữ liệu" }])
       );
-      if (error.status === 401) dispatch(requireLogin());
+      if (error.status === 401 && !isCategoryFetch && !isCategoryError) {
+        console.log(error)
+        console.log("vo day category");
+        dispatch(requireLogin());
+      }
     }
   }, [categories, dispatch, isCategoryFetch, isCategoryError]);
 

@@ -2,30 +2,65 @@ import { useNavigate } from "react-router-dom";
 import {
   requireLogin,
   updateUser,
-  useFetchUserQuery,
   useLogoutMutation,
 } from "../store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useUser from "../hooks/use-user";
+import useToast from "../hooks/use-toast";
+import { useEffect } from "react";
+
+let avatar;
 function Avatar() {
-  const { isFetching } = useUser();
+  const { isFetching, isError, error, isSuccess } = useUser();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
+  const { getToast } = useToast();
+  const user = useSelector(state=>state.userSlice)
+  const {isAuthenticated} = useSelector(state=>state.authSlice)
 
   function handleLogout() {
     dispatch(requireLogin());
     dispatch(updateUser({}));
     logout()
       .unwrap()
+      .then((res) => {
+        getToast(res);
+      })
       .then(navigate("/"))
       .catch((res) => console.log(res));
   }
 
-  if (isFetching) {
-    return <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
-  }
+  useEffect(() => {
+    if (isSuccess && isError) {
+      if (error.status === 401) {
+        console.log(isError);
+        console.log(count);
+        dispatch(requireLogin());
+      }
+    }
+  }, [isError, isSuccess]);
 
+
+  if (isFetching) {
+    avatar = <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
+  } else if (isError) {
+    avatar = (
+      <img
+        alt="Tailwind CSS Navbar component"
+        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+      />
+    );
+  } else {
+    if (user.avatar) {
+
+    } else {
+      avatar = <img
+      alt="Tailwind CSS Navbar component"
+      src="/default_avatar.png"
+    />
+    }
+  }
   return (
     <div className="dropdown dropdown-end">
       <div
@@ -34,10 +69,7 @@ function Avatar() {
         className="btn btn-ghost btn-circle avatar"
       >
         <div className="w-10 rounded-full">
-          <img
-            alt="Tailwind CSS Navbar component"
-            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-          />
+          {avatar}
         </div>
       </div>
       <ul

@@ -4,33 +4,32 @@ function Table({ data, config, keyFn }) {
   const renderedHeaders = config.map((column) => {
     if (column.header)
       return <Fragment key={column.label}>{column.header()}</Fragment>;
-    return <th key={column.label}>{column.label}</th>;
+    return <th key={column.label} className="text-xl">{column.label}</th>;
   });
 
   const renderedRows = data.map((rowData) => {
-    // console.log('rowData:')
-    // console.log(rowData)
+    const rowKey = keyFn(rowData) || 'none'; // Get a unique key for the row
     const renderedCells = config.map((column) => {
-      // console.log('column:')
-      // console.log(column)
       return (
-        <td className="p-3" key={column.label}>
+        <td className="p-3" key={`${rowKey}-${column.label || 'none'}`}>
           {column.render(rowData)}
         </td>
       );
     });
-    return <tr key={keyFn(rowData)}>{renderedCells}</tr>;
+    return <tr key={rowKey}>{renderedCells}</tr>;
   });
 
   return (
     <div className="overflow-x-auto">
-      <table className="table table-zebra">
+      <table className="table table-zebra text-xl">
         <thead>
           <tr className="border-b-2">{renderedHeaders}</tr>
         </thead>
-        <tbody>{renderedRows}</tbody>
+        <tbody>
+          {renderedRows}
+        </tbody>
       </table>
-      <p className="text-center">Chưa có item</p>
+      {data.length === 0 && <p className="text-center">Chưa có item</p>}
     </div>
   );
 }

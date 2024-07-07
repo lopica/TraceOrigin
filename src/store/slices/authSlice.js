@@ -6,12 +6,12 @@ const authSlice = createSlice({
     isAuthenticated: false,
   },
   reducers: {
-    requireLogin(state, action) {
+    requireLogin(state, _) {
       state.isAuthenticated = false;
-      console.log('set isAuthenticate')
+      console.log('set isAuthenticate to false')
     },
-    loginSuccess(state, action) {
-      console.log('login true')
+    loginSuccess(state, _) {
+      console.log('set isAuthenticate to true')
       state.isAuthenticated = true;
     },
   }

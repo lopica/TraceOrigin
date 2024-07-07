@@ -29,7 +29,7 @@ const CarouselModal = ({ isOpen, onClose, userId, onAccept, onReject }) => {
         <div className="fixed inset-0 bg-black bg-opacity-75 z-40"></div>
         <dialog id="carousel_modal" className="modal fixed inset-0 z-50 flex items-center justify-center" open>
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-5xl mx-auto flex">
-            <div className="w-1/4 bg-gray-800 p-4">
+            <div className="w-1/4 bg-sky-800 p-4">
               <h3 className="text-white text-xl mb-4">Certificates</h3>
               <ul></ul>
             </div>
@@ -83,20 +83,20 @@ const CarouselModal = ({ isOpen, onClose, userId, onAccept, onReject }) => {
       <dialog id="carousel_modal" className="modal fixed inset-0 z-50 flex items-center justify-center" open>
         <div className="relative bg-white rounded-lg shadow-lg w-full max-w-5xl mx-auto flex flex-col">
           <div className="flex w-full">
-            <div className="w-1/4 bg-gray-800 p-4 space-y flex flex-col justify-between">
+            <div className="w-1/4 bg-sky-800 p-4 space-y flex flex-col justify-between">
               <div>
                 <h3 className="text-white text-xl mb-4">Certificates</h3>
                 <ul>
                   {certificates.map((cert) => (
                     <li key={cert.certId} className="mb-2">
                       <button
-                        className={`w-full text-left p-2 rounded ${selectedCertId === cert.certId ? 'bg-gray-700 text-white' : 'text-gray-300'}`}
+                        className={`w-full text-left p-2 rounded ${selectedCertId === cert.certId ? 'bg-sky-700 text-white' : 'text-gray-300'}`}
                         onClick={() => {
                           setSelectedCertId(cert.certId);
                           setCurrentIndex(0);
                         }}
                       >
-                        {cert.certificateName}
+                        {cert.name}
                       </button>
                     </li>
                   ))}
@@ -153,7 +153,7 @@ const CarouselModal = ({ isOpen, onClose, userId, onAccept, onReject }) => {
                       <>
                         <button
                           type="button"
-                          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-gray-800 bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition"
+                          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-sky-800 bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition"
                           onClick={handlePrev}
                         >
                           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -162,7 +162,7 @@ const CarouselModal = ({ isOpen, onClose, userId, onAccept, onReject }) => {
                         </button>
                         <button
                           type="button"
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-gray-800 bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition"
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-sky-800 bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition"
                           onClick={handleNext}
                         >
                           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

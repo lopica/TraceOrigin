@@ -2,47 +2,51 @@ import Table from "./UI/Table";
 import useProductDetail from "../hooks/use-product-detail";
 import ImageBox from "./UI/ImageBox";
 import { useForm } from "react-hook-form";
+import Carousel from "./UI/Carousel";
+import { useEffect, useState } from "react";
 
-export default function ProductList({ productId }) {
-  const { productData, productConfig, name, images } =
-    useProductDetail(productId);
-  const { setValue } = useForm({ mode: "onTouched" });
-  return (
-    <section>
-      <p className="text-center text-lg mb-4">{name || "no name"}</p>
-      <Table
-        data={productData}
-        config={productConfig}
-        keyFn={(item) => item.label}
-      />
-      <div className="mb-4 md:mt-4 xl:mt-6">
-        <p className="mb-2 xl:ml-4">Các ảnh minh họa</p>
+let renderedProductDetail;
+export default function ProductDetail({ productId }) {
+  const [slides, setSlides] = useState([]);
+  const {
+    productData,
+    productConfig,
+    name,
+    images,
+    isProductFetch,
+    isProductError,
+  } = useProductDetail(productId);
 
-        <div className="flex space-x-4 mb-8 xl:ml-4">
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-4  2xl:grid-cols-5 gap-4 justify-items-center">
-            {images.map((image, i) => (
-              <div key={i}>
-                <ImageBox
-                  image={image}
-                  show
-                  setValue={setValue}
-                  className="min-w-24 min-h-24 max-w-24 max-h-24 "
-                  idx={i}
-                />
-              </div>
-            ))}
+  useEffect(() => {
+    if (images.length > 0) {
+      setSlides(images.map((image, idx) => <img src={image} alt={`${name} ${idx}`} className="" />));
+    }
+  }, [images, isProductFetch, isProductError]);
 
-            {images.length < 5 && (
-              <ImageBox
-                add
-                setValue={setValue}
-                name="images"
-                className="min-w-24 min-h-24 max-w-24 max-h-24"
-              />
-            )}
-          </div>
+  let renderedProductDetail;
+  if (isProductFetch) {
+    renderedProductDetail = <div className="skeleton h-[40svh] w-full"></div>;
+  } else if (isProductError) {
+    renderedProductDetail = <p>Lỗi khi tải dữ liệu chi tiết của sản phẩm</p>;
+  } else {
+    if (productData.length > 0) {
+      renderedProductDetail = (
+        <div>
+          <h1 className="text-center text-4xl mb-4">{name || "no name"}</h1>
+          <Table
+            data={productData}
+            config={productConfig}
+            keyFn={(item) => item.label}
+          />
         </div>
-      </div>
+      );
+    }
+  }
+
+  return (
+    <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-28">
+      <Carousel slides={slides} />
+      {renderedProductDetail}
     </section>
   );
 }

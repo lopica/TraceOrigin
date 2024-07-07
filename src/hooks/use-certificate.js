@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { requireLogin, updateList, useSearchProductQuery } from "../store";
+import { requireLogin, updateCertiList, useGetListCertificateByManuIdQuery } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function useProduct() {
@@ -8,7 +8,7 @@ export default function useProduct() {
     (state) => state.productSlice
   );
   console.log(categorySearch)
-  const { data, isError, isFetching, error, isSuccess } = useSearchProductQuery({
+  const { data, isError, isFetching, error, isSuccess } = useGetListCertificateByManuIdQuery({
     pageNumber: 0,
     pageSize: 6,
     type: "asc",
