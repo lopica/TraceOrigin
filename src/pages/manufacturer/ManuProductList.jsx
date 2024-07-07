@@ -127,5 +127,5 @@ function ManuProductList() {
     </div>
   );
 }
-
+// asdasd
 export default ManuProductList;
