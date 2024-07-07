@@ -16,7 +16,6 @@ function Card({ card }) {
   }
 
   return (
-<<<<<<< HEAD
     // <div className="card w-70 h-65 bg-white md:max-w-xl mx-auto">
     //   <figure>
     //     <img 
@@ -35,19 +34,6 @@ function Card({ card }) {
   <div className="md:flex">
     <div className="md:flex-shrink-0">
       <img className="h-48 w-full object-cover md:w-48"  src={card.image || emptyProductImage} alt="car!" />
-=======
-    <div className="card w-44 h-52 bg-white md:max-w-xl mx-auto">
-      <figure>
-        <img src={card.image || emptyProductImage} alt="car!" className="h-36 w-44 object-contain"/>
-      </figure>
-      <div className="flex flex-col justify-center items-center grow">
-        <p className="text-center text-xl">{card.name}</p>
-        {/* <p>How to park your car at your garage?</p> */}
-        <div className="card-actions justify-end">
-          {/* <button className="btn btn-primary">Chi tiết</button> */}
-        </div>
-      </div>
->>>>>>> de47cf4fe6249c2c73cd37203094ded9aea4ff44
     </div>
     <div className="p-4">
       <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
