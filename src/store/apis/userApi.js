@@ -23,7 +23,7 @@ const userApi = createApi({
   endpoints(builder) {
     return {
       fetchUser: builder.query({
-        providesTags: ['Users'],
+        providesTags: ['Login'],
         query: () => {
           return {
             url: "/me",

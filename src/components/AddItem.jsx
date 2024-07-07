@@ -41,24 +41,36 @@ export default function AddItem() {
     ward = getValues("ward").split(",");
     request = {
       ...data,
-      city: province[1],
-      district: district[1],
-      ward: ward[1],
-      country: "Vietnam",
-      coordinateX: coordinate[0],
-      coordinateY: coordinate[1],
+      location: {
+        city: province[1],
+        district: district[1],
+        ward: ward[1],
+        country: "Vietnam",
+        coordinateX: coordinate[0],
+        coordinateY: coordinate[1],
+        address: data.address,
+      },
       productId: productDetail.productId,
     };
-    delete request.province
+    delete request.province;
+    delete request.city;
+    delete request.district;
+    delete request.ward;
+    delete request.country;
+    delete request.coordinateX;
+    delete request.coordinateY;
+    delete request.address;
+    delete request.warranty;
+
     console.log(request);
 
     addItem(request)
-    .unwrap()
-    .then(()=>{
-      handleClose()
-      getToast("Tạo nhật ký thành công")
-    })
-    .catch(res=>console.log(res))
+      .unwrap()
+      .then(() => {
+        handleClose();
+        getToast("Tạo nhật ký thành công");
+      })
+      .catch((res) => console.log(res));
   };
 
   useEffect(() => {

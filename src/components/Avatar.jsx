@@ -1,46 +1,23 @@
-import { useNavigate } from "react-router-dom";
-import {
-  requireLogin,
-  updateUser,
-  useLogoutMutation,
-} from "../store";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import useUser from "../hooks/use-user";
+import useAuth from "../hooks/use-auth";
 import useToast from "../hooks/use-toast";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 let avatar;
 function Avatar() {
-  const { isFetching, isError, error, isSuccess } = useUser();
-  const dispatch = useDispatch();
-  const [logout] = useLogoutMutation();
-  const navigate = useNavigate();
-  const { getToast } = useToast();
-  const user = useSelector(state=>state.userSlice)
-  const {isAuthenticated} = useSelector(state=>state.authSlice)
+  const navigate = useNavigate()
+  const { isFetching, isError } = useUser();
+  const user = useSelector((state) => state.userSlice);
+  const { handleLogout: logout } = useAuth();
+  const {getToast} =useToast()
 
-  function handleLogout() {
-    dispatch(requireLogin());
-    dispatch(updateUser({}));
-    logout()
-      .unwrap()
-      .then((res) => {
-        getToast(res);
-      })
-      .then(navigate("/"))
-      .catch((res) => console.log(res));
+  async function handleLogout() {
+    await logout()
+    .then(()=>{
+      getToast('Đăng xuất thành công')
+    })
   }
-
-  useEffect(() => {
-    if (isSuccess && isError) {
-      if (error.status === 401) {
-        console.log(isError);
-        console.log(count);
-        dispatch(requireLogin());
-      }
-    }
-  }, [isError, isSuccess]);
-
 
   if (isFetching) {
     avatar = <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
@@ -53,14 +30,11 @@ function Avatar() {
     );
   } else {
     if (user.avatar) {
-
     } else {
-      avatar = <img
-      alt="Tailwind CSS Navbar component"
-      src="/default_avatar.png"
-    />
+      avatar = <img alt="default avatar" src="/default_avatar.png" />;
     }
   }
+
   return (
     <div className="dropdown dropdown-end">
       <div
@@ -68,9 +42,7 @@ function Avatar() {
         role="button"
         className="btn btn-ghost btn-circle avatar"
       >
-        <div className="w-10 rounded-full">
-          {avatar}
-        </div>
+        <div className="w-10 rounded-full">{avatar}</div>
       </div>
       <ul
         tabIndex={0}

@@ -4,14 +4,13 @@ import Button from "../../components/UI/Button";
 import { HiEye } from "react-icons/hi";
 import handleKeyDown from "../../utils/handleKeyDown";
 import useAuth from "../../hooks/use-auth";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../store";
+import useToast from "../../hooks/use-toast";
 
 function Login() {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
-  const { isAuthenticated, login, isLoginSuccess, isLoginLoading } = useAuth();
+  const { handleLogin: login, isLoginLoading } = useAuth();
+  const { getToast } = useToast();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -19,11 +18,10 @@ function Login() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    login(inputs)
-    .unwrap()
-    .then(()=>dispatch(loginSuccess()))
-    .then(()=>navigate('/manufacturer/products'))
-    .catch(err=>console.log(err))
+    await login(inputs).then(() => {
+      getToast('Đăng nhập thành công');
+      navigate("/manufacturer/products");
+    });
   };
 
   const handleChange = (identifier, e) => {
@@ -32,7 +30,6 @@ function Login() {
       [identifier]: e.target.value,
     }));
   };
-
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -64,6 +61,7 @@ function Login() {
                 placeholder="Email"
                 value={inputs.email}
                 onChange={(e) => handleChange("email", e)}
+                autoComplete="username"
               />
             </label>
           </div>
@@ -93,6 +91,7 @@ function Login() {
                 placeholder="Mật khẩu"
                 value={inputs.password}
                 onChange={(e) => handleChange("password", e)}
+                autoComplete="current-password"
               />
               <a
                 onMouseDown={() => setShowPassword(true)}

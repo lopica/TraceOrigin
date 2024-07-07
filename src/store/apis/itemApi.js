@@ -19,7 +19,7 @@ const itemApi = createApi({
 
       // Determine the endpoint based on the URL or some other method
       const url = typeof input === "string" ? input : input.url;
-      if (url.includes("/findAllItemByProductId?ProductId") || url.includes("/addItem")) {
+      if (url.includes("/search") || url.includes("/addItem")) {
         // Customize fetch options for this specific endpoint
         init = {
           ...init,
@@ -33,11 +33,12 @@ const itemApi = createApi({
   endpoints(builder) {
     return {
       // search items by product id
-      searchItemsByProductId: builder.query({
-        query: (productId) => {
+      searchItems: builder.query({
+        query: (request) => {
           return {
-            url: `/findAllItemByProductId?ProductId=${productId}`,
-            method: "GET",
+            url: '/search',
+            method: "POST",
+            body: request,
           };
         },
       }),
@@ -88,6 +89,6 @@ export { itemApi };
 export const {
   useFetchItemLogsByProductRecognitionQuery,
   useFetchOriginByItemLogIdQuery,
-  useSearchItemsByProductIdQuery,
+  useSearchItemsQuery,
   useAddItemMutation,
 } = itemApi;

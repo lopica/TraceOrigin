@@ -18,10 +18,10 @@ function Card({ card }) {
   return (
     <div className="card w-44 h-52 bg-white md:max-w-xl mx-auto">
       <figure>
-        <img src={card.image || emptyProductImage} alt="car!" />
+        <img src={card.image || emptyProductImage} alt="car!" className="h-36 w-44 object-contain"/>
       </figure>
-      <div className="card-body">
-        <h2 className="card-title">{card.name}</h2>
+      <div className="flex flex-col justify-center items-center grow">
+        <p className="text-center text-xl">{card.name}</p>
         {/* <p>How to park your car at your garage?</p> */}
         <div className="card-actions justify-end">
           {/* <button className="btn btn-primary">Chi tiết</button> */}

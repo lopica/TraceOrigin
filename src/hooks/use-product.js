@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { requireLogin, updateList, useSearchProductQuery } from "../store";
+import { requireLogin, updateCategorySearch, updateList, updateNameSearch, useSearchProductQuery } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function useProduct() {
@@ -7,16 +7,25 @@ export default function useProduct() {
   const { nameSearch, categorySearch } = useSelector(
     (state) => state.productSlice
   );
-  console.log(categorySearch)
-  const { data, isError, isFetching, error, isSuccess } = useSearchProductQuery({
-    pageNumber: 0,
-    pageSize: 6,
-    type: "asc",
-    startDate: 0,
-    endDate: 0,
-    name: nameSearch,
-    categoryName: categorySearch,
-  });
+  const {isAuthenticated} = useSelector(state=>state.authSlice)
+  const { data, isError, isFetching, error, isSuccess, refetch } = useSearchProductQuery(
+    {
+      pageNumber: 0,
+      pageSize: 6,
+      type: "asc",
+      startDate: 0,
+      endDate: 0,
+      name: nameSearch,
+      categoryName: categorySearch,
+    }, {
+      skip: !isAuthenticated,
+    }
+  );
+
+  function searchProduct (data) {
+    dispatch(updateNameSearch(data.nameSearch));
+    dispatch(updateCategorySearch(data.categorySearch.split(",")[1] || ""));
+  }
 
   useEffect(() => {
     if (isSuccess && !isError) {
@@ -26,13 +35,15 @@ export default function useProduct() {
             return {
               id: product.productId,
               name: product.productName,
-              image: product.avatar
+              image: product.avatar,
             };
           })
         )
       );
+    } else if (!isFetching && isError && error.status === 401) {
+      dispatch(requireLogin());
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess, isError, data]);
 
-  return { isFetching, isError, data, error, isSuccess };
+  return { isFetching, isError, searchProduct, isSuccess , error, refetch };
 }

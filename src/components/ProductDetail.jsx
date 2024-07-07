@@ -4,10 +4,16 @@ import ImageBox from "./UI/ImageBox";
 import { useForm } from "react-hook-form";
 import Carousel from "./UI/Carousel";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import useToast from "../hooks/use-toast";
 
 let renderedProductDetail;
 export default function ProductDetail({ productId }) {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [slides, setSlides] = useState([]);
+  const { getToast } = useToast();
   const {
     productData,
     productConfig,
@@ -15,15 +21,30 @@ export default function ProductDetail({ productId }) {
     images,
     isProductFetch,
     isProductError,
+    error,
   } = useProductDetail(productId);
 
   useEffect(() => {
-    if (images.length > 0) {
-      setSlides(images.map((image, idx) => <img src={image} alt={`${name} ${idx}`} className="" />));
-    }
-  }, [images, isProductFetch, isProductError]);
+    if (error?.status === 401) navigate("/portal/login");
+  }, [isProductError]);
 
-  let renderedProductDetail;
+  useEffect(() => {
+    if (!isProductFetch && !isAuthenticated) {
+      getToast("Phiên dăng nhập đã hết hạn");
+      navigate("/portal/login");
+    }
+  }, [isProductFetch, isAuthenticated]);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      setSlides(
+        images.map((image, idx) => (
+          <img src={image} alt={`${name} ${idx}`} className="" />
+        ))
+      );
+    }
+  }, [images]);
+
   if (isProductFetch) {
     renderedProductDetail = <div className="skeleton h-[40svh] w-full"></div>;
   } else if (isProductError) {
