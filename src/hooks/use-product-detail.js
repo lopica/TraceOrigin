@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { requireLogin, updateAvatar, updateProductDetail, useViewProductDetailQuery } from "../store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function useProductDetail(productId) {
   const dispatch = useDispatch();
+  const {isAuthenticated} = useSelector(state=>state.authSlice)
   const [productData, setProductData] = useState([]);
   const [name, setName] = useState("");
   const [images, setImages] = useState([])
@@ -13,7 +14,9 @@ export default function useProductDetail(productId) {
     isFetching: isProductFetch,
     isSuccess,
     error,
-  } = useViewProductDetailQuery(productId);
+  } = useViewProductDetailQuery(productId, {
+    skip: !isAuthenticated
+  });
 
   const productConfig = [
     {
@@ -52,5 +55,5 @@ export default function useProductDetail(productId) {
     }
   }, [isProductFetch, isProductError, productDetail]);
 
-  return { productData, productConfig, name, images, isProductFetch, isProductError };
+  return { productData, productConfig, name, images, isProductFetch, isProductError, error };
 }

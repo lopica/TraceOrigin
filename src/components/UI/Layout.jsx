@@ -1,5 +1,5 @@
-import { Fragment, useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Fragment } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "../Header";
 import SideBar from "./SideBar";
 import { useSelector } from "react-redux";
@@ -8,19 +8,9 @@ import Breadcrumps from "../Breadcrumbs";
 
 export default function Layout() {
   const location = useLocation();
-  const navigate = useNavigate()
   const currentPath = location.pathname;
-  const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const matchPaterm = currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
+  const matchPaterm = currentPath.startsWith("/manufacturer");
   const { show, content } = useSelector((state) => state.toast);
-
-  useEffect(() => {
-    if (currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin")) {
-      if (!isAuthenticated) {
-        navigate('/portal/login')
-      }
-    }
-  }, [isAuthenticated, currentPath]);
 
   return (
     <Fragment>

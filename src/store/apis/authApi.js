@@ -35,10 +35,12 @@ const authApi = createApi({
             body: {
               ...newUser,
             },
+            responseHandler: (res) => res.text()
           };
         },
       }),
       login: builder.mutation({
+        invalidatesTags: ['Login'],
         query: (input) => {
           return {
             url: "/login",
@@ -57,10 +59,19 @@ const authApi = createApi({
           };
         },
       }),
+      sendOtp: builder.mutation({
+        query: (request) => {
+          return {
+            url: '/sendEmailVerify',
+            method: 'POST',
+            body: request,
+          }
+        }
+      })
     };
   },
 });
 
-export const { useCreateUserMutation, useLoginMutation, useLogoutMutation } =
+export const { useCreateUserMutation, useLoginMutation, useLogoutMutation, useSendOtpMutation } =
   authApi;
 export { authApi };

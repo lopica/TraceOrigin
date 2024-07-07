@@ -23,10 +23,8 @@ export default function useImage(setValue) {
     const files = Array.from(e.target.files);
 
     // Check if any files were selected
-    if (!files.length) {
+    if (files.length === 0) {
       alert("Bạn hãy chọn ít nhất 1 ảnh.");
-      dispatch(updateImages([]));
-      dispatch(updateImagesData([]));
       return;
     }
 
