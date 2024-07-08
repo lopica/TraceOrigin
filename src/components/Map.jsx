@@ -35,7 +35,7 @@ const Map = ({ location, setValue }) => {
           .unwrap()
           .then((res) => {
             const newaddress = res[0].formatted.split(",");
-            setValue("address", newaddress[0]);
+            setValue && setValue("address", newaddress[0]);
             dispatch(updateNewAddress(results.isLoading))
             console.log(res[0].formatted);
           })
@@ -59,7 +59,7 @@ const Map = ({ location, setValue }) => {
     <MapContainer
       center={location || [0, 0]}
       zoom={20}
-      style={{ height: "40svh", width: "100%", marginTop: "2rem" }}
+      style={{ height: "40svh", width: "100%", marginTop: "2rem", zIndex: '0' }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

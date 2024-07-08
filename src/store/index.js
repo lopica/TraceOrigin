@@ -33,7 +33,6 @@ const persistConfig = {
     "authSlice",
     "userSlice",
     "productForm",
-    "locationData",
   ],
 };
 
@@ -87,7 +86,7 @@ const store = configureStore({
       categoryApi.middleware,
       classifierApi.middleware,
       certificateApi.middleware,
-      serialRequestMiddleware
+      // serialRequestMiddleware
     ),
 });
 
@@ -101,6 +100,7 @@ export {
   useLoginMutation,
   useLogoutMutation,
   useSendOtpMutation,
+  useCheckEmailExistMutation,
 } from "./apis/authApi";
 export {
   useFetchUserQuery,
