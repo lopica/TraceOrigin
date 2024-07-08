@@ -4,11 +4,19 @@ import Button from "./UI/Button";
 import { useSelector } from "react-redux";
 
 let currentOTPIndex = 0;
-export default function Otp({ handleClose, onSubmit, isLoading, sendOtp, inputsDisabled, setInputsDisabled }) {
+export default function Otp({
+  handleClose,
+  onSubmit,
+  isLoading,
+  sendOtp,
+  inputsDisabled,
+  setInputsDisabled,
+}) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(120);
   const { email } = useSelector((state) => state.registerForm);
+  const [lastSubmittedOtp, setLastSubmittedOtp] = useState("");
 
   const inputRef = useRef(null);
 
@@ -32,6 +40,25 @@ export default function Otp({ handleClose, onSubmit, isLoading, sendOtp, inputsD
     if (e.key === "Backspace") setActiveOTPIndex(currentOTPIndex - 1);
   };
 
+  const handleOnPaste = (e) => {
+    e.preventDefault(); 
+    const pastedData = e.clipboardData.getData("text").trim();
+
+    if (pastedData.length <= 6 && /^\d+$/.test(pastedData)) {
+      const digits = pastedData.split("");
+
+      const newOTP = [...digits, ...new Array(6 - digits.length).fill("")];
+      setOtp(newOTP);
+      setActiveOTPIndex(digits.length - 1);
+
+      if (digits.length === 6) {
+        setInputsDisabled(true);
+      } else {
+        setInputsDisabled(false); // Enable inputs if not all are filled
+      }
+    }
+  };
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOTPIndex]);
@@ -52,15 +79,24 @@ export default function Otp({ handleClose, onSubmit, isLoading, sendOtp, inputsD
 
   useEffect(() => {
     if (otp.every((value) => value !== "" && !isNaN(value))) {
-      // Disable all inputs
-      setInputsDisabled(true);
-      onSubmit(otp);
+      const currentOtpString = otp.join("");
+
+      if (currentOtpString === lastSubmittedOtp) {
+        setInputsDisabled(false); // Re-enable inputs for correction
+      } else {
+        setLastSubmittedOtp(currentOtpString); // Update the last submitted OTP
+        setInputsDisabled(true);
+        onSubmit(otp);
+      }
     }
   }, [otp, onSubmit, setInputsDisabled]);
 
   return (
     <Modal onClose={handleClose}>
-      <h2 className="text-center text-2xl mb-4">Xác thực OTP</h2>
+      <div className="text-center text-xl">
+        <h2 className="text-center text-2xl mb-4">Xác thực OTP</h2>
+        <small>(Bạn hãy kiểm tra email bạn đã đăng ký)</small>
+      </div>
       <div className="flex justify-center items-center space-x-2">
         {otp.map((_, index) => (
           <React.Fragment key={index}>
@@ -73,7 +109,8 @@ export default function Otp({ handleClose, onSubmit, isLoading, sendOtp, inputsD
               onChange={handleOnChange}
               onKeyDown={(e) => handleOnKeyDown(e, index)}
               value={otp[index]}
-              disabled={inputsDisabled} // Disable input if inputsDisabled is true
+              disabled={inputsDisabled}
+              onPaste={handleOnPaste}
             />
             {index === otp.length - 1 ? null : (
               <span className="w-2 py-0.5 bg-gray-400" />
@@ -91,7 +128,9 @@ export default function Otp({ handleClose, onSubmit, isLoading, sendOtp, inputsD
             Gửi lại
           </Button>
         )}
-        {isLoading && <span className="loading loading-spinner loading-lg"></span>}
+        {isLoading && (
+          <span className="loading loading-spinner loading-lg"></span>
+        )}
       </div>
     </Modal>
   );

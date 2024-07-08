@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const locationDataSlice = createSlice({
-  name: "locationData",
+  name: "locationDataSlice",
   initialState: {
     provincesData: [],
     districtsData: [{ id: 'initial', content: 'Bạn cần chọn tỉnh, thành phố trước' }],

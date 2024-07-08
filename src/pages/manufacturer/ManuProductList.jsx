@@ -55,11 +55,11 @@ function ManuProductList() {
     }
   }, [isProductsFetch, isAuthenticated]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      refetch(); 
-    }
-  }, [isAuthenticated, refetch]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     refetch(); 
+  //   }
+  // }, [isAuthenticated, refetch]);
 
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (

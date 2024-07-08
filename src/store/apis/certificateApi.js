@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CONSTANTS } from "../../services/Constants";
 
 // DEV ONLY!!!
 const pause = (duration) => {
@@ -10,7 +11,7 @@ const pause = (duration) => {
 const certificateApi = createApi({
   reducerPath: "certificate",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/certificate",
+    baseUrl: `${CONSTANTS.domain}/certificate`,
     // baseUrl: "http://localhost:3001",
     credentials: 'include',
     fetchFn: async (...args) => {
