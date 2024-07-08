@@ -36,6 +36,7 @@ export default function useProduct() {
               id: product.productId,
               name: product.productName,
               image: product.avatar,
+              description: product.description
             };
           })
         )

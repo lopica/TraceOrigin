@@ -6,7 +6,15 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customSideBarHover: 'rgb(3, 131, 255)',
+        customSideBarBg: 'rgb(6, 11, 24)',
+      },
+      fontFamily: {
+        'roboto': ['Roboto', 'sans-serif'],
+      },
+    },
   },
   plugins: [ 
     daisyui,

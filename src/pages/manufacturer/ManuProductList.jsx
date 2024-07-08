@@ -7,15 +7,20 @@ import useProduct from "../../hooks/use-product";
 import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../components/UI/Pagination";
+import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
+
 import useToast from "../../hooks/use-toast";
 
 let renderedProducts;
 function ManuProductList() {
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
-  const {
+  const { 
+
     list: products,
     nameSearch,
     categorySearch,
@@ -25,6 +30,7 @@ function ManuProductList() {
     isFetching: isProductsFetch,
     isError: isProductsError,
     searchProduct,
+    data,
     error,
     refetch,
   } = useProduct();
@@ -59,7 +65,7 @@ function ManuProductList() {
 
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (
-      <div key={index} className="skeleton w-44 h-52"></div>
+      <div key={index} className="skeleton w-70 h-65"></div>
     ));
   } else if (isProductsError) {
     renderedProducts = <p>Không thể tải danh sách sản phẩm</p>;
@@ -75,6 +81,7 @@ function ManuProductList() {
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
+    {/* form search  */}
       <form
         className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto"
         onKeyDown={handleKeyDown}
@@ -102,28 +109,39 @@ function ManuProductList() {
           Tìm kiếm
         </Button>
       </form>
-      <div className="flex flex-start px-4 md:ml-12">
-        <Link to="add">
-          <Button primary rounded>
-            Tạo sản phẩm
-          </Button>
+      <div className="flex justify-center md:justify-start px-8">
+      
+      <Link to="add">
+          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+            <FiPlus size={20} className="mr-2" />
+            Thêm sản phẩm
+          </button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
-        {/* <Link to="add">
+      <div class="flex justify-center">
+      
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
+        
+          {/* <Link to="add">
           <Card />
         </Link> */}
-        {renderedProducts}
-      </div>
-      <div className="flex justify-end mr-4">
-        {/* footer */}
-        {/* <div className="join">
-          <button className="join-item btn">1</button>
-          <button className="join-item btn btn-active">2</button>
-          <button className="join-item btn">3</button>
-          <button className="join-item btn">4</button>
-        </div> */}
-      </div>
+          {renderedProducts}
+        </div>
+      </div>    
+      {/* phần paging  */}
+      <div className="flex flex-col min-h-screen justify-center items-center">
+  <div className="flex-grow">
+    {/* Nội dung khác của bạn ở đây */}
+  </div>
+  <div className="mt-auto">
+    <Pagination
+      active={page}
+      totalPages={data?.totalPages || 0}
+      onPageChange={handlePageChange}
+    />
+  </div>
+</div>
+
     </div>
   );
 }

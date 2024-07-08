@@ -77,6 +77,7 @@ function ManuCertificateList() {
       </div>
       <div className="flex justify-between mr-4 px-8">
       <div>
+
         <Button primary rounded>
           Gửi xác thực
         </Button>

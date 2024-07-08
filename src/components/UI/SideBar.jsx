@@ -1,35 +1,64 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { CONSTANTS } from "../../services/Constants";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function SideBar() {
-  const role = useSelector(state => state.userSlice.role);
-  const roleId = role?.roleId;
+  const [selectedItem, setSelectedItem] = useState(0);
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // State để theo dõi mở/rút submenu
 
-  const filteredMenu = roleId === 1
-    ? CONSTANTS.menu.filter(item => item.role === '1')
-    : CONSTANTS.menu.filter(item => item.role !== '1');
+  const handleItemClick = (index) => {
+    if (selectedItem === index) {
+      // Nếu người dùng nhấp lại vào mục đã chọn, đóng submenu
+      setIsSubMenuOpen(false);
+    } else if (CONSTANTS.menu[index].children) {
+      // Nếu mục được chọn có children (submenu), mở submenu
+      setIsSubMenuOpen(true);
+    }
+    setSelectedItem(index);
+  };
 
   return (
     <>
-      {/* <label
-        htmlFor="my-drawer-2"
-        aria-label="close sidebar"
-        className="drawer-overlay"
-      ></label> */}
-      <ul className="menu p-4 min-h-full">
-        {/* Sidebar content here */}
-        {filteredMenu.map((item) => (
-          <li key={item.name}>
-            <Link
-              to={item.url}
-              className="focus:text-white text-lg xl:text-2xl hover:bg-opacity-50 hover:bg-sky-200"
-            >
-              {item.name}
-            </Link>
-          </li>
-        ))}
+      <ul className="menu bg-customSideBarBg min-h-full">
+        {CONSTANTS.menu.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <Fragment key={item.name}>
+              {/* Hiển thị mục cha */}
+              <li>
+                <Link
+                  to={item.children ? "/manufacturer/products" : item.url}
+                  onClick={() => handleItemClick(index)}
+                  className={`mt-2 text-lg md:text-md focus:bg-customSideBarHover focus:text-white ${
+                    selectedItem === index 
+                      ? "bg-customSideBarHover text-white"
+                      : "bg-customSideBarBg text-gray-400"
+                  } hover:text-white hover:bg-customSideBarHover`}
+                >
+                  <Icon className="mr-2" />
+                  {item.name}
+                </Link>
+              </li>
+              {/* Hiển thị submenu nếu mục cha được chọn và submenu mở */}
+              {  selectedItem === index  && isSubMenuOpen && item.children && (
+                <ul className="ml-4">
+                  {item.children.map((childItem, childIndex) => (
+                    <li key={childItem.name}>
+                      <Link
+                        to={childItem.url}
+                        className={`mt-2 text-lg md:text-md text-gray-400 hover:text-white hover:bg-customSideBarHover`}
+                      >
+                        <childItem.icon className="mr-2" />
+                        {childItem.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Fragment>
+          );
+        })}
       </ul>
     </>
   );
