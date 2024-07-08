@@ -83,6 +83,7 @@ function ManuProductList() {
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
+    {/* form search  */}
       <form
         className="flex items-end flex-col justify-between gap-2 mx-auto 
         md:flex-row md:justify-start md:gap-2 md:items-end"
@@ -122,32 +123,38 @@ function ManuProductList() {
           Tìm kiếm
         </Button>
       </form>
-      <div className="flex flex-start px-4 md:ml-12"></div>
-      <div class="flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
-          {/* <Link to="add">
-          <Card />
-        </Link> */}
-          {renderedProducts}
-        </div>
-      </div>
-      {/* các nút actions  */}
-      <div className="flex gap-4 justify-center items-center">
-        <Link to="add">
+      <div className="flex justify-center md:justify-start px-8">
+      
+      <Link to="add">
           <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
             <FiPlus size={20} className="mr-2" />
             Thêm sản phẩm
           </button>
         </Link>
       </div>
+      <div class="flex justify-center">
+      
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
+        
+          {/* <Link to="add">
+          <Card />
+        </Link> */}
+          {renderedProducts}
+        </div>
+      </div>    
       {/* phần paging  */}
-      <div className="flex justify-center items-center ">
-        <Pagination
-          active={page}
-          totalPages={data?.totalPages || 0}
-          onPageChange={handlePageChange}
-        />
-      </div>
+      <div className="flex flex-col min-h-screen justify-center items-center">
+  <div className="flex-grow">
+    {/* Nội dung khác của bạn ở đây */}
+  </div>
+  <div className="mt-auto">
+    <Pagination
+      active={page}
+      totalPages={data?.totalPages || 0}
+      onPageChange={handlePageChange}
+    />
+  </div>
+</div>
     </div>
   );
 }

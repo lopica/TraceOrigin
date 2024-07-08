@@ -20,7 +20,7 @@ export default function Layout() {
       </header>
       <section className="pt-[8svh]">
         {matchPaterm && (
-          <aside className="hidden md:block md:h-[92svh] md:fixed md:w-[15svw] bg-sky-800 text-white">
+          <aside className="hidden md:block md:h-[92svh] md:fixed md:w-[15svw]">
             <SideBar />
           </aside>
         )}
