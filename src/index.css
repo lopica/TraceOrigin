@@ -98,6 +98,10 @@ body, html {
   color: var(--text-body);
 }
 
+.height_125{
+  height: 125px;
+}
+
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;

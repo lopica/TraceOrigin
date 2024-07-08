@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGetUsersQuery } from '../../store/apis/userApi';
-import ProfileModal from '../user/userProfile';
+import ProfileModal from '../../components/UI/userProfile';
 import CarouselModal from '../../components/UI/CarouselModal';
 import Pagination from '../../components/UI/Pagination';
 import { useUpdateStatusMutation } from "../../store/apis/userApi";

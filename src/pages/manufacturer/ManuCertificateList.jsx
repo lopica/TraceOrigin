@@ -13,19 +13,27 @@ import {
   updateNameCertiSearch,
 } from "../../store";
 import { useGetListCertificateByManuIdQuery } from '../../store/apis/certificateApi';
+import Pagination from '../../components/UI/Pagination';
 
-
-let renderedCertificate;
 function ManuCertificateList() {
-  const {userId} = useSelector(state => state.userSlice);
+  const userIdList = useSelector(state => state.userSlice.userId);
+  const [page, setPage] = useState(0);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    refetch();
+  };
   const {
     isFetching: isCertificateFetch,
     isError: isCertificateError,
     data,
     error,
-    isSuccess
-  } = useGetListCertificateByManuIdQuery(userId);
+    isSuccess,
+    refetch
+  } = useGetListCertificateByManuIdQuery(userIdList, {
+    skip: !userIdList // Skip query if userIdList is not available
+  });
 
+  let renderedCertificate;
 
   if (isCertificateFetch) {
     renderedCertificate = Array.from({ length: 5 }).map((_, index) => (
@@ -33,15 +41,13 @@ function ManuCertificateList() {
     ));
   } else if (isCertificateError) {
     renderedCertificate = <p>Không thể tải danh sách chứng chỉ</p>;
-  } else {
+  } else if (data) {
     console.log(data);
-    if (data) {
-      renderedCertificate = data.map((certi, idx) => (
-        <Link key={idx} to={`${certi.certId}`}>
-           <Card card={{image: certi.images[0], name: certi.name}} />
-        </Link>
-      ));
-    }
+    renderedCertificate = data.map((certi, idx) => (
+      <Link key={idx} to={`${certi.certId}`}>
+         <Card card={{image: certi.images[0], name: certi.name}} />
+      </Link>
+    ));
   }
 
   return (
@@ -71,19 +77,21 @@ function ManuCertificateList() {
         </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
-        {/* <Link to="add">
-          <Card />
-        </Link> */}
         {renderedCertificate}
       </div>
-      <div className="flex justify-end mr-4">
-        {/* footer */}
-        {/* <div className="join">
-          <button className="join-item btn">1</button>
-          <button className="join-item btn btn-active">2</button>
-          <button className="join-item btn">3</button>
-          <button className="join-item btn">4</button>
-        </div> */}
+      <div className="flex justify-between mr-4 px-8">
+      <div>
+        <Button primary>
+          them moi
+        </Button>
+        </div>
+        <div>
+        <Pagination
+          active={page}
+          totalPages={data?.totalPages || 0}
+          onPageChange={handlePageChange}
+        />
+        </div>
       </div>
     </div>
   );

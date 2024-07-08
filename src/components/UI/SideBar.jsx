@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { CONSTANTS } from "../../services/Constants";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function SideBar() {
   const [selectedItem, setSelectedItem] = useState(0);

@@ -3,7 +3,7 @@ import { useGetUsersQuery, useLockUserMutation } from "../../store/apis/userApi"
 import Pagination from "../../components/UI/Pagination";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
 import { Link } from "react-router-dom";
-import ProfileModal from "../user/userProfile";
+import ProfileModal from "../../components/UI/userProfile";
 import SortableTable from "../../components/SortableTable";
 
 function VerifyManufacturer() {

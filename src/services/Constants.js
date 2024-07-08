@@ -10,8 +10,8 @@ export const CONSTANTS = {
         {
             name: 'Quản lý nhà sản xuất',
             children: [
-                {name: 'Danh sách nhà sản xuất', url: '/admin/ManufacturerList', isAdmin: true, icon: FaUserCog},
-                {name: 'Xác minh nhà sản xuất', url: '/admin/VerifyManufacturers', isAdmin: true, icon: FaCheckCircle}
+                {name: 'Danh sách nhà sản xuất', url: '/admin/ManufacturerList',  icon: FaUserCog , role: '1'},
+                {name: 'Xác minh nhà sản xuất', url: '/admin/VerifyManufacturers',  icon: FaCheckCircle , role: '1'}
             ],
             icon: FaUserCog
         }
