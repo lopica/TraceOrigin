@@ -19,6 +19,7 @@ VerifyManufacturer,
 } from "./pages";
 import ManuCertificateList from "./pages/manufacturer/ManuCertificateList";
 import ManuCertificateAdd from "./pages/manufacturer/ManuCertificateAdd";
+import ManuCertificateDetail from "./pages/manufacturer/ManuCertificateDetail";
 import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
@@ -56,6 +57,7 @@ function AppRouter() {
             { index: true, element: <p>Hello Manufacturer</p> },
             { path: "certificate", element: <ManuCertificateList /> },
             { path: "certificate/add", element: <ManuCertificateAdd /> },
+            { path: "certificate/:certId", element: <ManuCertificateDetail /> },
             { path: "products", element: <ManuProductList /> },
             { path: "products/:productId", element: <ManuProductDetail /> },
             { path: "products/add", element: <ManuProductAdd /> },

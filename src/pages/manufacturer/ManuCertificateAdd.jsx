@@ -19,7 +19,12 @@ function ManuCertificateAdd() {
   const { images } = useSelector((state) => state.productForm);
   const [addProduct, results] = useAddCertificateMutation();
   const { getToast } = useToast();
-  const { register, handleSubmit, trigger, getValues, setValue, formState: { errors } } = useForm({ mode: "onTouched" });
+  const { register, handleSubmit, trigger, getValues, setValue, formState: { errors } , reset} = useForm({ mode: "onTouched" });
+  const userIdList = useSelector(state => state.userSlice.userId);
+  useEffect(() => {
+    reset(); 
+  }, [reset]);
+
 
   const onSubmit = (data) => {
     const request = {

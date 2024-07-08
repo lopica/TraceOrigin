@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
-import useCategory from "../../hooks/use-category";
-import useProduct from "../../hooks/use-product";
 import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { useGetListCertificateByManuIdQuery } from '../../store/apis/certificateApi';
 import Pagination from '../../components/UI/Pagination';
+import useToast from "../../hooks/use-toast";
 
 function ManuCertificateList() {
+  const navigate = useNavigate();
+  const { getToast } = useToast();
   const userIdList = useSelector(state => state.userSlice.userId);
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [page, setPage] = useState(0);
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -28,6 +29,23 @@ function ManuCertificateList() {
   } = useGetListCertificateByManuIdQuery(userIdList, {
     skip: !userIdList // Skip query if userIdList is not available
   });
+
+  useEffect(() => {
+    if (error?.status === 401) navigate("/portal/login");
+  }, [isCertificateError]);
+
+  useEffect(() => {
+    if (!isCertificateFetch && !isAuthenticated) {
+      getToast('Phiên dăng nhập đã hết hạn');
+      navigate("/portal/login");
+    }
+  }, [isCertificateFetch, isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refetch(); 
+    }
+  }, [isAuthenticated, refetch]);
 
   let renderedCertificate;
 

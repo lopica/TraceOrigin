@@ -143,4 +143,4 @@ export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice'
 export {updateItemDetail, updateItemList, updateItemLine} from './slices/itemSlice'
-export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation} from "./apis/certificateApi";
+export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery} from "./apis/certificateApi";

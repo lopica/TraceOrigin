@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import { CONSTANTS } from "../../services/Constants";
 // DEV ONLY!!!
 const pause = (duration) => {
   return new Promise((resolve) => {
@@ -10,7 +10,7 @@ const pause = (duration) => {
 const certificateApi = createApi({
   reducerPath: "certificate",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/certificate",
+    baseUrl: `${CONSTANTS.domain}/certificate`,
     // baseUrl: "http://localhost:3001",
     credentials: 'include',
     fetchFn: async (...args) => {
@@ -63,9 +63,18 @@ const certificateApi = createApi({
           };
         },
       }),
+      getCertificateById: builder.query({
+        query: (userId) => ({
+          url: '/getCertificateById',
+          method: 'POST',
+          body:{
+            "id" : userId
+          }
+        }),
+      }),
     };
   },
 });
 
 export { certificateApi };
-export const { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation} = certificateApi;
+export const { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery} = certificateApi;
