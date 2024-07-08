@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../components/UI/Button";
 import Modal from "../../components/UI/Modal";
 import useShow from "../../hooks/use-show";
 import ImageBox from "../../components/UI/ImageBox";
 import { usePredictMutation } from "../../store";
 import QRCodeScanner from "../../components/QRCodeScanner";
-import { Html5Qrcode } from "html5-qrcode";
 
 function Home() {
+  const navigate = useNavigate()
   const { show: showModal, handleOpen: handleClick, handleClose } = useShow(false);
   const { show: showScanner, handleOpen: handleScannerOpen, handleClose: handleScannerClose } = useShow(false);
   const [image, setImage] = useState();
@@ -56,7 +56,7 @@ function Home() {
   const handleScanSuccess = (decodedText, decodedResult) => {
     console.log(`Scan result: ${decodedText}`, decodedResult);
     // Handle the scan result here
-    setResult({ className: decodedText, confidence: 100 });
+    window.location.href = decodedText
     handleScannerClose();
   };
 

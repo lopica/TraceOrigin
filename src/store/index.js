@@ -29,7 +29,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["authSlice"], // List of reducers to persist, add more as needed
+  whitelist: ["authSlice", "userSlice"], 
 };
 
 const rootReducer = combineReducers({
@@ -142,5 +142,5 @@ export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
 export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation} from "./apis/certificateApi";
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
-export {updateItemDetail, updateItemList} from './slices/itemSlice';
+export {updateItemDetail, updateItemList, updateItemLine} from './slices/itemSlice'
 export {updateNameCertiSearch, updateCertiList, updateCertificateDetail } from './slices/certificateSlice'
