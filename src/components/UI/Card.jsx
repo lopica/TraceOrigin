@@ -7,7 +7,7 @@ function Card({ card }) {
   const { getToast } = useToast();
   if (!card) {
     return (
-      <div className="card w-70 h-65 bg-white md:max-w-xl mx-auto ">
+      <div className="card w-44 h-52 bg-white md:max-w-xl mx-auto ">
         <div className="card-body flex flex-col items-center justify-center">
           <FaPlus className="text-6xl fill-blue-500" />
         </div>
@@ -16,6 +16,7 @@ function Card({ card }) {
   }
 
   return (
+
     // <div className="card w-70 h-65 bg-white md:max-w-xl mx-auto">
     //   <figure>
     //     <img 
@@ -38,9 +39,8 @@ function Card({ card }) {
     <div className="p-4">
       <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
       <p className="mt-2 text-xs text-gray-500">{card.description}</p>
+
     </div>
-  </div>
-</div>
   );
 }
 

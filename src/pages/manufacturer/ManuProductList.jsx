@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Card from "../../components/UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
+
 import useToast from "../../hooks/use-toast";
 
 let renderedProducts;
@@ -19,6 +20,7 @@ function ManuProductList() {
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
   const { 
+
     list: products,
     nameSearch,
     categorySearch,
@@ -76,17 +78,12 @@ function ManuProductList() {
       ));
     }
   }
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-    refetch();
-  };
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
     {/* form search  */}
       <form
-        className="flex items-end flex-col justify-between gap-2 mx-auto 
-        md:flex-row md:justify-start md:gap-2 md:items-end"
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto"
         onKeyDown={handleKeyDown}
         onSubmit={handleSubmit(searchHandler)}
       >
@@ -94,7 +91,7 @@ function ManuProductList() {
           label="Tên sản phẩm"
           {...register("nameSearch")}
           type="search"
-          placeholder="Tên sản phẩm"
+          placeholder="sản phẩm A"
         />
         <Input
           label="Loại sản phẩm"
@@ -103,22 +100,11 @@ function ManuProductList() {
           data={categoriesData}
           placeholder="Chọn danh mục"
         />
-        <Input
-          label="Từ ngày"
-          type="date"
-          {...register("startDate")}
-          placeholder="Chọn ngày bắt đầu"
-        />
-        <Input
-          label="Đến ngày"
-          type="date"
-          {...register("endDate")}
-          placeholder="Chọn ngày kết thúc"
-        />
         <Button
           primary
           rounded
-          className="whitespace-nowrap h-[5svh] w-full md:w-fit md:py-6 md:px-10"
+          isLoading={isProductsFetch}
+          className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0"
         >
           Tìm kiếm
         </Button>
@@ -155,8 +141,9 @@ function ManuProductList() {
     />
   </div>
 </div>
+
     </div>
   );
 }
-
+// asdasd
 export default ManuProductList;
