@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Define the initial state outside of the createSlice call
+const initialState = {
+  productName: "",
+  categoriesData: [],
+  images: [],
+  imagesData: [],
+  avatar: "",
+  form: {},
+};
+
 const productFormSlice = createSlice({
-  name: "productForm",
-  initialState: {
-    productName: "",
-    categoriesData: [],
-    images: [],
-    imagesData: [],
-    avatar: '',
-    
-  },
+  name: "productFormSlice",
+  initialState: initialState, // Use the initialState defined above
   reducers: {
     updateCategories(state, action) {
       state.categoriesData = action.payload;
@@ -28,7 +31,13 @@ const productFormSlice = createSlice({
     },
     updateAvatar(state, action) {
       state.avatar = action.payload;
-    }
+    },
+    updateForm(state, action) {
+      state.form = { ...state.form, ...action.payload };
+    },
+    resetState() {
+      return initialState; // Correctly returns the defined initialState
+    },
   },
 });
 
@@ -39,5 +48,7 @@ export const {
   updateImages,
   updateImagesData,
   updateAvatar,
+  updateForm,
+  resetState,
 } = productFormSlice.actions;
 export const productFormReducer = productFormSlice.reducer;

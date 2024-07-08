@@ -13,11 +13,11 @@ const locationApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://esgoo.net/api-tinhthanh",
     // mode: "no-cors",
-    fetchFn: async (...args) => {
-      // REMOVE FOR PRODUCTION
-      await pause(3000);
-      return fetch(...args);
-    },
+    // fetchFn: async (...args) => {
+    //   // REMOVE FOR PRODUCTION
+    //   await pause(3000);
+    //   return fetch(...args);
+    // },
     responseHandler: async (response) => {
       if (response.headers.get("Content-Type")?.includes("application/json")) {
         return await response.json(); // Parse as JSON if content-type is json

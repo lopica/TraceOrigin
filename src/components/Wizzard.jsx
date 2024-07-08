@@ -15,27 +15,25 @@ function Wizzard({
   trigger,
   isLoading,
   getValues,
-  avatar,
+  reset,
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const { getToast } = useToast();
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
-    valid = false; // Declare valid variable
+    valid = false;
 
     if (identifier === "next") {
       if (validateStep[currentStep][0] === "images") {
-        const images = getValues("images"); // Assuming getValues is a function that retrieves the values
-        const avatar = getValues("avatar"); // Assuming getValues is a function that retrieves the values
+        const images = getValues("images");
+        const avatar = getValues("avatar");
 
         if (!images.length > 0) {
-          // alert("Bạn hãy chọn ít nhất 1 ảnh.");
-          getToast("Bạn hãy chọn ít nhất 1 ảnh.")
+          getToast("Bạn hãy chọn ít nhất 1 ảnh.");
           return;
         } else if (avatar === "") {
-          // alert("Bạn hãy chọn ít nhất 1 ảnh làm ảnh chính.");
-          getToast("Bạn hãy chọn ít nhất 1 ảnh làm ảnh chính.")
+          getToast("Bạn hãy chọn ít nhất 1 ảnh làm ảnh chính.");
           return;
         } else {
           valid = true;
@@ -44,10 +42,9 @@ function Wizzard({
         valid = await trigger(validateStep[currentStep]);
       }
 
-      // Add to Redux
       if (valid) {
         // Save to local storage by Redux
-        // onStepSubmit(e) // Uncomment this if you have a function to submit the step
+        onStepSubmit && onStepSubmit(currentStep);
         setCurrentStep(currentStep + 1);
       }
     } else if (identifier === "back") {
@@ -76,6 +73,7 @@ function Wizzard({
                 currentStep={currentStep}
                 handleWizzard={handleWizzard}
                 isLoading={isLoading}
+                reset={reset}
               />
             </div>
           </div>
@@ -119,10 +117,21 @@ Wizzard.Step = ({ stepList, currentStep }) => {
   );
 };
 
-Wizzard.Action = ({ stepList, currentStep, handleWizzard, isLoading }) => {
+Wizzard.Action = ({
+  stepList,
+  currentStep,
+  handleWizzard,
+  isLoading,
+  reset,
+}) => {
   if (currentStep === 0) {
     return (
-      <div className="flex justify-end w-full mt-4">
+      <div className="flex justify-end w-full mt-4 gap-4">
+        {reset && (
+          <Button primary rounded outline onClick={reset}>
+            Đặt lại
+          </Button>
+        )}
         <Button primary rounded onClick={(e) => handleWizzard("next", e)}>
           Tiếp theo
         </Button>
@@ -131,17 +140,24 @@ Wizzard.Action = ({ stepList, currentStep, handleWizzard, isLoading }) => {
   } else if (currentStep === stepList.length - 1) {
     return (
       <div className="flex justify-between w-full mt-4">
-        <Button  primary outline onClick={(e) => handleWizzard("back", e)}>
+        <Button primary outline onClick={(e) => handleWizzard("back", e)}>
           Quay lại
         </Button>
-        <Button
-          primary
-          rounded
-          isLoading={isLoading}
-          onClick={(e) => handleWizzard("submit", e)}
-        >
-          Đăng ký
-        </Button>
+        <div className="flex gap-4">
+          {reset && (
+            <Button primary rounded outline onClick={reset}>
+              Đặt lại
+            </Button>
+          )}
+          <Button
+            primary
+            rounded
+            isLoading={isLoading}
+            onClick={(e) => handleWizzard("submit", e)}
+          >
+            Đăng ký
+          </Button>
+        </div>
       </div>
     );
   } else {
@@ -150,9 +166,16 @@ Wizzard.Action = ({ stepList, currentStep, handleWizzard, isLoading }) => {
         <Button outline primary onClick={(e) => handleWizzard("back", e)}>
           Quay lại
         </Button>
-        <Button primary rounded onClick={(e) => handleWizzard("next", e)}>
-          Tiếp theo
-        </Button>
+        <div className="flex gap-4">
+          {reset && (
+            <Button primary rounded outline onClick={reset}>
+              Đặt lại
+            </Button>
+          )}
+          <Button primary rounded onClick={(e) => handleWizzard("next", e)}>
+            Tiếp theo
+          </Button>
+        </div>
       </div>
     );
   }
