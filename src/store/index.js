@@ -158,20 +158,6 @@ export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAdd
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
 export {updateItemDetail, updateItemList, updateItemLine} from './slices/itemSlice'
 export {updateNameCertiSearch, updateCertiList, updateCertificateDetail } from './slices/certificateSlice'
-export {
-  updateCategorySearch,
-  updateList,
-  updateNameSearch,
-  updateProductDetail,
-} from "./slices/productSlice";
-export {
-  updateItemDetail,
-  updateItemList,
-  updateItemLine,
-} from "./slices/itemSlice";
-export {
-  useGetListManuToVerifyQuery,
-  useGetListCertificateByManuIdQuery,
-  useAddCertificateMutation,
-} from "./apis/certificateApi";
+
+
 
