@@ -35,7 +35,7 @@ let request;
 function ManuProductAdd() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { avatar } = useSelector((state) => state.productForm);
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const { images, form } = useSelector((state) => state.productForm);
   const { categoriesData } = useCategory();
   const [addProduct, results] = useAddProductMutation();
@@ -88,10 +88,16 @@ function ManuProductAdd() {
       });
   };
 
-  // useEffect(()=>{
-  //   console.log(form)
-  //   console.log(categoriesData)
-  // },[form, categoriesData])
+  useEffect(() => {
+    if (results.error?.status === 401) navigate("/portal/login");
+  }, [results]);
+
+  useEffect(() => {
+    if (!results.isLoading && !isAuthenticated) {
+      getToast('Phiên dăng nhập đã hết hạn');
+      navigate("/portal/login");
+    }
+  }, [results, isAuthenticated]);
 
   return (
     <div className="p-4 mx-auto">

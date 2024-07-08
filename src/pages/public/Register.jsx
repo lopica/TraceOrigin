@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   updateRegisterForm,
+  useCheckEmailExistMutation,
   useCreateUserMutation,
   useSendOtpMutation,
 } from "../../store";
@@ -57,7 +58,9 @@ function Register() {
       cfPassword: "",
     },
   });
-  const [createUser, { isLoading: isRegisterLoading }] = useCreateUserMutation();
+  const [createUser, { isLoading: isRegisterLoading }] =
+    useCreateUserMutation();
+  const [checkEmail, results] = useCheckEmailExistMutation();
   const [alertContent, setAlertContent] = useState({
     type: null, // 'error', 'success', or 'info'
     content: "",
@@ -99,22 +102,22 @@ function Register() {
   const handleRegister = (otp) => {
     console.log({
       ...registerForm,
-      otpVerify: otp.join(''),
+      otpVerify: otp.join(""),
     });
     createUser({
       ...registerForm,
-      otpVerify: otp.join('')
+      otpVerify: otp.join(""),
     })
       .unwrap()
       .then((res) => {
         console.log(res);
         dispatch(updateCoordinate([]));
-        getToast('Tạo tài khoản thành công');
+        getToast("Tạo tài khoản thành công");
         navigate("/portal/login");
       })
       .catch((err) => {
         console.log(err.error);
-        getToast('Gặp lỗi khi khi gửi yêu cầu');
+        getToast("Gặp lỗi khi khi gửi yêu cầu");
         setInputsDisabled(false); // Enable inputs again if creation fails
       });
   };
@@ -208,6 +211,14 @@ function Register() {
                   value: emailRegex,
                   message: "Email chưa đúng format",
                 },
+                validate: async (value) => {
+                  try {
+                    await checkEmail({ email: value }).unwrap(); // Assuming unwrap() correctly resolves or rejects
+                    return true; // Validation passed
+                  } catch (error) {
+                    return error?.data || "Có lỗi xảy ra khi kiểm tra email"; // Return custom error message
+                  }
+                },
               })}
               error={errors.email?.message}
             />
@@ -235,8 +246,8 @@ function Register() {
               {...register("password", {
                 required: "Bạn cần tạo mật khẩu",
                 minLength: {
-                  value: 6,
-                  message: "Nhập khẩu cần ít nhất 6 ký tự",
+                  value: 8,
+                  message: "Nhập khẩu cần ít nhất 8 ký tự",
                 },
                 pattern: {
                   value: passwordRegex,
@@ -244,7 +255,7 @@ function Register() {
                     "Mật khẩu cần chứa ít nhất 1 chữ hoa, 1 số và 1 ký tự đặc biệt",
                 },
               })}
-              autoComplete='new-password'
+              autoComplete="new-password"
               error={errors.password?.message}
             />
             <Input
@@ -256,12 +267,21 @@ function Register() {
                 validate: (value) =>
                   value === getValues("password") || "Mật khẩu nhập không khớp",
               })}
-              autoComplete='new-password'
+              autoComplete="new-password"
               error={errors.cfPassword?.message}
             />
           </>
         </Wizzard>
-        {showOtp && <Otp handleClose={handleClose} onSubmit={handleRegister} isLoading={isRegisterLoading} sendOtp={sendOtp} inputsDisabled={inputsDisabled} setInputsDisabled={setInputsDisabled} />}
+        {showOtp && (
+          <Otp
+            handleClose={handleClose}
+            onSubmit={handleRegister}
+            isLoading={isRegisterLoading}
+            sendOtp={sendOtp}
+            inputsDisabled={inputsDisabled}
+            setInputsDisabled={setInputsDisabled}
+          />
+        )}
         <div className="mt-5 text-sm flex justify-center items-center">
           <p>Đã tài khoản?</p>
           <Link to="/portal/login">

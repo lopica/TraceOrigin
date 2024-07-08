@@ -18,7 +18,7 @@ export default function ItemDetail() {
       });
       setItemDetail(foundItem);
     }
-  }, [list, itemId]);
+  }, [list]);
 
   if (!itemDetail?.productRecognition) {
     qr = <p className="pt-2 pl-2">Không thể tải qr</p>;
