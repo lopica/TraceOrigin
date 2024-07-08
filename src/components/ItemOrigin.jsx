@@ -1,9 +1,15 @@
 import { useSelector } from "react-redux";
 import { useFetchOriginByItemLogIdQuery } from "../store";
+import Map from "./Map";
+import Carousel from "./UI/Carousel";
+import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
+import { useEffect, useState } from "react";
 
 let origin;
-export default function ItemOrigin() {
+
+export default function ItemOrigin({ productRecognition }) {
   const { itemLine } = useSelector((state) => state.itemSlice);
+  const [slides, setSlides] = useState([]);
   const {
     data: originData,
     isError: isOriginError,
@@ -11,6 +17,21 @@ export default function ItemOrigin() {
   } = useFetchOriginByItemLogIdQuery(itemLine[0]?.itemLogId, {
     skip: !itemLine,
   });
+
+  useEffect(() => {
+    if (originData?.image) {
+      if (originData.image.length > 0) {
+        setSlides(
+          originData.image.map((image, idx) => (
+            <img
+              src={image}
+              alt={`${originData.productName || "không rõ"} ${idx}`}
+            />
+          ))
+        );
+      }
+    }
+  }, [originData]);
 
   if (isOriginFetching) {
     origin = (
@@ -38,55 +59,53 @@ export default function ItemOrigin() {
   } else {
     if (originData) {
       origin = (
-        <>
-          <h2 className="mb-4 text-center font-bold">Nguồn gốc</h2>
+        <section className="text-xl">
+          <h2 className="mb-4 text-center font-bold text-2xl">Nguồn gốc</h2>
           <ul className="space-y-2">
             <li>
-              <p>Tên sản phẩm: {originData?.productName || "chưa rõ"}</p>
+              <p>Tên sản phẩm: {originData.productName || "không rõ"}</p>
             </li>
             <li>
-              <p>Mã qr: {productRecognition || "chưa rõ"}</p>
+              {/* <p>Mã sản phẩm: {productRecognition || "không rõ"}</p> */}
             </li>
             <li>
-              <p>Đơn vị sản xuất: {originData?.orgName || "chưa rõ"}</p>
+              <p>Đơn vị sản xuất: {originData.orgName.trim() || "không rõ"}</p>
             </li>
             <li>
-              <p className="mb-2">Địa điểm sản xuất:</p>
-              <MapContainer
-                center={center}
-                zoom={15}
-                style={{ height: "400px", width: "100%" }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Marker position={center}>
-                  <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                  </Popup>
-                </Marker>
-                <SetViewOnClick coords={center} />
-              </MapContainer>
+              <p className="mb-4">Các hình ảnh của sản phẩm: </p>
+              <Carousel slides={slides} />
             </li>
+
             <li>
               <p>
                 Thời gian tạo:{" "}
-                {getDateFromEpochTime(originData?.createAt) || "chưa rõ"}
+                {getDateFromEpochTime(originData?.createAt) || "không rõ"}
               </p>
             </li>
             <li>
               <p>
-                Mô tả sản phẩm: {originData?.descriptionOrigin || "chưa rõ"}
+                Mô tả sản phẩm: {originData.descriptionOrigin || "không rõ"}
               </p>
             </li>
             <li>
               <p>
-                Hạn bảo hành: {`${originData?.warranty} tháng` || "chưa rõ"}
+                Hạn bảo hành: {`${originData?.warranty} tháng` || "không rõ"}
               </p>
             </li>
             <li>
-              <p>Ảnh/model 3d của sản phẩm: </p>
+              <p className="mb-2">
+                Địa điểm sản xuất:{" "}
+                {`${originData.locationDTO.address}, ${originData.locationDTO.ward}, ${originData.locationDTO.district}, ${originData.locationDTO.city} `}
+              </p>
+              <Map
+                location={{
+                  lat: originData.locationDTO.coordinateX,
+                  lng: originData.locationDTO.coordinateY,
+                }}
+              />
             </li>
           </ul>
-        </>
+        </section>
       );
     }
   }

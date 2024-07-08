@@ -92,7 +92,7 @@ function Pagination({ active, totalPages, onPageChange }) {
     return buttons;
   };
 
-  return <div className="join">{renderPaginationButtons()}</div>;
+  return <div className="join ">{renderPaginationButtons()}</div>;
 }
 
 Pagination.propTypes = {

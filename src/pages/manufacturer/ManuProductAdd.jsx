@@ -1,6 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
-import { updateAvatar, updateImages, useAddProductMutation } from "../../store";
+import {
+  resetState,
+  updateAvatar,
+  updateCategories,
+  updateForm,
+  updateImages,
+  updateImagesData,
+  useAddProductMutation,
+} from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import ImageBox from "../../components/UI/ImageBox";
 import { useForm } from "react-hook-form";
@@ -25,11 +33,11 @@ const validateStep = [
 let request;
 
 function ManuProductAdd() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { avatar } = useSelector((state) => state.productForm);
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const { images, form } = useSelector((state) => state.productForm);
   const { categoriesData } = useCategory();
-  const { images } = useSelector((state) => state.productForm);
   const [addProduct, results] = useAddProductMutation();
   const { getToast } = useToast();
   const {
@@ -41,7 +49,17 @@ function ManuProductAdd() {
     formState: { errors },
   } = useForm({
     mode: "onTouched",
+    defaultValues: { ...form },
   });
+
+  const onStepSubmit = (step) => {
+    const data = validateStep[step].reduce((obj, field) => {
+      obj[field] = getValues(field);
+      return obj;
+    }, {});
+    dispatch(updateCategories(categoriesData));
+    dispatch(updateForm(data));
+  };
 
   const onSubmit = (data) => {
     request = {
@@ -59,23 +77,27 @@ function ManuProductAdd() {
     console.log(request);
     addProduct(request)
       .unwrap()
-      .then((res) => {
-        console.log(res);
-        getToast('Tạo mới thành công sản phẩm')
-        navigate('/manufacturer/products')
+      .then(() => {
+        dispatch(resetState());
+        getToast("Tạo mới thành công sản phẩm");
+        navigate("/manufacturer/products");
       })
       .catch((err) => {
-        getToast('Gặp lỗi khi tạo mới sản phẩm')
+        getToast("Gặp lỗi khi tạo mới sản phẩm");
         console.log(err);
       });
   };
 
-  useEffect(()=>{
-    return () => {
-      dispatch(updateImages([]))
-      dispatch(updateAvatar(''))
+  useEffect(() => {
+    if (results.error?.status === 401) navigate("/portal/login");
+  }, [results]);
+
+  useEffect(() => {
+    if (!results.isLoading && !isAuthenticated) {
+      getToast('Phiên dăng nhập đã hết hạn');
+      navigate("/portal/login");
     }
-  },[dispatch])
+  }, [results, isAuthenticated]);
 
   return (
     <div className="p-4 mx-auto">
@@ -84,9 +106,14 @@ function ManuProductAdd() {
         onSubmit={handleSubmit(onSubmit)}
         validateStep={validateStep}
         trigger={trigger}
+        onStepSubmit={onStepSubmit}
         isLoading={results.isLoading}
         getValues={getValues}
-        avatar={avatar}
+        reset={(e) => {
+          e.preventDefault();
+          dispatch(resetState());
+          window.location.reload()
+        }}
       >
         <>
           <div className="grid grid-cols-3 gap-4">

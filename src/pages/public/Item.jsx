@@ -156,7 +156,7 @@ function Item() {
             {/* <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-base-100 shadow-xl border mb-8 mx-2"> */}
                 {/* {eventCard} */}
             {/* </div> */}
-            <ItemOrigin />
+            <ItemOrigin productRecognition={productRecognition} />
             <div className="grid mx-6 gap-4 mb-4 sm:w-[640px] sm:mx-auto">
                 <button className="btn btn-error text-white">Báo lỗi sản phẩm</button>
                 <button className="btn btn-error text-white">Tố cáo sản phẩm</button>

@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom";
 
 let qr;
 export default function ItemDetail() {
-  const { list } = useSelector((state) => state.itemSlice);
-  const { itemId } = useParams();
+  const { productRecognition } = useParams();
   const [itemDetail, setItemDetail] = useState({});
 
   useEffect(() => {
@@ -14,12 +13,12 @@ export default function ItemDetail() {
       console.log(list);
       const foundItem = list.find((item) => {
         console.log(item);
-        console.log(itemId);
-        return item.productRecognition == itemId;
+        console.log(productRecognition);
+        return item.productRecognition == productRecognition;
       });
       setItemDetail(foundItem);
     }
-  }, [list, itemId]);
+  }, [list]);
 
   if (!itemDetail?.productRecognition) {
     qr = <p className="pt-2 pl-2">Không thể tải qr</p>;
@@ -34,5 +33,8 @@ export default function ItemDetail() {
     );
   }
 
-  return <>{qr}</>;
+  return <section>
+  {/* itemline */}
+  {qr}
+  </section>;
 }

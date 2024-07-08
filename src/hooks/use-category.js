@@ -1,23 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-  requireLogin,
-  updateCategories,
-  useGetAllCategoriesQuery,
-} from "../store";
+import { updateCategories, useGetAllCategoriesQuery } from "../store";
 import { useEffect } from "react";
 
 let data = [];
 export default function useCategory() {
   const dispatch = useDispatch();
+  const { categoriesData } = useSelector((state) => state.productForm);
+
   const {
     data: categories,
     isError: isCategoryError,
     isFetching: isCategoryFetch,
-    error,
-  } = useGetAllCategoriesQuery();
-  const {isAuthenticated} = useSelector(state=>state.authSlice)
-
-
+  } = useGetAllCategoriesQuery(undefined, {
+    skip: categoriesData.length > 1,
+  });
 
   useEffect(() => {
     if (!isCategoryFetch && categories) {
@@ -36,15 +32,8 @@ export default function useCategory() {
       dispatch(
         updateCategories([{ id: "error", content: "Không thể tải dữ liệu" }])
       );
-      if (error.status === 401 && !isCategoryFetch && !isCategoryError) {
-        console.log(error)
-        console.log("vo day category");
-        dispatch(requireLogin());
-      }
     }
   }, [categories, dispatch, isCategoryFetch, isCategoryError]);
-
-  const { categoriesData } = useSelector((state) => state.productForm);
 
   return { categoriesData, isCategoryError, isCategoryFetch };
 }

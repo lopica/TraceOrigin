@@ -67,11 +67,21 @@ const authApi = createApi({
             body: request,
           }
         }
+      }),
+      checkEmailExist: builder.mutation({
+        query: (request) => {
+          return {
+            url: '/checkMailExist',
+            method: 'POST',
+            body: request,
+            responseHandler: res => res.text(),
+          }
+        }
       })
     };
   },
 });
 
-export const { useCreateUserMutation, useLoginMutation, useLogoutMutation, useSendOtpMutation } =
+export const { useCreateUserMutation, useLoginMutation, useLogoutMutation, useSendOtpMutation, useCheckEmailExistMutation } =
   authApi;
 export { authApi };

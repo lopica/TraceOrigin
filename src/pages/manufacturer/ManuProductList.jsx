@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/UI/Input";
@@ -7,11 +7,15 @@ import useProduct from "../../hooks/use-product";
 import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../components/UI/Pagination";
+import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
+
 import useToast from "../../hooks/use-toast";
 
 let renderedProducts;
 function ManuProductList() {
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
@@ -25,6 +29,7 @@ function ManuProductList() {
     isFetching: isProductsFetch,
     isError: isProductsError,
     searchProduct,
+    data,
     error,
     refetch,
   } = useProduct();
@@ -40,26 +45,31 @@ function ManuProductList() {
     searchProduct(data);
   };
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    refetch();
+  };
+
   useEffect(() => {
     if (error?.status === 401) navigate("/portal/login");
   }, [isProductsError]);
 
   useEffect(() => {
     if (!isProductsFetch && !isAuthenticated) {
-      getToast('Phiên dăng nhập đã hết hạn');
+      getToast("Phiên dăng nhập đã hết hạn");
       navigate("/portal/login");
     }
   }, [isProductsFetch, isAuthenticated]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      refetch(); 
-    }
-  }, [isAuthenticated, refetch]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     refetch();
+  //   }
+  // }, [isAuthenticated, refetch]);
 
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (
-      <div key={index} className="skeleton w-44 h-52"></div>
+      <div key={index} className="skeleton w-70 h-65"></div>
     ));
   } else if (isProductsError) {
     renderedProducts = <p>Không thể tải danh sách sản phẩm</p>;
@@ -75,6 +85,7 @@ function ManuProductList() {
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
+      {/* form search  */}
       <form
         className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto"
         onKeyDown={handleKeyDown}
@@ -93,6 +104,18 @@ function ManuProductList() {
           data={categoriesData}
           placeholder="Chọn danh mục"
         />
+        <Input
+          label="Từ ngày"
+          type="date"
+          {...register("startDate")}
+          placeholder="Chọn ngày bắt đầu"
+        />
+        <Input
+          label="Đến ngày"
+          type="date"
+          {...register("endDate")}
+          placeholder="Chọn ngày kết thúc"
+        />
         <Button
           primary
           rounded
@@ -102,30 +125,35 @@ function ManuProductList() {
           Tìm kiếm
         </Button>
       </form>
-      <div className="flex flex-start px-4 md:ml-12">
+      <div className="flex justify-center md:justify-start px-8">
         <Link to="add">
-          <Button primary rounded>
-            Tạo sản phẩm
-          </Button>
+          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+            <FiPlus size={20} className="mr-2" />
+            Thêm sản phẩm
+          </button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
-        {/* <Link to="add">
+      <div class="flex justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
+          {/* <Link to="add">
           <Card />
         </Link> */}
-        {renderedProducts}
+          {renderedProducts}
+        </div>
       </div>
-      <div className="flex justify-end mr-4">
-        {/* footer */}
-        {/* <div className="join">
-          <button className="join-item btn">1</button>
-          <button className="join-item btn btn-active">2</button>
-          <button className="join-item btn">3</button>
-          <button className="join-item btn">4</button>
-        </div> */}
+      {/* phần paging  */}
+      <div className="flex flex-col min-h-screen justify-center items-center">
+        <div className="flex-grow">{/* Nội dung khác của bạn ở đây */}</div>
+        <div className="mt-auto">
+          <Pagination
+            active={page}
+            totalPages={data?.totalPages || 0}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
     </div>
   );
 }
-
+// asdasd
 export default ManuProductList;

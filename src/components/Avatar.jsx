@@ -16,6 +16,7 @@ function Avatar() {
     await logout()
     .then(()=>{
       getToast('Đăng xuất thành công')
+      // navigate('/portal/login')
     })
   }
 

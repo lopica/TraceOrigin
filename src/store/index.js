@@ -13,7 +13,7 @@ import { categoryApi } from "./apis/categoryApi";
 import { classifierApi } from "./apis/classifierApi";
 import { registerFormReducer } from "./slices/registerFormSlice";
 import { locationDataReducer } from "./slices/locationDataSlice";
-import { productFormReducer } from "./slices/productForm";
+import { productFormReducer } from "./slices/productFormSlice";
 import authSliceReducer from "./slices/authSlice";
 import { userSliceReducer } from "./slices/userSlice";
 import { persistStore, persistReducer } from "redux-persist";
@@ -29,7 +29,11 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["authSlice", "userSlice"], 
+  whitelist: [
+    "authSlice",
+    "userSlice",
+    "productForm",
+  ],
 };
 
 const rootReducer = combineReducers({
@@ -41,7 +45,7 @@ const rootReducer = combineReducers({
   userSlice: userSliceReducer,
   productSlice: productSliceReducer,
   itemSlice: itemSliceReducer,
-  certificateSlice: certificateSliceReducer, 
+  certificateSlice: certificateSliceReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -82,7 +86,7 @@ const store = configureStore({
       categoryApi.middleware,
       classifierApi.middleware,
       certificateApi.middleware,
-      serialRequestMiddleware,
+      // serialRequestMiddleware
     ),
 });
 
@@ -96,8 +100,15 @@ export {
   useLoginMutation,
   useLogoutMutation,
   useSendOtpMutation,
+  useCheckEmailExistMutation,
 } from "./apis/authApi";
-export { useFetchUserQuery , useGetUserDetailQuery, useGetUsersQuery, useLockUserMutation , useUpdateStatusMutation  } from "./apis/userApi";
+export {
+  useFetchUserQuery,
+  useGetUserDetailQuery,
+  useGetUsersQuery,
+  useLockUserMutation,
+  useUpdateStatusMutation,
+} from "./apis/userApi";
 export {
   useAddProductMutation,
   useSearchProductQuery,
@@ -138,9 +149,15 @@ export {
   removeImageData,
   updateImagesData,
   updateAvatar,
-} from "./slices/productForm";
+  updateForm,
+  resetState,
+} from "./slices/productFormSlice";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
-export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice'
+export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
 export {updateItemDetail, updateItemList, updateItemLine} from './slices/itemSlice'
 export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery} from "./apis/certificateApi";
+export {updateNameCertiSearch, updateCertiList, updateCertificateDetail } from './slices/certificateSlice'
+
+
+
