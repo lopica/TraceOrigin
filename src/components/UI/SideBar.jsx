@@ -50,7 +50,7 @@ export default function SideBar() {
                         className={`mt-2 text-md md:text-md text-gray-400 hover:text-white hover:bg-customSideBarHover`}
                       >
                         <childItem.icon className="mr-2" />
-                        <span>{item.name}</span>
+                        <span>{childItem.name}</span>
                       </Link>
                     </li>
                   ))}
