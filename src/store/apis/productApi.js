@@ -36,7 +36,7 @@ const productApi = createApi({
         },
       }),
       searchProduct: builder.query({
-        providesTags: ['Login'],
+        providesTags: ['addProduct'],
         query: (request) => {
           return {
             url: "/findAllProductByManufacturerId",

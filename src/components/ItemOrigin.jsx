@@ -4,10 +4,13 @@ import Map from "./Map";
 import Carousel from "./UI/Carousel";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { useEffect, useState } from "react";
+import { getWarrantyDate } from "../utils/getWarrantyDate";
+import Button from "./UI/Button";
+import { IoIosArrowBack } from "react-icons/io";
 
 let origin;
 
-export default function ItemOrigin({ productRecognition }) {
+export default function ItemOrigin({ goToItemLine }) {
   const { itemLine } = useSelector((state) => state.itemSlice);
   const [slides, setSlides] = useState([]);
   const {
@@ -15,7 +18,7 @@ export default function ItemOrigin({ productRecognition }) {
     isError: isOriginError,
     isFetching: isOriginFetching,
   } = useFetchOriginByItemLogIdQuery(itemLine[0]?.itemLogId, {
-    skip: !itemLine,
+    skip: itemLine.length === 0,
   });
 
   useEffect(() => {
@@ -61,7 +64,7 @@ export default function ItemOrigin({ productRecognition }) {
       origin = (
         <section className="text-xl">
           <h2 className="mb-4 text-center font-bold text-2xl">Nguồn gốc</h2>
-          <ul className="space-y-2">
+          <ul className="space-y-2 lg:pb-12">
             <li>
               <p>Tên sản phẩm: {originData.productName || "không rõ"}</p>
             </li>
@@ -79,7 +82,7 @@ export default function ItemOrigin({ productRecognition }) {
             <li>
               <p>
                 Thời gian tạo:{" "}
-                {getDateFromEpochTime(originData?.createAt) || "không rõ"}
+                {getDateFromEpochTime(originData.createAt) || "không rõ"}
               </p>
             </li>
             <li>
@@ -89,7 +92,9 @@ export default function ItemOrigin({ productRecognition }) {
             </li>
             <li>
               <p>
-                Hạn bảo hành: {`${originData?.warranty} tháng` || "không rõ"}
+                Hạn bảo hành:{" "}
+                {getWarrantyDate(originData.createAt, originData.warranty) ||
+                  "không rõ"}
               </p>
             </li>
             <li>
@@ -111,7 +116,12 @@ export default function ItemOrigin({ productRecognition }) {
   }
 
   return (
-    <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-base-100 shadow-xl border mb-8 mx-2">
+    <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-base-100 shadow-xl border mb-8 mx-2 lg:max-h-[88svh] overflow-y-auto lg:mb-0">
+      <div className="mt-5 ml-4 lg:hidden">
+        <Button primary outline onClick={goToItemLine}>
+          <IoIosArrowBack /> Quay lại
+        </Button>
+      </div>
       <div className="card-body">{origin}</div>
     </div>
   );

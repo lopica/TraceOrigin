@@ -40,7 +40,7 @@ const authApi = createApi({
         },
       }),
       login: builder.mutation({
-        invalidatesTags: ['Login'],
+        invalidatesTags: ['addProduct'],
         query: (input) => {
           return {
             url: "/login",

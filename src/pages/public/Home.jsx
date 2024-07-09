@@ -53,17 +53,6 @@ function Home() {
     }
   };
 
-  const handleScanSuccess = (decodedText, decodedResult) => {
-    console.log(`Scan result: ${decodedText}`, decodedResult);
-    // Handle the scan result here
-    window.location.href = decodedText
-    handleScannerClose();
-  };
-
-  const handleScanError = (error) => {
-    console.error(`Scan error: ${error}`);
-  };
-
   const modal = (
     <Modal onClose={handleClose}>
       <form className="flex justify-between w-[50svw] mx-auto">
@@ -109,7 +98,7 @@ function Home() {
               {showModal && modal}
               {showScanner && (
                 <Modal onClose={handleScannerClose}>
-                  <QRCodeScanner onScanSuccess={handleScanSuccess} onScanError={handleScanError} />
+                  <QRCodeScanner onClose={handleScannerClose} />
                 </Modal>
               )}
             </div>

@@ -18,28 +18,16 @@ export default function useProductDetail(productId) {
     skip: !isAuthenticated
   });
 
-  const productConfig = [
-    {
-      label: "Thông số kĩ thuật",
-      render: (item) => item?.label,
-      sortValue: (item) => item?.label,
-    },
-    {
-      label: "Giá trị",
-      render: (item) => item?.value,
-    },
-  ];
-
   useEffect(() => {
     if (!isProductError && !isProductFetch && isSuccess) {
       console.log(productDetail)
       setName(productDetail.productName);
       setProductData([
-        { label: "kích thước", value: productDetail.dimensions },
-        { label: "cân nặng", value: productDetail.weight },
-        { label: "chất liệu", value: productDetail.material },
-        { label: "công dụng", value: productDetail.description },
-        { label: "Bảo hành", value: productDetail.warranty },
+        { label: "Kích thước 📏", value: productDetail.dimensions },
+        { label: "Cân nặng 🏋️", value: `${productDetail.weight} kg` },
+        { label: "Chất liệu 🔨", value: productDetail.material },
+        { label: "Công dụng ✅", value: productDetail.description },
+        { label: "Bảo hành ⏰", value: `${productDetail.warranty} tháng` },
       ]);
       dispatch(updateProductDetail(productDetail))
       setImages(productDetail.listImages)
@@ -55,5 +43,5 @@ export default function useProductDetail(productId) {
     }
   }, [isProductFetch, isProductError, productDetail]);
 
-  return { productData, productConfig, name, images, isProductFetch, isProductError, error };
+  return { productData, name, images, isProductFetch, isProductError, error };
 }

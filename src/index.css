@@ -18,11 +18,12 @@ body, html {
 
 
 .embla {
-  max-width: 48rem;
+  max-width: 32rem;
   margin: auto;
   --slide-height: 19rem;
   --slide-spacing: 1rem;
   --slide-size: 100%;
+  touch-action: pan-x; 
 }
 .embla__viewport {
   overflow: hidden;

@@ -11,7 +11,7 @@ function Table({ data, config, keyFn }) {
     const rowKey = keyFn(rowData) || 'none'; // Get a unique key for the row
     const renderedCells = config.map((column) => {
       return (
-        <td className="p-3" key={`${rowKey}-${column.label || 'none'}`}>
+        <td className="px-4" key={`${rowKey}-${column.label || 'none'}`}>
           {column.render(rowData)}
         </td>
       );

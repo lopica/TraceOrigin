@@ -23,6 +23,10 @@ const Carousel = ({ slides, options }) => {
     emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
   }, [emblaMainApi, emblaThumbsApi]);
 
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
+
   useEffect(() => {
     if (!emblaMainApi) return;
     onSelect();
@@ -30,7 +34,7 @@ const Carousel = ({ slides, options }) => {
   }, [emblaMainApi, onSelect]);
 
   return (
-    <div className="embla">
+    <div className="embla swiper-no-swiping" onTouchStart={stopPropagation} onTouchMove={stopPropagation} onTouchEnd={stopPropagation}>
       <div className="embla__viewport" ref={emblaMainRef}>
         <div className="embla__container">
           {slides.map((slide, index) => (
