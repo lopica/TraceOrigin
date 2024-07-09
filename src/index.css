@@ -23,6 +23,7 @@ body, html {
   --slide-height: 19rem;
   --slide-spacing: 1rem;
   --slide-size: 100%;
+  touch-action: pan-x; 
 }
 .embla__viewport {
   overflow: hidden;
