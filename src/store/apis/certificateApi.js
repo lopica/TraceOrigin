@@ -73,9 +73,26 @@ const certificateApi = createApi({
           }
         }),
       }),
+      sendRequestVerifyCert: builder.mutation({
+        query: (userId) => ({
+          url: '/SendRequestVerifyCert',
+          method: 'GET'
+        }),
+      }),
+      deleteCertCertId: builder.mutation({
+        query: (userId) => {
+          return {
+            url: "/deleteCertCertId",
+            method: "POST",
+            body: {
+              "id" : userId.id
+            }
+          };
+        },
+      }),
     };
   },
 });
 
 export { certificateApi };
-export const { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery} = certificateApi;
+export const { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery, useSendRequestVerifyCertMutation, useDeleteCertCertIdMutation} = certificateApi;

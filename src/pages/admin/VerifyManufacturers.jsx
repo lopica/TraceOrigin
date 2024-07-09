@@ -153,6 +153,7 @@ function VerifyManufacturer() {
           userId={selectedUserId}
           onAccept={handleAccept}
           onReject={handleReject}
+          isAdmin={true}
         />
       )}
     </div>

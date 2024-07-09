@@ -8,7 +8,7 @@ import useCertificateDetail from "../../hooks/use-certificate-detail";
 
 function ManuCertificateDetail() {
   const { certId } = useParams();
-
+  const [isModalOpenImage, setModalOpenImage] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [slides, setSlides] = useState([]);
