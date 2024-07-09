@@ -37,20 +37,20 @@ export default function SideBar() {
                   } hover:text-white hover:bg-customSideBarHover`}
                 >
                   <Icon className="mr-2" />
-                  {item.name}
+                  <span>{item.name}</span>
                 </Link>
               </li>
               {/* Hiển thị submenu nếu mục cha được chọn và submenu mở */}
               {  selectedItem === index  && isSubMenuOpen && item.children && (
-                <ul className="ml-4">
+                <ul className="ml-8">
                   {item.children.map((childItem, childIndex) => (
                     <li key={childItem.name}>
                       <Link
                         to={childItem.url}
-                        className={`mt-2 text-lg md:text-md text-gray-400 hover:text-white hover:bg-customSideBarHover`}
+                        className={`mt-2 text-md md:text-md text-gray-400 hover:text-white hover:bg-customSideBarHover`}
                       >
                         <childItem.icon className="mr-2" />
-                        {childItem.name}
+                        <span>{item.name}</span>
                       </Link>
                     </li>
                   ))}
