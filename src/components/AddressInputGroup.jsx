@@ -96,7 +96,7 @@ export default function AddressInputGroup({
           data={provinces}
           placeholder="Tỉnh, thành phố"
           {...register("province", {
-            // required: "Bạn cần chọn tỉnh, thành phố",
+            required: "Bạn cần chọn tỉnh, thành phố",
           })}
           onChange={(e) => handleInputChange("province", e)}
           error={errors.province?.message}
@@ -106,7 +106,7 @@ export default function AddressInputGroup({
           type="select"
           data={districts}
           {...register("district", {
-            // required: "Bạn cần chọn quận, huyện",
+            required: "Bạn cần chọn quận, huyện",
           })}
           onChange={(e) => handleInputChange("district", e)}
           placeholder="Quận, huyện"
@@ -117,7 +117,7 @@ export default function AddressInputGroup({
           type="select"
           data={wards}
           {...register("ward", {
-            // required: "Bạn cần chọn phường, xã",
+            required: "Bạn cần chọn phường, xã",
           })}
           placeholder="Phường, xã"
           error={errors.ward?.message}
@@ -128,7 +128,7 @@ export default function AddressInputGroup({
         className="input input-bordered join-item"
         placeholder="Số nhà, tên đường,..."
         {...register("address", {
-          // required: "Bạn cần nhập địa chỉ cụ thể để mình định vị nhé",
+          required: "Bạn cần nhập địa chỉ cụ thể để mình định vị nhé",
         })}
         onBlur={handleAddressBlur}
         unit={

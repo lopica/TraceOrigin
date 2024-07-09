@@ -48,7 +48,7 @@ export default function AddItem() {
         country: "Vietnam",
         coordinateX: coordinate[0],
         coordinateY: coordinate[1],
-        address: data.address,
+        address: `${data.address}, ${ward[1]}, ${district[1]}, ${province[1]}`,
       },
       productId: productDetail.productId,
     };
@@ -83,13 +83,29 @@ export default function AddItem() {
 
   modal = (
     <Modal onClose={handleClose}>
-      <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onKeyDown={handleKeyDown}
+        noValidate
+      >
         <h1 className="text-center text-2xl mb-8">Tạo nhật ký</h1>
         <Input
           label="Số lượng sản phẩm"
           type="number"
           unit="cái"
-          {...register("quantity")}
+          {...register("quantity", {
+            required: "Bạn cần nhập số lượng",
+            min: {
+              value: 1,
+              message: "Số lượng nhật ký phải là 1 sô dương",
+            },
+            validate: (value) => {
+              return Number.isInteger(Number(value))
+                ? true
+                : "Số lượng phải là một số nguyên";
+            },
+          })}
+          error={errors.quantity?.message}
         />
         <AddressInputGroup
           register={register}
@@ -102,6 +118,7 @@ export default function AddItem() {
           type="text"
           placeholder="Treo đồ, bàn tháo lắp nhanh,..."
           {...register("descriptionOrigin")}
+          error={errors.descriptionOrigin?.message}
         />
         <Input
           label="Thời gian bảo hành"

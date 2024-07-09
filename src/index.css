@@ -18,7 +18,7 @@ body, html {
 
 
 .embla {
-  max-width: 48rem;
+  max-width: 32rem;
   margin: auto;
   --slide-height: 19rem;
   --slide-spacing: 1rem;

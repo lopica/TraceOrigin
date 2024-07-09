@@ -75,17 +75,17 @@ function ManuProductAdd() {
     delete request.category;
 
     console.log(request);
-    addProduct(request)
-      .unwrap()
-      .then(() => {
-        dispatch(resetState());
-        getToast("Tạo mới thành công sản phẩm");
-        navigate("/manufacturer/products");
-      })
-      .catch((err) => {
-        getToast("Gặp lỗi khi tạo mới sản phẩm");
-        console.log(err);
-      });
+    // addProduct(request)
+    //   .unwrap()
+    //   .then(() => {
+    //     dispatch(resetState());
+    //     getToast("Tạo mới thành công sản phẩm");
+    //     navigate("/manufacturer/products");
+    //   })
+    //   .catch((err) => {
+    //     getToast("Gặp lỗi khi tạo mới sản phẩm");
+    //     console.log(err);
+    //   });
   };
 
   useEffect(() => {

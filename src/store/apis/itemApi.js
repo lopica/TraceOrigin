@@ -34,6 +34,7 @@ const itemApi = createApi({
     return {
       // search items by product id
       searchItems: builder.query({
+        providesTags: ['addItem'],
         query: (request) => {
           return {
             url: '/search',
@@ -63,6 +64,7 @@ const itemApi = createApi({
       }),
 
       addItem: builder.mutation({
+        invalidatesTags: ['addItem'],
         query: (request) => {
           return {
             url: "addItem",

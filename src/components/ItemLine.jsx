@@ -32,7 +32,7 @@ export default function ItemLine({ productRecognition, add, goToItemOrigin }) {
   } else {
     if (itemLogsData) {
       itemLine = (
-        <ul className="timeline timeline-vertical max-w-lg mx-auto overflow-x-auto overflow-y-hidden h-full">
+        <ul className="timeline timeline-vertical max-w-lg mx-auto overflow-x-auto overflow-y-hidden h-fit">
           {itemLogsData.itemLogDTOs.map((log, index) => (
             <li key={index} className="h-24 gap-x-4">
               {index !== 0 && <hr className="bg-base-content" />}
@@ -66,8 +66,7 @@ export default function ItemLine({ productRecognition, add, goToItemOrigin }) {
           )}
         </ul>
       );
-    } else {
-    }
+    } 
   }
   return itemLine;
 }

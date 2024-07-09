@@ -1,12 +1,22 @@
 import Table from "./UI/Table";
 import useProductDetail from "../hooks/use-product-detail";
-import ImageBox from "./UI/ImageBox";
-import { useForm } from "react-hook-form";
 import Carousel from "./UI/Carousel";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/use-toast";
+
+const productConfig = [
+  {
+    label: "Thông số kĩ thuật",
+    render: (item) => item?.label,
+    sortValue: (item) => item?.label,
+  },
+  {
+    label: "Giá trị",
+    render: (item) => item?.value,
+  },
+];
 
 let renderedProductDetail;
 export default function ProductDetail({ productId }) {
@@ -16,7 +26,6 @@ export default function ProductDetail({ productId }) {
   const { getToast } = useToast();
   const {
     productData,
-    productConfig,
     name,
     images,
     isProductFetch,
