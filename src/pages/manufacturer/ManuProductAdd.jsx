@@ -15,7 +15,10 @@ import { useForm } from "react-hook-form";
 import Wizzard from "../../components/Wizzard";
 import useCategory from "../../hooks/use-category";
 import useToast from "../../hooks/use-toast";
-import { useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import Button from "../../components/UI/Button";
+import { useDropzone } from "react-dropzone";
+import Canvas3D from "../../components/Canvas3D";
 
 const stepList = [
   "Thông tin cơ bản",
@@ -40,6 +43,9 @@ function ManuProductAdd() {
   const { categoriesData } = useCategory();
   const [addProduct, results] = useAddProductMutation();
   const { getToast } = useToast();
+  const fileInputRef = useRef(null);
+  const [progress, setProgress] = useState(0);
+
   const {
     register,
     handleSubmit,
@@ -50,6 +56,33 @@ function ManuProductAdd() {
   } = useForm({
     mode: "onTouched",
     defaultValues: { ...form },
+  });
+
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
+
+      reader.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentLoaded = Math.round((event.loaded / event.total) * 100);
+          setProgress(percentLoaded);
+        }
+      };
+
+      reader.onloadend = () => {
+        setValue("3DModel", reader.result);
+        setProgress(100); // Set to 100% when done
+      };
+
+      reader.readAsDataURL(file);
+    },
+    [setValue]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    noClick: true, // Prevent the dropzone from triggering file input click
   });
 
   const onStepSubmit = (step) => {
@@ -67,7 +100,6 @@ function ManuProductAdd() {
       avatar: data.avatar.split(",")[1],
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
-      file3D: "",
     };
     delete request.length;
     delete request.width;
@@ -94,7 +126,7 @@ function ManuProductAdd() {
 
   useEffect(() => {
     if (!results.isLoading && !isAuthenticated) {
-      getToast('Phiên dăng nhập đã hết hạn');
+      getToast("Phiên dăng nhập đã hết hạn");
       navigate("/portal/login");
     }
   }, [results, isAuthenticated]);
@@ -112,7 +144,7 @@ function ManuProductAdd() {
         reset={(e) => {
           e.preventDefault();
           dispatch(resetState());
-          window.location.reload()
+          window.location.reload();
         }}
       >
         <>
@@ -273,7 +305,51 @@ function ManuProductAdd() {
           </div>
         </>
         <>
-          <p>Đang phát triển </p>
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text">Chọn file 3D của sản phẩm:</span>
+            </div>
+            {!getValues("3DModel") && (
+              <div
+                {...getRootProps()}
+                className={`flex flex-col items-center justify-center h-28 p-3 border-2 border-dashed border-sky-900 cursor-pointer  text-sky-900 ${
+                  isDragActive ? "border-sky-700 bg-sky-100" : ""
+                }`}
+              >
+                <input
+                  {...getInputProps()}
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                <p className="text-center h-fit block">
+                  Chọn hoặc kéo thả tệp vào đây
+                </p>
+              </div>
+            )}
+            {progress > 0 && progress < 100 && (
+              <progress
+                className="progress progress-info w-56"
+                value={progress}
+                max="100"
+              ></progress>
+            )}
+            {getValues("3DModel") && (
+              <div>
+                <Button
+                  primary
+                  outline
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setValue("3DModel", undefined);
+                  }}
+                >
+                  Chọn lại
+                </Button>
+                <Canvas3D modelBase64={getValues("3DModel")} />
+              </div>
+            )}
+          </label>
         </>
       </Wizzard>
     </div>

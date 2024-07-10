@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  requireLogin,
-  updateItemList,
-  useSearchItemsQuery,
-} from "../store";
+import { requireLogin, updateItemList, useSearchItemsQuery } from "../store";
 import useToast from "./use-toast";
 import { useDispatch } from "react-redux";
 
@@ -11,6 +7,10 @@ export default function useItem(productId) {
   const dispatch = useDispatch();
   const [itemsData, setItemsData] = useState([]);
   const { getToast } = useToast();
+  const [paginate, setPaginate] = useState({
+    totalPages: 0,
+    currentPage: 0,
+  });
   const {
     data,
     isError: isItemError,
@@ -20,7 +20,7 @@ export default function useItem(productId) {
   } = useSearchItemsQuery({
     productId,
     pageSize: 6,
-    pageNumber: 0,
+    pageNumber: paginate.currentPage,
     startDate: 0,
     endDate: 0,
     name: "",
@@ -28,6 +28,15 @@ export default function useItem(productId) {
     productRecognition: "",
     eventTypeId: 0,
   });
+
+  const setCurrentPage = (newPage) => {
+    setPaginate((prev) => {
+      return {
+        ...prev,
+        currentPage: newPage,
+      };
+    });
+  };
 
   useEffect(() => {
     if (isItemError && isSuccess) {
@@ -38,11 +47,25 @@ export default function useItem(productId) {
       }
     }
     if (!isItemError && !isItemFetch && data?.content) {
-      console.log(data)
+      console.log(data);
       dispatch(updateItemList(data.content));
       setItemsData(data.content);
+      setPaginate((prev) => {
+        return {
+          ...prev,
+          totalPages: data.totalPages,
+        };
+      });
     }
   }, [isItemError, isItemFetch, data]);
 
-  return { itemsData, isItemFetch, isItemError, isSuccess };
+  return {
+    itemsData,
+    isItemFetch,
+    isItemError,
+    isSuccess,
+    error,
+    paginate,
+    setCurrentPage,
+  };
 }

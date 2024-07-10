@@ -15,7 +15,7 @@ const itemApi = createApi({
     // credentials: 'include',
     fetchFn: async (input, init, ...args) => {
       // REMOVE FOR PRODUCTION
-      await pause(3000);
+      // await pause(3000);
 
       // Determine the endpoint based on the URL or some other method
       const url = typeof input === "string" ? input : input.url;

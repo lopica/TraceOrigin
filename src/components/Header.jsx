@@ -47,7 +47,7 @@ function Header() {
 
   if (
     !location.pathname.startsWith("/manufacturer") &&
-    !location.pathname.startsWith("/admin")
+    !location.pathname.startsWith("/admin") 
   ) {
     menuMobile = (
       <Link to="/" className="btn btn-ghost text-xl">

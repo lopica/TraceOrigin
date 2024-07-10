@@ -6,18 +6,17 @@ import { useNavigate } from "react-router-dom";
 
 let avatar;
 function Avatar() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { isFetching, isError } = useUser();
   const user = useSelector((state) => state.userSlice);
   const { handleLogout: logout } = useAuth();
-  const {getToast} =useToast()
+  const { getToast } = useToast();
 
   async function handleLogout() {
-    await logout()
-    .then(()=>{
-      getToast('Đăng xuất thành công')
+    await logout().then(() => {
+      getToast("Đăng xuất thành công");
       // navigate('/portal/login')
-    })
+    });
   }
 
   if (isFetching) {

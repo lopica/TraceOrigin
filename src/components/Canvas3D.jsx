@@ -1,8 +1,8 @@
-import { PresentationControls, Stage, useTexture } from "@react-three/drei"
-import { Canvas, useLoader, useThree } from "@react-three/fiber"
+import { PresentationControls, Stage, useTexture } from "@react-three/drei";
+import { Canvas, useLoader, useThree } from "@react-three/fiber";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from 'three';
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react';
 
 function VideoBackground() {
   const { scene } = useThree();
@@ -42,28 +42,8 @@ function VideoBackground() {
   return null;  // This component does not render anything itself
 }
 
-// function ScrollZoom() {
-//   const { camera } = useThree();
-//   const [zoom, setZoom] = useState(1);
-//   const handleWheel = (event) => {
-//     const delta = -event.deltaY * 0.01;
-//     setZoom((prev) => {
-//       const newZoom = prev + delta;
-//       return Math.max(0.5, Math.min(newZoom, 5));  // Constrain zoom to reasonable values
-//     });
-//   };
-
-//   useEffect(() => {
-//     camera.position.z = 5 / zoom;  // Adjust this based on your scene scale
-//     camera.updateProjectionMatrix();
-//   }, [zoom, camera]);
-
-//   return null;
-// }
-
-function Model() {
-  const stl = useLoader(STLLoader, '/cah7v3tejt3cai13juuw.stl'); // Load the STL file
-  // const ply = useLoader(PLYLoader, '/Tam-Nen-Phai-V6.4.ply');
+function Model({ modelUrl }) {
+  const stl = useLoader(STLLoader, modelUrl); // Load the STL file
   return (
     <mesh geometry={stl}>
       <meshStandardMaterial attach="material" color={'gray'} />
@@ -71,19 +51,41 @@ function Model() {
   );
 }
 
-function Canvas3D() {
-  return <Canvas style={{ height: '50svh', touchAction: 'none' }} dpr={[1, 2]} camera={{ fov: 45 }}>
-    <PresentationControls
-      speed={1.5}
-      global
-      polar={[-Math.PI, Math.PI]}  // Full vertical rotation from top to bottom
-      azimuth={[-Infinity, Infinity]}  // Infinite horizontal rotation
-    >
-      <Stage environment={'city'}><Model /></Stage>
-      <VideoBackground />
-      {/* <ScrollZoom /> */}
-    </PresentationControls>
-  </Canvas>
+function Canvas3D({ modelBase64 }) {
+  const [modelUrl, setModelUrl] = useState(null);
+
+  useEffect(() => {
+    if (modelBase64) {
+      const byteCharacters = atob(modelBase64.split(',')[1]);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/sla' });
+      const url = URL.createObjectURL(blob);
+      setModelUrl(url);
+
+      // Clean up URL object when component unmounts
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [modelBase64]);
+
+  return (
+    <Canvas style={{ height: '50svh', touchAction: 'none' }} dpr={[1, 2]} camera={{ fov: 45 }}>
+      <PresentationControls
+        speed={1.5}
+        global
+        polar={[-Math.PI, Math.PI]}  // Full vertical rotation from top to bottom
+        azimuth={[-Infinity, Infinity]}  // Infinite horizontal rotation
+      >
+        <Stage environment={'city'}>
+          {modelUrl && <Model modelUrl={modelUrl} />}
+        </Stage>
+        <VideoBackground />
+      </PresentationControls>
+    </Canvas>
+  );
 }
 
-export default Canvas3D
+export default Canvas3D;

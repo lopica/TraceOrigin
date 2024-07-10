@@ -197,7 +197,7 @@ function Item() {
             goToItemOrigin={goToItemOrigin}
           />
         </div>
-        <div className="col-span-4">
+        <div className="col-span-4  pt-[2svh]">
           <ItemOrigin goToItemLine={goToItemLine} />
         </div>
       </div>

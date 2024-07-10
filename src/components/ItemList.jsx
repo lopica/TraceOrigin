@@ -4,12 +4,17 @@ import useCategory from "../hooks/use-category";
 import Input from "./UI/Input";
 import AddItem from "./AddItem";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./UI/Button";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 let renderedListItem;
 export default function ItemList({ productId }) {
-  const { itemsData, isItemError, isItemFetch } = useItem(productId);
+  const { itemsData, isItemError, isItemFetch, error, paginate, setCurrentPage } =
+    useItem(productId);
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const navigate = useNavigate()
   const { categoriesData } = useCategory();
 
   const itemConfig = [
@@ -44,10 +49,21 @@ export default function ItemList({ productId }) {
     },
   ];
 
+  useEffect(() => {
+    if (error?.status === 401) navigate("/portal/login");
+  }, [isItemFetch]);
+
+  useEffect(() => {
+    if (!isItemFetch && !isAuthenticated) {
+      getToast("Phiên dăng nhập đã hết hạn");
+      navigate("/portal/login");
+    }
+  }, [isItemFetch, isAuthenticated]);
+
   if (isItemFetch) {
     renderedListItem = <div className="skeleton h-40 w-full"></div>;
   } else if (isItemError) {
-    renderedListItem = <p className="text-xl">Không thể tải dữ liệu nhật ký</p>
+    renderedListItem = <p className="text-xl">Không thể tải dữ liệu nhật ký</p>;
   } else {
     renderedListItem = (
       <div className="w-full">
@@ -77,6 +93,18 @@ export default function ItemList({ productId }) {
         <AddItem />
       </div>
       {renderedListItem}
+      <div className="join mt-4 flex justify-center">
+        {/* <button className="join-item btn">1</button>
+        <button className="join-item btn">2</button>
+        <button className="join-item btn btn-disabled">...</button>
+        <button className="join-item btn">99</button>
+        <button className="join-item btn">100</button> */}
+        {Array.from({ length: paginate.totalPages }).map((_, idx) => (
+          <button key={idx} className="join-item btn" onClick={()=>setCurrentPage(idx)}>
+            {idx + 1}
+          </button>
+        ))}
+      </div>
     </section>
   );
 }

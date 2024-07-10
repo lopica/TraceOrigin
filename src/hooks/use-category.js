@@ -12,7 +12,7 @@ export default function useCategory() {
     isError: isCategoryError,
     isFetching: isCategoryFetch,
   } = useGetAllCategoriesQuery(undefined, {
-    skip: categoriesData.length > 1,
+    skip: categoriesData.length > 0 && categoriesData[0]?.id !== 'loading' && categoriesData[0]?.id !== 'error',
   });
 
   useEffect(() => {
