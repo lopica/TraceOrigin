@@ -179,7 +179,7 @@ function Item() {
           simulateTouch={true}
           scrollbar={{ draggable: true }}
         >
-          <SwiperSlide className="text-center w-svw sm:w-[lg] min-h-[90svh] mx-auto ">
+          <SwiperSlide className="text-center w-svw sm:w-[lg] mx-auto ">
             <ItemLine
               productRecognition={productRecognition}
               goToItemOrigin={goToItemOrigin}

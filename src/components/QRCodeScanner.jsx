@@ -1,7 +1,6 @@
 // src/components/QRCodeScanner.js
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import Modal from "./UI/Modal";
 
 const qrcodeRegionId = "html5qr-code-full-region";
 
@@ -62,8 +61,8 @@ function QRCodeScanner({ onClose }) {
 
   return (
       <Html5QrcodePlugin
-        fps={30}
-        qrbox={250}
+        fps={60}
+        qrbox={200}
         disableFlip={false}
         qrCodeSuccessCallback={onNewScanResult}
       />

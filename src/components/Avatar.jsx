@@ -3,14 +3,16 @@ import useUser from "../hooks/use-user";
 import useAuth from "../hooks/use-auth";
 import useToast from "../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 let avatar;
 function Avatar() {
   const navigate = useNavigate();
-  const { isFetching, isError } = useUser();
+  const { isFetching, isError, refetch } = useUser();
   const user = useSelector((state) => state.userSlice);
   const { handleLogout: logout } = useAuth();
   const { getToast } = useToast();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
 
   async function handleLogout() {
     await logout().then(() => {
@@ -18,6 +20,13 @@ function Avatar() {
       // navigate('/portal/login')
     });
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refetch(); 
+    }
+  }, [isAuthenticated, refetch]);
+  
 
   if (isFetching) {
     avatar = <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;

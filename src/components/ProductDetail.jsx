@@ -38,11 +38,11 @@ export default function ProductDetail({ productId }) {
   }, [isProductError]);
 
   useEffect(() => {
-    if (!isProductFetch && !isAuthenticated) {
+    if (!isAuthenticated) {
       getToast("Phiên dăng nhập đã hết hạn");
       navigate("/portal/login");
     }
-  }, [isProductFetch, isAuthenticated]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (images.length > 0) {

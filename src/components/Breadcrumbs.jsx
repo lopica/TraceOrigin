@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 
+
 function Breadcrumbs() {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(x => x);
@@ -9,6 +10,9 @@ function Breadcrumbs() {
     <div className="text-sm breadcrumbs ml-4 md:ml-0">
       <ul>
         {pathnames.map((name, index) => {
+          // Skip the first route
+          if (index === 0) return null;
+          
           // Determine the path to this part of the URL
           const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
           // Check if it's the last item in the pathnames array

@@ -38,8 +38,8 @@ export default function useProductDetail(productId) {
       console.log(productDetail.listImages)
       console.log(productDetail.avatar)
     }
-    if (isSuccess && isProductError) {
-      if(error.status === 401) dispatch(requireLogin()) 
+    if (error?.status === 401 && isProductError) {
+      dispatch(requireLogin()) 
     }
   }, [isProductFetch, isProductError, productDetail]);
 

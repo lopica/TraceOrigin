@@ -6,14 +6,24 @@ import useShow from "../../hooks/use-show";
 import ImageBox from "../../components/UI/ImageBox";
 import { usePredictMutation } from "../../store";
 import QRCodeScanner from "../../components/QRCodeScanner";
+import CustomUIQRCodeScanner from "../../components/CustomUIQRCodeScanner";
+import ImageClassification from "../../components/ImageClassification";
 
 function Home() {
-  const navigate = useNavigate()
-  const { show: showModal, handleOpen: handleClick, handleClose } = useShow(false);
-  const { show: showScanner, handleOpen: handleScannerOpen, handleClose: handleScannerClose } = useShow(false);
+  const navigate = useNavigate();
+  const {
+    show: showModal,
+    handleOpen: handleClick,
+    handleClose,
+  } = useShow(false);
+  const {
+    show: showScanner,
+    handleOpen: handleScannerOpen,
+    handleClose: handleScannerClose,
+  } = useShow(false);
   const [image, setImage] = useState();
   const [result, setResult] = useState({
-    className: '',
+    className: "",
     confidence: 0,
   });
   const [predict, { isSuccess }] = usePredictMutation();
@@ -29,7 +39,7 @@ function Home() {
         setImage(base64String);
         try {
           predict({
-            model: '', // Provide the necessary model identifier if needed
+            model: "", // Provide the necessary model identifier if needed
             image: base64String, // Pass the complete base64 string here
           })
             .unwrap()
@@ -55,11 +65,13 @@ function Home() {
 
   const modal = (
     <Modal onClose={handleClose}>
-      <form className="flex justify-between w-[50svw] mx-auto">
-        <input type="file" className="file-input w-full max-w-xs" onChange={handleImage} />
-        <div>
-          {/* <Button primary rounded>Tìm kiếm</Button> */}
-        </div>
+      {/* <form className="flex justify-between w-[50svw] mx-auto">
+        <input
+          type="file"
+          className="file-input w-full max-w-xs"
+          onChange={handleImage}
+        />
+        <div><Button primary rounded>Tìm kiếm</Button></div>
       </form>
       {isSuccess && (
         <div className="flex gap-4">
@@ -76,13 +88,17 @@ function Home() {
             )}
           </div>
         </div>
-      )}
+      )} */}
+      <ImageClassification />
     </Modal>
   );
 
   return (
     <main className="h-[93svh] overflow-y-auto">
-      <div className="hero h-[50svh]" style={{ backgroundImage: "url(/hero.jpg)" }}>
+      <div
+        className="hero h-[50svh]"
+        style={{ backgroundImage: "url(/hero.jpg)" }}
+      >
         <div className="hero-overlay bg-opacity-80"></div>
         <div className="hero-content text-center text-neutral-content">
           <div className="max-w-md">
@@ -92,15 +108,18 @@ function Home() {
               <Button primary onClick={handleScannerOpen} rounded>
                 Quét QR
               </Button>
+              {showScanner && (
+                <Modal onClose={handleScannerClose}>
+                  <div className="p-4">
+                    <QRCodeScanner onClose={handleScannerClose} />
+                    {/* <CustomUIQRCodeScanner /> */}
+                  </div>
+                </Modal>
+              )}
               <Button primary onClick={handleClick} rounded>
                 Nhận diện hình ảnh
               </Button>
               {showModal && modal}
-              {showScanner && (
-                <Modal onClose={handleScannerClose}>
-                  <QRCodeScanner onClose={handleScannerClose} />
-                </Modal>
-              )}
             </div>
           </div>
         </div>
