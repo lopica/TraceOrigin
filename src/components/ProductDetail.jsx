@@ -9,8 +9,9 @@ import useToast from "../hooks/use-toast";
 const productConfig = [
   {
     label: "Thông số kĩ thuật",
+    icon: (item) => item?.icon,
     render: (item) => item?.label,
-    sortValue: (item) => item?.label,
+    // sortValue: (item) => item?.label,
   },
   {
     label: "Giá trị",
@@ -74,7 +75,7 @@ export default function ProductDetail({ productId }) {
   }
 
   return (
-    <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-28">
+    <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-12">
       <Carousel slides={slides} />
       {renderedProductDetail}
     </section>

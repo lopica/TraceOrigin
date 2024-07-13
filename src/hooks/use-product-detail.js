@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { requireLogin, updateAvatar, updateProductDetail, useViewProductDetailQuery } from "../store";
 import { useDispatch, useSelector } from "react-redux";
+import { FaRuler, FaDumbbell, FaHammer, FaCheckCircle, FaClock } from 'react-icons/fa';
 
 export default function useProductDetail(productId) {
   const dispatch = useDispatch();
@@ -23,11 +24,11 @@ export default function useProductDetail(productId) {
       console.log(productDetail)
       setName(productDetail.productName);
       setProductData([
-        { label: "Kích thước 📏", value: productDetail.dimensions },
-        { label: "Cân nặng 🏋️", value: `${productDetail.weight} kg` },
-        { label: "Chất liệu 🔨", value: productDetail.material },
-        { label: "Công dụng ✅", value: productDetail.description },
-        { label: "Bảo hành ⏰", value: `${productDetail.warranty} tháng` },
+        { icon: FaRuler, label: "Kích thước", value: productDetail.dimensions },
+        { icon: FaDumbbell, label: "Cân nặng", value: `${productDetail.weight} kg` },
+        { icon: FaHammer, label: "Chất liệu", value: productDetail.material },
+        { icon: FaCheckCircle, label: "Công dụng", value: productDetail.description },
+        { icon: FaClock, label: "Bảo hành", value: `${productDetail.warranty} tháng` },
       ]);
       dispatch(updateProductDetail(productDetail))
       setImages(productDetail.listImages)
