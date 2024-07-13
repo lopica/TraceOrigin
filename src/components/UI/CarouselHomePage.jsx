@@ -30,7 +30,7 @@ const CarouselHomePage = () => {
   }, [slides.length]);
 
   return (
-     <div className="max-w-xl mx-auto">
+    <div className="max-w-xl mx-auto hidden sm:block">
       <div id="default-carousel" className="relative" data-carousel="static">
         {/* Carousel wrapper */}
         <div className="overflow-hidden relative h-56 rounded-lg sm:w-64 md:w-80 lg:w-96 xl:w-180 2xl:w-96 sm:h-64 xl:h-80 2xl:h-96">

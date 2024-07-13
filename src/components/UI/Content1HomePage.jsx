@@ -13,7 +13,7 @@ const Content1HomePage = () => {
           </h2>
         </div>
         {/* Nửa phải: Biểu đồ */}
-        <div className="md:w-1/2 p-4 flex flex-col items-center justify-center text-center">
+        <div className="md:w-1/2 p-4 flex flex-col items-center justify-center text-center text-lg">
           <div className="max-w-4xl mx-auto p-6">
             <ul className="space-y-4">
               <li className="flex items-start">

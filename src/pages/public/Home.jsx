@@ -13,6 +13,8 @@ import CarouselHomePage from "../../components/UI/CarouselHomePage";
 import ActionButtonHomePage from "../../components/UI/ActionButtonHomePage";
 import DiagramHomePage from "../../components/UI/DiagramHomePage";
 import Content1HomePage from "../../components/UI/Content1HomePage";
+import Footer from "../../components/UI/Footer";
+import ActiveMethodHomePage from "../../components/UI/ActiveMethodHomePage";
 
 function Home() {
   const navigate = useNavigate();
@@ -132,11 +134,11 @@ function Home() {
 
     // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[93svh] overflow-y-auto">
-      <section className="flex justify-center py-8 bg-[rgb(240,240,240)]  gap-6">
+      <section className="flex justify-center py-8 bg-[rgb(240,240,240)]  sm:gap-6">
         <div className="basis-7/10 flex items-center justify-center">
           <CarouselHomePage />
         </div>
-        <div className="basis-3/10 flex flex-col justify-center space-y-2 pl-4">
+        <div className="basis-3/10 flex flex-col justify-center space-y-2 ">
           <ActionButtonHomePage />
         </div>
       </section>
@@ -144,6 +146,8 @@ function Home() {
       <div className="bg-[rgb(240,240,240)]">
       <DiagramHomePage/>
       </div>
+      <ActiveMethodHomePage/>
+      <Footer/>
     </main>
   );
 }
