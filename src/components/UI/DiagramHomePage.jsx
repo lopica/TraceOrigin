@@ -19,7 +19,7 @@ const DiagramHomePage = () => {
         {/* Nửa phải: Biểu đồ */}
         <div className="md:w-1/2 p-4">
           <img
-            src="https://img.freepik.com/free-vector/illustration-data-analysis-graph_53876-17902.jpg?t=st=1720883276~exp=1720886876~hmac=7e7ff810bba6c9bc76d7b31ceeda2d026d3a9be7028d69e8702d3253335d5cf0&w=996"
+            src="https://img.freepik.com/free-vector/illustration-data-analysis-graph_53876-17902.jpg"
             alt="Data Analysis Graph"
           />
         </div>
