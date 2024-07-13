@@ -8,6 +8,9 @@ import { usePredictMutation } from "../../store";
 import QRCodeScanner from "../../components/QRCodeScanner";
 import CustomUIQRCodeScanner from "../../components/CustomUIQRCodeScanner";
 import ImageClassification from "../../components/ImageClassification";
+import { FaArrowRight, FaSignInAlt, FaSearch } from "react-icons/fa";
+import CarouselHomePage from "../../components/UI/CarouselHomePage";
+
 
 function Home() {
   const navigate = useNavigate();
@@ -92,38 +95,81 @@ function Home() {
       <ImageClassification />
     </Modal>
   );
-
   return (
+    // <main className="h-[93svh] overflow-y-auto">
+    //   <div
+    //     className="hero h-[50svh]"
+    //     style={{ backgroundImage: "url(/hero.jpg)" }}
+    //   >
+    //     <div className="hero-overlay bg-opacity-80"></div>
+    //     <div className="hero-content text-center text-neutral-content">
+    //       <div className="max-w-md">
+    //         <h1 className="mb-5 text-5xl font-bold">TraceOrigin</h1>
+    //         <p className="mb-5">Tra cứu sản phẩm bằng hình ảnh</p>
+    //         <div className="flex gap-4 justify-center">
+    //           <Button primary onClick={handleScannerOpen} rounded>
+    //             Quét QR
+    //           </Button>
+    //           {showScanner && (
+    //             <Modal onClose={handleScannerClose}>
+    //               <div className="p-4">
+    //                 <QRCodeScanner onClose={handleScannerClose} />
+    //                 {/* <CustomUIQRCodeScanner /> */}
+    //               </div>
+    //             </Modal>
+    //           )}
+    //           <Button primary onClick={handleClick} rounded>
+    //             Nhận diện hình ảnh
+    //           </Button>
+    //           {showModal && modal}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </main>
+
+    // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[93svh] overflow-y-auto">
-      <div
-        className="hero h-[50svh]"
-        style={{ backgroundImage: "url(/hero.jpg)" }}
-      >
-        <div className="hero-overlay bg-opacity-80"></div>
-        <div className="hero-content text-center text-neutral-content">
-          <div className="max-w-md">
-            <h1 className="mb-5 text-5xl font-bold">TraceOrigin</h1>
-            <p className="mb-5">Tra cứu sản phẩm bằng hình ảnh</p>
-            <div className="flex gap-4 justify-center">
-              <Button primary onClick={handleScannerOpen} rounded>
-                Quét QR
-              </Button>
-              {showScanner && (
-                <Modal onClose={handleScannerClose}>
-                  <div className="p-4">
-                    <QRCodeScanner onClose={handleScannerClose} />
-                    {/* <CustomUIQRCodeScanner /> */}
-                  </div>
-                </Modal>
-              )}
-              <Button primary onClick={handleClick} rounded>
-                Nhận diện hình ảnh
-              </Button>
-              {showModal && modal}
-            </div>
-          </div>
+            
+
+<section className="flex justify-center py-8 bg-[rgb(240,240,240)]">
+        <div className="basis-7/10 flex items-center justify-center">
+        <CarouselHomePage/>
         </div>
-      </div>
+        <div className="basis-3/10 flex flex-col justify-center space-y-2 pl-4">
+  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+    <div className="flex items-center">
+      <FaSearch className="mr-2" />
+      <span className="font-bold">TÌM KIẾM</span>
+    </div>
+    <FaArrowRight />
+  </button>
+  
+  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+    <div className="flex items-center">
+      <FaSignInAlt className="mr-2" />
+      <span className="font-bold">ĐĂNG KÍ SẢN PHẨM | ĐĂNG NHẬP</span>
+    </div>
+    <FaArrowRight />
+  </button>
+  
+  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+    <div className="flex items-center">
+      <FaSearch className="mr-2" />
+      <span className="font-bold mr-2">TRA CỨU SẢN PHẨM BẰNG HÌNH ẢNH </span>
+    </div>
+    <FaArrowRight />
+  </button>
+  
+  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+    <div className="flex items-center">
+      <FaSearch className="mr-2" />
+      <span className="font-bold">TRA CỨU SẢN PHẨM BẰNG QR</span>
+    </div>
+    <FaArrowRight />
+  </button>
+</div>
+      </section>
     </main>
   );
 }
