@@ -10,7 +10,9 @@ import CustomUIQRCodeScanner from "../../components/CustomUIQRCodeScanner";
 import ImageClassification from "../../components/ImageClassification";
 import { FaArrowRight, FaSignInAlt, FaSearch } from "react-icons/fa";
 import CarouselHomePage from "../../components/UI/CarouselHomePage";
-
+import ActionButtonHomePage from "../../components/UI/ActionButtonHomePage";
+import DiagramHomePage from "../../components/UI/DiagramHomePage";
+import Content1HomePage from "../../components/UI/Content1HomePage";
 
 function Home() {
   const navigate = useNavigate();
@@ -130,46 +132,18 @@ function Home() {
 
     // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[93svh] overflow-y-auto">
-            
-
-<section className="flex justify-center py-8 bg-[rgb(240,240,240)]">
+      <section className="flex justify-center py-8 bg-[rgb(240,240,240)]  gap-6">
         <div className="basis-7/10 flex items-center justify-center">
-        <CarouselHomePage/>
+          <CarouselHomePage />
         </div>
         <div className="basis-3/10 flex flex-col justify-center space-y-2 pl-4">
-  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
-    <div className="flex items-center">
-      <FaSearch className="mr-2" />
-      <span className="font-bold">TÌM KIẾM</span>
-    </div>
-    <FaArrowRight />
-  </button>
-  
-  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
-    <div className="flex items-center">
-      <FaSignInAlt className="mr-2" />
-      <span className="font-bold">ĐĂNG KÍ SẢN PHẨM | ĐĂNG NHẬP</span>
-    </div>
-    <FaArrowRight />
-  </button>
-  
-  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
-    <div className="flex items-center">
-      <FaSearch className="mr-2" />
-      <span className="font-bold mr-2">TRA CỨU SẢN PHẨM BẰNG HÌNH ẢNH </span>
-    </div>
-    <FaArrowRight />
-  </button>
-  
-  <button className="w-full h-16 bg-transparent text-left border border-black rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
-    <div className="flex items-center">
-      <FaSearch className="mr-2" />
-      <span className="font-bold">TRA CỨU SẢN PHẨM BẰNG QR</span>
-    </div>
-    <FaArrowRight />
-  </button>
-</div>
+          <ActionButtonHomePage />
+        </div>
       </section>
+      <Content1HomePage/>
+      <div className="bg-[rgb(240,240,240)]">
+      <DiagramHomePage/>
+      </div>
     </main>
   );
 }
