@@ -9,7 +9,7 @@ import { Camera } from "react-camera-pro";
 
 const MOBILE_NET_INPUT_HEIGHT = 224,
   MOBILE_NET_INPUT_WIDTH = 224;
-// let model, customModel;
+
 export default function ImageClassification() {
   const [step, setStep] = useState("choose");
   const [predictionResult, setPredictions] = useState([]);
@@ -18,14 +18,13 @@ export default function ImageClassification() {
   const [imageUrl, setImageUrl] = useState(null);
   const [cameraType, setCameraType] = useState("environment");
   const videoContainerRef = useRef(null);
+  const videoRef = useRef(null);
   const [camerasAvailable, setCamerasAvailable] = useState({
     user: false,
     environment: false,
   });
-  const modelRef = useRef(null);
   const customModelRef = useRef(null);
   const imageRef = useRef(null);
-  const videoRef = useRef(null);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const checkCameraAvailability = async () => {
@@ -33,13 +32,6 @@ export default function ImageClassification() {
     const videoInputs = devices.filter(
       (device) => device.kind === "videoinput"
     );
-    // navigator.mediaDevices.enumerateDevices().then((devices) => {
-    //   devices.forEach((device) => {
-    //     if (device.kind === "videoinput") {
-    //       console.log(device.label); // Log the label to see how it is described
-    //     }
-    //   });
-    // });
 
     const hasUser = videoInputs.some((device) =>
       device.label.toLowerCase().includes("front")
@@ -90,6 +82,12 @@ export default function ImageClassification() {
   useEffect(() => {
     if (videoContainerRef.current) {
       videoRef.current = videoContainerRef.current.querySelector('video');
+      if (videoRef.current) {
+        videoRef.current.onloadeddata = () => {
+          console.log('Video loaded');
+          requestAnimationFrame(predictVideoFrame);
+        };
+      }
     }
   }, [step]);
 
@@ -97,7 +95,7 @@ export default function ImageClassification() {
     const loadImageAndPredict = async () => {
       try {
         tf.tidy(() => {
-          let tensor = tf.browser.fromPixels(imageRef.current.video).div(255);
+          let tensor = tf.browser.fromPixels(imageRef.current).div(255);
           let resizedTensorImage = tf.image.resizeBilinear(
             tensor,
             [MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH],
@@ -132,10 +130,9 @@ export default function ImageClassification() {
   }, []);
 
   useEffect(() => {
-    // Define the async function inside useEffect
     async function loadCustomModel() {
       try {
-        const url = "http://localhost:8081/models/model.json";
+        const url = "https://lopica.github.io/model-hosting/model.json";
         const model = await tf.loadLayersModel(url);
         console.log("Custom model loaded successfully!");
         customModelRef.current = model;
@@ -145,28 +142,10 @@ export default function ImageClassification() {
       }
     }
 
-    // async function loadMobilenetModel() {
-    //   try {
-    //     const url =
-    //       "https://www.kaggle.com/models/google/mobilenet-v3/TfJs/large-100-224-feature-vector/1";
-    //     const mobilenet_v3 = await tf.loadGraphModel(url, { fromTFHub: true });
-    //     console.log("MobileNet v3 loaded successfully!");
-    //     modelRef.current = mobilenet_v3;
-    //     tf.tidy(() => {
-    //       let answer = model.predict(
-    //         tf.zeros([1, MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH, 3])
-    //       );
-    //       console.log(answer.shape);
-    //     });
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-
     async function fetchClassNames() {
       try {
         const response = await fetch(
-          "http://localhost:8081/models/classNames.json"
+          "https://lopica.github.io/model-hosting/classNames.json"
         );
         const classNames = await response.json();
         classNamesRef.current = classNames;
@@ -176,18 +155,14 @@ export default function ImageClassification() {
       }
     }
 
-    // Call the async functions
-    // loadMobilenetModel();
     loadCustomModel();
     fetchClassNames();
 
-    // Optional: Return a cleanup function
     return () => {
       // Cleanup code here (if necessary)
     };
   }, []);
 
-  //image or video -> predict -> navigate
   return (
     <section>
       <h2 className="text-center pt-4 text-xl pb-2">Nhận diện hình ảnh</h2>
@@ -263,11 +238,9 @@ export default function ImageClassification() {
                         <div className="flex flex-col">
                           <div className="stat-title">Độ chính xác</div>
                           <div className="font-medium">{confidence}%</div>
-                          {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
                         </div>
                         <div className="stat-figure text-secondary"></div>
                       </div>
-
                       <p className="underline cursor-pointer">Manufacturer</p>
                     </div>
                   </>
@@ -323,7 +296,6 @@ export default function ImageClassification() {
                   <div className="flex flex-col">
                     <div className="stat-title">Độ chính xác</div>
                     <div className="font-medium">{confidence}%</div>
-                    {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
                   </div>
                   <div className="stat-figure text-secondary"></div>
                 </div>
