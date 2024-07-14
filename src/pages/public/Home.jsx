@@ -14,6 +14,7 @@ import ActionButtonHomePage from "../../components/UI/ActionButtonHomePage";
 import DiagramHomePage from "../../components/UI/DiagramHomePage";
 import Content1HomePage from "../../components/UI/Content1HomePage";
 import Content2HomePage from "../../components/UI/Content2HomePage";
+import Content3HomePage from "../../components/UI/Content3HomePage";
 
 import Footer from "../../components/UI/Footer";
 import ActiveMethodHomePage from "../../components/UI/ActiveMethodHomePage";
@@ -155,13 +156,21 @@ function Home() {
         </div>
       </div>
       {/* ============================ */}
+      <div className="bg-[rgb(240,240,240)]">
+      <Content1HomePage />
+      </div>
       <Content2HomePage />
+      <div className="bg-[rgb(240,240,240)]">
+      <Content3HomePage />
+      </div>
       {/* ============================ */}
 
-      <div className="bg-[rgb(240,240,240)]">
+     
         <DiagramHomePage />
-      </div>
+   
+      <div className="bg-[rgb(240,240,240)]">
       <ActiveMethodHomePage />
+      </div>
       <Footer />
     </main>
   );

@@ -33,7 +33,7 @@ const CarouselHomePage = () => {
     <div className="max-w-xl mx-auto hidden sm:block">
       <div id="default-carousel" className="relative" data-carousel="static">
         {/* Carousel wrapper */}
-        <div className="overflow-hidden relative h-56 rounded-lg sm:w-64 md:w-80 lg:w-96 xl:w-180 2xl:w-96 sm:h-64 xl:h-80 2xl:h-96">
+        <div className="overflow-hidden relative h-56 rounded-lg sm:w-64 md:w-80 lg:w-96 xl:w-180  sm:h-64 xl:h-80">
           {slides.map((slide, index) => (
             <div
               key={index}
@@ -53,7 +53,7 @@ const CarouselHomePage = () => {
         </div>
 
         {/* Slider indicators */}
-        <div className="flex absolute bottom-5 left-1/2 z-30 space-x-3 -translate-x-1/2">
+        <div className="flex absolute bottom-5 left-1/2 z-10 space-x-3 -translate-x-1/2">
           {slides.map((_, index) => (
             <button
               key={index}
