@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 export default function SideBar() {
   const [selectedItem, setSelectedItem] = useState(null);
-  const role = useSelector(state => state.userSlice.role.roleId);
+  const role = useSelector(state => state.userSlice?.role?.roleId) ?? -1;
 
   const handleItemClick = (index) => {
     setSelectedItem(selectedItem === index ? null : index);
