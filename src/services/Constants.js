@@ -3,12 +3,12 @@ import { FaProductHunt, FaCertificate, FaUserCog, FaCheckCircle } from 'react-ic
 export const CONSTANTS = {
     brand: 'TraceOrigin',
     menu: [
-        {name: 'Sản phẩm', url: '/manufacturer/products', icon: FaProductHunt},
-        {name: 'Chứng chỉ', url: '/manufacturer/certificate', icon: FaCertificate},
+        {name: 'Sản phẩm', url: '/manufacturer/products', icon: FaProductHunt, role: '2'},
+        {name: 'Chứng chỉ', url: '/manufacturer/certificate', icon: FaCertificate, role: '2'},
         // {name: 'Report', url: '/manufacturer/products'},
         // {name: 'Warranty', url: '/manufacturer/products'},
         {
-            name: 'Quản lý nhà sản xuất',
+            name: 'Quản lý nhà sản xuất', role: '1',
             children: [
                 {name: 'Danh sách nhà sản xuất', url: '/admin/ManufacturerList',  icon: FaUserCog , role: '1'},
                 {name: 'Xác minh nhà sản xuất', url: '/admin/VerifyManufacturers',  icon: FaCheckCircle , role: '1'}

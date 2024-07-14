@@ -150,6 +150,7 @@ export { usePredictMutation } from "./apis/classifierApi";
 export {
   useGetCoordinateByAddressMutation,
   useGetAddressByCoordinateMutation,
+  useGetAllDistinctCityQuery
 } from "./apis/mapApi";
 export {
   updateCategories,
@@ -166,7 +167,6 @@ export { updateUser } from "./slices/userSlice";
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
 export {updateItemDetail, updateItemList, updateItemLine} from './slices/itemSlice'
 export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery, useSendRequestVerifyCertMutation, useDeleteCertCertIdMutation} from "./apis/certificateApi";
-export {updateNameCertiSearch, updateCertiList, updateCertificateDetail } from './slices/certificateSlice'
 
 
 

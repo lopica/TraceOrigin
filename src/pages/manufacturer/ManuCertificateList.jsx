@@ -15,6 +15,7 @@ function ManuCertificateList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
   const userIdList = useSelector(state => state.userSlice.userId);
+  const certificateSlice = useSelector((state) => state.certificateSlice);
   const { data: userId, refetch: refetchUserDetail } = useGetUserDetailQuery(userIdList);
   const [userStatus, setUserStatus] = useState(null);
   const { isAuthenticated } = useSelector((state) => state.authSlice);
@@ -123,6 +124,7 @@ function ManuCertificateList() {
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
       <form className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto" onKeyDown={handleKeyDown}>
+      {console.log(certificateSlice)}
         <Input label="Tên chứng chỉ" type="search" placeholder="sản phẩm A" />
         <Button primary rounded className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0">
           Tìm kiếm
