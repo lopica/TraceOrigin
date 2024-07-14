@@ -46,10 +46,18 @@ const mapApi = createApi({
             body: address
           }
         }
-      })
+      }),
+      getAllDistinctCity: builder.query({
+        query: (address) => {
+          return {
+            url: '/getAllCity',
+            method: 'GET'
+          }
+        }
+      }),
     };
   },
 });
 
-export const { useGetCoordinateByAddressMutation, useGetAddressByCoordinateMutation } = mapApi;
+export const { useGetCoordinateByAddressMutation, useGetAddressByCoordinateMutation , useGetAllDistinctCityQuery } = mapApi;
 export { mapApi };

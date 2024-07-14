@@ -56,7 +56,8 @@ const userApi = createApi({
             orderBy: options.orderBy || "createAt",
             isAsc: options.isAsc || "true",
             page: options.page || "0",
-            size: options.size || "10"
+            size: options.size || "10",
+            city: options.city || "",
           }
         }),
       }),

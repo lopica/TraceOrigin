@@ -4,7 +4,11 @@ import Pagination from "../../components/UI/Pagination";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
 import { Link } from "react-router-dom";
 import ProfileModal from "../../components/UI/userProfile";
-import SortableTable from "../../components/SortableTable";
+import handleKeyDown from "../../utils/handleKeyDown";
+import { useForm } from "react-hook-form";
+import Input from "../../components/UI/Input";
+import Button from "../../components/UI/Button";
+import { useGetAllDistinctCityQuery } from "../../store/apis/mapApi";
 
 function VerifyManufacturer() {
   const [page, setPage] = useState(0);
@@ -17,7 +21,18 @@ function VerifyManufacturer() {
     onConfirm: null,
   });
 
-  const { data, isError, isFetching, refetch } = useGetUsersQuery({
+  const { handleSubmit, register } = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      nameSearch: "",
+      citySearch: "",
+      statusSearch: "",
+    },
+  });
+
+  const { data: citiesData, isFetching: isFetchingCities } = useGetAllDistinctCityQuery();
+
+  const [searchParams, setSearchParams] = useState({
     email: "",
     roleId: "",
     status: "",
@@ -26,8 +41,11 @@ function VerifyManufacturer() {
     orderBy: "userId",
     isAsc: "true",
     page: page.toString(),
-    size: "10"
+    size: "10",
+    city: ""
   });
+
+  const { data, isError, isFetching, refetch } = useGetUsersQuery(searchParams);
 
   const [lockUser] = useLockUserMutation();
 
@@ -69,37 +87,28 @@ function VerifyManufacturer() {
     setIsConfirmationModalOpen(true);
   };
 
-  const status0Msg = () => (
-    <span>Bạn cần phê duyệt chứng chỉ để kích hoạt</span>
-  );
-
-  const status1Msg = () => (
-    <span>Đang hoạt động, Click để khóa tài khoản</span>
-  );
-
-  const status2Msg = () => (
-    <span>Tài khoản đang bị khóa, Click để mở khóa</span>
-  );
-  const statusMap = {
-    default: (
-        <span className="text-secondary">
-          &#8226; <Link to="#" className="text-secondary">Chưa kích hoạt</Link>
-        </span>
-    ),
-    1: (
-        <span className="text-success cursor-pointer" onClick={() => handleStatusColumnClick(item)}>
-          &#8226; <Link to="#" className="text-success">Đã kích hoạt</Link>
-        </span>
-    ),
-    2: (
-        <span className="text-info">
-          &#8226; <Link to="#" className="text-info">Đang xử lý</Link>
-        </span>
-    )
-  };
-  
-  const getStatusComponent = (status) => {
-    return statusMap[status] || statusMap.default;
+  const statusMap = (user) => {
+    const handleClick = () => handleStatusColumnClick(user);
+    switch (user.status) {
+      case 1:
+        return (
+          <span className="text-success cursor-pointer" onClick={handleClick}>
+            &#8226; <Link to="#" className="text-success">Đã kích hoạt</Link>
+          </span>
+        );
+      case 2:
+        return (
+          <span className="text-info">
+            &#8226; <Link to="#" className="text-info">Đang xử lý</Link>
+          </span>
+        );
+      default:
+        return (
+          <span className="text-secondary">
+            &#8226; <Link to="#" className="text-secondary">Chưa kích hoạt</Link>
+          </span>
+        );
+    }
   };
 
   const handleLockUnlock = async (userId, status) => {
@@ -114,7 +123,6 @@ function VerifyManufacturer() {
       setIsConfirmationModalOpen(false);
     }
   };
-
 
   const renderTableBody = () => {
     if (isFetching) {
@@ -160,9 +168,7 @@ function VerifyManufacturer() {
             </td>
             <td>{user.email}</td>
             <td>{user.city}</td>
-            <td>
-            {getStatusComponent(user.status)}
-            </td>
+            <td>{statusMap(user)}</td>
           </tr>
         ))}
       </tbody>
@@ -178,8 +184,58 @@ function VerifyManufacturer() {
     setIsConfirmationModalOpen(false);
   };
 
+  const searchHandler = (data) => {
+    setSearchParams({
+      ...searchParams,
+      email: data.emailSearch,
+      city: data.citySearch.split(',')[0].trim(),
+      status: data.statusSearch.split(',')[0].trim(),
+      page: 0 
+    });
+  };
+
+  const statusData = [
+    { id: "1", content: "Active" },
+    { id: "2", content: "Lock" },
+    { id: "-1", content: "Inactive" }
+  ];
+
   return (
     <div className="table-responsive p-5">
+      <form
+        className="flex items-end flex-col justify-between gap-2 mx-auto 
+        md:flex-row md:justify-start md:gap-2 md:items-end"
+        onKeyDown={handleKeyDown}
+        onSubmit={handleSubmit(searchHandler)}
+      >
+        <Input
+          label="Tên sản phẩm"
+          {...register("nameSearch")}
+          type="search"
+          placeholder="Tên sản phẩm"
+        />
+        <Input
+          label="Thành phố"
+          type="select"
+          {...register("citySearch")}
+          data={citiesData?.map(city => ({id:city.text ,  content: city.text })) || []}
+          placeholder="Chọn thành phố"
+        />
+        <Input
+          label="Trạng thái"
+          type="select"
+          {...register("statusSearch")}
+          data={statusData}
+          placeholder="Chọn trạng thái"
+        />
+        <Button
+          primary
+          rounded
+          className="whitespace-nowrap h-[5svh] w-full md:w-fit md:py-6 md:px-10"
+        >
+          Tìm kiếm
+        </Button>
+      </form>
       <table className="table table-zebra">
         <thead>
           <tr>
