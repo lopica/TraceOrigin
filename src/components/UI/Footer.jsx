@@ -4,7 +4,7 @@ const Footer = () => {
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         {/* Bên trái: Logo */}
         <div className="flex items-center mb-4 md:mb-0">
-          <img src="public/logo.png" alt="Logo" className="h-10 w-auto" />
+          <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
           <span className="ml-3 text-xl font-bold">TRACE ORIGIN</span>
         </div>
 
