@@ -74,6 +74,69 @@ const itemApi = createApi({
           };
         },
       }),
+      sendOtpReceiver: builder.mutation({
+        query: (request) => {
+          return {
+            url: 'sendOTP',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
+      sendOtpOwner: builder.mutation({
+        query: (request) => {
+          return {
+            url: 'sendCurrentOwnerOTP',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
+      checkOTP: builder.mutation({
+        query: (request) => {
+          return {
+            url: 'confirmOTP',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
+      checkCurrentOwnerOTP: builder.mutation({
+        query: (request) => {
+          return {
+            url: 'confirmCurrentOwner',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
+      checkIsCurrentOwner: builder.query({
+        query: (request) => {
+          return {
+            url: 'checkCurrentOwner',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
+      consign: builder.mutation({
+        query: (request) => {
+          return {
+            url: 'authorized',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
+      isConsigned: builder.query({
+        query: (request) => {
+          return {
+            url: 'checkAuthorized',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
     };
   },
 });
@@ -84,4 +147,11 @@ export const {
   useFetchOriginByItemLogIdQuery,
   useSearchItemsQuery,
   useAddItemMutation,
+  useCheckIsCurrentOwnerQuery,
+  useSendOtpOwnerMutation,
+  useSendOtpReceiverMutation,
+  useCheckCurrentOwnerOTPMutation,
+  useCheckOTPMutation,
+  useConsignMutation,
+  useIsConsignedQuery,
 } = itemApi;

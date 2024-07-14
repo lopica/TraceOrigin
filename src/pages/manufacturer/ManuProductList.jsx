@@ -45,11 +45,7 @@ function ManuProductList() {
   };
 
   useEffect(() => {
-    if (error?.status === 401) navigate("/portal/login");
-  }, [isProductsError]);
-
-  useEffect(() => {
-    if (!isProductsFetch && !isAuthenticated) {
+    if (!isAuthenticated) {
       getToast('Phiên dăng nhập đã hết hạn');
       navigate("/portal/login");
     }

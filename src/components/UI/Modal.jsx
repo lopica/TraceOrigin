@@ -3,10 +3,9 @@ import { createPortal } from "react-dom";
 import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';  
 
-function Modal({ onClose, children, className, primary }) {
-  const dynamicClasses = classNames('relative w-full max-h-[70svh] md:max-w-2xl bg-white p-10 overflow-y-auto rounded-md', {
+function Modal({ onClose, children, className, primary, easy }) {
+  const dynamicClasses = classNames('relative w-full max-h-[70svh] min-h-[40svh] container bg-white overflow-y-auto rounded-md', {
     'border-blue-500 bg-sky-500 text-white': primary,
-    
   });
 
   // Use `twMerge` to combine `props.className` with the classes from `classNames`
@@ -25,16 +24,20 @@ function Modal({ onClose, children, className, primary }) {
     <div className="relative z-20">
       <div
         className="fixed inset-0 flex items-center justify-center p-4 md:p-10 bg-black bg-opacity-50"
-        onClick={onClose}
+        onClick={easy && onClose}
       >
-        {/* Add onClick here to stop propagation */}
         <div
           className={classes}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex flex-col justify-between h-full">
+          <div className="top-2 right-2 z-10">
+            <button
+              onClick={onClose}
+              className="absolute top-0 right-2 text-gray-500 hover:text-gray-800 text-4xl"
+            >
+              &times;
+            </button>
             <div className="flex flex-col gap-6">{children}</div>
-            {/* Uncomment to add action bar at the bottom of the modal */}
             {/* <div className="flex justify-end">{actionBar}</div> */}
           </div>
         </div>

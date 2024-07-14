@@ -7,10 +7,10 @@ import Toast from "./Toast";
 import Breadcrumps from "../Breadcrumbs";
 
 export default function Layout() {
-
   const location = useLocation();
   const currentPath = location.pathname;
-  const matchPaterm = currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
+  const matchPaterm =
+    currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
   const { show, content } = useSelector((state) => state.toast);
 
   return (
@@ -26,7 +26,8 @@ export default function Layout() {
           </aside>
         )}
         {matchPaterm && (
-          <main className="md:ml-[15svw]">
+          <main className="md:ml-[15svw] mt-4">
+            {/* <Breadcrumps /> */}
             <Outlet />
           </main>
         )}

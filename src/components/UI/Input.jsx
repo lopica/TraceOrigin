@@ -120,7 +120,7 @@ const Input = React.forwardRef(
             )}
           </label>
         ) : (
-          <label className="form-control w-full max-w-sm">
+          <label className="form-control w-full">
             <div className="label">
               <div className="tooltip" data-tip={tooltip}>
                 <span className="label-text text-base">{label}</span>
@@ -131,7 +131,7 @@ const Input = React.forwardRef(
               {...props}
               onChange={handleInputChange}
               onBlur={onBlur}
-              className="input input-bordered w-full max-w-sm"
+              className="input input-bordered w-full "
             />
             {error && (
               <div className="label">

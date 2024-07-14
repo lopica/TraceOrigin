@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { requireLogin, updateCategorySearch, updateList, updateNameSearch, useSearchProductQuery } from "../store";
+import { requireLogin, updateCategorySearch, updateList, updateNameSearch, updateUser, useSearchProductQuery } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function useProduct() {
@@ -42,6 +42,7 @@ export default function useProduct() {
         )
       );
     } else if (!isFetching && isError && error.status === 401) {
+      dispatch(updateUser({}))
       dispatch(requireLogin());
     }
   }, [isSuccess, isError, data]);

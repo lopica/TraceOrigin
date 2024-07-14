@@ -23,6 +23,7 @@ import { serialRequestMiddleware } from "./serialRequestMiddleware";
 import { productSliceReducer } from "./slices/productSlice";
 import { itemSliceReducer } from "./slices/itemSlice";
 import { certificateSliceReducer } from "./slices/certificateSlice";
+import {thunk} from 'redux-thunk';
 
 // Define the persist configuration
 const persistConfig = {
@@ -86,6 +87,7 @@ const store = configureStore({
       categoryApi.middleware,
       classifierApi.middleware,
       certificateApi.middleware,
+      thunk,
       // serialRequestMiddleware
     ),
 });
@@ -129,6 +131,13 @@ export {
   useFetchOriginByItemLogIdQuery,
   useSearchItemsQuery,
   useAddItemMutation,
+  useCheckIsCurrentOwnerQuery,
+  useSendOtpOwnerMutation,
+  useSendOtpReceiverMutation,
+  useCheckCurrentOwnerOTPMutation,
+  useCheckOTPMutation,
+  useConsignMutation,
+  useIsConsignedQuery,
 } from "./apis/itemApi";
 export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";
 export {

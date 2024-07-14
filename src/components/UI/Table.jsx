@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { FaRuler, FaDumbbell, FaHammer, FaCheckCircle, FaClock } from 'react-icons/fa';
 
 function Table({ data, config, keyFn }) {
   const renderedHeaders = config.map((column) => {
@@ -12,7 +13,10 @@ function Table({ data, config, keyFn }) {
     const renderedCells = config.map((column) => {
       return (
         <td className="px-4" key={`${rowKey}-${column.label || 'none'}`}>
-          {column.render(rowData)}
+           <div className="flex items-center">
+            {column.icon ? <span className="mr-2">{column.icon(rowData)()}</span> : null}
+            {column.render(rowData)}
+          </div>
         </td>
       );
     });
@@ -21,7 +25,7 @@ function Table({ data, config, keyFn }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="table table-zebra text-xl">
+      <table className="table  text-xl bg-white rounded-box">
         <thead>
           <tr className="border-b-2">{renderedHeaders}</tr>
         </thead>

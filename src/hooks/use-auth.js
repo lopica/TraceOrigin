@@ -7,6 +7,7 @@ import {
   useLogoutMutation,
 } from "../store";
 import { useEffect } from "react";
+import { requireLoginAfterTimeout } from "../store/slices/authSlice";
 
 export default function useAuth() {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ export default function useAuth() {
     return login(inputs)
       .unwrap()
       .then(() => {
+        dispatch(requireLoginAfterTimeout());
         dispatch(loginSuccess())
       })
       .catch((err) => console.log(err));
