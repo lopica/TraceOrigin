@@ -103,76 +103,76 @@ function Home() {
     </Modal>
   );
   return (
-    // <main className="h-[93svh] overflow-y-auto">
-    //   <div
-    //     className="hero h-[50svh]"
-    //     style={{ backgroundImage: "url(/hero.jpg)" }}
-    //   >
-    //     <div className="hero-overlay bg-opacity-80"></div>
-    //     <div className="hero-content text-center text-neutral-content">
-    //       <div className="max-w-md">
-    //         <h1 className="mb-5 text-5xl font-bold">TraceOrigin</h1>
-    //         <p className="mb-5">Tra cứu sản phẩm bằng hình ảnh</p>
-    //         <div className="flex gap-4 justify-center">
-    //           <Button primary onClick={handleScannerOpen} rounded>
-    //             Quét QR
-    //           </Button>
-    //           {showScanner && (
-    //             <Modal onClose={handleScannerClose}>
-    //               <div className="p-4">
-    //                 <QRCodeScanner onClose={handleScannerClose} />
-    //                 {/* <CustomUIQRCodeScanner /> */}
-    //               </div>
-    //             </Modal>
-    //           )}
-    //           <Button primary onClick={handleClick} rounded>
-    //             Nhận diện hình ảnh
-    //           </Button>
-    //           {showModal && modal}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </main>
-
-    // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[93svh] overflow-y-auto">
       <div
         className="hero h-[50svh]"
-        style={{ backgroundImage: "url(/hero1.jpg)" }}
+        style={{ backgroundImage: "url(/hero.jpg)" }}
       >
-        <div className="hero-overlay bg-opacity-80">
-        {/* ============================ */}
-        <section className="flex justify-center py-8 sm:gap-6">
-          <div className="basis-5/10 flex items-center justify-center">
-            <div className="w-full">
-              <CarouselHomePage />
+        <div className="hero-overlay bg-opacity-80"></div>
+        <div className="hero-content text-center text-neutral-content">
+          <div className="max-w-md">
+            <h1 className="mb-5 text-5xl font-bold">TraceOrigin</h1>
+            <p className="mb-5">Tra cứu sản phẩm bằng hình ảnh</p>
+            <div className="flex gap-4 justify-center">
+              <Button primary onClick={handleScannerOpen} rounded>
+                Quét QR
+              </Button>
+              {showScanner && (
+                <Modal onClose={handleScannerClose}>
+                  <div className="p-4">
+                    <QRCodeScanner onClose={handleScannerClose} />
+                    {/* <CustomUIQRCodeScanner /> */}
+                  </div>
+                </Modal>
+              )}
+              <Button primary onClick={handleClick} rounded>
+                Nhận diện hình ảnh
+              </Button>
+              {showModal && modal}
             </div>
           </div>
-          <div className="basis-5/10 flex flex-col justify-center space-y-2">
-            <ActionButtonHomePage />
-          </div>
-        </section>
         </div>
       </div>
-      {/* ============================ */}
-      <div className="bg-[rgb(240,240,240)]">
-      <Content1HomePage />
-      </div>
-      <Content2HomePage />
-      <div className="bg-[rgb(240,240,240)]">
-      <Content3HomePage />
-      </div>
-      {/* ============================ */}
+    </main>
+
+    // =================================NEW UI FOR HOME PAGE============================================
+    // <main className="h-[93svh] overflow-y-auto">
+    //   <div
+    //     className="hero h-[50svh]"
+    //     style={{ backgroundImage: "url(/hero1.jpg)" }}
+    //   >
+    //     <div className="hero-overlay bg-opacity-80">
+    //     {/* ============================ */}
+    //     <section className="flex justify-center py-8 sm:gap-6">
+    //       <div className="basis-5/10 flex items-center justify-center">
+    //         <div className="w-full">
+    //           <CarouselHomePage />
+    //         </div>
+    //       </div>
+    //       <div className="basis-5/10 flex flex-col justify-center space-y-2">
+    //         <ActionButtonHomePage />
+    //       </div>
+    //     </section>
+    //     </div>
+    //   </div>
+    //   {/* ============================ */}
+    //   <div className="bg-[rgb(240,240,240)]">
+    //   <Content1HomePage />
+    //   </div>
+    //   <Content2HomePage />
+    //   <div className="bg-[rgb(240,240,240)]">
+    //   <Content3HomePage />
+    //   </div>
+    //   {/* ============================ */}
 
      
-        <DiagramHomePage />
+    //     <DiagramHomePage />
    
-      <div className="bg-[rgb(240,240,240)]">
-      <ActiveMethodHomePage />
-      </div>
-      <Footer />
-    </main>
+    //   <div className="bg-[rgb(240,240,240)]">
+    //   <ActiveMethodHomePage />
+    //   </div>
+    //   <Footer />
+    // </main>
   );
 }
 
