@@ -17,6 +17,7 @@ export default function ImageClassification() {
   const classNamesRef = useRef(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [cameraType, setCameraType] = useState("environment");
+  const videoContainerRef = useRef(null);
   const [camerasAvailable, setCamerasAvailable] = useState({
     user: false,
     environment: false,
@@ -24,6 +25,7 @@ export default function ImageClassification() {
   const modelRef = useRef(null);
   const customModelRef = useRef(null);
   const imageRef = useRef(null);
+  const videoRef = useRef(null);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const checkCameraAvailability = async () => {
@@ -63,11 +65,39 @@ export default function ImageClassification() {
     }
   };
 
+  const predictVideoFrame = () => {
+    if (videoRef.current && customModelRef.current) {
+      tf.tidy(() => {
+        let tensor = tf.browser.fromPixels(videoRef.current).div(255);
+        let resizedTensorImage = tf.image.resizeBilinear(
+          tensor,
+          [MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH],
+          true
+        );
+        let prediction = customModelRef.current
+          .predict(resizedTensorImage.expandDims())
+          .squeeze();
+        let highestIndex = prediction.argMax().arraySync();
+        let predictionArray = prediction.arraySync();
+
+        setPredictions(classNamesRef.current[highestIndex]);
+        setConfidence(Math.floor(predictionArray[highestIndex] * 100));
+      });
+    }
+    requestAnimationFrame(predictVideoFrame);
+  };
+
+  useEffect(() => {
+    if (videoContainerRef.current) {
+      videoRef.current = videoContainerRef.current.querySelector('video');
+    }
+  }, [step]);
+
   useEffect(() => {
     const loadImageAndPredict = async () => {
       try {
         tf.tidy(() => {
-          let tensor = tf.browser.fromPixels(imageRef.current).div(255);
+          let tensor = tf.browser.fromPixels(imageRef.current.video).div(255);
           let resizedTensorImage = tf.image.resizeBilinear(
             tensor,
             [MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH],
@@ -97,8 +127,6 @@ export default function ImageClassification() {
     }
   }, [imageLoaded]);
 
-  
-
   useEffect(() => {
     checkCameraAvailability();
   }, []);
@@ -117,23 +145,23 @@ export default function ImageClassification() {
       }
     }
 
-    async function loadMobilenetModel() {
-      try {
-        const url =
-          "https://www.kaggle.com/models/google/mobilenet-v3/TfJs/large-100-224-feature-vector/1";
-        const mobilenet_v3 = await tf.loadGraphModel(url, { fromTFHub: true });
-        console.log("MobileNet v3 loaded successfully!");
-        modelRef.current = mobilenet_v3;
-        tf.tidy(() => {
-          let answer = model.predict(
-            tf.zeros([1, MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH, 3])
-          );
-          console.log(answer.shape);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    // async function loadMobilenetModel() {
+    //   try {
+    //     const url =
+    //       "https://www.kaggle.com/models/google/mobilenet-v3/TfJs/large-100-224-feature-vector/1";
+    //     const mobilenet_v3 = await tf.loadGraphModel(url, { fromTFHub: true });
+    //     console.log("MobileNet v3 loaded successfully!");
+    //     modelRef.current = mobilenet_v3;
+    //     tf.tidy(() => {
+    //       let answer = model.predict(
+    //         tf.zeros([1, MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH, 3])
+    //       );
+    //       console.log(answer.shape);
+    //     });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
     async function fetchClassNames() {
       try {
@@ -262,7 +290,10 @@ export default function ImageClassification() {
           </Button>
           <div className="flex flex-col sm:flex-row pb-4">
             <div className="flex-1 max-w-full sm:max-w-[50%]">
-              <div className="relative w-full pt-[56.25%] bg-sky-200">
+              <div
+                ref={videoContainerRef}
+                className="relative w-full pt-[56.25%] bg-sky-200"
+              >
                 <Camera
                   facingMode={cameraType}
                   showFocus={false}
@@ -286,12 +317,12 @@ export default function ImageClassification() {
               </select>
             </div>
             <div className="flex-1 mx-auto sm:max-w-md lg:max-w-sm">
-              <h3 className="text-center text-3xl mb-6">Predict</h3>
+              <h3 className="text-center text-3xl mb-6">{predictionResult}</h3>
               <div className="flex justify-between gap-2 mx-2">
                 <div className="flex ">
                   <div className="flex flex-col">
                     <div className="stat-title">Độ chính xác</div>
-                    <div className="font-medium">58%</div>
+                    <div className="font-medium">{confidence}%</div>
                     {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
                   </div>
                   <div className="stat-figure text-secondary"></div>
