@@ -28,16 +28,16 @@ const Content2HomePage = () => {
 ];
   return (
     <div>
-      <div className="flex flex-col md:flex-row max-w-6xl mx-auto p-6">
+      <div className="flex flex-col md:flex-row max-w-6xl mx-auto p-16">
         {/* Nửa trái: Nội dung */}
-        <div className="md:w-1/2 p-4 flex flex-col items-center justify-center text-center">
+        <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
           <h2 className="text-3xl font-bold mb-4">
             Lợi ích của truy xuất nguồn gốc
           </h2>
         </div>
         {/* Nửa phải: Biểu đồ */}
-        <div className="md:w-1/2 p-4 flex flex-col items-center justify-center text-center text-lg">
-          <div className="max-w-4xl mx-auto p-6 tracking-widest">
+        <div className="md:w-1/2 p-4 flex flex-col items-center justify-center  text-justify text-lg">
+          <div className="max-w-4xl mx-auto p-6">
             <strong>TRACE ORIGIN</strong> là nền tảng truy xuất nguồn gốc chuỗi
             cung ứng trên thị trường, giúp các doanh nghiệp bảo vệ thương
             hiệu và chuỗi cung ứng của họ, khai thác hiệu quả chuỗi cung ứng,

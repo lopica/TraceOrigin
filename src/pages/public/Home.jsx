@@ -155,6 +155,9 @@ function Home() {
         </div>
       </div>
       {/* ============================ */}
+      <div className="bg-[rgb(240,240,240)]">
+      <Content1HomePage />
+      </div>
       <Content2HomePage />
       {/* ============================ */}
 
