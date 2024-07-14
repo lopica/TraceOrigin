@@ -28,7 +28,7 @@ const Content2HomePage = () => {
 ];
   return (
     <div>
-      <div className="flex flex-col md:flex-row max-w-6xl mx-auto p-16">
+      <div className="flex flex-col md:flex-row max-w-6xl mx-auto p-10">
         {/* Nửa trái: Nội dung */}
         <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
           <h2 className="text-3xl font-bold mb-4">

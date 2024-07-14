@@ -5,7 +5,7 @@ import { FaArrowRight, FaSignInAlt, FaSearch } from "react-icons/fa";
 const Content1HomePage = () => {
   return (
 
-    <div className="flex flex-col items-center justify-center p-16">
+    <div className="flex flex-col items-center justify-center p-10">
       {/* Tên nội dung */}
       <h2 className="text-3xl font-bold mb-4"> Truy xuất nguồn gốc là gì?</h2>
       <div className="max-w-4xl mx-auto p-6 text-center">

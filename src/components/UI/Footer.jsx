@@ -10,9 +10,9 @@ const Footer = () => {
 
         {/* Bên phải: Thông tin */}
         <div className="text-center md:text-right">
-          <p className="mb-2">Thông tin liên hệ: info@example.com</p>
-          <p className="mb-2">Điện thoại: (012) 345-6789</p>
-          <p>Địa chỉ: 123 Đường ABC, Thành phố XYZ</p>
+          <p className="mb-2">Thông tin liên hệ: thanhnc942@gmail.com</p>
+          <p className="mb-2">Điện thoại: 0961-835-886</p>
+          <p>Địa chỉ: Đại học FPT</p>
         </div>
       </div>
     </footer>
