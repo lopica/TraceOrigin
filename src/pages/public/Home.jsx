@@ -13,6 +13,8 @@ import CarouselHomePage from "../../components/UI/CarouselHomePage";
 import ActionButtonHomePage from "../../components/UI/ActionButtonHomePage";
 import DiagramHomePage from "../../components/UI/DiagramHomePage";
 import Content1HomePage from "../../components/UI/Content1HomePage";
+import Content2HomePage from "../../components/UI/Content2HomePage";
+
 import Footer from "../../components/UI/Footer";
 import ActiveMethodHomePage from "../../components/UI/ActiveMethodHomePage";
 
@@ -134,20 +136,33 @@ function Home() {
 
     // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[93svh] overflow-y-auto">
-      <section className="flex justify-center py-8 bg-[rgb(240,240,240)]  sm:gap-6">
-        <div className="basis-7/10 flex items-center justify-center">
-          <CarouselHomePage />
+      <div
+        className="hero h-[50svh]"
+        style={{ backgroundImage: "url(/hero1.jpg)" }}
+      >
+        <div className="hero-overlay bg-opacity-80">
+        {/* ============================ */}
+        <section className="flex justify-center py-8 sm:gap-6">
+          <div className="basis-5/10 flex items-center justify-center">
+            <div className="w-full">
+              <CarouselHomePage />
+            </div>
+          </div>
+          <div className="basis-5/10 flex flex-col justify-center space-y-2">
+            <ActionButtonHomePage />
+          </div>
+        </section>
         </div>
-        <div className="basis-3/10 flex flex-col justify-center space-y-2 ">
-          <ActionButtonHomePage />
-        </div>
-      </section>
-      <Content1HomePage/>
-      <div className="bg-[rgb(240,240,240)]">
-      <DiagramHomePage/>
       </div>
-      <ActiveMethodHomePage/>
-      <Footer/>
+      {/* ============================ */}
+      <Content2HomePage />
+      {/* ============================ */}
+
+      <div className="bg-[rgb(240,240,240)]">
+        <DiagramHomePage />
+      </div>
+      <ActiveMethodHomePage />
+      <Footer />
     </main>
   );
 }
