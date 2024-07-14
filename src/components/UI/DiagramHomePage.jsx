@@ -7,7 +7,7 @@ const DiagramHomePage = () => {
         <div className="md:w-1/2 p-4 flex flex-col items-center justify-center text-center">
           <div className=" font-bold mb-4">Số lần người dùng sử dụng  <strong>TRACE ORIGIN</strong> để truy xuất nguồn gốc</div>
           <div className="text-5xl font-extrabold text-blue-600">
-          121223
+          100
         </div>
         </div>
         {/* Nửa phải: Biểu đồ */}

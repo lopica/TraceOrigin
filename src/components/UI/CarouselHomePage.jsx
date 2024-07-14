@@ -53,7 +53,7 @@ const CarouselHomePage = () => {
         </div>
 
         {/* Slider indicators */}
-        <div className="flex absolute bottom-5 left-1/2 z-30 space-x-3 -translate-x-1/2">
+        <div className="flex absolute bottom-5 left-1/2 z-10 space-x-3 -translate-x-1/2">
           {slides.map((_, index) => (
             <button
               key={index}
