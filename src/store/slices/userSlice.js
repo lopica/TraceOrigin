@@ -4,8 +4,8 @@ const userSlice = createSlice({
     name: 'userSlice',
     initialState: {},
     reducers: {
-        updateUser(state, action) {
-            return {...state, ...action.payload};
+        updateUser(_, action) {
+            return {...action.payload};
         }
     }
 })

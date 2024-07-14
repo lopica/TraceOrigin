@@ -16,6 +16,7 @@ function Wizzard({
   isLoading,
   getValues,
   reset,
+  noStepShow,
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const { getToast } = useToast();
@@ -56,29 +57,59 @@ function Wizzard({
 
   return (
     <>
-      <Wizzard.Step stepList={stepList} currentStep={currentStep} />
-      <form
-        className="space-y-6 mt-4"
-        noValidate
-        onKeyDown={handleKeyDown}
-        key={`form-step-${currentStep}`}
-      >
-        <div className="card bg-white md:max-w-2xl mx-auto">
-          <div className="card-body text-center">
-            <h2 className="card-title mb-6">{stepList[currentStep]}</h2>
-            {children[currentStep]}
-            <div className="card-actions justify-end">
-              <Wizzard.Action
-                stepList={stepList}
-                currentStep={currentStep}
-                handleWizzard={handleWizzard}
-                isLoading={isLoading}
-                reset={reset}
-              />
+      {noStepShow && (
+        <>
+          <form
+            className="space-y-6 mt-4"
+            noValidate
+            onKeyDown={handleKeyDown}
+            key={`form-step-${currentStep}`}
+          >
+            <div className="card bg-white md:max-w-2xl mx-auto">
+              <div className="card-body text-center">
+                <h2 className="card-title mb-6">{stepList[currentStep]}</h2>
+                {children[currentStep]}
+                <div className="card-actions justify-end">
+                  <Wizzard.Action
+                    stepList={stepList}
+                    currentStep={currentStep}
+                    handleWizzard={handleWizzard}
+                    isLoading={isLoading}
+                    reset={reset}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </form>
+          </form>
+        </>
+      )}
+      {!noStepShow && (
+        <>
+          <Wizzard.Step stepList={stepList} currentStep={currentStep} />
+          <form
+            className="space-y-6 mt-4"
+            noValidate
+            onKeyDown={handleKeyDown}
+            key={`form-step-${currentStep}`}
+          >
+            <div className="card bg-white md:max-w-2xl mx-auto">
+              <div className="card-body text-center">
+                <h2 className="card-title mb-6">{stepList[currentStep]}</h2>
+                {children[currentStep]}
+                <div className="card-actions justify-end">
+                  <Wizzard.Action
+                    stepList={stepList}
+                    currentStep={currentStep}
+                    handleWizzard={handleWizzard}
+                    isLoading={isLoading}
+                    reset={reset}
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        </>
+      )}
     </>
   );
 }

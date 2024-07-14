@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { requireLogin, updateItemList, useSearchItemsQuery } from "../store";
+import { requireLogin, updateItemList, updateUser, useSearchItemsQuery } from "../store";
 import useToast from "./use-toast";
 import { useDispatch } from "react-redux";
 
@@ -42,7 +42,7 @@ export default function useItem(productId) {
     if (isItemError && isSuccess) {
       getToast("Gặp lỗi khi tải dữ liệu item");
       if (error.status === 401) {
-        console.log("vo day item");
+        dispatch(updateUser({}))
         dispatch(requireLogin());
       }
     }

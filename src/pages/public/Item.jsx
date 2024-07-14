@@ -16,6 +16,8 @@ import ItemOrigin from "../../components/ItemOrigin.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import "swiper/css";
+import Button from "../../components/UI/Button.jsx";
+import { MdOutlineTransferWithinAStation } from "react-icons/md";
 
 function Item() {
   //   const [originId, setOriginId] = useState("");
@@ -167,7 +169,10 @@ function Item() {
   // }
 
   return (
-    <section>
+    <section className="relative">
+      {/* <Button className="absolute bottom-2 right-6 z-10 bg-sky-400 rounded-full h-12 w-12 p-2 lg:bottom-4 lg:right-8">
+        <MdOutlineTransferWithinAStation className="w-8 h-8" />
+      </Button> */}
       <div className="block lg:hidden">
         <Swiper
           autoHeight
