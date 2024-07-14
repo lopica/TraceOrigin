@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CONSTANTS } from '../../services/Constants';
+import { updateUser } from './userSlice';
 
 // Create an async thunk to handle the timeout
 export const requireLoginAfterTimeout = createAsyncThunk(
@@ -9,6 +10,7 @@ export const requireLoginAfterTimeout = createAsyncThunk(
     return new Promise((resolve) => {
       setTimeout(() => {
         dispatch(requireLogin());
+        dispatch(updateUser({}))
         resolve();
       }, 3600000 * CONSTANTS.key_expire);
     });

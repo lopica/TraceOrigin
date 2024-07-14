@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 let avatar;
 function Avatar() {
-  const navigate = useNavigate();
   const { isFetching, isError, refetch } = useUser();
   const user = useSelector((state) => state.userSlice);
   const { handleLogout: logout } = useAuth();
@@ -17,7 +16,6 @@ function Avatar() {
   async function handleLogout() {
     await logout().then(() => {
       getToast("Đăng xuất thành công");
-      // navigate('/portal/login')
     });
   }
 

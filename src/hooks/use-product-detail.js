@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { requireLogin, updateAvatar, updateProductDetail, useViewProductDetailQuery } from "../store";
+import { requireLogin, updateAvatar, updateProductDetail, updateUser, useViewProductDetailQuery } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRuler, FaDumbbell, FaHammer, FaCheckCircle, FaClock } from 'react-icons/fa';
 
@@ -40,6 +40,7 @@ export default function useProductDetail(productId) {
       console.log(productDetail.avatar)
     }
     if (error?.status === 401 && isProductError) {
+      dispatch(updateUser({}))
       dispatch(requireLogin()) 
     }
   }, [isProductFetch, isProductError, productDetail]);

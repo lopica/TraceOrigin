@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';  
 
 function Modal({ onClose, children, className, primary, easy }) {
-  const dynamicClasses = classNames('relative w-full max-h-[70svh] min-h-[70svh] md:max-w-2xl pt-8 bg-white overflow-y-auto rounded-md', {
+  const dynamicClasses = classNames('relative w-full max-h-[70svh] min-h-[40svh] container bg-white overflow-y-auto rounded-md', {
     'border-blue-500 bg-sky-500 text-white': primary,
   });
 
@@ -30,7 +30,7 @@ function Modal({ onClose, children, className, primary, easy }) {
           className={classes}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex flex-col justify-between h-full">
+          <div className="top-2 right-2 z-10">
             <button
               onClick={onClose}
               className="absolute top-0 right-2 text-gray-500 hover:text-gray-800 text-4xl"

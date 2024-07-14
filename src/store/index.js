@@ -131,6 +131,13 @@ export {
   useFetchOriginByItemLogIdQuery,
   useSearchItemsQuery,
   useAddItemMutation,
+  useCheckIsCurrentOwnerQuery,
+  useSendOtpOwnerMutation,
+  useSendOtpReceiverMutation,
+  useCheckCurrentOwnerOTPMutation,
+  useCheckOTPMutation,
+  useConsignMutation,
+  useIsConsignedQuery,
 } from "./apis/itemApi";
 export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";
 export {
