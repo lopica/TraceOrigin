@@ -116,7 +116,7 @@ export default function ItemOrigin({ goToItemLine }) {
   }
 
   return (
-    <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-base-100 shadow-xl border mb-8 mx-2 lg:max-h-[88svh] overflow-y-auto lg:mb-0">
+    <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-white mb-8 mx-2 mt-2 lg:max-h-[88svh] overflow-y-auto lg:mb-0">
       <div className="mt-5 ml-4 lg:hidden">
         <Button primary outline onClick={goToItemLine}>
           <IoIosArrowBack /> Quay lại

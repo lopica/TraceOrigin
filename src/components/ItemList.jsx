@@ -94,11 +94,6 @@ export default function ItemList({ productId }) {
       </div>
       {renderedListItem}
       <div className="join mt-4 flex justify-center">
-        {/* <button className="join-item btn">1</button>
-        <button className="join-item btn">2</button>
-        <button className="join-item btn btn-disabled">...</button>
-        <button className="join-item btn">99</button>
-        <button className="join-item btn">100</button> */}
         {Array.from({ length: paginate.totalPages }).map((_, idx) => (
           <button key={idx} className="join-item btn" onClick={()=>setCurrentPage(idx)}>
             {idx + 1}

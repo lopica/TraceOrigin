@@ -80,7 +80,7 @@ export default function Consign({ productRecognition }) {
     <div className="flex justify-center">
       <Button
         onClick={handleOpen}
-        className="absolute bottom-2 right-6 z-10 bg-white rounded-full h-12 w-12 p-2 lg:bottom-4 lg:right-8 shadow-lg hover:bg-sky-100 hover:border-sky-400 hover:p-3 hover:shadow-md transition-all duration-100"
+        className="absolute bottom-2 right-6 z-10 bg-sky-100 rounded-full h-12 w-12 p-2 lg:bottom-6 lg:right-8 shadow-lg hover:bg-sky-100 hover:border-sky-400 hover:p-3 hover:shadow-md hover:shadow-sky-400 transition-all duration-100"
       >
         <MdOutlineTransferWithinAStation className="w-8 h-8 fill-sky-400" />
       </Button>

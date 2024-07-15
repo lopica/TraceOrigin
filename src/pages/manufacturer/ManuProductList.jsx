@@ -18,7 +18,7 @@ function ManuProductList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
-  const { 
+  const {
     list: products,
     nameSearch,
     categorySearch,
@@ -31,6 +31,8 @@ function ManuProductList() {
     data,
     error,
     refetch,
+    paginate,
+    setCurrentPage,
   } = useProduct();
   const { handleSubmit, register } = useForm({
     mode: "onTouched",
@@ -44,16 +46,21 @@ function ManuProductList() {
     searchProduct(data);
   };
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    refetch();
+  };
+
   useEffect(() => {
     if (!isAuthenticated) {
-      getToast('Phiên dăng nhập đã hết hạn');
+      getToast("Phiên dăng nhập đã hết hạn");
       navigate("/portal/login");
     }
   }, [isProductsFetch, isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      refetch(); 
+      refetch();
     }
   }, [isAuthenticated, refetch]);
 
@@ -72,14 +79,10 @@ function ManuProductList() {
       ));
     }
   }
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-    refetch();
-  };
 
   return (
-    <div className="flex flex-col gap-8 justify-between py-4">
-    {/* form search  */}
+    <div className="flex flex-col gap-8 justify-between items-center py-4">
+      {/* form search  */}
       <form
         className="flex items-end flex-col justify-between gap-2 mx-auto 
         md:flex-row md:justify-start md:gap-2 md:items-end"
@@ -120,8 +123,7 @@ function ManuProductList() {
         </Button>
       </form>
       <div className="flex justify-center md:justify-start px-8">
-      
-      <Link to="add">
+        <Link to="add">
           <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
             <FiPlus size={20} className="mr-2" />
             Thêm sản phẩm
@@ -129,28 +131,22 @@ function ManuProductList() {
         </Link>
       </div>
       <div className="flex justify-center">
-      
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
-        
-          {/* <Link to="add">
-          <Card />
-        </Link> */}
           {renderedProducts}
         </div>
-      </div>    
+      </div>
       {/* phần paging  */}
-      <div className="flex flex-col min-h-screen justify-center items-center">
-  <div className="flex-grow">
-    {/* Nội dung khác của bạn ở đây */}
-  </div>
-  <div className="mt-auto">
-    <Pagination
-      active={page}
-      totalPages={data?.totalPages || 0}
-      onPageChange={handlePageChange}
-    />
-  </div>
-</div>
+      <div className="flex justify-between w-fit">
+        {Array.from({ length: paginate.totalPages }).map((_, idx) => (
+          <button
+            key={idx}
+            className="join-item btn"
+            onClick={() => setCurrentPage(idx)}
+          >
+            {idx + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

@@ -202,7 +202,7 @@ function Item() {
             goToItemOrigin={goToItemOrigin}
           />
         </div>
-        <div className="col-span-4  pt-[2svh]">
+        <div className="col-span-4 mt-2">
           <ItemOrigin goToItemLine={goToItemLine} />
         </div>
       </div>

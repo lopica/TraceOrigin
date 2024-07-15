@@ -71,7 +71,7 @@ function ManuProductAdd() {
       };
 
       reader.onloadend = () => {
-        setValue("3DModel", reader.result);
+        setValue("file3D", reader.result);
         setProgress(100); // Set to 100% when done
       };
 
@@ -107,17 +107,17 @@ function ManuProductAdd() {
     delete request.category;
 
     console.log(request);
-    // addProduct(request)
-    //   .unwrap()
-    //   .then(() => {
-    //     dispatch(resetState());
-    //     getToast("Tạo mới thành công sản phẩm");
-    //     navigate("/manufacturer/products");
-    //   })
-    //   .catch((err) => {
-    //     getToast("Gặp lỗi khi tạo mới sản phẩm");
-    //     console.log(err);
-    //   });
+    addProduct(request)
+      .unwrap()
+      .then(() => {
+        dispatch(resetState());
+        getToast("Tạo mới thành công sản phẩm");
+        navigate("/manufacturer/products");
+      })
+      .catch((err) => {
+        getToast("Gặp lỗi khi tạo mới sản phẩm");
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -309,7 +309,7 @@ function ManuProductAdd() {
             <div className="label">
               <span className="label-text">Chọn file 3D của sản phẩm:</span>
             </div>
-            {!getValues("3DModel") && (
+            {!getValues("file3D") && (
               <div
                 {...getRootProps()}
                 className={`flex flex-col items-center justify-center h-28 p-3 border-2 border-dashed border-sky-900 cursor-pointer  text-sky-900 ${
@@ -321,10 +321,11 @@ function ManuProductAdd() {
                   type="file"
                   ref={fileInputRef}
                   className="hidden"
+                  accept=".obj, .stl, .fbx, .3ds, .ply"
                 />
-                <p className="text-center h-fit block">
-                  Chọn hoặc kéo thả tệp vào đây
-                </p>
+                <div>
+                  <p className="text-center ">Chọn hoặc kéo thả tệp vào đây</p>
+                </div>
               </div>
             )}
             {progress > 0 && progress < 100 && (
@@ -334,19 +335,19 @@ function ManuProductAdd() {
                 max="100"
               ></progress>
             )}
-            {getValues("3DModel") && (
+            {getValues("file3D") && (
               <div>
                 <Button
                   primary
                   outline
                   onClick={(e) => {
                     e.preventDefault();
-                    setValue("3DModel", undefined);
+                    setValue("file3D", undefined);
                   }}
                 >
                   Chọn lại
                 </Button>
-                <Canvas3D modelBase64={getValues("3DModel")} />
+                <Canvas3D modelBase64={getValues("file3D")} />
               </div>
             )}
           </label>

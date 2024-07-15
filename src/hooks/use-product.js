@@ -8,9 +8,13 @@ export default function useProduct() {
     (state) => state.productSlice
   );
   const {isAuthenticated} = useSelector(state=>state.authSlice)
+  const [paginate, setPaginate] = useState({
+    totalPages: 0,
+    currentPage: 0,
+  });
   const { data, isError, isFetching, error, isSuccess, refetch } = useSearchProductQuery(
     {
-      pageNumber: 0,
+      pageNumber: paginate.currentPage,
       pageSize: 6,
       type: "asc",
       startDate: 0,
@@ -21,6 +25,15 @@ export default function useProduct() {
       skip: !isAuthenticated,
     }
   );
+
+  const setCurrentPage = (newPage) => {
+    setPaginate((prev) => {
+      return {
+        ...prev,
+        currentPage: newPage,
+      };
+    });
+  };
 
   function searchProduct (data) {
     dispatch(updateNameSearch(data.nameSearch));
@@ -38,14 +51,21 @@ export default function useProduct() {
               image: product.avatar,
               description: product.description
             };
-          })
+          })         
         )
       );
+      setPaginate((prev) => {
+        return {
+          ...prev,
+          totalPages: data.totalPages,
+        };
+      })
     } else if (!isFetching && isError && error.status === 401) {
       dispatch(updateUser({}))
       dispatch(requireLogin());
     }
   }, [isSuccess, isError, data]);
 
-  return { isFetching, isError, searchProduct, isSuccess , error, refetch };
+  return { isFetching, isError, searchProduct, isSuccess , error, refetch, paginate,
+    setCurrentPage };
 }

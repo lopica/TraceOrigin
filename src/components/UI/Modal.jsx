@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';  
 
 function Modal({ onClose, children, className, primary, easy }) {
-  const dynamicClasses = classNames('relative w-full max-h-[70svh] min-h-[40svh] container bg-white overflow-y-auto rounded-md', {
+  const dynamicClasses = classNames('relative w-full max-h-[70svh] min-h-[40svh] container max-w-3xl bg-white overflow-y-auto rounded-md', {
     'border-blue-500 bg-sky-500 text-white': primary,
   });
 
