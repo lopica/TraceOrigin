@@ -34,7 +34,7 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
     const selectedCertificate = data?.find(cert => cert.certId === selectedCertId);
     const images = selectedCertificate ? selectedCertificate.images : [];
     setSlides(images.map((image, idx) => (
-      <img src={image} alt={`${selectedCertificate.name} ${idx}`} className="" key={idx} />
+      <img src={image} alt={`${selectedCertificate.certificateName} ${idx}`} className="" key={idx} />
     )));
   }, [selectedCertId]);
 
@@ -113,7 +113,7 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
                           setSelectedCertId(cert.certId);
                         }}
                       >
-                        <div>{cert.name}</div>
+                        <div>{cert.certificateName}</div>
                         <div className="text-sm text-gray-400">Cơ quan cấp: {cert.issuingAuthority}</div>
                         <div className="text-sm text-gray-400">Ngày cấp: {formatDate(cert.issuanceDate)}</div>
 

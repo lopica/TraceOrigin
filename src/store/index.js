@@ -14,6 +14,7 @@ import { classifierApi } from "./apis/classifierApi";
 import { registerFormReducer } from "./slices/registerFormSlice";
 import { locationDataReducer } from "./slices/locationDataSlice";
 import { productFormReducer } from "./slices/productFormSlice";
+import { certiFormReducer } from "./slices/certiFormSlice";
 import authSliceReducer from "./slices/authSlice";
 import { userSliceReducer } from "./slices/userSlice";
 import { persistStore, persistReducer } from "redux-persist";
@@ -34,6 +35,7 @@ const persistConfig = {
     "authSlice",
     "userSlice",
     "productForm",
+    "certiForm"
   ],
 };
 
@@ -42,6 +44,7 @@ const rootReducer = combineReducers({
   registerForm: registerFormReducer,
   locationData: locationDataReducer,
   productForm: productFormReducer,
+  certiForm: certiFormReducer,
   authSlice: authSliceReducer,
   userSlice: userSliceReducer,
   productSlice: productSliceReducer,
@@ -162,6 +165,16 @@ export {
   updateForm,
   resetState,
 } from "./slices/productFormSlice";
+export {
+  updateCertiCategories,
+  removeCertiImage,
+  removeCertiImageData,
+  updateCertiImages,
+  updateCertiImagesData,
+  updateCertiAvatar,
+  updateCertiForm,
+  resetCertiState
+} from "./slices/certiFormSlice";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';

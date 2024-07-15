@@ -5,21 +5,30 @@ import {
   updateAvatar,
   updateImages,
   updateImagesData,
+  updateForm,
+  resetState,
+  // Import các action từ certiForm
+  updateCertiCategories,
+  removeCertiImage,
+  removeCertiImageData,
+  updateCertiAvatar,
+  updateCertiImages,
+  updateCertiImagesData,
+  updateCertiForm,
+  resetCertiState,
 } from "../store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 let imageUrls = [];
 let imagesShow = [];
 
-export default function useImage(setValue) {
-  // const [isAvatar, setIsAvatar] = useState(false)
+export default function useImage(setValue, isCer) {
   const dispatch = useDispatch();
-  const { images, imagesData, avatar } = useSelector(
-    (state) => state.productForm
+  const { images, imagesData, avatar } = useSelector((state) =>
+    isCer ? state.certiForm : state.productForm
   );
 
   const handleImages = (e) => {
-    console.log(e.target.files);
     const files = Array.from(e.target.files);
 
     // Check if any files were selected
@@ -55,8 +64,13 @@ export default function useImage(setValue) {
 
         // Check if all files are processed
         if (imageUrls.length === files.length) {
-          dispatch(updateImages([...images, ...imagesShow]));
-          dispatch(updateImagesData([...imagesData, ...imageUrls]));
+          if (isCer) {
+            dispatch(updateCertiImages([...images, ...imagesShow]));
+            dispatch(updateCertiImagesData([...imagesData, ...imageUrls]));
+          } else {
+            dispatch(updateImages([...images, ...imagesShow]));
+            dispatch(updateImagesData([...imagesData, ...imageUrls]));
+          }
           imageUrls = [];
           imagesShow = [];
         }
@@ -67,27 +81,37 @@ export default function useImage(setValue) {
   };
 
   const deleteImage = (idx) => {
-    dispatch(removeImage(idx));
-    dispatch(removeImageData(idx));
+    if (isCer) {
+      dispatch(removeCertiImage(idx));
+      dispatch(removeCertiImageData(idx));
+    } else {
+      dispatch(removeImage(idx));
+      dispatch(removeImageData(idx));
+    }
   };
 
   const changeAvatar = (idx) => {
-    dispatch(updateAvatar(images[idx]));
+    if (isCer) {
+      dispatch(updateCertiAvatar(images[idx]));
+    } else {
+      dispatch(updateAvatar(images[idx]));
+    }
   };
 
   const isAvatar = (image) => {
     return image === avatar;
   };
 
-  
-
   useEffect(() => {
     setValue("images", imagesData);
-  }, [imagesData]);
+  }, [imagesData, setValue]);
 
   useEffect(() => {
     setValue("avatar", avatar);
-  }, [avatar]);
+  }, [avatar, setValue]);
 
-  return { handleImages, deleteImage, changeAvatar, isAvatar };
+  // Reset state based on isCer
+  const resetStateAction = isCer ? resetCertiState : resetState;
+
+  return { handleImages, deleteImage, changeAvatar, isAvatar, resetStateAction };
 }

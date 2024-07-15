@@ -1,32 +1,44 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import Input from "../../components/UI/Input";
 import ImageBox from "../../components/UI/ImageBox";
 import Wizzard from "../../components/Wizzard";
-import useCategory from "../../hooks/use-category";
 import useToast from "../../hooks/use-toast";
-import { updateAvatar, updateImages, useAddCertificateMutation } from "../../store";
+import { 
+  useAddCertificateMutation,
+  updateCertiForm,
+  resetCertiState
+} from "../../store";
 
 const stepList = ["Thông tin cơ bản", "Hình ảnh chứng chỉ"];
-const validateStep = [["productName", "category", "description", "warranty"], ["length", "width", "height", "weight", "material"], ["images"]];
+const validateStep = [["name", "issuanceDate", "issuanceAuthority"], ["images"]];
 
 function ManuCertificateAdd() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { avatar } = useSelector((state) => state.productForm);
-  const { images } = useSelector((state) => state.productForm);
+  const { images, form } = useSelector((state) => state.certiForm);
   const [addProduct, results] = useAddCertificateMutation();
   const { getToast } = useToast();
-  const { register, handleSubmit, trigger, getValues, setValue, formState: { errors } , reset} = useForm({ mode: "onTouched" });
-  const userIdList = useSelector(state => state.userSlice.userId);
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: { ...form },
+  });
 
-
-  useEffect(() => {
-    reset(); 
-  }, [reset]);
-
+  const onStepSubmit = (step) => {
+    const data = validateStep[step].reduce((obj, field) => {
+      obj[field] = getValues(field);
+      return obj;
+    }, {});
+    dispatch(updateCertiForm(data));
+  };
 
   const onSubmit = (data) => {
     const request = {
@@ -45,15 +57,6 @@ function ManuCertificateAdd() {
       });
   };
 
-
-  useEffect(() => {
-    // Clean up function to reset images and avatar when the component unmounts
-    return () => {
-      dispatch(updateImages([]));
-      dispatch(updateAvatar(''));
-    };
-  }, [dispatch]);
-
   return (
     <div className="p-4 mx-auto">
       <Wizzard
@@ -61,9 +64,14 @@ function ManuCertificateAdd() {
         onSubmit={handleSubmit(onSubmit)}
         validateStep={validateStep}
         trigger={trigger}
+        onStepSubmit={onStepSubmit}
         isLoading={results.isLoading}
         getValues={getValues}
-        avatar={avatar}
+        reset={(e) => {
+          e.preventDefault();
+          dispatch(resetCertiState());
+          window.location.reload();
+        }}
       >
         <>
           <div className="grid grid-cols-3 gap-4">
@@ -89,20 +97,12 @@ function ManuCertificateAdd() {
             type="text"
             placeholder="Bộ y tế"
             {...register("issuanceAuthority", { required: "Bạn cần điền công dụng sản phẩm" })}
-            tooltip="Liệt kê, cánh nhau dấu phẩy"
+            tooltip="Liệt kê, cách nhau dấu phẩy"
             error={errors.description?.message}
-          />
-          <Input
-            label="Ghi chú"
-            type="textarea"
-            placeholder=""
-            {...register("test", {})}
-            tooltip="Ghi chú cho sản phẩm"
-            error={errors.warranty?.message}
           />
         </>
         <>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-4 justify-items-center">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5  gap-4 justify-items-center">
             {images.map((image, i) => (
               <div key={i}>
                 <ImageBox
@@ -111,12 +111,14 @@ function ManuCertificateAdd() {
                   setValue={setValue}
                   className="min-w-24 min-h-24 max-w-24 max-h-24 "
                   idx={i}
+                  isCer={true}
                 />
               </div>
             ))}
 
             {images.length < 5 && (
               <ImageBox
+                isCer={true}
                 add
                 setValue={setValue}
                 name="images"
