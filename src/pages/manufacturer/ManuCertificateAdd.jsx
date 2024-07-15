@@ -21,6 +21,8 @@ function ManuCertificateAdd() {
   const { getToast } = useToast();
   const { register, handleSubmit, trigger, getValues, setValue, formState: { errors } , reset} = useForm({ mode: "onTouched" });
   const userIdList = useSelector(state => state.userSlice.userId);
+
+
   useEffect(() => {
     reset(); 
   }, [reset]);
@@ -43,7 +45,9 @@ function ManuCertificateAdd() {
       });
   };
 
+
   useEffect(() => {
+    // Clean up function to reset images and avatar when the component unmounts
     return () => {
       dispatch(updateImages([]));
       dispatch(updateAvatar(''));
