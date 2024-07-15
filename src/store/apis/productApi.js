@@ -22,6 +22,7 @@ const productApi = createApi({
   endpoints(builder) {
     return {
       addProduct: builder.mutation({
+        invalidatesTags: ['Product'],
         query: (newProduct) => {
           return {
             url: "/addProduct",
@@ -36,7 +37,7 @@ const productApi = createApi({
         },
       }),
       searchProduct: builder.query({
-        providesTags: ['addProduct'],
+        providesTags: ['Product'],
         query: (request) => {
           return {
             url: "/findAllProductByManufacturerId",

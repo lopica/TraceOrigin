@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { requireLogin, updateItemList, updateUser, useSearchItemsQuery } from "../store";
 import useToast from "./use-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function useItem(productId) {
   const dispatch = useDispatch();
   const [itemsData, setItemsData] = useState([]);
   const { getToast } = useToast();
+  const {isAuthenticated} = useSelector(state=>state.authSlice)
   const [paginate, setPaginate] = useState({
     totalPages: 0,
     currentPage: 0,
@@ -27,6 +28,8 @@ export default function useItem(productId) {
     type: "",
     productRecognition: "",
     eventTypeId: 0,
+  }, {
+    skip: !isAuthenticated,
   });
 
   const setCurrentPage = (newPage) => {

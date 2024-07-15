@@ -2,6 +2,7 @@ import { FaPlus } from "react-icons/fa";
 import emptyProductImage from "/no_product.jpg";
 import dogBox from "/dog_box.jpg";
 import useToast from "../../hooks/use-toast";
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 
 function Card({ card }) {
@@ -16,6 +17,14 @@ function Card({ card }) {
    );
  }
 
+ const handleUpdate = (id) => {
+  // Xử lý cập nhật ở đây nhé
+  console.log(id + "gggg");
+};
+
+const handleDelete = () => {
+  // Xử lý xóa ở đây nhé
+};
 
  return (
    // <div className="card w-70 h-65 bg-white md:max-w-xl mx-auto">
@@ -32,17 +41,31 @@ function Card({ card }) {
    //     </div>
    //   </div>
    // </div>
-   <div className="max-w-md mx-auto bg-white shadow-md rounded-box overflow-hidden">
- <div className="md:flex">
-   <div className="md:flex-shrink-0">
-     <img className="h-48 w-full object-cover md:w-48"  src={card.image || emptyProductImage} alt="car!" />
+   <div className="relative max-w-md mx-auto bg-white shadow-md rounded-box overflow-hidden">
+   <div className="md:flex">
+     <div className="md:flex-shrink-0">
+       <img className="h-48 w-full object-cover md:w-48" src={card.image || emptyProductImage} alt="product" />
+     </div>
+     <div className="p-4">
+       <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
+       <p className="mt-2 text-xs text-gray-500">{card.description}</p>
+     </div>
    </div>
-   <div className="p-4">
-     <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
-     <p className="mt-2 text-xs text-gray-500">{card.description}</p>
+   <div className="absolute  bottom-3 right-3 flex space-x-2">
+     <button
+       onClick={() => handleUpdate(card.id)}
+       className="text-blue-500 hover:text-blue-700"
+     >
+       <FaEdit size={20} />
+     </button>
+     <button
+       onClick={() => handleDelete(card.id)}
+       className="text-red-500 hover:text-red-700"
+     >
+       <FaTrash size={20} />
+     </button>
    </div>
  </div>
-</div>
  );
 }
 

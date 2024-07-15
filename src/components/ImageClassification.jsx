@@ -5,70 +5,138 @@ import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
 import Dropzone from "./Dropzone";
+import { Camera } from "react-camera-pro";
 
 const MOBILE_NET_INPUT_HEIGHT = 224,
   MOBILE_NET_INPUT_WIDTH = 224;
+
 export default function ImageClassification() {
   const [step, setStep] = useState("choose");
-  const [predictions, setPredictions] = useState([]);
-  const [classNames, setClassNames] = useState([]);
+  const [predictionResult, setPredictions] = useState([]);
+  const [confidence, setConfidence] = useState(0);
+  const classNamesRef = useRef(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [cameraType, setCameraType] = useState("environment");
+  const videoContainerRef = useRef(null);
+  const videoRef = useRef(null);
+  const [camerasAvailable, setCamerasAvailable] = useState({
+    user: false,
+    environment: false,
+  });
+  const customModelRef = useRef(null);
+  const imageRef = useRef(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const checkCameraAvailability = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoInputs = devices.filter(
+      (device) => device.kind === "videoinput"
+    );
+
+    const hasUser = videoInputs.some((device) =>
+      device.label.toLowerCase().includes("front")
+    );
+    const hasEnvironment = videoInputs.some((device) =>
+      device.label.toLowerCase().includes("back")
+    );
+
+    setCamerasAvailable({ user: hasUser, environment: hasEnvironment });
+  };
+
+  const handleCameraChange = (event) => {
+    setCameraType(event.target.value);
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       setImageUrl(URL.createObjectURL(file));
+      setImageLoaded(false);
     } else {
       alert("Please select an image file.");
     }
   };
 
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    const imageElement = imageRef.current;
+  const predictVideoFrame = () => {
+    if (videoRef.current && customModelRef.current) {
+      tf.tidy(() => {
+        let tensor = tf.browser.fromPixels(videoRef.current).div(255);
+        let resizedTensorImage = tf.image.resizeBilinear(
+          tensor,
+          [MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH],
+          true
+        );
+        let prediction = customModelRef.current
+          .predict(resizedTensorImage.expandDims())
+          .squeeze();
+        let highestIndex = prediction.argMax().arraySync();
+        let predictionArray = prediction.arraySync();
 
-    const reader = new FileReader();
-    reader.onload = async () => {
-      imageElement.src = reader.result;
-      const tensor = tf.browser
-        .fromPixels(imageElement)
-        .resizeBilinear([MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH])
-        .div(255)
-        .expandDims();
-      const feature = model.predict(tensor);
-      const predict = customModel.predict(feature).squeeze();
-      setPredictions(prediction);
-    };
-    reader.readAsDataURL(file);
+        setPredictions(classNamesRef.current[highestIndex]);
+        setConfidence(Math.floor(predictionArray[highestIndex] * 100));
+      });
+    }
+    requestAnimationFrame(predictVideoFrame);
   };
 
   useEffect(() => {
-    // Define the async function inside useEffect
-    async function loadCustomModel() {
-      try {
-        const url = "http://localhost:8081/models/model.json";
-        const model = await tf.loadLayersModel(url);
-        console.log("Custom model loaded successfully!");
-
-        model.summary();
-      } catch (error) {
-        console.log(error);
+    if (videoContainerRef.current) {
+      videoRef.current = videoContainerRef.current.querySelector('video');
+      if (videoRef.current) {
+        videoRef.current.onloadeddata = () => {
+          console.log('Video loaded');
+          requestAnimationFrame(predictVideoFrame);
+        };
       }
     }
+  }, [step]);
 
-    async function loadMobilenetModel() {
+  useEffect(() => {
+    const loadImageAndPredict = async () => {
       try {
-        const url =
-          "https://www.kaggle.com/models/google/mobilenet-v3/TfJs/large-100-224-feature-vector/1";
-        const model = await tf.loadGraphModel(url, { fromTFHub: true });
-        console.log("MobileNet v3 loaded successfully!");
-
         tf.tidy(() => {
-          let answer = model.predict(
-            tf.zeros([1, MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH, 3])
+          let tensor = tf.browser.fromPixels(imageRef.current).div(255);
+          let resizedTensorImage = tf.image.resizeBilinear(
+            tensor,
+            [MOBILE_NET_INPUT_HEIGHT, MOBILE_NET_INPUT_WIDTH],
+            true
           );
-          console.log(answer.shape);
+          let prediction = customModelRef.current
+            .predict(resizedTensorImage.expandDims())
+            .squeeze();
+          let highestIndex = prediction.argMax().arraySync();
+          let predictionArray = prediction.arraySync();
+
+          setPredictions(classNamesRef.current[highestIndex]);
+          setConfidence(Math.floor(predictionArray[highestIndex] * 100));
+          console.log(classNamesRef.current[highestIndex]);
+          console.log(Math.floor(predictionArray[highestIndex] * 100));
         });
+      } catch (error) {
+        console.error("Failed to load image or make prediction:", error);
+      } finally {
+      }
+    };
+
+    if (imageLoaded) {
+      tf.setBackend("cpu").then(() => {
+        loadImageAndPredict();
+      });
+    }
+  }, [imageLoaded]);
+
+  useEffect(() => {
+    checkCameraAvailability();
+  }, []);
+
+  useEffect(() => {
+    async function loadCustomModel() {
+      try {
+        const url = "https://lopica.github.io/model-hosting/model.json";
+        const model = await tf.loadLayersModel(url);
+        console.log("Custom model loaded successfully!");
+        customModelRef.current = model;
+        model.summary();
       } catch (error) {
         console.log(error);
       }
@@ -77,28 +145,24 @@ export default function ImageClassification() {
     async function fetchClassNames() {
       try {
         const response = await fetch(
-          "http://localhost:8081/models/classNames.json"
+          "https://lopica.github.io/model-hosting/classNames.json"
         );
         const classNames = await response.json();
-        setClassNames(classNames);
+        classNamesRef.current = classNames;
         console.log("Class names loaded successfully!");
       } catch (error) {
         console.error("Failed to load class names:", error);
       }
     }
 
-    // Call the async functions
-    loadMobilenetModel();
     loadCustomModel();
     fetchClassNames();
 
-    // Optional: Return a cleanup function
     return () => {
       // Cleanup code here (if necessary)
     };
   }, []);
 
-  //image or video -> predict -> navigate
   return (
     <section>
       <h2 className="text-center pt-4 text-xl pb-2">Nhận diện hình ảnh</h2>
@@ -139,9 +203,11 @@ export default function ImageClassification() {
           )}
           {imageUrl && (
             <div className="flex">
-              <div className="flex-1 flex flex-col items-center  p-2">
+              <div className="flex-1 flex flex-col items-center p-2">
                 <img
                   src={imageUrl}
+                  ref={imageRef}
+                  onLoad={() => setImageLoaded(true)}
                   alt="upload image"
                   className=" h-[40svh] object-contain"
                 />
@@ -152,23 +218,33 @@ export default function ImageClassification() {
                   id="fileInput"
                   onChange={handleImageChange}
                 />
-                <p className="text-center underline text-slate-500 w-full py-2 hover:cursor-pointer" onClick={() => document.getElementById('fileInput').click()}>
+                <p
+                  className="text-center underline text-slate-500 w-full py-2 hover:cursor-pointer"
+                  onClick={() => document.getElementById("fileInput").click()}
+                >
                   Chọn ảnh khác
                 </p>
               </div>
-              <div className="flex-1 mx-8">
-                <h3 className="text-center text-3xl mb-6">Predict</h3>
-                <div className="flex justify-between">
-                  <div className="flex">
-                    <div className="flex flex-col">
-                      <div className="stat-title">Độ chính xác</div>
-                      <div className="font-medium">58%</div>
-                      {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
+              <div className="flex-1 w-1/2 p-4">
+                {!imageLoaded ? (
+                  <p>Loading prediction...</p>
+                ) : (
+                  <>
+                    <h3 className="text-center text-3xl mb-6">
+                      {predictionResult}
+                    </h3>
+                    <div className="flex justify-between  max-w-md mx-auto">
+                      <div className="flex">
+                        <div className="flex flex-col">
+                          <div className="stat-title">Độ chính xác</div>
+                          <div className="font-medium">{confidence}%</div>
+                        </div>
+                        <div className="stat-figure text-secondary"></div>
+                      </div>
+                      <p className="underline cursor-pointer">Manufacturer</p>
                     </div>
-                    <div className="stat-figure text-secondary"></div>
-                  </div>
-                  <p className="underline">Manufacturer</p>
-                </div>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -185,6 +261,48 @@ export default function ImageClassification() {
             <IoIosArrowBack />
             Quay lại
           </Button>
+          <div className="flex flex-col sm:flex-row pb-4">
+            <div className="flex-1 max-w-full sm:max-w-[50%]">
+              <div
+                ref={videoContainerRef}
+                className="relative w-full pt-[56.25%] bg-sky-200"
+              >
+                <Camera
+                  facingMode={cameraType}
+                  showFocus={false}
+                  className="absolute top-0 left-0 w-full h-full"
+                />
+              </div>
+              <select
+                className="mt-2 block w-full text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                onChange={handleCameraChange}
+                value={cameraType}
+              >
+                <option value="user" disabled={!camerasAvailable.user}>
+                  Front Camera
+                </option>
+                <option
+                  value="environment"
+                  disabled={!camerasAvailable.environment}
+                >
+                  Rear Camera
+                </option>
+              </select>
+            </div>
+            <div className="flex-1 mx-auto sm:max-w-md lg:max-w-sm">
+              <h3 className="text-center text-3xl mb-6">{predictionResult}</h3>
+              <div className="flex justify-between gap-2 mx-2">
+                <div className="flex ">
+                  <div className="flex flex-col">
+                    <div className="stat-title">Độ chính xác</div>
+                    <div className="font-medium">{confidence}%</div>
+                  </div>
+                  <div className="stat-figure text-secondary"></div>
+                </div>
+                <p className="underline cursor-pointer">Manufacturer</p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </section>

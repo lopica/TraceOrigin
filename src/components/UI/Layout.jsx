@@ -26,7 +26,7 @@ export default function Layout() {
           </aside>
         )}
         {matchPaterm && (
-          <main className="md:ml-[15svw] mt-4">
+          <main className="md:ml-[15svw] mt-2">
             {/* <Breadcrumps /> */}
             <Outlet />
           </main>

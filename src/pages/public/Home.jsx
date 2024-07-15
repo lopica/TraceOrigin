@@ -31,74 +31,9 @@ function Home() {
     handleOpen: handleScannerOpen,
     handleClose: handleScannerClose,
   } = useShow(false);
-  const [image, setImage] = useState();
-  const [result, setResult] = useState({
-    className: "",
-    confidence: 0,
-  });
-  const [predict, { isSuccess }] = usePredictMutation();
-
-  const handleImage = async (e) => {
-    const file = e.target.files[0]; // Correctly access the first selected file
-    if (!file) {
-      setImage([]);
-    } else {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64String = e.target.result;
-        setImage(base64String);
-        try {
-          predict({
-            model: "", // Provide the necessary model identifier if needed
-            image: base64String, // Pass the complete base64 string here
-          })
-            .unwrap()
-            .then((res) =>
-              setResult({
-                className: res.result,
-                confidence: res.confidence,
-              })
-            );
-        } catch (error) {
-          console.error("Prediction error:", error);
-          if (error.data) {
-            dispatch(showToast(JSON.parse(error.data).description));
-            setTimeout(() => {
-              dispatch(hideToast());
-            }, 2000);
-          }
-        }
-      };
-      reader.readAsDataURL(file); // Start reading the file as DataURL
-    }
-  };
 
   const modal = (
     <Modal onClose={handleClose}>
-      {/* <form className="flex justify-between w-[50svw] mx-auto">
-        <input
-          type="file"
-          className="file-input w-full max-w-xs"
-          onChange={handleImage}
-        />
-        <div><Button primary rounded>Tìm kiếm</Button></div>
-      </form>
-      {isSuccess && (
-        <div className="flex gap-4">
-          <ImageBox image={image} show className="w-[60svh] h-[40svh]" />
-          <div className="flex flex-col gap-4">
-            <p>Nhận diện:</p>
-            {result.confidence > 85 ? (
-              <>
-                <p>{result.className}</p>
-                <p>Độ tin cậy: {result.confidence}%</p>
-              </>
-            ) : (
-              <p>Không tìm thấy đồ vật này trên hệ thống</p>
-            )}
-          </div>
-        </div>
-      )} */}
       <ImageClassification />
     </Modal>
   );

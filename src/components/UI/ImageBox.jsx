@@ -39,7 +39,8 @@ function ImageBox({ image, actionBar, show, add, idx, setValue, ...props }) {
 
   const modal = (
     <Modal onClose={handleClose} actionBar={actionBar}>
-      <img src={image} className="w-full h-full" />
+      <div className="py-4 max-w-lg mx-auto">
+      <img src={image} className="w-full h-full max-w-sm  mx-auto" />
       <div className="flex justify-between mt-4">
         <Button rounded secondary onClick={handleDelete}>
           Bỏ chọn
@@ -47,6 +48,7 @@ function ImageBox({ image, actionBar, show, add, idx, setValue, ...props }) {
         <Button rounded primary onClick={handleAvatar}>
           Đặt làm ảnh chính
         </Button>
+      </div>
       </div>
     </Modal>
   );
