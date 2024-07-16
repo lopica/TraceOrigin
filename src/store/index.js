@@ -24,6 +24,7 @@ import { serialRequestMiddleware } from "./serialRequestMiddleware";
 import { productSliceReducer } from "./slices/productSlice";
 import { itemSliceReducer } from "./slices/itemSlice";
 import { certificateSliceReducer } from "./slices/certificateSlice";
+import {productEditFormReducer} from "./slices/productEditFormSlice";
 import {thunk} from 'redux-thunk';
 
 // Define the persist configuration
@@ -35,7 +36,8 @@ const persistConfig = {
     "authSlice",
     "userSlice",
     "productForm",
-    "certiForm"
+    "certiForm",
+    "productEditForm"
   ],
 };
 
@@ -50,6 +52,7 @@ const rootReducer = combineReducers({
   productSlice: productSliceReducer,
   itemSlice: itemSliceReducer,
   certificateSlice: certificateSliceReducer,
+  productEditForm: productEditFormReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -175,6 +178,16 @@ export {
   updateCertiForm,
   resetCertiState
 } from "./slices/certiFormSlice";
+export {
+  updateProductEditCategories,
+  removeProductEditImage,
+  removeProductEditImageData,
+  updateProductEditImages,
+  updateProductEditImagesData,
+  updateProductEditAvatar,
+  updateProductEditForm,
+  resetProductEditState,
+} from "./slices/productEditFormSlice";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';

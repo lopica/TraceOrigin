@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGetUsersQuery } from '../../store/apis/userApi';
 import ProfileModal from '../../components/UI/userProfile';
 import CarouselModal from '../../components/UI/CarouselModal';
 import Pagination from '../../components/UI/Pagination';
 import { useUpdateStatusMutation } from "../../store/apis/userApi";
+import {  useNavigate } from "react-router-dom";
+import useToast from "../../hooks/use-toast";
+import { useSelector } from "react-redux";
 
 function VerifyManufacturer() {
+  const navigate = useNavigate();
+  const { getToast } = useToast();
   const [page, setPage] = useState(0);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalOpenImage, setModalOpenImage] = useState(false);
   const [isModalOpenProfile, setModalOpenProfile] = useState(false);
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+
 
   const { data, isError, isFetching, refetch } = useGetUsersQuery({
     email: "",
@@ -22,6 +29,25 @@ function VerifyManufacturer() {
     page: page.toString(),
     size: "10"
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refetch();
+    }
+  }, [isAuthenticated, refetch]);
+
+  useEffect(() => {
+    if (isError?.status === 401) {
+      navigate("/portal/login");
+    }
+  }, [isError, navigate]);
+
+  useEffect(() => {
+    if (!isFetching && !isAuthenticated) {
+      getToast('Phiên đăng nhập đã hết hạn');
+      navigate("/portal/login");
+    }
+  }, [isFetching, isAuthenticated, getToast, navigate]);
 
   const [updateStatus] = useUpdateStatusMutation();
 

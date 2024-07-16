@@ -11,9 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
 import useToast from "../../hooks/use-toast";
+import ManuProductEdit from "../manufacturer/ManuProductEdit"
 
 let renderedProducts;
 function ManuProductList() {
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const { getToast } = useToast();
@@ -24,6 +26,7 @@ function ManuProductList() {
     categorySearch,
   } = useSelector((state) => state.productSlice);
   const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const role = useSelector(state => state.userSlice?.role?.roleId) ?? -1;
   const {
     isFetching: isProductsFetch,
     isError: isProductsError,
@@ -41,6 +44,12 @@ function ManuProductList() {
       categorySearch,
     },
   });
+
+  useEffect(() => {
+    if(role === 1){
+      navigate("/admin/ManufacturerList")
+    }
+  }, []);
 
   const searchHandler = (data) => {
     searchProduct(data);
@@ -64,6 +73,14 @@ function ManuProductList() {
     }
   }, [isAuthenticated, refetch]);
 
+  const handleCloseModal = () => {
+    setSelectedProductId(null);
+  };
+
+  const handleUpdate = (productId) => {
+    setSelectedProductId(productId);
+  };
+
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (
       <div key={index} className="skeleton w-70 h-65"></div>
@@ -74,7 +91,9 @@ function ManuProductList() {
     if (products) {
       renderedProducts = products.map((product, idx) => (
         <Link key={idx} to={`${product.id}`}>
-          <Card card={product} />
+          <Card card={product} 
+                handleUpdate={handleUpdate}
+          />
         </Link>
       ));
     }
@@ -147,6 +166,9 @@ function ManuProductList() {
           </button>
         ))}
       </div>
+      {selectedProductId && (
+        <ManuProductEdit productId={selectedProductId} closeModal={handleCloseModal} />
+      )}
     </div>
   );
 }

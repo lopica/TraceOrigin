@@ -2,15 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useGetUsersQuery, useLockUserMutation } from "../../store/apis/userApi";
 import Pagination from "../../components/UI/Pagination";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProfileModal from "../../components/UI/userProfile";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
 import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import { useGetAllDistinctCityQuery } from "../../store/apis/mapApi";
+import useToast from "../../hooks/use-toast";
+import { useSelector } from "react-redux";
 
 function VerifyManufacturer() {
+  const navigate = useNavigate();
+  const { getToast } = useToast();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [page, setPage] = useState(0);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -50,10 +55,23 @@ function VerifyManufacturer() {
   const [lockUser] = useLockUserMutation();
 
   useEffect(() => {
-    console.log("Fetching status:", isFetching);
-    console.log("Error status:", isError);
-    console.log("Fetched data:", data);
-  }, [isFetching, isError, data]);
+    if (isAuthenticated) {
+      refetch();
+    }
+  }, [isAuthenticated, refetch]);
+
+  useEffect(() => {
+    if (isError?.status === 401) {
+      navigate("/portal/login");
+    }
+  }, [isError, navigate]);
+
+  useEffect(() => {
+    if (!isFetching && !isAuthenticated) {
+      getToast('Phiên đăng nhập đã hết hạn');
+      navigate("/portal/login");
+    }
+  }, [isFetching, isAuthenticated, getToast, navigate]);
 
   const handleUserClick = (userId) => {
     setSelectedUserId(userId);
