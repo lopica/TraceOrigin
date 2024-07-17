@@ -112,6 +112,7 @@ export {
   useLogoutMutation,
   useSendOtpMutation,
   useCheckEmailExistMutation,
+  useForgotPasswordMutation
 } from "./apis/authApi";
 export {
   useFetchUserQuery,

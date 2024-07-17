@@ -77,11 +77,21 @@ const authApi = createApi({
             responseHandler: res => res.text(),
           }
         }
+      }),
+      forgotPassword: builder.mutation({
+        query: (input) => {
+          return {
+            url: '/forgotPassword',
+            method: 'POST',
+            body: { ...input },
+            responseHandler: res => res.text(),
+          }
+        }
       })
     };
   },
 });
 
-export const { useCreateUserMutation, useLoginMutation, useLogoutMutation, useSendOtpMutation, useCheckEmailExistMutation } =
+export const { useCreateUserMutation, useLoginMutation, useLogoutMutation, useSendOtpMutation, useCheckEmailExistMutation, useForgotPasswordMutation } =
   authApi;
 export { authApi };

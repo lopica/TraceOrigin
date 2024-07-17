@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useForgotPasswordMutation } from "../../store/apis/authApi";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const handleSubmit = (e) => {
+  const [forgotPassword, { isLoading, isSuccess, isError, error }] = useForgotPasswordMutation();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email);
+    try {
+      const result = await forgotPassword({ email }).unwrap();
+      console.log('Success:', result);
+    } catch (err) {
+      console.error('Failed:', err);
+    }
   };
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -40,11 +49,18 @@ function ForgotPassword() {
           </div>
 
           <div>
-            <button className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              Gửi mật khẩu tạm thời
+            <button 
+              type="submit" 
+              disabled={isLoading}
+              className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              {isLoading && <span className="loading loading-spinner text-info mr-3"></span>}
+              {isLoading ? 'Loading...' : 'Gửi mật khẩu tạm thời'}
             </button>
           </div>
         </form>
+
+        {isSuccess && <p className="text-green-500 text-center mt-4">Đã gửi mật khẩu tạm đến email của bạn!</p>}
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Đã có tài khoản?{" "}
