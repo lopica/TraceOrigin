@@ -6,17 +6,16 @@ const Content3HomePage = () => {
     <div>
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto ">
         {/* Nửa trái:  Biểu đồ */}
-        <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            <img
-              className="rounded-lg object-cover"
-              src="/qr1.png"
-              alt="Data Analysis Graph"
-            />
-          </h2>
+        <div className="md:w-1/3 flex flex-col items-center justify-center text-center">
+          
+          <img
+  className="rounded-lg object-cover w-64 h-64" // Thay đổi kích thước theo ý muốn
+  src="/qr1.png"
+  alt="Data Analysis Graph"
+/>
         </div>
         {/* Nửa phải: Nội dung */}
-        <div className="md:w-1/2 p-4 flex flex-col items-center justify-center  text-justify text-lg">
+        <div className="md:w-2/3 p-4 flex flex-col items-center justify-center  text-justify text-lg">
           <div className="container mx-auto px-4 py-8">
             <h2 className="text-blue-600 text-2xl font-bold mb-4">
               Giới thiệu

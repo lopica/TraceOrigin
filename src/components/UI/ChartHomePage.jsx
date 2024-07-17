@@ -42,10 +42,11 @@ const ChartHomePage = () => {
     },
   };
 
+const ChartHomePage = ({ className }) => {
   return (
-    <div>
-      <Line data={data} options={options} />
-    </div>
+    <div className={`w-full h-full ${className}`}>
+        <Line data={data} options={options} />
+</div>
   );
 };
 
