@@ -104,7 +104,7 @@ function ManuCertificateList() {
       <div key={index} className="skeleton w-44 h-52"></div>
     ));
   } else if (isCertificateError) {
-    renderedCertificate = <p>Không thể tải danh sách chứng chỉ</p>;
+    renderedCertificate = <p></p>;
   } else if (certificateData) {
     renderedCertificate = certificateData.map((certi, idx) => (
       <div key={idx} onClick={() => handleOpenModalImage(certi.certId)}>
