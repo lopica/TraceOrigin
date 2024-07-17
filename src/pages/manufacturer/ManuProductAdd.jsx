@@ -52,6 +52,7 @@ function ManuProductAdd() {
     trigger,
     getValues,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
@@ -168,6 +169,7 @@ function ManuProductAdd() {
             <Input
               label="Loại sản phẩm"
               type="select"
+              control={control}
               {...register("category", {
                 required: "Bạn cần chọn loại sản phẩm",
               })}

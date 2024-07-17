@@ -50,6 +50,7 @@ function Register() {
     getValues,
     setValue,
     trigger,
+    control,
   } = useForm({
     mode: "onTouched",
     defaultValues: {
@@ -197,6 +198,7 @@ function Register() {
               getValues={getValues}
               setValue={setValue}
               errors={errors}
+              control={control}
             />
           </>
           <>

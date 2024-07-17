@@ -30,10 +30,10 @@ function Modal({ onClose, children, className, primary, easy }) {
           className={classes}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="top-2 right-2 z-10 max-h-[70svh] min-h-[40svh]">
+          <div className="relative top-2 right-2 z-10 max-h-[70svh] min-h-[40svh]">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-500 hover:text-gray-800 text-4xl"
+              className="absolute top-0 right-2 z-20 text-gray-500 hover:text-gray-800 text-4xl"
             >
               &times;
             </button>
