@@ -5,7 +5,7 @@ import { useGetNumberVisitsDiagramQuery } from '../../store/apis/elkApi';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
-const ChartHomePage = () => {
+const ChartHomePage = ({ className }) => {
   const { data: apiData, error, isLoading } = useGetNumberVisitsDiagramQuery();
 
   if (isLoading) return <div>Loading...</div>;
@@ -42,10 +42,9 @@ const ChartHomePage = () => {
     },
   };
 
-const ChartHomePage = ({ className }) => {
-  return (
-    <div className={`w-full h-full ${className}`}>
-        <Line data={data} options={options} />
+return (
+  <div className={`w-full h-full ${className}`}>
+      <Line data={data} options={options} />
 </div>
   );
 };
