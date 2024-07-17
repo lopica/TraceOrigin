@@ -15,8 +15,6 @@ const certificateApi = createApi({
     // baseUrl: "http://localhost:3001",
     credentials: 'include',
     fetchFn: async (...args) => {
-      // REMOVE FOR PRODUCTION
-      await pause(1);
       return fetch(...args);
     },
     responseHandler: async (response) => {

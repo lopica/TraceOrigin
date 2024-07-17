@@ -5,7 +5,7 @@ import useToast from "../../hooks/use-toast";
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 
-function Card({ card, handleUpdate}) {
+function Card({ card, handleUpdate, handleDelete}) {
  const { getToast } = useToast();
  if (!card) {
    return (
@@ -18,9 +18,7 @@ function Card({ card, handleUpdate}) {
  }
 
 
-const handleDelete = () => {
-  // Xử lý xóa ở đây nhé
-};
+
 
  return (
    // <div className="card w-70 h-65 bg-white md:max-w-xl mx-auto">
@@ -58,7 +56,10 @@ const handleDelete = () => {
        <FaEdit size={20} />
      </button>
      <button
-       onClick={() => handleDelete()}
+        onClick={(e) => {
+          e.preventDefault();
+          handleDelete(card.id);
+        }}
        className="text-red-500 hover:text-red-700"
      >
        <FaTrash size={20} />

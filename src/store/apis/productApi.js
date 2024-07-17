@@ -57,6 +57,17 @@ const productApi = createApi({
           };
         },
       }),
+      deleteProductById: builder.mutation({
+        query: (productId) => {
+          return {
+            url: "/deleteProductById",
+            method: "POST",
+            body: {
+              id: productId,
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -66,4 +77,5 @@ export const {
   useAddProductMutation,
   useSearchProductQuery,
   useViewProductDetailQuery,
+  useDeleteProductByIdMutation
 } = productApi;

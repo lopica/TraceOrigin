@@ -25,6 +25,7 @@ import { productSliceReducer } from "./slices/productSlice";
 import { itemSliceReducer } from "./slices/itemSlice";
 import { certificateSliceReducer } from "./slices/certificateSlice";
 import {productEditFormReducer} from "./slices/productEditFormSlice";
+import { elkApi } from "../store/apis/elkApi";
 import {thunk} from 'redux-thunk';
 
 // Define the persist configuration
@@ -63,6 +64,7 @@ const rootReducer = combineReducers({
   [categoryApi.reducerPath]: categoryApi.reducer,
   [classifierApi.reducerPath]: classifierApi.reducer,
   [certificateApi.reducerPath]: certificateApi.reducer,
+  [elkApi.reducerPath]: elkApi.reducer,
 });
 
 // Apply persistReducer wrapper
@@ -93,6 +95,7 @@ const store = configureStore({
       categoryApi.middleware,
       classifierApi.middleware,
       certificateApi.middleware,
+      elkApi.middleware,
       thunk,
       // serialRequestMiddleware
     ),
@@ -121,6 +124,7 @@ export {
   useAddProductMutation,
   useSearchProductQuery,
   useViewProductDetailQuery,
+  useDeleteProductByIdMutation
 } from "./apis/productApi";
 export { showToast, hideToast } from "./slices/toastSlice";
 export { updateRegisterForm } from "./slices/registerFormSlice";
@@ -192,7 +196,15 @@ export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
 export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
 export {updateItemDetail, updateItemList, updateItemLine} from './slices/itemSlice'
-export { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery, useSendRequestVerifyCertMutation, useDeleteCertCertIdMutation} from "./apis/certificateApi";
+export {
+  useGetListManuToVerifyQuery, 
+  useGetListCertificateByManuIdQuery, 
+  useAddCertificateMutation, 
+  useGetCertificateByIdQuery,
+  useSendRequestVerifyCertMutation, 
+  useDeleteCertCertIdMutation} from "./apis/certificateApi";
+export {
+  useGetNumberVisitsAllTimeQuery,} from "./apis/elkApi";
 
 
 

@@ -12,11 +12,14 @@ import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
 import useToast from "../../hooks/use-toast";
 import ManuProductEdit from "../manufacturer/ManuProductEdit"
+import ConfirmationModal from "../../components/UI/ConfirmModal";
+import {useDeleteProductByIdMutation} from "../../store/apis/productApi"
 
 let renderedProducts;
 function ManuProductList() {
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [page, setPage] = useState(0);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
@@ -44,6 +47,12 @@ function ManuProductList() {
       categorySearch,
     },
   });
+  const [modalContent, setModalContent] = useState({
+    header: "",
+    body: "",
+    onConfirm: null,
+  });
+  const [isLoadingModal, setIsLoadingModal] = useState(false);
 
   useEffect(() => {
     if(role === 1){
@@ -73,6 +82,8 @@ function ManuProductList() {
     }
   }, [isAuthenticated, refetch]);
 
+  const [DeleteProductById] = useDeleteProductByIdMutation();
+
   const handleCloseModal = () => {
     setSelectedProductId(null);
   };
@@ -80,6 +91,40 @@ function ManuProductList() {
   const handleUpdate = (productId) => {
     setSelectedProductId(productId);
   };
+
+  const handleDeleteApi = async (id) => {
+    setIsLoadingModal(true);
+    try {
+      await DeleteProductById(id.toString()).unwrap();
+
+    } catch (error) {
+      console.error("Lock/Unlock user error:", error);
+    } finally {
+      setIsLoadingModal(false);
+      setIsConfirmationModalOpen(false);
+      refetch();
+      getToast("Xóa sản phẩm thành công")
+    }
+  };
+
+  const handleDelete = (productId) => {
+
+    let confirmAction = null;
+
+    confirmAction = () => handleDeleteApi(productId);
+    
+    setModalContent({
+      header: "Xác nhận xóa sản phẩm",
+      body: "Bạn có chắc chắn muốn xóa sản phẩm này?",
+      onConfirm: confirmAction,
+    });
+    setIsConfirmationModalOpen(true);
+  };
+
+  const closeModalConfirm = () => {
+    setIsConfirmationModalOpen(false);
+  };
+
 
   if (isProductsFetch) {
     renderedProducts = Array.from({ length: 5 }).map((_, index) => (
@@ -93,6 +138,7 @@ function ManuProductList() {
         <Link key={idx} to={`${product.id}`}>
           <Card card={product} 
                 handleUpdate={handleUpdate}
+                handleDelete={handleDelete}
           />
         </Link>
       ));
@@ -169,6 +215,14 @@ function ManuProductList() {
       {selectedProductId && (
         <ManuProductEdit productId={selectedProductId} closeModal={handleCloseModal} />
       )}
+        <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={closeModalConfirm}
+        headerContent={modalContent.header}
+        content={modalContent.body}
+        onConfirm={modalContent.onConfirm}
+        isLoading={isLoadingModal}
+      />
     </div>
   );
 }
