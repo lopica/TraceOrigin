@@ -78,11 +78,11 @@ function Home() {
       >
         <div className="hero-overlay bg-opacity-80">
           {/* ============================ */}
-          <section className="flex justify-center">
-            <div className="md:w-3/5 ">
-              <CarouselHomePage />
+          <section className="flex justify-center gap-0 md:gap-6">
+            <div className="md:w-3/5 ml-0 md:ml-16">
+              <CarouselHomePage/>
             </div>
-            <div className="md:w-2/5 flex flex-col items-center md:items-start justify-center mt-4 mb-2">
+            <div className="md:w-2/5 flex flex-col items-center md:items-start justify-center my-4">
               <ActionButtonHomePage />
             </div>
           </section>

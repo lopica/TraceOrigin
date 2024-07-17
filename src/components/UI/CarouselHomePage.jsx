@@ -40,15 +40,15 @@ const CarouselHomePage = () => {
   };
 
   return (
-    <div className="hidden sm:block w-full max-w-xl mx-auto pt-9 p-6">
-      <Slider {...settings}>
-        {slides.map((slide, index) => (
-          <div key={index}>
-            <img src={slide.src} alt={`slide-${index}`}  className="rounded-box w-full h-auto object-cover" />
-          </div>
-        ))}
-      </Slider>
-    </div>
+<div className="hidden sm:block w-full max-w-full mx-auto pt-9 p-6">
+  <Slider {...settings}>
+    {slides.map((slide, index) => (
+      <div key={index} className="rounded-box w-full h-[400px] overflow-hidden">
+        <img src={slide.src} alt={`slide-${index}`} className="rounded-box w-full h-full object-cover object-center" />
+      </div>
+    ))}
+  </Slider>
+</div>
   );
 };
 
