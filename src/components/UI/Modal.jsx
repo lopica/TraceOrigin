@@ -30,15 +30,14 @@ function Modal({ onClose, children, className, primary, easy }) {
           className={classes}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="top-2 right-2 z-10">
+          <div className="top-2 right-2 z-10 max-h-[70svh] min-h-[40svh]">
             <button
               onClick={onClose}
               className="absolute top-0 right-2 text-gray-500 hover:text-gray-800 text-4xl"
             >
               &times;
             </button>
-            <div className="flex flex-col gap-6">{children}</div>
-            {/* <div className="flex justify-end">{actionBar}</div> */}
+            <div className="flex flex-col gap-6 max-h-[70svh] min-h-[40svh]">{children}</div>
           </div>
         </div>
       </div>

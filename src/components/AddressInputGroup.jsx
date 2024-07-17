@@ -89,7 +89,7 @@ export default function AddressInputGroup({
 
   return (
     <>
-      <div className="join w-full gap-2">
+      <div className="join w-full gap-2 h-fit">
         <Input
           label="Địa chỉ:"
           type="select"

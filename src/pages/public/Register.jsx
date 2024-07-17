@@ -22,6 +22,7 @@ import Alert from "../../components/UI/Alert.jsx";
 import useToast from "../../hooks/use-toast";
 import Otp from "../../components/Otp.jsx";
 import useShow from "../../hooks/use-show.js";
+import Modal from "../../components/UI/Modal.jsx";
 
 const stepList = ["Thông tin cơ bản", "Thông tin liên hệ", "Tạo mật khẩu"];
 
@@ -35,7 +36,7 @@ let province, district, ward;
 let alert;
 
 function Register() {
-  const { show: showOtp, handleOpen, handleClose } = useShow();
+  const { show: showOtp, handleOpen, handleClose } = useShow(false);
   const [sendOtp, { isLoading: isOtpLoading }] = useSendOtpMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ function Register() {
     type: null, // 'error', 'success', or 'info'
     content: "",
   });
-  const [inputsDisabled, setInputsDisabled] = useState(false); // State to manage input disabled status
+  const [inputsDisabled, setInputsDisabled] = useState(false); 
 
   const onStepSubmit = () => {
     //get data and save to local storage
@@ -273,14 +274,18 @@ function Register() {
           </>
         </Wizzard>
         {showOtp && (
-          <Otp
-            handleClose={handleClose}
-            onSubmit={handleRegister}
-            isLoading={isRegisterLoading}
-            sendOtp={sendOtp}
-            inputsDisabled={inputsDisabled}
-            setInputsDisabled={setInputsDisabled}
-          />
+          <Modal onClose={handleClose}>
+            <div className="grow flex flex-col items-center justify-center">
+              <Otp
+                onSubmit={handleRegister}
+                isLoading={isRegisterLoading}
+                sendOtp={sendOtp}
+                isSendOtpLoading={isOtpLoading}
+                inputsDisabled={inputsDisabled}
+                setInputsDisabled={setInputsDisabled}
+              />
+            </div>
+          </Modal>
         )}
         <div className="mt-5 text-sm flex justify-center items-center">
           <p>Đã tài khoản?</p>

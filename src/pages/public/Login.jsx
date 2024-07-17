@@ -5,11 +5,13 @@ import { HiEye } from "react-icons/hi";
 import handleKeyDown from "../../utils/handleKeyDown";
 import useAuth from "../../hooks/use-auth";
 import useToast from "../../hooks/use-toast";
+import { useSelector } from "react-redux";
 
 function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { handleLogin: login, isLoginLoading } = useAuth();
+  const {isAuthenticated} = useSelector(state=>state.authSlice)
   const { getToast } = useToast();
   const [inputs, setInputs] = useState({
     email: "",
@@ -20,7 +22,6 @@ function Login() {
     e.preventDefault();
     await login(inputs).then(() => {
       getToast('Đăng nhập thành công');
-      navigate("/manufacturer/products");
     });
   };
 
@@ -30,6 +31,10 @@ function Login() {
       [identifier]: e.target.value,
     }));
   };
+
+  useEffect(()=>{
+    if (isAuthenticated) navigate("/manufacturer/products");
+  }, [isAuthenticated])
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

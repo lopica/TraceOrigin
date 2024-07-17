@@ -18,6 +18,7 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import "swiper/css";
 import Button from "../../components/UI/Button.jsx";
 import { MdOutlineTransferWithinAStation } from "react-icons/md";
+import Consign from "../../components/Consign.jsx";
 
 function Item() {
   //   const [originId, setOriginId] = useState("");
@@ -170,9 +171,7 @@ function Item() {
 
   return (
     <section className="relative">
-      {/* <Button className="absolute bottom-2 right-6 z-10 bg-sky-400 rounded-full h-12 w-12 p-2 lg:bottom-4 lg:right-8">
-        <MdOutlineTransferWithinAStation className="w-8 h-8" />
-      </Button> */}
+      <Consign productRecognition={productRecognition} />
       <div className="block lg:hidden">
         <Swiper
           autoHeight

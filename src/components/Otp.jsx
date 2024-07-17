@@ -5,12 +5,12 @@ import { useSelector } from "react-redux";
 
 let currentOTPIndex = 0;
 export default function Otp({
-  handleClose,
   onSubmit,
   isLoading,
   sendOtp,
   inputsDisabled,
   setInputsDisabled,
+  isOtpLoading
 }) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
@@ -41,7 +41,7 @@ export default function Otp({
   };
 
   const handleOnPaste = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const pastedData = e.clipboardData.getData("text").trim();
 
     if (pastedData.length <= 6 && /^\d+$/.test(pastedData)) {
@@ -91,13 +91,17 @@ export default function Otp({
     }
   }, [otp, onSubmit, setInputsDisabled]);
 
+  useEffect(()=>{
+    if (!isOtpLoading) setTimeLeft(120)
+  },[isOtpLoading])
+
   return (
-    <Modal onClose={handleClose}>
-      <div className="text-center text-xl">
-        <h2 className="text-center text-2xl mb-4">Xác thực OTP</h2>
+    <>
+      <div className="text-center text-xl mb-8">
+        <h2 className="text-center text-2xl">Xác thực OTP</h2>
         <small>(Bạn hãy kiểm tra email bạn đã đăng ký)</small>
       </div>
-      <div className="flex justify-center items-center space-x-2">
+      <div className="flex justify-center items-center space-x-2 mb-4">
         {otp.map((_, index) => (
           <React.Fragment key={index}>
             <input
@@ -124,7 +128,7 @@ export default function Otp({
             Mã xác thực còn có hiệu lực trong {timeLeft} giây
           </p>
         ) : (
-          <Button primary rounded onClick={() => sendOtp({ email })}>
+          <Button primary rounded onClick={() => sendOtp({ email })} isLoading={isOtpLoading}>
             Gửi lại
           </Button>
         )}
@@ -132,6 +136,6 @@ export default function Otp({
           <span className="loading loading-spinner loading-lg"></span>
         )}
       </div>
-    </Modal>
+    </>
   );
 }

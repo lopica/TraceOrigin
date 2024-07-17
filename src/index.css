@@ -165,3 +165,9 @@ input[type='number'] {
   font-size: 14px;
   color: #666;
 }
+
+input:-webkit-autofill {
+  @apply bg-white text-gray-900; /* Tailwind classes for background and text color */
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: black !important;
+}

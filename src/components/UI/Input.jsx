@@ -4,27 +4,12 @@ const Input = React.forwardRef(
   ({ label, tooltip, unit, error, ...props }, ref) => {
     const { type, placeholder, data, onChange, onBlur } = props;
     const inputRef = ref || useRef();
-    const [inputWidth, setInputWidth] = useState("auto");
-
-    const updateWidth = () => {
-      if (inputRef.current && inputRef.current.value) {
-        const length = inputRef.current.value.length;
-        const placeholder = inputRef.current.placeholder.length;
-        length === 0
-          ? setInputWidth(`${placeholder + 1}rem`)
-          : setInputWidth(`${length + 1}rem`);
-      }
-    };
-
-    useEffect(() => {
-      updateWidth();
-    }, []);
+ 
 
     const handleInputChange = (event) => {
       if (onChange) {
         onChange(event);
       }
-      updateWidth();
     };
 
     if (type === "select") {
@@ -107,7 +92,6 @@ const Input = React.forwardRef(
                 onChange={handleInputChange}
                 onBlur={onBlur}
                 className="max-w-xl invalid:input-bordered"
-                style={{ width: inputWidth }}
               />
               <span className="badge">{unit}</span>
             </label>

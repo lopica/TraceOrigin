@@ -71,7 +71,7 @@ function Home() {
     // </main>
 
     // =================================NEW UI FOR HOME PAGE============================================
-    <main className="h-[93svh] overflow-y-auto">
+    <main className="h-[92svh] overflow-y-auto">
       <div
         className="hero h-[50svh]"
         style={{ backgroundImage: "url(/hero1.jpg)" }}

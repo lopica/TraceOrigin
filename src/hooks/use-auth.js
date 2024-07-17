@@ -10,6 +10,9 @@ import { useEffect } from "react";
 import { requireLoginAfterTimeout } from "../store/slices/authSlice";
 
 export default function useAuth() {
+  const { lastActivityTime, isAuthenticated } = useSelector(
+    (state) => state.authSlice
+  );
   const dispatch = useDispatch();
   const [
     login,
@@ -32,10 +35,7 @@ export default function useAuth() {
   async function handleLogin(inputs) {
     return login(inputs)
       .unwrap()
-      .then(() => {
-        dispatch(requireLoginAfterTimeout());
-        dispatch(loginSuccess())
-      })
+      .then(() => {})
       .catch((err) => console.log(err));
   }
 
@@ -50,7 +50,9 @@ export default function useAuth() {
   }
 
   useEffect(() => {
-    if (isLoginSuccess && !isLoginError) dispatch(loginSuccess());
+    if (isLoginSuccess && !isLoginError) {
+      dispatch(loginSuccess());
+    }
     if (isLoginSuccess && isLoginError && loginError.status === 401) {
       dispatch(requireLogin());
     }
@@ -65,6 +67,10 @@ export default function useAuth() {
       dispatch(loginSuccess());
     }
   }, [isLogoutSuccess, isLogoutError]);
+
+  useEffect(() => {
+    if (isAuthenticated) dispatch(requireLoginAfterTimeout());
+  }, [lastActivityTime]);
 
   return {
     handleLogin,

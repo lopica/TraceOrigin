@@ -7,11 +7,16 @@ import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { useEffect, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import Button from "./UI/Button";
-import Consign from "./Consign";
+import Tooltip from "./UI/Tooltip";
 
 let itemLine;
 let qr;
-export default function ItemLine({ productRecognition, add, goToItemOrigin, showQr }) {
+export default function ItemLine({
+  productRecognition,
+  add,
+  goToItemOrigin,
+  showQr,
+}) {
   const dispatch = useDispatch();
   const qrContainerRef = useRef(null);
   const {
@@ -86,10 +91,16 @@ export default function ItemLine({ productRecognition, add, goToItemOrigin, show
                 {getDateFromEpochTime(log.createdAt)}
               </div>
               <div className="timeline-middle w-8 h-8">
-                <button
-                  className="w-8 h-8 rounded-full bg-accent"
-                  onClick={goToItemOrigin}
-                ></button>
+                <Tooltip content={<div className="flex flex-col items-start">
+                  <p>Người tham gia: {log?.partyName}</p>
+                  <p>Địa điểm: {log?.address || 'Không ghi'}</p>
+                  <p>Mô tả: {log?.description || 'Không ghi'}</p>
+                </div>}>
+                  <button
+                    className="w-8 h-8 rounded-full bg-green-400 hover:bg-green-500"
+                    onClick={goToItemOrigin}
+                  ></button>
+                </Tooltip>
               </div>
               <div className="timeline-end timeline-box">{log.eventType}</div>
               {(index !== itemLogsData?.itemLogDTOs?.length - 1 || add) && (
@@ -118,7 +129,6 @@ export default function ItemLine({ productRecognition, add, goToItemOrigin, show
     <div className="flex flex-col justify-between h-[90svh]">
       <div className="grow">{itemLine}</div>
       {showQr && qr}
-      <Consign productRecognition={productRecognition} />
     </div>
   );
 }
