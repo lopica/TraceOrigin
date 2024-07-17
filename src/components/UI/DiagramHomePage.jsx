@@ -13,7 +13,7 @@ const DiagramHomePage = () => {
         </div>
         {/* Nửa phải: Biểu đồ */}
         <div className="md:w-1/2 p-4">
-        <ChartHomePage/>
+        <ChartHomePage />
         </div>
       </div>
     </div>

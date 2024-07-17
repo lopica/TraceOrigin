@@ -75,10 +75,10 @@ const options = {
     }
 };
 
-const ChartHomePage = () => {
+const ChartHomePage = ({ className }) => {
   return (
-    <div>
-    <Line data={data} options={options} />
+    <div className={`w-full h-full ${className}`}>
+        <Line data={data} options={options} />
 </div>
   );
 };

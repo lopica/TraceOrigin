@@ -73,38 +73,35 @@ function Home() {
     // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[92svh] overflow-y-auto">
       <div
-        className="hero h-[50svh]"
+      className="hero"
         style={{ backgroundImage: "url(/hero1.jpg)" }}
       >
         <div className="hero-overlay bg-opacity-80">
-        {/* ============================ */}
-        <section className="flex justify-center py-8 sm:gap-6">
-          <div className="basis-5/10 flex items-center justify-center">
-            <div className="w-full">
+          {/* ============================ */}
+          <section className="flex justify-center">
+            <div className="md:w-3/5 ">
               <CarouselHomePage />
             </div>
-          </div>
-          <div className="basis-5/10 flex flex-col justify-center space-y-2">
-            <ActionButtonHomePage />
-          </div>
-        </section>
+            <div className="md:w-2/5 flex flex-col items-center md:items-start justify-center mt-4 mb-2">
+              <ActionButtonHomePage />
+            </div>
+          </section>
         </div>
       </div>
       {/* ============================ */}
       <div className="bg-[rgb(240,240,240)]">
-      <Content1HomePage />
+        <Content1HomePage />
       </div>
       <Content2HomePage />
       <div className="bg-[rgb(240,240,240)]">
-      <Content3HomePage />
+        <Content3HomePage />
       </div>
       {/* ============================ */}
 
-     
-        <DiagramHomePage />
-   
+      <DiagramHomePage className="w-full h-full"/>
+
       <div className="bg-[rgb(240,240,240)]">
-      <ActiveMethodHomePage />
+        <ActiveMethodHomePage />
       </div>
       <Footer />
     </main>
