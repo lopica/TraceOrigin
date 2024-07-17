@@ -20,6 +20,7 @@ export default function AddItem() {
     getValues,
     setValue,
     reset,
+    control,
     formState: { errors },
     handleSubmit,
   } = useForm({
@@ -87,8 +88,9 @@ export default function AddItem() {
         onSubmit={handleSubmit(onSubmit)}
         onKeyDown={handleKeyDown}
         noValidate
+        className="p-4 px-8"
       >
-        <h1 className="text-center text-2xl mb-8">Tạo nhật ký</h1>
+        <h1 className="text-center text-2xl mb-4">Tạo nhật ký</h1>
         <Input
           label="Số lượng sản phẩm"
           type="number"
@@ -112,6 +114,7 @@ export default function AddItem() {
           getValues={getValues}
           setValue={setValue}
           errors={errors}
+          control={control}
         />
         <Input
           label="Mô tả tình trạng sản phẩm hiện tại"
@@ -127,7 +130,7 @@ export default function AddItem() {
           {...register("warranty")}
           disabled
         />
-        <div className="flex justify-end mt-8">
+        <div className="flex justify-end mt-8 pb-4">
           <Button primary rounded isLoading={isLoading}>
             Tạo nhật ký
           </Button>

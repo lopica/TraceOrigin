@@ -14,6 +14,7 @@ export default function AddressInputGroup({
   getValues,
   setValue,
   errors,
+  control,
 }) {
   const dispatch = useDispatch();
   const [getCoordinate, results] = useGetCoordinateByAddressMutation();
@@ -93,28 +94,31 @@ export default function AddressInputGroup({
         <Input
           label="Địa chỉ:"
           type="select"
+          control={control}
           data={provinces}
           placeholder="Tỉnh, thành phố"
           {...register("province", {
             required: "Bạn cần chọn tỉnh, thành phố",
           })}
-          onChange={(e) => handleInputChange("province", e)}
+          addOnChange={(e) => handleInputChange("province", e)}
           error={errors.province?.message}
         />
         <Input
           label="&nbsp;"
           type="select"
+          control={control}
           data={districts}
           {...register("district", {
             required: "Bạn cần chọn quận, huyện",
           })}
-          onChange={(e) => handleInputChange("district", e)}
+          addOnChange={(e) => handleInputChange("district", e)}
           placeholder="Quận, huyện"
           error={errors.district?.message}
         />
         <Input
           label="&nbsp;"
           type="select"
+          control={control}
           data={wards}
           {...register("ward", {
             required: "Bạn cần chọn phường, xã",

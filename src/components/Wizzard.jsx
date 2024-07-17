@@ -4,7 +4,6 @@ import handleKeyDown from "../utils/handleKeyDown";
 import useToast from "../hooks/use-toast";
 
 let valid;
-let images;
 
 function Wizzard({
   stepList,

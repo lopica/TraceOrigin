@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "./UI/Button";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 let renderedListItem;
 export default function ItemList({ productId }) {
@@ -16,6 +17,7 @@ export default function ItemList({ productId }) {
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const navigate = useNavigate()
   const { categoriesData } = useCategory();
+  const {control, register} = useForm({mode: 'onTouched'})
 
   const itemConfig = [
     {
@@ -85,6 +87,8 @@ export default function ItemList({ productId }) {
         <Input
           label="Trạng thái"
           type="select"
+          {...register("status")}
+          control={control}
           data={categoriesData}
           placeholder="Lựa chọn trạng thái"
         />

@@ -40,7 +40,7 @@ function ManuProductList() {
     paginate,
     setCurrentPage,
   } = useProduct();
-  const { handleSubmit, register } = useForm({
+  const { handleSubmit, register, control } = useForm({
     mode: "onTouched",
     defaultValues: {
       nameSearch,
@@ -156,6 +156,7 @@ function ManuProductList() {
       >
         <Input
           label="Tên sản phẩm"
+          control={control}
           {...register("nameSearch")}
           type="search"
           placeholder="Tên sản phẩm"
@@ -163,6 +164,7 @@ function ManuProductList() {
         <Input
           label="Loại sản phẩm"
           type="select"
+          control={control}
           {...register("categorySearch")}
           data={categoriesData}
           placeholder="Chọn danh mục"

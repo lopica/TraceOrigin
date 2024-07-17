@@ -1,16 +1,49 @@
 import React, { useState, useRef, useEffect } from "react";
-
+import { Controller } from "react-hook-form";
+import Select from "react-select";
+let options;
 const Input = React.forwardRef(
-  ({ label, tooltip, unit, error, ...props }, ref) => {
-    const { type, placeholder, data, onChange, onBlur } = props;
+  ({ label, tooltip, unit, error, data, addOnChange, ...props }, ref) => {
+    const { type, placeholder, onBlur, name } = props;
     const inputRef = ref || useRef();
- 
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    if (data && data?.length > 0) {
+      options = data.map((option) => ({
+        value: `${option.id},${option.content}`,
+        label: option.content,
+      }));
+    }
 
     const handleInputChange = (event) => {
-      if (onChange) {
-        onChange(event);
+      if (props.onChange) {
+        props.onChange(event);
+      }
+      if (addOnChange) {
+        addOnChange(event);
       }
     };
+
+    const handleSelect = (option) => {
+      // console.log(props);
+      const event = {
+        target: {
+          name,
+          value: option.value,
+        },
+      };
+      if (props.onChange) {
+        props.onChange(event);
+        setSelectedOption(option);
+      }
+      if (addOnChange) {
+        addOnChange(event);
+      }
+    };
+
+    // useEffect(() => {
+    //   console.log(selectedOption);
+    // }, [selectedOption]);
 
     if (type === "select") {
       return (
@@ -20,7 +53,7 @@ const Input = React.forwardRef(
               <span className="label-text text-base">{label}</span>
             </div>
           </div>
-          <select
+          {/* <select
             ref={ref}
             {...props}
             onChange={onChange}
@@ -35,7 +68,23 @@ const Input = React.forwardRef(
                   {option.content}
                 </option>
               ))}
-          </select>
+          </select> */}
+          <Controller
+            name={name}
+            control={props.control}
+            render={({ field: { onChange, ref, value } }) => (
+              <Select
+                ref={ref}
+                options={options}
+                onChange={(val) => {
+                  onChange(val.value);
+                  handleSelect(val);
+                }}
+                value={options?.find((option) => option.value === value)}
+                placeholder={placeholder}
+              />
+            )}
+          />
           {error && (
             <div className="label">
               <span className="label-text-alt text-left text-error text-sm">
@@ -47,34 +96,33 @@ const Input = React.forwardRef(
       );
     }
 
-    if(type == "textarea")
-      { return (
+    if (type == "textarea") {
+      return (
         <>
-           
-            <label className="form-control w-full max-w-sm">
-              <div className="label">
-                <div className="tooltip" data-tip={tooltip}>
-                  <span className="label-text text-base">{label}</span>
-                </div>
+          <label className="form-control w-full max-w-sm">
+            <div className="label">
+              <div className="tooltip" data-tip={tooltip}>
+                <span className="label-text text-base">{label}</span>
               </div>
-              <textarea
-                ref={inputRef}
-                {...props}
-                onChange={handleInputChange}
-                onBlur={onBlur}
-                className="input input-bordered w-full max-w-sm height_125"
-              />
-              {error && (
-                <div className="label">
-                  <span className="label-text-alt text-left text-error text-sm">
-                    {error}
-                  </span>
-                </div>
-              )}
-            </label>
-          
+            </div>
+            <textarea
+              ref={inputRef}
+              {...props}
+              onChange={handleInputChange}
+              onBlur={onBlur}
+              className="input input-bordered w-full max-w-sm height_125"
+            />
+            {error && (
+              <div className="label">
+                <span className="label-text-alt text-left text-error text-sm">
+                  {error}
+                </span>
+              </div>
+            )}
+          </label>
         </>
-      );}
+      );
+    }
 
     return (
       <>
