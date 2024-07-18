@@ -39,7 +39,7 @@ const Carousel = ({ slides, options }) => {
         <div className="embla__container">
           {slides.map((slide, index) => (
             <div className="embla__slide flex justify-center items-center" key={index}>
-              <div className="max-h-[60svh] overflow-y-auto">{slide}</div>
+              <div className="max-h-[60svh] overflow-y-auto ">{slide}</div>
             </div>
           ))}
         </div>
@@ -75,7 +75,6 @@ const Thumb = ({ selected, index, onClick, slide }) => {
         type="button"
         className="embla-thumbs__slide__number"
       >
-        {/* {index + 1} */}
         {slide}
       </button>
     </div>

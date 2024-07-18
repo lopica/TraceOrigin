@@ -110,10 +110,10 @@ const itemApi = createApi({
           }
         }
       }),
-      checkIsCurrentOwner: builder.query({
+      checkConsignRole: builder.query({
         query: (request) => {
           return {
-            url: 'checkCurrentOwner',
+            url: 'check',
             method: 'POST',
             body: request,
           }
@@ -128,15 +128,15 @@ const itemApi = createApi({
           }
         }
       }),
-      isConsigned: builder.query({
-        query: (request) => {
-          return {
-            url: 'checkAuthorized',
-            method: 'POST',
-            body: request,
-          }
-        }
-      }),
+      // isConsigned: builder.query({
+      //   query: (request) => {
+      //     return {
+      //       url: 'checkAuthorized',
+      //       method: 'POST',
+      //       body: request,
+      //     }
+      //   }
+      // }),
     };
   },
 });
@@ -147,7 +147,7 @@ export const {
   useFetchOriginByItemLogIdQuery,
   useSearchItemsQuery,
   useAddItemMutation,
-  useCheckIsCurrentOwnerQuery,
+  useCheckConsignRoleQuery,
   useSendOtpOwnerMutation,
   useSendOtpReceiverMutation,
   useCheckCurrentOwnerOTPMutation,
