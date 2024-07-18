@@ -6,16 +6,29 @@ import { FaPlus } from "react-icons/fa";
 import { twMerge } from "tailwind-merge";
 import className from "classnames";
 import useImage from "../../hooks/use-image";
+import useCertiImage from "../../hooks/use-image-certi"; 
+import useImageEditPro from "../../hooks/use-image-editPro"
 
-
-function ImageBox({ image, actionBar, show, add, idx, setValue, isCer = false, ...props }) {
+function ImageBox({ image, actionBar, show, add, idx, setValue, isCer = false, isEditPro = false, ...props }) {
   const {
     show: showModal,
     handleOpen: handleClick,
     handleClose,
   } = useShow(false);
+  let imageProps = {};
 
-  const { handleImages: addImage, deleteImage, changeAvatar, isAvatar } = useImage(setValue, isCer);
+
+if(isEditPro)
+{
+  imageProps = useImageEditPro(setValue)
+}else if(isCer){
+  imageProps = useCertiImage(setValue)
+}
+else
+{
+  imageProps = useImage(setValue);
+}
+const { handleImages: addImage, deleteImage, changeAvatar, isAvatar } = imageProps;
   const fileInputRef = useRef(null);
 
   const triggerFileInput = () => {
@@ -59,6 +72,7 @@ function ImageBox({ image, actionBar, show, add, idx, setValue, isCer = false, .
 
   return (
     <>
+    {console.log('tessttttttt:'+isEditPro + ' va' + isCer)}
       {add ? (
         <div className={classes} onClick={triggerFileInput}>
           <FaPlus className="text-2xl fill-white" />

@@ -14,12 +14,22 @@ import useToast from "../../hooks/use-toast";
 import ManuProductEdit from "../manufacturer/ManuProductEdit"
 import ConfirmationModal from "../../components/UI/ConfirmModal";
 import {useDeleteProductByIdMutation} from "../../store/apis/productApi"
+import {
+  updateProductEditForm,
+  resetProductEditState,
+  useViewProductDetailQuery,
+} from "../../store";
 
 let renderedProducts;
 function ManuProductList() {
+  const dispatch = useDispatch();
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const { data: productDetail, refetch: refetchDetail } = useViewProductDetailQuery(selectedProductId, {
+    skip: selectedProductId === null,
+  });
   const [page, setPage] = useState(0);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
@@ -86,11 +96,22 @@ function ManuProductList() {
 
   const handleCloseModal = () => {
     setSelectedProductId(null);
+    setEditModalOpen(false);
   };
+
 
   const handleUpdate = (productId) => {
     setSelectedProductId(productId);
   };
+  
+  useEffect(() => {
+    if (productDetail) {
+      refetchDetail();
+      dispatch(updateProductEditForm(productDetail));
+      setEditModalOpen(true);
+    }
+  }, [productDetail, dispatch]);
+  
 
   const handleDeleteApi = async (id) => {
     setIsLoadingModal(true);
@@ -214,7 +235,7 @@ function ManuProductList() {
           </button>
         ))}
       </div>
-      {selectedProductId && (
+      {isEditModalOpen && (
         <ManuProductEdit productId={selectedProductId} closeModal={handleCloseModal} />
       )}
         <ConfirmationModal

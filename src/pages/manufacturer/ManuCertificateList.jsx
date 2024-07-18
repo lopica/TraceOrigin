@@ -10,6 +10,7 @@ import Pagination from '../../components/UI/Pagination';
 import useToast from "../../hooks/use-toast";
 import CarouselModal from '../../components/UI/CarouselModal';
 import { useGetUserDetailQuery } from "../../store/apis/userApi";
+import { FiPlus} from "react-icons/fi";
 
 function ManuCertificateList() {
   const navigate = useNavigate();
@@ -123,20 +124,25 @@ function ManuCertificateList() {
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
-      <form className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto" onKeyDown={handleKeyDown}>
-      {console.log(certificateSlice)}
+      {/* <form className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto" onKeyDown={handleKeyDown}>
         <Input label="Tên chứng chỉ" type="search" placeholder="sản phẩm A" />
         <Button primary rounded className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0">
           Tìm kiếm
         </Button>
-      </form>
-      <div className="flex flex-start px-4 md:ml-12">
+      </form> */}
+      <div
+       className="flex items-end flex-col justify-between gap-2 mx-auto 
+       md:flex-row md:justify-start md:gap-2 md:items-end">
+        <div className="flex justify-center md:justify-start px-8">
         <Link to="add">
-          <Button primary rounded>
+          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+            <FiPlus size={20} className="mr-2" />
             Thêm mới chứng chỉ
-          </Button>
-        </Link>
+            </button>
+            </Link>
       </div>
+      </div>
+      
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
         {renderedCertificate}
       </div>

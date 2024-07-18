@@ -1,22 +1,20 @@
-// useCertiImage.js
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateCertiCategories,
-  removeCertiImage,
-  removeCertiImageData,
-  updateCertiAvatar,
-  updateCertiImages,
-  updateCertiImagesData,
-  resetCertiState,
-} from "../store";
 import { useEffect } from "react";
+import {
+  removeProductEditImage,
+  removeProductEditImageData,
+  updateProductEditImages,
+  updateProductEditImagesData,
+  updateProductEditAvatar,
+  resetState,
+} from "../store";
 
 let imageUrls = [];
 let imagesShow = [];
 
-export default function useCertiImage(setValue) {
+export default function useImageEditPro(setValue) {
   const dispatch = useDispatch();
-  const { images, imagesData, avatar } = useSelector((state) => state.certiForm);
+  const { images, imagesData, avatar } = useSelector((state) => state.productEditForm);
 
   const handleImages = (e) => {
     const files = Array.from(e.target.files);
@@ -47,8 +45,8 @@ export default function useCertiImage(setValue) {
         imagesShow.push(base64String);
 
         if (imageUrls.length === files.length) {
-          dispatch(updateCertiImages([...images, ...imagesShow]));
-          dispatch(updateCertiImagesData([...imagesData, ...imageUrls]));
+          dispatch(updateProductEditImages([...images, ...imagesShow]));
+          dispatch(updateProductEditImagesData([...imagesData, ...imageUrls]));
           imageUrls = [];
           imagesShow = [];
         }
@@ -59,12 +57,12 @@ export default function useCertiImage(setValue) {
   };
 
   const deleteImage = (idx) => {
-    dispatch(removeCertiImage(idx));
-    dispatch(removeCertiImageData(idx));
+    dispatch(removeProductEditImage(idx));
+    dispatch(removeProductEditImageData(idx));
   };
 
   const changeAvatar = (idx) => {
-    dispatch(updateCertiAvatar(images[idx]));
+    dispatch(updateProductEditAvatar(images[idx]));
   };
 
   const isAvatar = (image) => {
@@ -79,5 +77,5 @@ export default function useCertiImage(setValue) {
     setValue("avatar", avatar);
   }, [avatar, setValue]);
 
-  return { handleImages, deleteImage, changeAvatar, isAvatar, resetStateAction: resetCertiState };
+  return { handleImages, deleteImage, changeAvatar, isAvatar, resetStateAction: resetState };
 }

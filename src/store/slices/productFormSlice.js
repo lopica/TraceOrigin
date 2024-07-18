@@ -35,8 +35,8 @@ const productFormSlice = createSlice({
     updateForm(state, action) {
       state.form = { ...state.form, ...action.payload };
     },
-    resetState() {
-      return initialState; // Correctly returns the defined initialState
+    resetState(state) {
+      Object.assign(state, initialState);
     },
   },
 });
@@ -51,4 +51,5 @@ export const {
   updateForm,
   resetState,
 } = productFormSlice.actions;
+
 export const productFormReducer = productFormSlice.reducer;
