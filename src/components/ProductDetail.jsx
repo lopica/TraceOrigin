@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/use-toast";
+import Canvas3D from "./Canvas3D"
 
 const productConfig = [
   {
@@ -47,10 +48,16 @@ export default function ProductDetail({ productId }) {
 
   useEffect(() => {
     if (images.length > 0) {
+      const imageSlides = images.map((image, idx) => (
+        <img src={image} alt={`${name} ${idx}`} />
+      ))
       setSlides(
-        images.map((image, idx) => (
-          <img src={image} alt={`${name} ${idx}`} className="" />
-        ))
+        [...imageSlides, 
+        <div className='sm:w-[32rem] aspect-video'>
+        {/* // <div className='w-[35rem] aspect-video bg-red-300'> */}
+          <Canvas3D />
+        </div>
+        ]
       );
     }
   }, [images]);

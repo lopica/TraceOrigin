@@ -142,7 +142,7 @@ export {
   useFetchOriginByItemLogIdQuery,
   useSearchItemsQuery,
   useAddItemMutation,
-  useCheckIsCurrentOwnerQuery,
+  useCheckConsignRoleQuery,
   useSendOtpOwnerMutation,
   useSendOtpReceiverMutation,
   useCheckCurrentOwnerOTPMutation,

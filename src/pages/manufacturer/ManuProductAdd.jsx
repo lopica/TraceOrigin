@@ -349,7 +349,9 @@ function ManuProductAdd() {
                 >
                   Chọn lại
                 </Button>
-                <Canvas3D modelBase64={getValues("file3D")} />
+                <div className="h-[50svh]">
+                  <Canvas3D modelBase64={getValues("file3D")} />
+                </div>
               </div>
             )}
           </label>

@@ -4,7 +4,6 @@ import useShow from "../hooks/use-show";
 import Button from "./UI/Button";
 import { MdOutlineTransferWithinAStation } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { useCheckIsCurrentOwnerQuery } from "../store";
 import Input from "./UI/Input";
 import { useForm } from "react-hook-form";
 import { GrFormNextLink } from "react-icons/gr";
@@ -12,6 +11,7 @@ import { emailRegex } from "../services/Validation";
 import handleKeyDown from "../utils/handleKeyDown";
 import { IoIosArrowBack } from "react-icons/io";
 import AddressInputGroup from "./AddressInputGroup";
+import { useCheckConsignRoleQuery } from "../store";
 
 let form;
 export default function Consign({ productRecognition }) {
@@ -32,13 +32,14 @@ export default function Consign({ productRecognition }) {
     formState: { errors: consignFormErrors },
     setValue,
     getValues,
+    control,
   } = useForm();
 
   const {
-    isFetching: isCheckOwnerFetch,
-    isError: isCheckOwnerError,
-    isSuccess: isCheckOwnerSuccess,
-  } = useCheckIsCurrentOwnerQuery(
+    isFetching: isCheckRoleFetch,
+    isError: isCheckRoleError,
+    isSuccess: isCheckRoleSuccess,
+  } = useCheckConsignRoleQuery(
     {
       email,
       productRecognition,
@@ -55,16 +56,16 @@ export default function Consign({ productRecognition }) {
   };
 
   useEffect(() => {
-    if (isCheckOwnerSuccess) {
+    if (isCheckRoleSuccess) {
       setIsOwner(true);
       setStep("consign-info");
     }
-  }, [isCheckOwnerSuccess]);
+  }, [isCheckRoleSuccess]);
 
   if (step === "email") {
-    if (isCheckOwnerFetch) {
+    if (isCheckRoleFetch) {
       form = <span className="loading loading-spinner loading-lg"></span>;
-    } else if (isCheckOwnerError) {
+    } else if (isCheckRoleError) {
       form = (
         <p>Gặp lỗi khi kiểm tra email của bạn có đang sở hữu sản phẩm không</p>
       );
@@ -228,6 +229,7 @@ export default function Consign({ productRecognition }) {
                   register={consignFormRegister}
                   getValues={getValues}
                   setValue={setValue}
+                  control={control}
                   errors={consignFormErrors}
                 />
               </div>
