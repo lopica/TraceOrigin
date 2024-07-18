@@ -154,8 +154,8 @@ export default function Consign({ productRecognition }) {
             onSubmit={handleSubmitEmailForm(onEmailSubmit)}
           >
             <div className="w-full space-y-6 mx-auto grow flex flex-col items-center justify-center">
-              <div className="relative w-full min-h-10 pb-8 max-h-56 overflow-y-auto pr-4">
-                <div className="relative w-full min-h-10 mt-4">
+              <div className="relative w-full min-h-10 pb-8 max-h-56 overflow-y-auto">
+                <div className="relative w-full min-h-10">
                   <input
                     {...registerEmailForm("email", {
                       required: "Bạn cần nhập email",
@@ -267,8 +267,8 @@ export default function Consign({ productRecognition }) {
               />
             </figure>
             <div className="w-2/3 flex flex-col h-[50svh]">
-              <div className="container px-2 h-full flex flex-col">
-                <h2 className="text-2xl text-center pt-2">
+              <div className="container px-4 h-full flex flex-col my-4">
+                <h2 className="text-2xl text-center pb-4">
                   Giao dịch ủy quyền
                 </h2>
                 <div className="flex flex-col grow">{form}</div>
