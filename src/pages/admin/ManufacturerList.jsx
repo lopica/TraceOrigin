@@ -26,7 +26,7 @@ function VerifyManufacturer() {
     onConfirm: null,
   });
 
-  const { handleSubmit, register } = useForm({
+  const { handleSubmit, register, control } = useForm({
     mode: "onTouched",
     defaultValues: {
       nameSearch: "",
@@ -235,6 +235,7 @@ function VerifyManufacturer() {
         <Input
           label="Thành phố"
           type="select"
+          control={control}
           {...register("citySearch")}
           data={citiesData?.map(city => ({id:city.text ,  content: city.text })) || []}
           placeholder="Chọn thành phố"
@@ -242,6 +243,7 @@ function VerifyManufacturer() {
         <Input
           label="Trạng thái"
           type="select"
+          control={control}
           {...register("statusSearch")}
           data={statusData}
           placeholder="Chọn trạng thái"

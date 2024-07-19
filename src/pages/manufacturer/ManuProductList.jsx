@@ -64,11 +64,6 @@ function ManuProductList() {
   });
   const [isLoadingModal, setIsLoadingModal] = useState(false);
 
-  useEffect(() => {
-    if(role === 1){
-      navigate("/admin/ManufacturerList")
-    }
-  }, []);
 
   const searchHandler = (data) => {
     searchProduct(data);

@@ -17,6 +17,8 @@ function Login() {
     email: "",
     password: "",
   });
+  const role = useSelector(state => state.userSlice?.role?.roleId) ?? -1;
+  const user = useSelector((state) => state.userSlice);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -33,8 +35,21 @@ function Login() {
   };
 
   useEffect(()=>{
-    if (isAuthenticated) navigate("/manufacturer/products");
-  }, [isAuthenticated])
+    if (isAuthenticated && Object.keys(user).length !== 0)
+      {
+        console.log(user);
+        if(role === 1){
+          navigate("/admin/ManufacturerList")
+        }else{
+          navigate("/manufacturer/products");
+        }
+      }
+   
+  }, [isAuthenticated, user])
+
+  useEffect(()=>{
+    console.log(user);
+  }, [user])
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
