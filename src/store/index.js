@@ -148,7 +148,7 @@ export {
   useCheckCurrentOwnerOTPMutation,
   useCheckOTPMutation,
   useConsignMutation,
-  useIsConsignedQuery,
+  useIsPendingConsignQuery,
 } from "./apis/itemApi";
 export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";
 export {
