@@ -142,9 +142,10 @@ function ManuCertificateList() {
             </Link>
       </div>
       </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 justify-items-center px-8">
+      <div className="flex justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
         {renderedCertificate}
+      </div>
       </div>
       <div className="flex justify-between mr-4 px-8">
         <div>
