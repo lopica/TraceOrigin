@@ -30,7 +30,7 @@ const ActionButtonHomePage = () => {
     </Modal>
   );
   return (
-    <div className="space-y-2">
+    <div className=" p-6 space-y-2">
       <button className="w-full h-16 bg-transparent text-white text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
     <div className="flex items-center">
       <FaSearch className="mr-2" />

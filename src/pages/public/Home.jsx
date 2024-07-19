@@ -1,4 +1,4 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../components/UI/Button";
 import Modal from "../../components/UI/Modal";
@@ -45,10 +45,10 @@ function Home() {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -89,41 +89,41 @@ function Home() {
 
     // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[92svh] overflow-y-auto">
-       <div
-      className="hero"
-      style={{
-        backgroundImage: "url(/hero1.jpg)",
-        backgroundAttachment: 'fixed', // Keep background in place
-        backgroundPosition: bgPosition, // Change position based on scroll
-        backgroundSize: 'cover', // Ensure the image covers the area
-      }}
-    >
-      <div className="hero-overlay bg-opacity-80">
-        <section className="flex justify-center gap-0 md:gap-6 my-12">
-          <div className="md:w-3/5 ml-0 md:ml-16">
-            <CarouselHomePage />
-          </div>
-          <div className="md:w-2/5 flex flex-col items-center md:items-start justify-center">
-            <ActionButtonHomePage />
-          </div>
-        </section>
-      </div>
-    </div>
-      {/* ============================ */}
-      <div className="bg-[rgb(240,240,240)]">
-        <Content1HomePage />
-      </div>
-      <Content2HomePage />
-      <div className="bg-[rgb(240,240,240)]">
-        <Content3HomePage />
+      <div
+        className="hero"
+        style={{
+          backgroundImage: "url(/hero1.jpg)",
+          backgroundAttachment: "fixed", // Keep background in place
+          backgroundPosition: bgPosition, // Change position based on scroll
+          backgroundSize: "cover", // Ensure the image covers the area
+        }}
+      >
+        <div className="hero-overlay bg-opacity-50">
+          <section className="flex justify-center gap-0 md:gap-6 my-12">
+            <div className="md:w-3/5 ml-0 md:ml-16">
+              <CarouselHomePage />
+            </div>
+            <div className="md:w-2/5 flex flex-col items-center md:items-start justify-center">
+              <ActionButtonHomePage />
+            </div>
+          </section>
+        </div>
       </div>
       {/* ============================ */}
-
-      <DiagramHomePage className="w-full h-full"/>
-
       <div className="bg-[rgb(240,240,240)]">
         <ActiveMethodHomePage />
       </div>
+      <Content1HomePage />
+      <div className="bg-[rgb(240,240,240)]">
+        <Content2HomePage />
+      </div>
+
+      <Content3HomePage />
+      {/* ============================ */}
+      <div className="bg-[rgb(240,240,240)]">
+        <DiagramHomePage className="w-full h-full" />
+      </div>
+
       <Footer />
     </main>
   );
