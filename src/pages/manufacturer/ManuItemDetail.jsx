@@ -1,19 +1,24 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import "swiper/css";
 import ItemLine from "../../components/ItemLine";
 import ItemOrigin from "../../components/ItemOrigin";
 import { useLocation } from "react-router-dom";
+import Consign from "../../components/Consign";
+import useToast from "../../hooks/use-toast";
 
 export default function ItemDetail() {
   const location = useLocation();
   const productRecognition = location.pathname.split("/").pop();
   const swiperRef = useRef(null);
   const qrContainerRef = useRef(null);
+  const { getToast } = useToast();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
 
   const goToItemOrigin = () => {
     if (swiperRef.current) {
@@ -36,9 +41,17 @@ export default function ItemDetail() {
     }
   };
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      getToast("Phiên dăng nhập đã hết hạn");
+      navigate("/portal/login");
+    }
+  }, [isAuthenticated]);
+
 
   return (
-    <section>
+    <section className="relative">
+      <Consign productRecognition={productRecognition} />
       <div className="block lg:hidden">
         <Swiper
           autoHeight
@@ -56,7 +69,6 @@ export default function ItemDetail() {
                 <ItemLine
                   productRecognition={productRecognition}
                   goToItemOrigin={goToItemOrigin}
-                  add
                 />
               </div>
             </div>
@@ -72,7 +84,6 @@ export default function ItemDetail() {
             <ItemLine
               productRecognition={productRecognition}
               goToItemOrigin={goToItemOrigin}
-              add
             />
           </div>
         </div>

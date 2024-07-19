@@ -15,6 +15,7 @@ export default function AddressInputGroup({
   setValue,
   errors,
   control,
+  noValidate,
 }) {
   const dispatch = useDispatch();
   const [getCoordinate, results] = useGetCoordinateByAddressMutation();
@@ -97,7 +98,7 @@ export default function AddressInputGroup({
           control={control}
           data={provinces}
           placeholder="Tỉnh, thành phố"
-          {...register("province", {
+          {...register("province", !noValidate && {
             required: "Bạn cần chọn tỉnh, thành phố",
           })}
           addOnChange={(e) => handleInputChange("province", e)}
@@ -108,7 +109,7 @@ export default function AddressInputGroup({
           type="select"
           control={control}
           data={districts}
-          {...register("district", {
+          {...register("district", !noValidate && {
             required: "Bạn cần chọn quận, huyện",
           })}
           addOnChange={(e) => handleInputChange("district", e)}
@@ -120,7 +121,7 @@ export default function AddressInputGroup({
           type="select"
           control={control}
           data={wards}
-          {...register("ward", {
+          {...register("ward", !noValidate && {
             required: "Bạn cần chọn phường, xã",
           })}
           placeholder="Phường, xã"
@@ -129,9 +130,9 @@ export default function AddressInputGroup({
       </div>
       <Input
         type="text"
-        className="input input-bordered join-item"
+        className="input input-bordered join-item mt-0"
         placeholder="Số nhà, tên đường,..."
-        {...register("address", {
+        {...register("address", !noValidate && {
           required: "Bạn cần nhập địa chỉ cụ thể để mình định vị nhé",
         })}
         onBlur={handleAddressBlur}

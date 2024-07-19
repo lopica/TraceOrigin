@@ -19,7 +19,7 @@ const itemApi = createApi({
 
       // Determine the endpoint based on the URL or some other method
       const url = typeof input === "string" ? input : input.url;
-      if (url.includes("/search") || url.includes("/addItem")) {
+      if (url.includes("/search") || url.includes("/addItem") || url.includes("/checkEventAuthorized")) {
         // Customize fetch options for this specific endpoint
         init = {
           ...init,
@@ -45,6 +45,7 @@ const itemApi = createApi({
       }),
       //get itemlogs by productRecognition
       fetchItemLogsByProductRecognition: builder.query({
+        providesTags: ['consign'],
         query: (productRecognition) => {
           return {
             url: `/viewLineItem?productRecognition=${productRecognition}`,
@@ -120,23 +121,24 @@ const itemApi = createApi({
         }
       }),
       consign: builder.mutation({
+        invalidatesTags: ['consign'],
         query: (request) => {
           return {
             url: 'authorized',
             method: 'POST',
             body: request,
+            responseHandler: res => res.text()
           }
         }
       }),
-      // isConsigned: builder.query({
-      //   query: (request) => {
-      //     return {
-      //       url: 'checkAuthorized',
-      //       method: 'POST',
-      //       body: request,
-      //     }
-      //   }
-      // }),
+      isPendingConsign: builder.query({
+        query: (request) => {
+          return {
+            url: `checkEventAuthorized?productRecognition=${request}`,
+            method: 'POST',
+          }
+        }
+      }),
     };
   },
 });
@@ -153,5 +155,5 @@ export const {
   useCheckCurrentOwnerOTPMutation,
   useCheckOTPMutation,
   useConsignMutation,
-  useIsConsignedQuery,
+  useIsPendingConsignQuery,
 } = itemApi;

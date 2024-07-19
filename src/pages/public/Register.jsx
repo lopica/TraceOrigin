@@ -102,10 +102,6 @@ function Register() {
   };
 
   const handleRegister = (otp) => {
-    console.log({
-      ...registerForm,
-      otpVerify: otp.join(""),
-    });
     createUser({
       ...registerForm,
       otpVerify: otp.join(""),
