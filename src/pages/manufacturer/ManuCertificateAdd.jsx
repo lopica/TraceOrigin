@@ -88,8 +88,14 @@ function ManuCertificateAdd() {
             <Input
               label="Ngày cấp"
               type="date"
-              {...register("issuanceDate", { required: "Bạn cần chọn ngày cấp" })}
-              error={errors.category?.message}
+              {...register("issuanceDate", { 
+                required: "Bạn cần chọn ngày cấp",
+                validate: value => {
+                  const selectedDate = new Date(value);
+                  const currentDate = new Date();
+                  return selectedDate <= currentDate || "Ngày cấp không được lớn hơn ngày hiện tại";
+                }})}
+              error={errors.issuanceDate?.message}
             />
           </div>
           <Input

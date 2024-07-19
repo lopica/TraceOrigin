@@ -98,14 +98,32 @@ function ManuProductList() {
   const handleUpdate = (productId) => {
     setSelectedProductId(productId);
   };
+
+  const [length, setLength] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);  
   
   useEffect(() => {
-    if (productDetail) {
+    if (selectedProductId !== null && productDetail) {
       refetchDetail();
-      dispatch(updateProductEditForm(productDetail));
+      const dimensionMatch = productDetail.dimensions.match(/(\d+)cm x (\d+)cm x (\d+)cm/);
+      if (dimensionMatch) {
+        setLength(dimensionMatch[1]);
+        setWidth(dimensionMatch[2]);
+        setHeight(dimensionMatch[3]);
+      }
+      
+      const updatedProductDetail = {
+        ...productDetail,
+        length: dimensionMatch[1],
+        width: dimensionMatch[2],
+        height: dimensionMatch[3]
+      };
+
+      dispatch(updateProductEditForm(updatedProductDetail));
       setEditModalOpen(true);
     }
-  }, [productDetail, dispatch]);
+  }, [productDetail, dispatch, refetchDetail, setEditModalOpen, selectedProductId]);
   
 
   const handleDeleteApi = async (id) => {

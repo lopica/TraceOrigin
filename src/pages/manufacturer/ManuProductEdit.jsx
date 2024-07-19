@@ -121,14 +121,13 @@ const ManuProductEdit = ({ productId, closeModal }) => {
       .unwrap()
       .then(() => {
         dispatch(resetProductEditState());
-        getToast("Tạo mới thành công sản phẩm");
-        navigate("/manufacturer/products");
+        getToast("Sửa sản phẩm thành công");
+        closeModal();
       })
       .catch((err) => {
         getToast("Gặp lỗi khi tạo mới sản phẩm");
         console.log(err);
       });
-      {closeModal}
   };
 
   return (
