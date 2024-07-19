@@ -4,24 +4,26 @@ import { SiBlockchaindotcom } from "react-icons/si";
 const Content3HomePage = () => {
   return (
     <div>
-      <div className="flex flex-col md:flex-row max-w-6xl mx-auto ">
-        {/* Nửa trái:  Biểu đồ */}
+      <div className="flex flex-col md:flex-row max-w-6xl mx-auto">
+        {/* Nửa trái: Biểu đồ */}
         <div className="md:w-1/3 flex flex-col items-center justify-center text-center">
-          
           <img
-  className="rounded-lg object-cover w-64 h-64" // Thay đổi kích thước theo ý muốn
-  src="/qr1.png"
-  alt="Data Analysis Graph"
-/>
+            className="object-contain h-full w-auto"
+            src="/phone_homepage.png"
+            alt="Data Analysis Graph"
+          />
         </div>
         {/* Nửa phải: Nội dung */}
-        <div className="md:w-2/3 p-4 flex flex-col items-center justify-center  text-justify text-lg">
+        <div className="md:w-2/3 flex flex-col items-center justify-center text-justify text-lg">
           <div className="container mx-auto px-4 py-8">
-            <h2 className="text-blue-600 text-2xl font-bold mb-4">
-              Giới thiệu
-            </h2>
-            <h1 className="text-2xl font-semibold mb-2">
-              Truy xuất nguồn gốc TRACE ORIGIN
+            <img 
+              src="/logo_full.png" // Đường dẫn tới logo của hãng
+              alt="Logo"
+              className="
+               object-contain" // Điều chỉnh kích thước logo theo ý muốn
+            />
+            <h1 className="text-2xl font-semibold mb-8">
+              HỆ THỐNG TRUY XUẤT NGUỒN GỐC
             </h1>
             <p className="text-lg mb-4">
               Hệ thống của chúng tôi được thiết kế để cung cấp sản phẩm minh

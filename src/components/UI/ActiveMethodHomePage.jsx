@@ -51,7 +51,7 @@ const ActiveMethodHomePage = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 mt-10 pb-10">
+    <div className="flex flex-col items-center justify-center p-24 mt-10">
       {/* Tên nội dung */}
       <h2 className="text-3xl font-bold mb-4">Phương thức hoạt động</h2>
 
