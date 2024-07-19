@@ -6,7 +6,7 @@ const Content1HomePage = () => {
   return (
     <div className="flex flex-col items-center justify-center p-12">
       {/* Tên nội dung */}
-      <h2 className="text-3xl font-bold mb-4">
+      <h2 className="text-3xl font-bold mb-4 text-center">
         {" "}
         Dịch vụ xác thực nguồn gốc là gì?
       </h2>

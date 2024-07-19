@@ -23,7 +23,7 @@ const ChartHomePage = ({ className }) => {
         label: 'số người truy xuất nguồn gốc',
         data: dataValues,
         fill: false,
-        borderColor: 'rgba(75, 192, 192, 1)',
+        borderColor: 'rgba(43, 117, 245)',
         tension: 0.1,
       },
     ],
@@ -36,8 +36,8 @@ const ChartHomePage = ({ className }) => {
         position: 'top',
       },
       title: {
-        display: true,
-        text: 'Document Count Over Time',
+        display: false,
+        text: '',
       },
     },
   };
