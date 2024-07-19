@@ -68,6 +68,14 @@ const productApi = createApi({
           };
         },
       }),
+      countRegisteredProduct: builder.query({
+        query: () => {
+          return {
+            url: "/countRegisteredProduct",
+            method: "GET",
+          };
+        },
+      }),
     };
   },
 });
@@ -77,5 +85,6 @@ export const {
   useAddProductMutation,
   useSearchProductQuery,
   useViewProductDetailQuery,
-  useDeleteProductByIdMutation
+  useDeleteProductByIdMutation,
+  useCountRegisteredProductQuery
 } = productApi;

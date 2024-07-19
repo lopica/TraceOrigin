@@ -81,9 +81,17 @@ const userApi = createApi({
           }
         }),
       }),
+      countRegisteredUser: builder.query({
+        query: () => {
+          return{
+            url: '/countRegisteredUser',
+            method: 'GET',
+          }
+        }
+      }),
     };
   },
 });
 
 export { userApi };
-export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation } = userApi;
+export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation, useCountRegisteredUserQuery } = userApi;
