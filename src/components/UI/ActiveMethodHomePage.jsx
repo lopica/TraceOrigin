@@ -51,19 +51,21 @@ const ActiveMethodHomePage = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center p-24">
+    <div className="flex flex-col items-center justify-center p-10">
       {/* Tên nội dung */}
       <h2 className="text-3xl font-bold mb-4 text-center">Phương thức hoạt động</h2>
 
       {/* Hình ảnh */}
-      <div className="items-center p-8 overflow-x-auto w-screen">
-        <div className="flex items-center min-h-max space-x-8 min-w-[60rem] ">
+      {/* <div className="items-center p-8 overflow-x-auto w-screen"> */}
+      <div className="items-center p-8">
+
+        <div className="flex items-center min-h-max space-x-8 ">
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (
               <div
                 key={index}
-                className="flex flex-1 items-center space-x-4 text-center"
+                className="flex  items-center space-x-4 text-center"
               >
                 <div className="flex flex-col items-center min-w-[5rem]">
                   <Icon className="w-12 h-12 text-blue-500" />
