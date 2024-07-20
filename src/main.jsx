@@ -23,7 +23,7 @@ import ManuCertificateDetail from "./pages/manufacturer/ManuCertificateDetail";
 import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
-import manhTest from "./pages/admin/manhTest";
+import AdminMonitoring from "./pages/admin/AdminMonitoring;";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -69,6 +69,7 @@ function AppRouter() {
           children: [
             { path: 'manufacturerList', element: <ManufacturerList /> },
             { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
+            { path: 'adminMonitoring', element: <AdminMonitoring /> },
           ]
           }
         ,
