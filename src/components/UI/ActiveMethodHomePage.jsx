@@ -58,33 +58,13 @@ const ActiveMethodHomePage = () => {
       {/* Hình ảnh */}
       {/* <div className="items-center p-8 overflow-x-auto w-screen"> */}
       <div className="items-center p-8">
-
-        <div className="flex items-center min-h-max space-x-8 ">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={index}
-                className="flex  items-center space-x-4 text-center"
-              >
-                <div className="flex flex-col items-center min-w-[5rem]">
-                  <Icon className="w-12 h-12 text-blue-500" />
-                  <h3 className="mt-2 font-bold text-xs">{step.title}</h3>
-                  {step.description && (
-                    <p className="mt-1 text-xs text-center max-w-xs overflow-x-auto whitespace-pre-wrap min-w-0">
-                      {step.description}
-                    </p>
-                  )}
-                </div>
-                {index < steps.length - 1 && (
-                  <div>
-                    <FaArrowRight className="w-8 h-8 text-blue-500" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+      <img 
+              src="/workflow-process.png" // Đường dẫn tới logo của hãng
+              alt="Logo"
+              className="
+               object-contain" // Điều chỉnh kích thước logo theo ý muốn
+            />
+      
       </div>
     </div>
   );
