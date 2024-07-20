@@ -27,7 +27,7 @@ const Content2HomePage = () => {
   },
 ];
   return (
-    <div className="p-4">
+    <div className="p-2 md:p-24">
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto ">
         {/* Nửa trái: Nội dung */}
         <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
@@ -51,7 +51,7 @@ const Content2HomePage = () => {
           const Icon = benefit.icon;
           return (
             <div key={index} className="text-center">
-              <Icon className="w-12 h-12 mx-auto text-blue-500" />
+              <Icon className="w-12 h-12 mx-auto  text-color1" />
               <h3 className="mt-2 font-bold text-lg">{benefit.header}</h3>
               <p className="mt-1">{benefit.content}</p>
             </div>

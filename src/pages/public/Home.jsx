@@ -55,44 +55,11 @@ function Home() {
   const bgPosition = `center ${scrollY * 0.5}px`;
 
   return (
-    // <main className="h-[93svh] overflow-y-auto">
-    //   <div
-    //     className="hero h-[50svh]"
-    //     style={{ backgroundImage: "url(/hero.jpg)" }}
-    //   >
-    //     <div className="hero-overlay bg-opacity-80"></div>
-    //     <div className="hero-content text-center text-neutral-content">
-    //       <div className="max-w-md">
-    //         <h1 className="mb-5 text-5xl font-bold">TraceOrigin</h1>
-    //         <p className="mb-5">Tra cứu sản phẩm bằng hình ảnh</p>
-    //         <div className="flex gap-4 justify-center">
-    //           <Button primary onClick={handleScannerOpen} rounded>
-    //             Quét QR
-    //           </Button>
-    //           {showScanner && (
-    //             <Modal onClose={handleScannerClose}>
-    //               <div className="p-4">
-    //                 <QRCodeScanner onClose={handleScannerClose} />
-    //                 {/* <CustomUIQRCodeScanner /> */}
-    //               </div>
-    //             </Modal>
-    //           )}
-    //           <Button primary onClick={handleClick} rounded>
-    //             Nhận diện hình ảnh
-    //           </Button>
-    //           {showModal && modal}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </main>
-
-    // =================================NEW UI FOR HOME PAGE============================================
     <main className="h-[92svh] overflow-y-auto">
       <div
         className="hero"
         style={{
-          backgroundImage: "url(/hero1.jpg)",
+          backgroundImage: "url(/hero2.jpg)",
           backgroundAttachment: "fixed", // Keep background in place
           backgroundPosition: bgPosition, // Change position based on scroll
           backgroundSize: "cover", // Ensure the image covers the area

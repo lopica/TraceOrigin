@@ -10,6 +10,7 @@ export default {
       colors: {
         customSideBarHover: 'rgb(3, 131, 255)',
         customSideBarBg: 'rgb(6, 11, 24)',
+        color1: '#76BCCE',
       },
       fontFamily: {
         'roboto': ['Roboto', 'sans-serif'],

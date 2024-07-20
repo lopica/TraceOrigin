@@ -31,7 +31,7 @@ const ActionButtonHomePage = () => {
   );
   return (
     <div className=" p-6 space-y-2">
-      <button className="w-full h-16 bg-transparent text-white text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+      <button className="w-full h-16  bg-white text-black text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-color1 hover:text-white hover:border-color1">
     <div className="flex items-center">
       <FaSearch className="mr-2" />
       <span className="font-bold">TÌM KIẾM</span>
@@ -39,14 +39,14 @@ const ActionButtonHomePage = () => {
     <FaArrowRight />
   </button>
   
-  <Link to={isAuthenticated ? "/manufacturer/products" : "/portal/login"}  className="w-full h-16 bg-transparent text-white text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+  <Link to={isAuthenticated ? "/manufacturer/products" : "/portal/login"} className="w-full h-16  bg-white text-black text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-color1 hover:text-white hover:border-color1">
   <div className="flex items-center">
       <FaSignInAlt className="mr-2" />
       <span className="font-bold">ĐĂNG KÍ SẢN PHẨM | ĐĂNG NHẬP</span>
     </div>
     <FaArrowRight />
       </Link>
-  <button onClick={handleClick} className="w-full h-16 bg-transparent text-white text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+  <button onClick={handleClick}  className="w-full h-16  bg-white text-black text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-color1 hover:text-white hover:border-color1">
     <div className="flex items-center">
       <FaSearch className="mr-2" />
       <span className="font-bold mr-2">TRA CỨU SẢN PHẨM BẰNG HÌNH ẢNH </span>
@@ -54,7 +54,7 @@ const ActionButtonHomePage = () => {
     <FaArrowRight />
   </button>
   
-  <button onClick={handleScannerOpen} className="w-full h-16 bg-transparent text-white text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-blue-500 hover:text-white hover:border-blue-500">
+  <button onClick={handleScannerOpen}  className="w-full h-16  bg-white text-black text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-color1 hover:text-white hover:border-color1">
     <div className="flex items-center">
       <FaSearch className="mr-2" />
       <span className="font-bold">TRA CỨU SẢN PHẨM BẰNG QR</span>

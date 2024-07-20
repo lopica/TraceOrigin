@@ -23,7 +23,7 @@ const ChartHomePage = ({ className }) => {
         label: 'số người truy xuất nguồn gốc',
         data: dataValues,
         fill: false,
-        borderColor: 'rgba(43, 117, 245)',
+        borderColor: 'rgba(118, 188, 206)',
         tension: 0.1,
       },
     ],

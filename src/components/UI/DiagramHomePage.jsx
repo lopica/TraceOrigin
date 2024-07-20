@@ -2,7 +2,7 @@ import ChartHomePage from "./ChartHomePage";
 
 const DiagramHomePage = () => {
   return (
-    <div>
+    <div className="p-2 md:p-24">
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto p-16">
         {/* Nửa trái: Nội dung */}
         <div className="md:w-1/2 flex flex-col items-center justify-center text-center text-xl">

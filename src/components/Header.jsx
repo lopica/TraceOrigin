@@ -47,11 +47,18 @@ function Header() {
 
   if (
     !location.pathname.startsWith("/manufacturer") &&
-    !location.pathname.startsWith("/admin") 
+    !location.pathname.startsWith("/admin")
   ) {
     menuMobile = (
-      <Link to="/" className="btn btn-ghost text-xl">
-        <img src="/logo_full.png" alt="logo" />
+      <Link
+        to="/"
+        className="btn btn-ghost text-xl flex items-center justify-center w-[233px] h-[54px]"
+      >
+        <img
+          src="/logo_full.png"
+          alt="logo"
+          className="max-w-full max-h-full object-contain"
+        />
       </Link>
     );
     userContent = (
@@ -101,8 +108,15 @@ function Header() {
   const desktopHeader = (
     <div className="navbar bg-white border">
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl">
-          <img src="/logo_full.png" alt="logo" />
+        <Link
+          to="/"
+          className="btn btn-ghost text-xl flex items-center justify-center w-[233px] h-[54px]"
+        >
+          <img
+            src="/logo_full.png"
+            alt="logo"
+            className="max-w-full max-h-full object-contain"
+          />
         </Link>
       </div>
       <div className="flex-none gap-4">
