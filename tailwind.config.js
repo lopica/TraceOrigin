@@ -11,6 +11,8 @@ export default {
         customSideBarHover: 'rgb(3, 131, 255)',
         customSideBarBg: 'rgb(6, 11, 24)',
         color1: '#76BCCE',
+        color1Dark: '#5DA0B0',
+
       },
       fontFamily: {
         'roboto': ['Roboto', 'sans-serif'],

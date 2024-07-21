@@ -15,7 +15,7 @@ export default function SideBar() {
 
   return (
     <>
-      <ul className="menu bg-customSideBarBg min-h-full">
+      <ul className="menu  bg-color1 min-h-full">
         {filteredMenu.map((item, index) => {
           const Icon = item.icon;
           const hasChildren = item.children && item.children.some(child => child.role == role);
@@ -26,11 +26,11 @@ export default function SideBar() {
                 <Link
                   to={hasChildren ? "#" : item.url}
                   onClick={() => handleItemClick(index)}
-                  className={`mt-2 text-lg md:text-md focus:bg-customSideBarHover focus:text-white ${
+                  className={`mt-2 text-lg md:text-md focus:bg-color1Dark focus:text-white ${
                     selectedItem === index 
-                      ? "bg-customSideBarHover text-white"
-                      : "bg-customSideBarBg text-gray-400"
-                  } hover:text-white hover:bg-customSideBarHover`}
+                      ? "bg-color1Dark text-white"
+                      : "bg-color1 text-white"
+                  } hover:text-white hover:bg-color1Dark`}
                 >
                   <Icon className="mr-2" />
                   <span>{item.name}</span>
@@ -42,7 +42,7 @@ export default function SideBar() {
                     <li key={childItem.name}>
                       <Link
                         to={childItem.url}
-                        className="mt-2 text-md md:text-md text-gray-400 hover:text-white hover:bg-customSideBarHover"
+                        className="mt-2 text-md md:text-md text-gray-400 hover:text-white hover:bg-color1Dark"
                       >
                         <childItem.icon className="mr-2" />
                         <span>{childItem.name}</span>
