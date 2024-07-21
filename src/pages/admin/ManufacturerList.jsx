@@ -77,6 +77,15 @@ function VerifyManufacturer() {
     }
   }, [isFetching, isAuthenticated, getToast, navigate]);
 
+  useEffect(()=>{
+    if (!isError && !isFetching) {
+      if (data) {
+        console.log(data)
+        
+      }
+    }
+  },[isError, isFetching])
+
   const handleUserClick = (userId) => {
     setSelectedUserId(userId);
   };

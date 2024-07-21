@@ -35,6 +35,7 @@ function Login() {
   };
 
   useEffect(() => {
+    console.log(role)
     if (isAuthenticated && role) {
       if (role == 1) {
         console.log('vo admin')

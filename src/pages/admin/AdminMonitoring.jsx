@@ -23,12 +23,12 @@ function AdminMonitoring() {
   //   }
   // }, [isError, navigate]);
 
-  // useEffect(() => {
-  //   if (!isFetching && !isAuthenticated) {
-  //     getToast('Phiên đăng nhập đã hết hạn');
-  //     navigate("/portal/login");
-  //   }
-  // }, [isFetching, isAuthenticated, getToast, navigate]);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      getToast('Phiên đăng nhập đã hết hạn');
+      navigate("/portal/login");
+    }
+  }, [isAuthenticated, getToast, navigate]);
 
   return (
     <div className="flex border p-4">

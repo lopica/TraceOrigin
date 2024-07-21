@@ -4,10 +4,11 @@ import useAuth from "../hooks/use-auth";
 import useToast from "../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import ProfileModal from "../components/UI/userProfile";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 let avatar;
 function Avatar() {
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const { isFetching, isError, refetch } = useUser();
   const user = useSelector((state) => state.userSlice);
   const { handleLogout: logout } = useAuth();
@@ -27,6 +28,11 @@ function Avatar() {
   const handleCloseModal = () => {
     setSelectedUserId(null);
   };
+
+  useEffect(() => {
+    if (isAuthenticated) refetch();
+  }, [isAuthenticated]);
+
 
 
   if (isFetching) {
@@ -60,12 +66,16 @@ function Avatar() {
         className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
       >
         <li>
-          <a className="justify-between"
+          <a
+            className="justify-between"
             href="#"
             onClick={(e) => {
               e.preventDefault();
               handleUserClick(user.userId);
-            }}>Profile</a>
+            }}
+          >
+            Profile
+          </a>
         </li>
         <li>
           <a>Settings</a>

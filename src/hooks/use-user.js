@@ -17,8 +17,8 @@ export default function useUser() {
   }, [isAuthenticated, refetch]);
 
   useEffect(() => {
-    if (isSuccess) dispatch(updateUser(data));
-  }, [isSuccess]);
+    if (isSuccess && !isFetching) dispatch(updateUser(data));
+  }, [isSuccess, isFetching]);
 
   useEffect(() => {
     if (isError && error.status === 401) {
