@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -6,12 +6,45 @@ import { FaUsers, FaQrcode, FaRegRegistered } from 'react-icons/fa'; // Thay th�
 import { useGetNumberVisitsAllTimeQuery } from '../../store/apis/elkApi';
 import { useCountRegisteredProductQuery } from '../../store/apis/productApi';
 import { useCountRegisteredUserQuery } from '../../store/apis/userApi';
+// import SockJS from 'sockjs-client';
+import SockJS from "sockjs-client/dist/sockjs"
+
+import { over } from 'stompjs';
+var stompClient = null;
 
 const CarouselHomePage = () => {
-  const { data: number1 } = useCountRegisteredUserQuery();
-  const { data: number2 } = useGetNumberVisitsAllTimeQuery();
-  const { data: number3 } = useCountRegisteredProductQuery();
+  const [data, setData] = useState({
+    numberClient: "--",
+    numberTrace: "--",
+    numberRegisterProduct: "--"
+  });
 
+  // const { data: number1 } = useCountRegisteredUserQuery();
+  // const { data: number2 } = useGetNumberVisitsAllTimeQuery();
+  // const { data: number3 } = useCountRegisteredProductQuery();
+
+// ================socket 
+useEffect(() => {
+  let Sock = new SockJS("https://traceorigin.click/ws");
+  stompClient = over(Sock);
+  stompClient.connect({}, onConnected, onError);
+}, []);
+
+const onConnected = () => {
+
+  stompClient.subscribe('/topic/messages', onMessageReceived);
+
+  // stompClient.subscribe("/user/" + user.id + "/private", onPrivateMessage);
+  // userJoin();
+};
+const onMessageReceived = (payload) => {
+  var payloadData = JSON.parse(payload.body);
+  setData(payloadData);
+
+
+};
+
+const onError = () => {};
 
   return (
     <div className="hidden sm:block w-full max-w-full mx-auto p-6">
@@ -29,21 +62,21 @@ const CarouselHomePage = () => {
           <div className="bg-green-500 text-white p-4 rounded-lg flex items-center space-x-4 w-80">
             <FaUsers className="text-3xl" />
             <div className="flex flex-col">
-              <p className="text-2xl font-bold">{number1}</p>
+              <p className="text-2xl font-bold">{data.numberClient}</p>
               <h2 className="text-sm \text-center">Đối tác và khách hàng</h2>
             </div>
           </div>
           <div className="bg-green-500 text-white p-2 rounded-lg flex items-center space-x-4 w-80">
             <FaQrcode className="text-3xl" />
             <div className="flex flex-col">
-              <p className="text-2xl font-bold">{number2}</p>
+              <p className="text-2xl font-bold">{data.numberTrace}</p>
               <h2 className="text-sm text-center">Lượt truy xuất nguồn gốc</h2>
             </div>
           </div>
           <div className="bg-green-500 text-white p-4 rounded-lg flex items-center space-x-4 w-80">
             <FaRegRegistered className="text-3xl" />
             <div className="flex flex-col">
-              <p className="text-2xl font-bold">{number3}</p>
+              <p className="text-2xl font-bold">{data.numberRegisterProduct}</p>
               <h2 className="text-sm text-center">Sản phẩm được đăng ký</h2>
             </div>
           </div>
