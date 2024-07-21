@@ -23,7 +23,7 @@ import ManuCertificateDetail from "./pages/manufacturer/ManuCertificateDetail";
 import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
-import AdminMonitoring from "./pages/admin/AdminMonitoring;";
+import AdminMonitoring from "./pages/admin/AdminMonitoring";
 const persistor = persistStore(store);
 
 function AppRouter() {
