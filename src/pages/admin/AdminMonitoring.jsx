@@ -3,7 +3,9 @@ import ConfirmationModal from "../../components/UI/ConfirmModal";
 import { Link, useNavigate } from "react-router-dom";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
-
+import CustomerInfo from "../../components/UI/monitoring/CustomerInfo";
+import ChartHomePage from "../../components/UI/ChartHomePage";
+import PieChart from "../../components/UI/monitoring/PieChart";
 
 function AdminMonitoring() {
   const navigate = useNavigate();
@@ -29,14 +31,38 @@ function AdminMonitoring() {
   // }, [isFetching, isAuthenticated, getToast, navigate]);
 
   return (
-    <>
-      <div className="drawer md:drawer-open">
-        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col overflow-auto">
-          Hello world
+    <div className="flex border p-4">
+      <div className="w-1/2 border-r pr-4 flex flex-col justify-center items-center">
+        <div className="flex w-full justify-around gap-2">
+          <CustomerInfo
+            totalCustomers={10}
+            monthlyCustomers={12}
+            totalLabel={"Tổng số khách hàng"}
+            monthlyLabel={"Khách hàng mới trong tháng"}
+          />
+          <CustomerInfo
+            totalCustomers={10}
+            monthlyCustomers={12}
+            totalLabel={"Tổng số sản phẩm"}
+            monthlyLabel={"Sản phẩm mới trong tháng"}
+          />
         </div>
+        <div className="flex w-full justify-around">
+          <div className="w-1/2 p-4">
+            <PieChart />
+          </div>
+          <div className="w-1/2 p-4">
+            <PieChart />
+          </div>
+        </div>
+        
       </div>
-    </>
+      <div className="w-1/2 pl-4 flex flex-col justify-center items-center">
+        <ChartHomePage />
+        <ChartHomePage />
+
+      </div>
+    </div>
   );
 }
 
