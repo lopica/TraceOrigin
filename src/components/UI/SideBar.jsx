@@ -25,7 +25,7 @@ export default function SideBar() {
 
   return (
     <>
-      <ul className="menu bg-color1 min-h-full">
+      <ul className="menu mt-1 bg-color1 min-h-full">
         {filteredMenu.map((item, index) => {
           const Icon = item.icon;
           const hasChildren =
@@ -37,7 +37,7 @@ export default function SideBar() {
                 <Link
                   to={hasChildren ? "#" : item.url}
                   onClick={() => handleItemClick(index)}
-                  className={`mt-2 text-lg md:text-md focus:bg-color1Dark focus:text-white ${
+                  className={`mt-1 text-lg md:text-md focus:bg-color1Dark focus:text-white ${
                     selectedItem === index
                       ? "bg-color1Dark text-white"
                       : "bg-color1 text-white"
@@ -48,14 +48,18 @@ export default function SideBar() {
                 </Link>
               </li>
               {selectedItem === index && hasChildren && (
-                <ul className="ml-8">
+                <ul className="bg-color1Dark rounded-lg mt-1">
                   {item.children
                     .filter((childItem) => childItem.role == role)
                     .map((childItem) => (
                       <li key={childItem.name}>
                         <Link
                           to={childItem.url}
-                          className="mt-2 text-md md:text-md text-gray-400 hover:text-white hover:bg-color1Dark"
+                          className={`mt-1 text-lg md:text-md focus:bg-color1Dark focus:text-white ${
+                            selectedItem === index
+                              ? "bg-color1Dark text-white"
+                              : "bg-color1 text-white"
+                          } hover:text-white hover:bg-color1Dark`}
                         >
                           <childItem.icon className="mr-2" />
                           <span>{childItem.name}</span>
