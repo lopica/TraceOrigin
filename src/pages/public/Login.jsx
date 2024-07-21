@@ -11,19 +11,19 @@ function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { handleLogin: login, isLoginLoading } = useAuth();
-  const {isAuthenticated} = useSelector(state=>state.authSlice)
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const { getToast } = useToast();
+  const [role, setRole] = useState();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
-  const role = useSelector(state => state.userSlice?.role?.roleId) ?? -1;
-  const user = useSelector((state) => state.userSlice);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    await login(inputs).then(() => {
-      getToast('Đăng nhập thành công');
+    await login(inputs).then((res) => {
+      setRole(res);
+      getToast("Đăng nhập thành công");
     });
   };
 
@@ -34,22 +34,16 @@ function Login() {
     }));
   };
 
-  useEffect(()=>{
-    if (isAuthenticated && Object.keys(user).length !== 0)
-      {
-        console.log(user);
-        if(role === 1){
-          navigate("/admin/ManufacturerList")
-        }else{
-          navigate("/manufacturer/products");
-        }
+  useEffect(() => {
+    if (isAuthenticated && role) {
+      if (role == 1) {
+        console.log('vo admin')
+        navigate("/admin/ManufacturerList");
+      } else if (role == 2) {
+        navigate("/manufacturer/products");
       }
-   
-  }, [isAuthenticated, user])
-
-  useEffect(()=>{
-    console.log(user);
-  }, [user])
+    }
+  }, [isAuthenticated, role]);
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

@@ -50,7 +50,9 @@ function VerifyManufacturer() {
     city: ""
   });
 
-  const { data, isError, isFetching, refetch } = useGetUsersQuery(searchParams);
+  const { data, isError, isFetching, refetch } = useGetUsersQuery(searchParams, {
+    skip: !isAuthenticated
+  });
 
   const [lockUser] = useLockUserMutation();
 
@@ -61,13 +63,15 @@ function VerifyManufacturer() {
   }, [isAuthenticated, refetch]);
 
   useEffect(() => {
-    if (isError?.status === 401) {
+    if (isError?.status === 401 && !isFetching) {
+      console.log('vo error 401')
       navigate("/portal/login");
     }
   }, [isError, navigate]);
 
   useEffect(() => {
     if (!isFetching && !isAuthenticated) {
+      console.log('vo timeout')
       getToast('Phiên đăng nhập đã hết hạn');
       navigate("/portal/login");
     }

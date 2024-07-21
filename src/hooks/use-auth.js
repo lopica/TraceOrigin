@@ -35,7 +35,9 @@ export default function useAuth() {
   async function handleLogin(inputs) {
     return login(inputs)
       .unwrap()
-      .then(() => {})
+      .then((res) => {
+        return res;
+      })
       .catch((err) => console.log(err));
   }
 
