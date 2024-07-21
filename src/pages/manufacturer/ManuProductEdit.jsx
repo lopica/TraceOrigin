@@ -292,6 +292,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
             </>
             <>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4 justify-items-center">
+                {console.log(images)}
                 {images.map((image, i) => (
                   <div key={i}>
                     <ImageBox

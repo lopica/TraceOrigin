@@ -109,7 +109,7 @@ function ManuCertificateList() {
   } else if (certificateData) {
     renderedCertificate = certificateData.map((certi, idx) => (
       <div key={idx} onClick={() => handleOpenModalImage(certi.certId)}>
-        <Card card={{ image: certi.images[0], name: certi.certificateName, description: getDescription() }} />
+        <Card card={{ image: certi.images[0], name: certi.certificateName, description: getDescription(), status: 0 }} />
       </div>
     ));
   }

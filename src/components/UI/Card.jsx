@@ -36,6 +36,7 @@ function Card({ card, handleUpdate, handleDelete}) {
    //   </div>
    // </div>
    <div className="relative max-w-md mx-auto bg-white shadow-md rounded-box overflow-hidden">
+    {console.log(card)}
    <div className="md:flex">
      <div className="md:flex-shrink-0">
        <img className="h-48 w-full object-cover md:w-48" src={card.image || emptyProductImage} alt="product" />
@@ -44,27 +45,29 @@ function Card({ card, handleUpdate, handleDelete}) {
        <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
        <p className="mt-2 text-xs text-gray-500">{card.description}</p>
      </div>
-   </div>
-   <div className="absolute  bottom-3 right-3 flex space-x-2">
-     <button
+    </div>
+    {card.status === 0 && ( 
+    <div className="absolute bottom-3 right-3 flex space-x-2">
+      <button
         onClick={(e) => {
           e.preventDefault();
           handleUpdate(card.id);
         }}
-       className="text-blue-500 hover:text-blue-700"
-     >
-       <FaEdit size={20} />
-     </button>
-     <button
+        className="text-blue-500 hover:text-blue-700"
+      >
+        <FaEdit size={20} />
+      </button>
+      <button
         onClick={(e) => {
           e.preventDefault();
           handleDelete(card.id);
         }}
-       className="text-red-500 hover:text-red-700"
-     >
-       <FaTrash size={20} />
-     </button>
-   </div>
+        className="text-red-500 hover:text-red-700"
+      >
+        <FaTrash size={20} />
+      </button>
+    </div>
+  )}
  </div>
  );
 }

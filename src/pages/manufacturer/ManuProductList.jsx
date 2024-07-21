@@ -19,6 +19,7 @@ import {
   resetProductEditState,
   useViewProductDetailQuery,
 } from "../../store";
+import useUpdateImageFromApi from "../../hooks/use-update-Images-FromApi"
 
 let renderedProducts;
 function ManuProductList() {
@@ -63,7 +64,7 @@ function ManuProductList() {
     onConfirm: null,
   });
   const [isLoadingModal, setIsLoadingModal] = useState(false);
-
+  const { updateImagesFromApi } = useUpdateImageFromApi();
 
   const searchHandler = (data) => {
     searchProduct(data);
@@ -121,6 +122,7 @@ function ManuProductList() {
       };
 
       dispatch(updateProductEditForm(updatedProductDetail));
+      updateImagesFromApi(productDetail.listImages, productDetail.avatar);
       setEditModalOpen(true);
     }
   }, [productDetail, dispatch, refetchDetail, setEditModalOpen, selectedProductId]);

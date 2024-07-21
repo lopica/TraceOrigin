@@ -7,6 +7,7 @@ export const CONSTANTS = {
         {name: 'Chứng chỉ', url: '/manufacturer/certificate', icon: FaCertificate, role: '2'},
         // {name: 'Report', url: '/manufacturer/products'},
         // {name: 'Warranty', url: '/manufacturer/products'},
+        {name: 'Admin Monitor', url: '/admin/adminMonitoring', icon: FaCertificate, role: '1'},
         {
             name: 'Quản lý nhà sản xuất', role: '1',
             children: [

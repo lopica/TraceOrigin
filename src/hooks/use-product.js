@@ -49,7 +49,8 @@ export default function useProduct() {
               id: product.productId,
               name: product.productName,
               image: product.avatar,
-              description: product.description
+              description: product.description,
+              status: product.status
             };
           })         
         )
