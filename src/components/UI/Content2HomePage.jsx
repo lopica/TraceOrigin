@@ -27,12 +27,12 @@ const Content2HomePage = () => {
   },
 ];
   return (
-    <div className="p-2 md:p-24">
+    <div className="py-12 md:p-24">
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto ">
         {/* Nửa trái: Nội dung */}
         <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Lợi ích của truy xuất nguồn gốc
+          <h2 className="text-xl font-bold mb-4">
+            LỢI ÍCH CỦA TRUY XUẤT NGUỒN GỐC 
           </h2>
         </div>
         {/* Nửa phải: Biểu đồ */}

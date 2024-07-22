@@ -13,12 +13,12 @@ import {
 
 const ActiveMethodHomePage = () => {
   return (
-    <div className="flex flex-col items-center justify-center md:p-24 p-2">
+    <div className="flex flex-col items-center justify-center md:p-24 py-12">
       {/* Tên nội dung */}
-      <h2 className="text-3xl font-bold mb-4 text-center">Phương thức hoạt động</h2>
+      <h2 className="text-xl font-bold mb-4 text-center">PHƯƠNG THỨC HOẠT ĐỘNG</h2>
 
       {/* Hình ảnh */}
-      <div className="p-8 w-full overflow-x-auto md:overflow-hidden">
+      <div className="p-1 md:p-8 w-full overflow-x-auto md:overflow-hidden">
         <img 
           src="/workflow-process.png" // Đường dẫn tới logo của hãng
           alt="Logo"

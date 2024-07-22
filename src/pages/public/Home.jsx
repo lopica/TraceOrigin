@@ -77,18 +77,18 @@ function Home() {
         </div>
       </div>
       {/* ============================ */}
-      <div className="bg-[rgb(240,240,240)]">
+      <div className="bg-colorBgHomePage">
         <ActiveMethodHomePage />
       </div>
       <Content1HomePage />
-      <div className="bg-[rgb(240,240,240)]">
+      <div className="bg-colorBgHomePage">
         <Content2HomePage />
       </div>
 
       <Content3HomePage />
       {/* ============================ */}
-      <div className="bg-[rgb(240,240,240)]">
-        <DiagramHomePage className="w-full h-full" />
+      <div className="bg-colorBgHomePage">
+        {/* <DiagramHomePage className="w-full h-full" /> */}
       </div>
 
       <Footer />

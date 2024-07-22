@@ -11,6 +11,7 @@ export default {
         customSideBarHover: 'rgb(3, 131, 255)',
         customSideBarBg: 'rgb(6, 11, 24)',
         color1: '#76BCCE',
+        colorBgHomePage: '#FFFFFF',
         color1Dark: '#5DA0B0',
 
       },
