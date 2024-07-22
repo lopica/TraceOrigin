@@ -15,6 +15,7 @@ export default function ItemLine({
   productRecognition,
   add,
   goToItemOrigin,
+  goToEvent,
   showQr,
 }) {
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ export default function ItemLine({
         <QRCodeSVG
           value={`https://trace-origin.netlify.app/item?productRecognition=${productRecognition}`}
           size={200}
-          level="H"
+          level="L"
           includeMargin={true}
           className="mx-auto"
         />
@@ -91,14 +92,22 @@ export default function ItemLine({
                 {getDateFromEpochTime(log.createdAt)}
               </div>
               <div className="timeline-middle w-8 h-8">
-                <Tooltip content={<div className="flex flex-col items-start">
-                  <p>Người tham gia: {log?.partyName}</p>
-                  <p>Địa điểm: {log?.address || 'Không ghi'}</p>
-                  <p>Mô tả: {log?.description || 'Không ghi'}</p>
-                </div>}>
+                <Tooltip
+                  content={
+                    <div className="flex flex-col items-start">
+                      <p>Người tham gia: {log?.partyName}</p>
+                      <p>Địa điểm: {log?.address || "Không ghi"}</p>
+                      <p>Mô tả: {log?.description || "Không ghi"}</p>
+                    </div>
+                  }
+                >
                   <button
                     className="w-8 h-8 rounded-full bg-green-400 hover:bg-green-500"
-                    onClick={goToItemOrigin}
+                    onClick={
+                      index === 0
+                        ? goToItemOrigin
+                        : () => goToEvent(log.itemLogId)
+                    }
                   ></button>
                 </Tooltip>
               </div>

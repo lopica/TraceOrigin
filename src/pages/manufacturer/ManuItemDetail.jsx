@@ -10,17 +10,20 @@ import ItemOrigin from "../../components/ItemOrigin";
 import { useLocation } from "react-router-dom";
 import Consign from "../../components/Consign";
 import useToast from "../../hooks/use-toast";
+import ItemEvent from "../../components/ItemEvent";
 
 export default function ItemDetail() {
   const location = useLocation();
   const productRecognition = location.pathname.split("/").pop();
   const swiperRef = useRef(null);
-  const qrContainerRef = useRef(null);
   const { getToast } = useToast();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const [eventType, setEventType] = useState("origin");
+  const [currentEventId, setCurrentEventId] = useState("");
 
   const goToItemOrigin = () => {
+    setEventType("origin");
     if (swiperRef.current) {
       swiperRef.current.slideTo(1, 500); // Slide indices start at 0
     }
@@ -29,6 +32,14 @@ export default function ItemDetail() {
   const goToItemLine = () => {
     if (swiperRef.current) {
       swiperRef.current.slideTo(0, 500); // Slide indices start at 0
+    }
+  };
+
+  const goToEvent = (eventId) => {
+    setEventType("event");
+    setCurrentEventId(eventId);
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(1, 500); // Slide indices start at 0
     }
   };
 
@@ -47,7 +58,6 @@ export default function ItemDetail() {
       navigate("/portal/login");
     }
   }, [isAuthenticated]);
-
 
   return (
     <section className="relative">
@@ -69,13 +79,19 @@ export default function ItemDetail() {
                 <ItemLine
                   productRecognition={productRecognition}
                   goToItemOrigin={goToItemOrigin}
+                  goToEvent={goToEvent}
                   showQr
                 />
               </div>
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <ItemOrigin goToItemLine={goToItemLine} />
+            {eventType === "origin" && (
+              <ItemOrigin goToItemLine={goToItemLine} />
+            )}
+            {eventType === "event" && (
+              <ItemEvent goToItemLine={goToItemLine} eventId={currentEventId} />
+            )}
           </SwiperSlide>
         </Swiper>
       </div>
@@ -85,12 +101,16 @@ export default function ItemDetail() {
             <ItemLine
               productRecognition={productRecognition}
               goToItemOrigin={goToItemOrigin}
+              goToEvent={goToEvent}
               showQr
             />
           </div>
         </div>
         <div className="col-span-4">
-          <ItemOrigin goToItemLine={goToItemLine} />
+          {eventType === "origin" && <ItemOrigin goToItemLine={goToItemLine} />}
+          {eventType === "event" && (
+            <ItemEvent goToItemLine={goToItemLine} eventId={currentEventId} />
+          )}
         </div>
       </div>
     </section>

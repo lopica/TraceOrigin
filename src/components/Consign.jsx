@@ -11,6 +11,7 @@ import { emailRegex } from "../services/Validation";
 import handleKeyDown from "../utils/handleKeyDown";
 import { IoIosArrowBack } from "react-icons/io";
 import AddressInputGroup from "./AddressInputGroup";
+import { IoIosWarning } from "react-icons/io";
 import {
   useCheckConsignRoleQuery,
   useConsignMutation,
@@ -68,6 +69,8 @@ export default function Consign({ productRecognition }) {
     handleSubmit: handleSubmitConsignForm,
   } = useForm({ mode: "onTouched" });
 
+  const [consignFormData, setConsignFormData] = useState();
+
   const onEmailSubmit = (formData) => {
     console.log(formData);
     if (formData.email === guestEmail) {
@@ -79,6 +82,12 @@ export default function Consign({ productRecognition }) {
 
   const onConsignSubmit = (formData) => {
     // console.log(formData);
+    setConsignFormData(formData);
+    setStep("consign-confirm");
+  };
+
+  const consignHandler = () => {
+    const formData = consignFormData;
     let request;
     if (getValues("province")) {
       province = getValues("province").split(",");
@@ -122,10 +131,10 @@ export default function Consign({ productRecognition }) {
       delete request.address;
     }
     console.log(request);
-    consign(request)
-      .unwrap()
-      .then(() => handleClose())
-      .catch((err) => console.log(err));
+    // consign(request)
+    //   .unwrap()
+    //   .then(() => handleClose())
+    //   .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -351,6 +360,7 @@ export default function Consign({ productRecognition }) {
                     control={control}
                     errors={consignFormErrors}
                     noValidate
+                    message='Địa chỉ người nhận'
                   />
                 </div>
               </div>
@@ -396,9 +406,22 @@ export default function Consign({ productRecognition }) {
             <IoIosArrowBack />
             Quay lại
           </Button> */}
-          <p className="pl-4">
-            Hiện đang chờ phản hồi từ người được ủy quyền.
-          </p>
+          <p className="pl-4">Hiện đang chờ phản hồi từ người được ủy quyền.</p>
+        </div>
+      );
+    } else if (step === "consign-confirm") {
+      form = (
+        <div className="p-6 pt-0 flex flex-col justify-center items-center">
+        <IoIosWarning className=" fill-red-300 h-20 w-20" />
+          <p className="text-center text-2xl font-light text-slate-600">Bạn có chắc chắn với thông tin mình điền chứ?</p>
+          <div className="flex justify-center gap-8 mt-8">
+            <Button primary outline onClick={() => setStep("consign-info")} disabled={isConsignLoading}>
+              Xem lại
+            </Button>
+            <Button primary rounded onClick={consignHandler} isLoading={isConsignLoading}>
+              Ủy quyền
+            </Button>
+          </div>
         </div>
       );
     }
@@ -407,7 +430,7 @@ export default function Consign({ productRecognition }) {
     <div className="flex justify-center">
       <Button
         onClick={handleOpen}
-        className="absolute z-20 bottom-20 right-6 bg-sky-500 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-400 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
+        className="absolute z-20 bottom-24 right-6 bg-sky-500 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-400 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
       >
         <MdOutlineTransferWithinAStation className="w-8 h-8 fill-white" />
       </Button>
@@ -425,7 +448,7 @@ export default function Consign({ productRecognition }) {
             </div>
             <div className="md:w:2/3 grow md:h-auto">
               <div className="md:px-4 md:h-full flex flex-col gap-6 py-4 mx-auto px-2">
-                <h2 className="text-2xl text-center ">Giao dịch ủy quyền</h2>
+                {step !== "consign-confirm" && <h2 className="text-2xl text-center ">Giao dịch ủy quyền</h2>}
                 <div className="flex flex-col grow h-auto overflow-y-auto">
                   {form}
                 </div>

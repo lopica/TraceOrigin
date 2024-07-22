@@ -16,6 +16,7 @@ export default function AddressInputGroup({
   errors,
   control,
   noValidate,
+  message,
 }) {
   const dispatch = useDispatch();
   const [getCoordinate, results] = useGetCoordinateByAddressMutation();
@@ -93,7 +94,7 @@ export default function AddressInputGroup({
     <>
       <div className="join w-full gap-2 h-fit">
         <Input
-          label="Địa chỉ:"
+          label={message || 'Địa chỉ'}
           type="select"
           control={control}
           data={provinces}
