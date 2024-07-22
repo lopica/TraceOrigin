@@ -12,12 +12,18 @@ import { useForm } from "react-hook-form";
 
 let renderedListItem;
 export default function ItemList({ productId }) {
-  const { itemsData, isItemError, isItemFetch, error, paginate, setCurrentPage } =
-    useItem(productId);
+  const {
+    itemsData,
+    isItemError,
+    isItemFetch,
+    error,
+    paginate,
+    setCurrentPage,
+  } = useItem(productId);
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { categoriesData } = useCategory();
-  const {control, register} = useForm({mode: 'onTouched'})
+  const { control, register } = useForm({ mode: "onTouched" });
 
   const itemConfig = [
     {
@@ -67,15 +73,17 @@ export default function ItemList({ productId }) {
   } else if (isItemError) {
     renderedListItem = <p className="text-xl">Không thể tải dữ liệu nhật ký</p>;
   } else {
-    renderedListItem = (
-      <div className="w-full">
-        <SortableTable
-          data={itemsData}
-          config={itemConfig}
-          keyFn={(item) => item.itemId}
-        />
-      </div>
-    );
+    if (itemsData.length > 0) {
+      renderedListItem = (
+        <div className="w-full">
+          <SortableTable
+            data={itemsData}
+            config={itemConfig}
+            keyFn={(item) => item.itemId}
+          />
+        </div>
+      );
+    }
   }
 
   return (
@@ -99,7 +107,11 @@ export default function ItemList({ productId }) {
       {renderedListItem}
       <div className="join mt-4 flex justify-center">
         {Array.from({ length: paginate.totalPages }).map((_, idx) => (
-          <button key={idx} className="join-item btn" onClick={()=>setCurrentPage(idx)}>
+          <button
+            key={idx}
+            className="join-item btn"
+            onClick={() => setCurrentPage(idx)}
+          >
             {idx + 1}
           </button>
         ))}
