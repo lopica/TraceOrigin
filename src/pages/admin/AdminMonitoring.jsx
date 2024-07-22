@@ -19,12 +19,10 @@ function AdminMonitoring() {
   //   }
   // }, [isAuthenticated]);
 
-  // useEffect(() => {
-  //   if (isError?.status === 401) {
-  //     navigate("/portal/login");
-  //   }
-  // }, [isError, navigate]);
-  // console.log(JSON.parse(data.body));
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
 
   useEffect(() => {
     if (!isAuthenticated) {

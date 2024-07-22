@@ -7,6 +7,7 @@ import { productApi } from "./apis/productApi";
 import { toastReducer } from "./slices/toastSlice";
 import { itemApi } from "./apis/itemApi";
 import { itemLogApi } from "./apis/itemLogApi";
+import { monitoringApi } from "./apis/monitoringApi";
 import { mapApi } from "./apis/mapApi";
 import { locationApi } from "./apis/locationApi";
 import { categoryApi } from "./apis/categoryApi";
@@ -68,6 +69,7 @@ const rootReducer = combineReducers({
   [classifierApi.reducerPath]: classifierApi.reducer,
   [certificateApi.reducerPath]: certificateApi.reducer,
   [elkApi.reducerPath]: elkApi.reducer,
+  [monitoringApi.reducerPath]: monitoringApi.reducer,
 });
 
 // Apply persistReducer wrapper
@@ -99,6 +101,7 @@ const store = configureStore({
       classifierApi.middleware,
       certificateApi.middleware,
       elkApi.middleware,
+      monitoringApi.middleware,
       thunk
       // serialRequestMiddleware
     ),
