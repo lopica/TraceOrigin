@@ -1,30 +1,44 @@
 import React from "react";
 
 const CustomerInfo = ({
-  totalCustomers,
-  monthlyCustomers,
-  totalLabel,
-  monthlyLabel,
+  numberCustomer,
+  numberProduct,
+  numberCode,
+  type,
 }) => {
   return (
-    <div className="flex border p-4 bg-white rounded-box mb-2">
-      <div className="w-1/2 border-r pr-4 flex flex-col justify-between">
-        <div className="text-md font-bold text-gray-500 text-center">
-          {totalLabel}
-        </div>
-        <div className="text-2xl font-bold mt-2 text-center text-green-500">
-          {totalCustomers || "--"}
-        </div>
+<div className="flex flex-col border p-4 bg-white rounded-box mb-2 w-full">
+  <div className="text-lg font-bold text-gray-500 text-center mb-4">
+    {type}
+  </div>
+  <div className="flex">
+    <div className="w-1/3 border-r pr-4 flex flex-col justify-between">
+      <div className="text-lg  text-gray-500 text-center">
+        Khách hàng
       </div>
-      <div className="w-1/2 pl-4 flex flex-col justify-between">
-        <div className="text-sm font-bold text-gray-500 text-center">
-          {monthlyLabel}
-        </div>
-        <div className="text-2xl font-bold mt-2 text-center text-green-500">
-          {monthlyCustomers || "--"}
-        </div>
+      <div className="text-2xl font-bold mt-2 text-center text-green-500">
+        {numberCustomer || "--"}
       </div>
     </div>
+    <div className="w-1/3 border-r pl-4 pr-4 flex flex-col justify-between">
+      <div className="text-md text-gray-500 text-center">
+       Sản phẩm
+      </div>
+      <div className="text-2xl font-bold mt-2 text-center text-green-500">
+        {numberProduct || "--"}
+      </div>
+    </div>
+    <div className="w-1/3 pl-4 flex flex-col justify-between">
+      <div className="text-md= text-gray-500 text-center">
+        Mã QR
+      </div>
+      <div className="text-2xl font-bold mt-2 text-center text-green-500">
+        {numberCode || "--"}
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 };
 

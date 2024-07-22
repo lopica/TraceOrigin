@@ -6,11 +6,11 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = () => {
   const data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Cần Thơ', 'Hải Phòng', 'Huế'],
     datasets: [
       {
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
+        label: 'Số lượng người dùng',
+        data: [120, 200, 80, 60, 50, 30],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -36,5 +36,3 @@ const PieChart = () => {
 };
 
 export default PieChart;
-
-

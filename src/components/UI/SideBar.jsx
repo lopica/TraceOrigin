@@ -37,7 +37,7 @@ export default function SideBar() {
                 <Link
                   to={hasChildren ? "#" : item.url}
                   onClick={() => handleItemClick(index)}
-                  className={`mt-1 text-lg md:text-md focus:bg-color1Dark focus:text-white ${
+                  className={`mt-1 text-md focus:bg-color1Dark focus:text-white ${
                     selectedItem === index
                       ? "bg-color1Dark text-white"
                       : "bg-color1 text-white"
@@ -55,7 +55,7 @@ export default function SideBar() {
                       <li key={childItem.name}>
                         <Link
                           to={childItem.url}
-                          className={`mt-1 text-lg md:text-md focus:bg-color1Dark focus:text-white ${
+                          className={`mt-1 text-md focus:bg-color1Dark focus:text-white ${
                             selectedItem === index
                               ? "bg-color1Dark text-white"
                               : "bg-color1 text-white"

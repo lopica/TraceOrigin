@@ -36,20 +36,22 @@ function AdminMonitoring() {
   return (
     <div className="flex border p-4">
       <div className="w-1/2 border-r pr-4 flex flex-col justify-center items-center">
-        <div className="flex w-full justify-around gap-2">
+
+        {/* <div className="flex w-full justify-around gap-2"> */}
           <CustomerInfo
-            totalCustomers={10}
-            monthlyCustomers={12}
-            totalLabel={"Tổng số khách hàng"}
-            monthlyLabel={"Khách hàng mới trong tháng"}
+            numberCustomer={10}
+            numberProduct={12}
+            numberCode={12}
+            type={"Tổng"}
           />
           <CustomerInfo
-            totalCustomers={10}
-            monthlyCustomers={12}
-            totalLabel={"Tổng số sản phẩm"}
-            monthlyLabel={"Sản phẩm mới trong tháng"}
+          numberCustomer={10}
+            numberProduct={12}
+            numberCode={12}
+            type={"Tổng mới trong tháng"}
           />
-        </div>
+
+        {/* </div> */}
         <div className="flex w-full justify-around">
           <div className="w-1/2 p-4">
             <PieChart />
