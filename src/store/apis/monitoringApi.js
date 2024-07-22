@@ -9,7 +9,7 @@ const pause = (duration) => {
 };
 
 const monitoringApi = createApi({
-  reducerPath: "product",
+  reducerPath: "monitoring",
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/monitoring`,
     credentials: "include",
