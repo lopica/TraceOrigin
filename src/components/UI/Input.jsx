@@ -127,19 +127,19 @@ const Input = React.forwardRef(
     return (
       <>
         {unit ? (
-          <label className="form-control w-fit max-w-sm">
-            <div className="label">
+          <label className="form-control w-fit">
+            {label && <div className="label">
               <div className="tooltip" data-tip={tooltip}>
                 <span className="label-text text-base">{label}</span>
               </div>
-            </div>
+            </div>}
             <label className="input input-bordered flex items-center gap-2">
               <input
                 ref={inputRef}
                 {...props}
                 onChange={handleInputChange}
                 onBlur={onBlur}
-                className="max-w-xl invalid:input-bordered"
+                className="invalid:input-bordered"
               />
               <span className="badge">{unit}</span>
             </label>
@@ -153,11 +153,11 @@ const Input = React.forwardRef(
           </label>
         ) : (
           <label className="form-control w-full">
-            <div className="label">
+            {label && <div className="label">
               <div className="tooltip" data-tip={tooltip}>
                 <span className="label-text text-base">{label}</span>
               </div>
-            </div>
+            </div>}
             <input
               ref={inputRef}
               {...props}

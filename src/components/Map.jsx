@@ -24,24 +24,25 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
 
-const Map = ({ location, setValue }) => {
-  const mapRef = useRef();
+const AddNoSwipingClass = () => {
+  const map = useMap();
 
   useEffect(() => {
-    // Once the map is mounted, add the `noSwiping` class to the container
-    if (mapRef.current) {
-      const mapContainer = mapRef.current.getContainer();
-      mapContainer.classList.add("swiper-no-swiping"); // Adjust class name based on your swiper setup
-    }
-  }, [mapRef.current]);
+    const mapContainer = map.getContainer();
+    mapContainer.classList.add("swiper-no-swiping");
+  }, [map]);
 
+  return null;
+};
+
+const Map = ({ location, setValue }) => {
   return (
     <MapContainer
       center={location || [0, 0]}
       zoom={20}
       style={{ height: "40svh", width: "100%", marginTop: "2rem", zIndex: "0" }}
-      ref={mapRef}
     >
+      <AddNoSwipingClass />
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -59,13 +60,13 @@ const LocationMarker = ({ location, setValue }) => {
   useMapEvents({
     click(e) {
       dispatch(updateCoordinate({ lat: e.latlng.lat, lng: e.latlng.lng }));
-      //update address base on new mark
+      // Update address based on new mark
       setValue &&
         getAddress({ lat: e.latlng.lat, lng: e.latlng.lng })
           .unwrap()
           .then((res) => {
-            const newaddress = res[0].formatted.split(",");
-            setValue("address", newaddress[0]);
+            const newAddress = res[0].formatted.split(",");
+            setValue("address", newAddress[0]);
             dispatch(updateNewAddress(results.isLoading));
             console.log(res[0].formatted);
           })
@@ -78,7 +79,7 @@ const LocationMarker = ({ location, setValue }) => {
 
   useEffect(() => {
     dispatch(updateNewAddress(results.isLoading));
-  }, [results]);
+  }, [results, dispatch]);
 
   useEffect(() => {
     if (location) {

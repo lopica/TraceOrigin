@@ -39,7 +39,7 @@ const QRCodeScanner = () => {
     }
   };
 
-  const handleSuccess = (decodedText) => {
+  const handleSuccess = (decodedText , _) => {
     console.log(decodedText);
     const url = new URL(decodedText);
     const productRecognition = url.searchParams.get("productRecognition");
@@ -55,8 +55,8 @@ const QRCodeScanner = () => {
   const scanQRCode = (imageSrc) => {
     const html5QrCode = new Html5Qrcode("qr-reader");
     html5QrCode
-      .scanFile(imageSrc, true)
-      .then((decodedText) => {
+      .scanFileV2(imageSrc, true)
+      .then(({decodedText}) => {
         handleSuccess(decodedText);
         setImageLoaded(true);
       })
@@ -108,6 +108,7 @@ const QRCodeScanner = () => {
         cameraType || { facingMode: "environment" },
         config,
         (decodedText, _) => {
+          console.log(decodedText)
           handleSuccess(decodedText);
         }
       );
@@ -171,10 +172,14 @@ const QRCodeScanner = () => {
                 <ul className="pl-8 flex gap-4 mt-2">
                   {qrList.map((qr) => (
                     <Link key={qr.id} to={qr.url}>
-                      <Button secondary rounded>{qr.id}</Button>
+                      <Button secondary rounded>
+                        {qr.id}
+                      </Button>
                     </Link>
                   ))}
-                  {qrList.length === 0 && <p>Bạn chưa tìm kiếm sản phẩm nào.</p>}
+                  {qrList.length === 0 && (
+                    <p>Bạn chưa tìm kiếm sản phẩm nào.</p>
+                  )}
                 </ul>
               </div>
             </>
@@ -263,7 +268,7 @@ const QRCodeScanner = () => {
           <div className="flex flex-col sm:flex-row pb-4">
             <div className="flex-1 max-w-full sm:max-w-[50%]">
               <div className="relative w-full bg-sky-200">
-                <div id={qrCodeRegionId}></div>
+                <div id={qrCodeRegionId} ></div>
               </div>
               <select
                 className="mt-2 block w-full text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
@@ -275,21 +280,23 @@ const QRCodeScanner = () => {
                 ))}
               </select>
             </div>
-            <div className="flex-1 mx-auto sm:max-w-md lg:max-w-sm">
-              <h3 className="text-center text-3xl mb-6">{qrCodeData}</h3>
-              <div className="flex justify-between gap-2 mx-2">
-                <div className="flex ">
-                  <div className="flex flex-col">
-                    <div className="stat-title">Mã sản phẩm</div>
-                    <div className="font-medium">{item.itemId}</div>
+            {item.itemId && (
+              <div className="flex-1 mx-auto sm:max-w-md lg:max-w-sm">
+                <h3 className="text-center text-3xl mb-6">{qrCodeData}</h3>
+                <div className="flex justify-between gap-2 mx-2">
+                  <div className="flex ">
+                    <div className="flex flex-col">
+                      <div className="stat-title">Mã sản phẩm</div>
+                      <div className="font-medium">{item.itemId}</div>
+                    </div>
+                    <div className="stat-figure text-secondary"></div>
                   </div>
-                  <div className="stat-figure text-secondary"></div>
+                  <p className="underline cursor-pointer">
+                    {item.manufacturerName}
+                  </p>
                 </div>
-                <p className="underline cursor-pointer">
-                  {item.manufacturerName}
-                </p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

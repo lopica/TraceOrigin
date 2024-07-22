@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CONSTANTS } from "../../services/Constants";
 
 // DEV ONLY!!!
 const pause = (duration) => {
@@ -10,11 +11,11 @@ const pause = (duration) => {
 const itemLogApi = createApi({
     reducerPath: 'itemLog',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/itemlog',
+        baseUrl: `${CONSTANTS.domain}/itemlog`,
         // credentials: 'include',
         fetchFn: async (input, init, ...args) => {
             // REMOVE FOR PRODUCTION
-            await pause(3000);
+            // await pause(3000);
 
             // Determine the endpoint based on the URL or some other method
             // const url = typeof input === 'string' ? input : input.url;
