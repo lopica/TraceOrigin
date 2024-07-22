@@ -15,9 +15,12 @@ let imagesShow = [];
 
 export default function useImage(setValue) {
   const dispatch = useDispatch();
-  const { images, imagesData, avatar } = useSelector((state) => state.productForm);
+  const { images, imagesData, avatar } = useSelector(
+    (state) => state.productForm
+  );
 
   const handleImages = (e) => {
+    console.log("vo day");
     const files = Array.from(e.target.files);
 
     if (files.length === 0) {
@@ -25,7 +28,8 @@ export default function useImage(setValue) {
       return;
     }
 
-    const totalSize = files.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024;
+    const totalSize =
+      files.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024;
 
     if (totalSize > 25) {
       alert("Tổng kích thước của tất cả các file phải ít hơn là 25 MB.");
@@ -55,6 +59,7 @@ export default function useImage(setValue) {
 
       reader.readAsDataURL(file);
     });
+    e.target.value = null;
   };
 
   const deleteImage = (idx) => {
@@ -63,12 +68,21 @@ export default function useImage(setValue) {
   };
 
   const changeAvatar = (idx) => {
-    dispatch(updateAvatar(images[idx]));
+    dispatch(
+      updateAvatar({
+        avatar: images[idx],
+        idx,
+      })
+    );
   };
 
   const isAvatar = (image) => {
     return image === avatar;
   };
+
+  useEffect(() => {
+    console.log(imagesData);
+  }, [imagesData]);
 
   useEffect(() => {
     setValue("images", imagesData);
@@ -78,5 +92,11 @@ export default function useImage(setValue) {
     setValue("avatar", avatar);
   }, [avatar, setValue]);
 
-  return { handleImages, deleteImage, changeAvatar, isAvatar, resetStateAction: resetState };
+  return {
+    handleImages,
+    deleteImage,
+    changeAvatar,
+    isAvatar,
+    resetStateAction: resetState,
+  };
 }

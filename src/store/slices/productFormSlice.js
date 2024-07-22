@@ -8,6 +8,7 @@ const initialState = {
   imagesData: [],
   avatar: "",
   form: {},
+  avatarIdx: '',
 };
 
 const productFormSlice = createSlice({
@@ -19,6 +20,10 @@ const productFormSlice = createSlice({
     },
     removeImage(state, action) {
       state.images = state.images.filter((_, index) => index !== action.payload);
+      if(state.avatarIdx === action.payload) {
+        state.avatarIdx = '';
+        state.avatar = '';
+      }
     },
     removeImageData(state, action) {
       state.imagesData = state.imagesData.filter((_, index) => index !== action.payload);
@@ -30,7 +35,8 @@ const productFormSlice = createSlice({
       state.imagesData = action.payload;
     },
     updateAvatar(state, action) {
-      state.avatar = action.payload;
+      state.avatar = action.payload.avatar;
+      state.avatarIdx = action.payload.idx;
     },
     updateForm(state, action) {
       state.form = { ...state.form, ...action.payload };

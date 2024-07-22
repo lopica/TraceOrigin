@@ -6,10 +6,20 @@ import { FaPlus } from "react-icons/fa";
 import { twMerge } from "tailwind-merge";
 import className from "classnames";
 import useImage from "../../hooks/use-image";
-import useCertiImage from "../../hooks/use-image-certi"; 
-import useImageEditPro from "../../hooks/use-image-editPro"
+import useCertiImage from "../../hooks/use-image-certi";
+import useImageEditPro from "../../hooks/use-image-editPro";
 
-function ImageBox({ image, actionBar, show, add, idx, setValue, isCer = false, isEditPro = false, ...props }) {
+function ImageBox({
+  image,
+  actionBar,
+  show,
+  add,
+  idx,
+  setValue,
+  isCer = false,
+  isEditPro = false,
+  ...props
+}) {
   const {
     show: showModal,
     handleOpen: handleClick,
@@ -17,18 +27,19 @@ function ImageBox({ image, actionBar, show, add, idx, setValue, isCer = false, i
   } = useShow(false);
   let imageProps = {};
 
-
-if(isEditPro)
-{
-  imageProps = useImageEditPro(setValue)
-}else if(isCer){
-  imageProps = useCertiImage(setValue)
-}
-else
-{
-  imageProps = useImage(setValue);
-}
-const { handleImages: addImage, deleteImage, changeAvatar, isAvatar } = imageProps;
+  if (isEditPro) {
+    imageProps = useImageEditPro(setValue);
+  } else if (isCer) {
+    imageProps = useCertiImage(setValue);
+  } else {
+    imageProps = useImage(setValue);
+  }
+  const {
+    handleImages: addImage,
+    deleteImage,
+    changeAvatar,
+    isAvatar,
+  } = imageProps;
   const fileInputRef = useRef(null);
 
   const triggerFileInput = () => {
@@ -72,7 +83,7 @@ const { handleImages: addImage, deleteImage, changeAvatar, isAvatar } = imagePro
 
   return (
     <>
-    {console.log('tessttttttt:'+isEditPro + ' va' + isCer)}
+      {console.log("tessttttttt:" + isEditPro + " va" + isCer)}
       {add ? (
         <div className={classes} onClick={triggerFileInput}>
           <FaPlus className="text-2xl fill-white" />
@@ -89,7 +100,9 @@ const { handleImages: addImage, deleteImage, changeAvatar, isAvatar } = imagePro
       ) : (
         <div className="indicator">
           {isAvatar(image) && (
-            <span className="indicator-item indicator-center badge badge-info">Ảnh chính</span>
+            <span className="indicator-item indicator-center badge badge-info">
+              Ảnh chính
+            </span>
           )}
           <img src={image} className={classes} onClick={handleClick} />
           {showModal && modal}
