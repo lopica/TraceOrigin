@@ -24,9 +24,10 @@ import { serialRequestMiddleware } from "./serialRequestMiddleware";
 import { productSliceReducer } from "./slices/productSlice";
 import { itemSliceReducer } from "./slices/itemSlice";
 import { certificateSliceReducer } from "./slices/certificateSlice";
-import {productEditFormReducer} from "./slices/productEditFormSlice";
+import { productEditFormReducer } from "./slices/productEditFormSlice";
 import { elkApi } from "../store/apis/elkApi";
-import {thunk} from 'redux-thunk';
+import { thunk } from "redux-thunk";
+import { historySearchSliceReducer } from "./slices/historySeach";
 
 // Define the persist configuration
 const persistConfig = {
@@ -38,7 +39,8 @@ const persistConfig = {
     "userSlice",
     "productForm",
     "certiForm",
-    "productEditForm"
+    "productEditForm",
+    // 'historySearchSlice',
   ],
 };
 
@@ -54,6 +56,7 @@ const rootReducer = combineReducers({
   itemSlice: itemSliceReducer,
   certificateSlice: certificateSliceReducer,
   productEditForm: productEditFormReducer,
+  historySearchSlice: historySearchSliceReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -96,7 +99,7 @@ const store = configureStore({
       classifierApi.middleware,
       certificateApi.middleware,
       elkApi.middleware,
-      thunk,
+      thunk
       // serialRequestMiddleware
     ),
 });
@@ -106,13 +109,14 @@ setupListeners(store.dispatch);
 const persistor = persistStore(store);
 
 export { store, persistor };
+export { updateQRList, updateAIList } from "./slices/historySeach";
 export {
   useCreateUserMutation,
   useLoginMutation,
   useLogoutMutation,
   useSendOtpMutation,
   useCheckEmailExistMutation,
-  useForgotPasswordMutation
+  useForgotPasswordMutation,
 } from "./apis/authApi";
 export {
   useFetchUserQuery,
@@ -125,7 +129,7 @@ export {
   useAddProductMutation,
   useSearchProductQuery,
   useViewProductDetailQuery,
-  useDeleteProductByIdMutation
+  useDeleteProductByIdMutation,
 } from "./apis/productApi";
 export { showToast, hideToast } from "./slices/toastSlice";
 export { updateRegisterForm } from "./slices/registerFormSlice";
@@ -161,7 +165,7 @@ export { usePredictMutation } from "./apis/classifierApi";
 export {
   useGetCoordinateByAddressMutation,
   useGetAddressByCoordinateMutation,
-  useGetAllDistinctCityQuery
+  useGetAllDistinctCityQuery,
 } from "./apis/mapApi";
 export {
   updateCategories,
@@ -181,7 +185,7 @@ export {
   updateCertiImagesData,
   updateCertiAvatar,
   updateCertiForm,
-  resetCertiState
+  resetCertiState,
 } from "./slices/certiFormSlice";
 export {
   updateProductEditCategories,
@@ -195,17 +199,23 @@ export {
 } from "./slices/productEditFormSlice";
 export { requireLogin, loginSuccess } from "./slices/authSlice";
 export { updateUser } from "./slices/userSlice";
-export {updateCategorySearch, updateList, updateNameSearch, updateProductDetail} from './slices/productSlice';
-export {updateItemDetail, updateItemList, updateItemLine} from './slices/itemSlice'
 export {
-  useGetListManuToVerifyQuery, 
-  useGetListCertificateByManuIdQuery, 
-  useAddCertificateMutation, 
+  updateCategorySearch,
+  updateList,
+  updateNameSearch,
+  updateProductDetail,
+} from "./slices/productSlice";
+export {
+  updateItemDetail,
+  updateItemList,
+  updateItemLine,
+} from "./slices/itemSlice";
+export {
+  useGetListManuToVerifyQuery,
+  useGetListCertificateByManuIdQuery,
+  useAddCertificateMutation,
   useGetCertificateByIdQuery,
-  useSendRequestVerifyCertMutation, 
-  useDeleteCertCertIdMutation} from "./apis/certificateApi";
-export {
-  useGetNumberVisitsAllTimeQuery,} from "./apis/elkApi";
-
-
-
+  useSendRequestVerifyCertMutation,
+  useDeleteCertCertIdMutation,
+} from "./apis/certificateApi";
+export { useGetNumberVisitsAllTimeQuery } from "./apis/elkApi";

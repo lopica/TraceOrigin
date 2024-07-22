@@ -69,6 +69,7 @@ export default function ItemDetail() {
                 <ItemLine
                   productRecognition={productRecognition}
                   goToItemOrigin={goToItemOrigin}
+                  showQr
                 />
               </div>
             </div>
@@ -84,6 +85,7 @@ export default function ItemDetail() {
             <ItemLine
               productRecognition={productRecognition}
               goToItemOrigin={goToItemOrigin}
+              showQr
             />
           </div>
         </div>

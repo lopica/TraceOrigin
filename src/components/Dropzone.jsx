@@ -3,12 +3,13 @@ import { useDropzone } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
 import { RiFolderUploadFill } from "react-icons/ri";
 
-function Dropzone({ className, setImageUrl }) {
+function Dropzone({ className, setImageUrl, scanQr }) {
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       const url = URL.createObjectURL(file);
       setImageUrl(url);
+      scanQr && scanQr(file)
     }
   }, []);
 
@@ -21,6 +22,7 @@ function Dropzone({ className, setImageUrl }) {
     },
     maxFiles: 1,
     multiple: false,
+    
   });
 
   const classes = twMerge(
