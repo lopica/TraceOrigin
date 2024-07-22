@@ -6,11 +6,13 @@ import { useSelector } from "react-redux";
 import CustomerInfo from "../../components/UI/monitoring/CustomerInfo";
 import ChartHomePage from "../../components/UI/ChartHomePage";
 import PieChart from "../../components/UI/monitoring/PieChart";
+import { useAdminQuery } from '../../store/apis/monitoringApi';
 
 function AdminMonitoring() {
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const { data } = useAdminQuery();
 
   // useEffect(() => {
   //   if (isAuthenticated) {
@@ -22,6 +24,7 @@ function AdminMonitoring() {
   //     navigate("/portal/login");
   //   }
   // }, [isError, navigate]);
+  // console.log(JSON.parse(data.body));
 
   useEffect(() => {
     if (!isAuthenticated) {
