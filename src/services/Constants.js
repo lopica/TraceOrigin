@@ -1,4 +1,4 @@
-import { FaProductHunt, FaCertificate, FaUserCog, FaCheckCircle, FaChartLine } from 'react-icons/fa';
+import { FaProductHunt, FaCertificate, FaUserCog, FaCheckCircle, FaChartLine, FaInfo } from 'react-icons/fa';
 
 export const CONSTANTS = {
     brand: 'TraceOrigin',
@@ -15,7 +15,8 @@ export const CONSTANTS = {
                 {name: 'Xác minh nhà sản xuất', url: '/admin/VerifyManufacturers',  icon: FaCheckCircle , role: '1'}
             ],
             icon: FaUserCog
-        }
+        },
+        {name: 'Xem báo cáo', url: '/manufacturer/reportManager', icon: FaInfo, role: '2'},
     ],
     openCage_API_KEY: '322f7bf039244925a233610a1e61360a',
     domain: 'https://traceorigin.click/api',

@@ -24,6 +24,7 @@ import Item from "./pages/public/Item";
 import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
 import AdminMonitoring from "./pages/admin/AdminMonitoring";
+import ManuReportManager from "./pages/manufacturer/ManuReportManager";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -62,6 +63,8 @@ function AppRouter() {
             { path: "products/:productId", element: <ManuProductDetail /> },
             { path: "products/add", element: <ManuProductAdd /> },
             { path: "products/:productId/:itemId", element: <ManuItemDetail /> },
+            { path: "reportManager", element: <ManuReportManager /> },
+            { path: "reportManager/:id", element: <ManuReportManager />}
           ],
         },
         {

@@ -46,7 +46,7 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
         <div className="fixed inset-0 bg-black bg-opacity-75 z-40"></div>
         <dialog id="carousel_modal" className="modal fixed inset-0 z-50 flex items-center justify-center" open>
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-5xl mx-auto flex" style={{ width: '840px' }}>
-            <div style={{ backgroundColor: 'rgb(6, 11, 24)' }} className="w-1/3 p-4">
+            <div  className="w-1/3 p-4 bg-color1">
               <h3 className="text-white text-xl mb-4">Chứng chỉ</h3>
               <ul></ul>
             </div>
@@ -101,21 +101,21 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
       <dialog id="carousel_modal" className="modal fixed inset-0 z-50 flex items-center justify-center" open>
         <div className="relative bg-white rounded-lg shadow-lg w-full max-w-5xl mx-auto flex flex-col" style={{ width: '840px' }}>
           <div className="flex w-full">
-            <div style={{ backgroundColor: 'rgb(6, 11, 24)' }} className="w-1/3 p-4 space-y flex flex-col justify-between">
+            <div className="w-1/3 p-4 space-y flex flex-col justify-between bg-color1">
               <div>
                 <h3 className="text-white text-xl mb-4">Chứng chỉ</h3>
                 <ul>
                   {certificates.map((cert) => (
                     <li key={cert.certId} className="mb-2">
                       <button
-                        className={`w-full text-left p-2 rounded ${selectedCertId === cert.certId ? 'bg-sky-700 text-white' : 'text-gray-300'}`}
+                        className={`w-full text-left p-2 rounded ${selectedCertId === cert.certId ? 'bg-color1Dark text-white' : 'text-white'}`}
                         onClick={() => {
                           setSelectedCertId(cert.certId);
                         }}
                       >
                         <div>{cert.certificateName}</div>
-                        <div className="text-sm text-gray-400">Cơ quan cấp: {cert.issuingAuthority}</div>
-                        <div className="text-sm text-gray-400">Ngày cấp: {formatDate(cert.issuanceDate)}</div>
+                        <div className="text-sm text-gray-300">Cơ quan cấp: {cert.issuingAuthority}</div>
+                        <div className="text-sm text-gray-300">Ngày cấp: {formatDate(cert.issuanceDate)}</div>
 
                       </button>
                     </li>
@@ -129,7 +129,7 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
                   ) : (
                     <button
                       type="button"
-                      className="btn btn-success w-full"
+                      className="btn btn-success w-full text-white"
                       onClick={handleAccept}
                     >
                       Phê duyệt
@@ -140,7 +140,7 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
                   ) : (
                     <button
                       type="button"
-                      className="btn btn-error mt-2 w-full"
+                      className="btn btn-error mt-2 w-full text-white"
                       onClick={handleReject}
                     >
                       Từ chối
