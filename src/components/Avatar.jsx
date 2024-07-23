@@ -4,6 +4,7 @@ import useAuth from "../hooks/use-auth";
 import useToast from "../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import ProfileModal from "../components/UI/userProfile";
+import ChangePassword from "../components/UI/ChangePassword";
 import React, { useEffect, useState } from "react";
 
 let avatar;
@@ -14,6 +15,7 @@ function Avatar() {
   const { handleLogout: logout } = useAuth();
   const { getToast } = useToast();
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   async function handleLogout() {
     await logout().then(() => {
@@ -29,11 +31,17 @@ function Avatar() {
     setSelectedUserId(null);
   };
 
+  const handleOpenChangePassword = () => {
+    setIsChangePasswordOpen(true);
+  };
+
+  const handleCloseChangePassword = () => {
+    setIsChangePasswordOpen(false);
+  };
+
   useEffect(() => {
     if (isAuthenticated) refetch();
   }, [isAuthenticated]);
-
-
 
   if (isFetching) {
     avatar = <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
@@ -78,7 +86,15 @@ function Avatar() {
           </a>
         </li>
         <li>
-          <a>Settings</a>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              handleOpenChangePassword();
+            }}
+          >
+            Change Password
+          </a>
         </li>
         <li>
           <a onClick={handleLogout}>Logout</a>
@@ -86,6 +102,9 @@ function Avatar() {
       </ul>
       {selectedUserId && (
         <ProfileModal userId={selectedUserId} closeModal={handleCloseModal} />
+      )}
+      {isChangePasswordOpen && (
+        <ChangePassword isOpen={isChangePasswordOpen} onClose={handleCloseChangePassword} />
       )}
     </div>
   );

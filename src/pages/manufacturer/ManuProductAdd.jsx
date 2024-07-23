@@ -59,6 +59,17 @@ function ManuProductAdd() {
     defaultValues: { ...form },
   });
 
+  const user = useSelector((state) => state.userSlice);
+
+  
+  useEffect(() => {
+    console.log(user.status);
+    if (user.status !== 1) { 
+      getToast('Bạn không có quyền thêm mới sản phẩm');
+      navigate("/manufacturer/products");
+    }
+  }, [user]);
+
   const onDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];

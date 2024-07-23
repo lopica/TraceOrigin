@@ -11,6 +11,7 @@ import useToast from "../../hooks/use-toast";
 import CarouselModal from '../../components/UI/CarouselModal';
 import { useGetUserDetailQuery } from "../../store/apis/userApi";
 import { FiPlus} from "react-icons/fi";
+import useUser from "../../hooks/use-user";
 
 function ManuCertificateList() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ function ManuCertificateList() {
   const [page, setPage] = useState(0);
   const [sendRequestVerifyCert, { isLoading: isSendingRequest }] = useSendRequestVerifyCertMutation();
   const [deleteCertCertId] = useDeleteCertCertIdMutation();
+  const { isFetching, isError, refetch } = useUser();
 
   const { isFetching: isCertificateFetching, isError: isCertificateError, data: certificateData, refetch: refetchCertificates } = useGetListCertificateByManuIdQuery(userIdList, { skip: !userIdList });
 
@@ -60,6 +62,7 @@ function ManuCertificateList() {
   const handleRequestVerifyCert = async () => {
     try {
       await sendRequestVerifyCert().unwrap();
+      refetch();
       refetchUserDetail();
       getToast('Yêu cầu xác thực thành công!');
     } catch (err) {
@@ -109,7 +112,7 @@ function ManuCertificateList() {
   } else if (certificateData) {
     renderedCertificate = certificateData.map((certi, idx) => (
       <div key={idx} onClick={() => handleOpenModalImage(certi.certId)}>
-        <Card card={{ image: certi.images[0], name: certi.certificateName, description: getDescription(), status: 0 }} />
+        <Card card={{ image: certi.images[0], name: certi.certificateName, description: getDescription(), status: (userStatus === 7 || userStatus === 0) ? 0 : 1 }} />
       </div>
     ));
   }
@@ -120,6 +123,15 @@ function ManuCertificateList() {
         Yêu cầu xác thực
       </Button>
     </div>
+  );
+
+  const addNewButton = (userStatus === 7 || userStatus === 0) && (
+      <Link to="add">
+          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+            <FiPlus size={20} className="mr-2" />
+            Thêm mới chứng chỉ
+          </button>
+      </Link>
   );
 
   return (
@@ -134,12 +146,7 @@ function ManuCertificateList() {
        className="flex items-end flex-col justify-between gap-2 mx-auto 
        md:flex-row md:justify-start md:gap-2 md:items-end">
         <div className="flex justify-center md:justify-start px-8">
-        <Link to="add">
-          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
-            <FiPlus size={20} className="mr-2" />
-            Thêm mới chứng chỉ
-            </button>
-            </Link>
+        {addNewButton}
       </div>
       </div>
       <div className="flex justify-center">

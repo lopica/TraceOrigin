@@ -31,6 +31,17 @@ function ManuCertificateAdd() {
     mode: "onTouched",
     defaultValues: { ...form },
   });
+  const user = useSelector((state) => state.userSlice);
+
+  
+  useEffect(() => {
+    console.log(user.status);
+    if (user.status !== 0 || user.status !== 7) { 
+      getToast('Bạn không thể thêm mới chứng chỉ lúc này');
+      navigate("/manufacturer/certificate");
+    }
+  }, [user]);
+
 
   const onStepSubmit = (step) => {
     const data = validateStep[step].reduce((obj, field) => {

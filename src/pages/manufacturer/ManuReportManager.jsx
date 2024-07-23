@@ -38,7 +38,9 @@ const issues = [
       { id: 1, url: 'https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png' },
       { id: 2, url: 'https://hapodigital.com/wp-content/uploads/2024/01/loi-404-la-gi.jpg' },
       { id: 3, url: 'https://hapodigital.com/wp-content/uploads/2024/01/loi-404-la-gi.jpg' }
-    ]
+    ],
+    itemId: 'ABCSX-101',
+    productName: 'Đế dày'
   },
   {
     id: 2,
@@ -57,7 +59,9 @@ const issues = [
     imageReports: [
       { id: 3, url: 'image3.jpg' },
       { id: 4, url: 'image4.jpg' }
-    ]
+    ],
+    itemId: 'XYXCS-202',
+    productName: 'Gót giày'
   },
   {
     id: 3,
@@ -76,7 +80,9 @@ const issues = [
     imageReports: [
       { id: 5, url: 'image5.jpg' },
       { id: 6, url: 'image6.jpg' }
-    ]
+    ],
+    itemId: 'ZYXAB-303',
+    productName: 'Mũi giày'
   }
 ];
 
@@ -180,7 +186,7 @@ function ManuReportManager() {
             {issues.map((issue) => (
               <li
                 key={issue.id}
-                className={`p-3 cursor-pointer border-b border-gray-200 flex flex-col ${
+                className={`p-3 cursor-pointer border-b border-gray-200 ${
                   selectedIssue.id === issue.id ? 'bg-gray-300 text-gray-800' : 'hover:bg-gray-200'
                 }`}
                 onClick={() => handleIssueClick(issue)}
@@ -189,7 +195,11 @@ function ManuReportManager() {
                   {getTypeIcon(issue.type)}
                   <span className="ml-2">{issue.code}</span>
                 </div>
-                <span className="ml-6">{issue.title}</span>
+                <div className="ml-6">{issue.title}</div>
+                <div className="ml-6 text-gray-600">
+                  <span>{issue.itemId}</span>
+                  <span> - {issue.productName}</span>
+                </div>
                 <FaChevronRight className="ml-auto" />
               </li>
             ))}
@@ -208,6 +218,12 @@ function ManuReportManager() {
             <h2 className="text-2xl font-bold ml-3 flex items-center">{selectedIssue.title}</h2>
           </div>
           <div className="grid grid-cols-2 gap-4">
+            <div className="font-medium">
+              <span className="font-bold">Mã sản phẩm:</span> {selectedIssue.itemId}
+            </div>
+            <div className="font-medium text-right">
+              <span className="font-bold">Tên sản phẩm:</span> {selectedIssue.productName}
+            </div>
             <div className="col-span-2 flex justify-between items-center">
               <div className="font-medium flex items-center">
                 <span className="font-bold">Mức độ ưu tiên:</span>

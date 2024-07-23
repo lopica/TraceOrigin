@@ -18,6 +18,7 @@ function VerifyManufacturer() {
   const { isAuthenticated } = useSelector((state) => state.authSlice);
 
 
+
   const { data, isError, isFetching, refetch } = useGetUsersQuery({
     email: "",
     roleId: "",
@@ -29,6 +30,8 @@ function VerifyManufacturer() {
     page: page.toString(),
     size: "10"
   });
+
+
 
   useEffect(() => {
     if (isAuthenticated) {

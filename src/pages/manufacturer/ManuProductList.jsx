@@ -40,7 +40,6 @@ function ManuProductList() {
     categorySearch,
   } = useSelector((state) => state.productSlice);
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const role = useSelector(state => state.userSlice?.role?.roleId) ?? -1;
   const {
     isFetching: isProductsFetch,
     isError: isProductsError,
@@ -65,6 +64,7 @@ function ManuProductList() {
   });
   const [isLoadingModal, setIsLoadingModal] = useState(false);
   const { updateImagesFromApi } = useUpdateImageFromApi();
+  const user = useSelector((state) => state.userSlice);
 
   const searchHandler = (data) => {
     searchProduct(data);
@@ -181,6 +181,41 @@ function ManuProductList() {
     }
   }
 
+  const handleButtonClick = (status) => {
+    if (status === 0) {
+      getToast('Bạn cần phải đăng kí chứng chỉ trước để thêm sản phẩm');
+    } else if (status === 7) {
+      getToast('Bạn cần gửi chứng chỉ cho quản trị viên xác nhận để thêm mới sản phẩm');
+    } else if (status === 2) {
+      getToast('Tài khoản của bạn đang bị khóa, không thể thêm mới sản phẩm');
+    } else if (status === 8) {
+      getToast('Bạn có thể thêm mới chứng chỉ ngay khi chứng chỉ của bạn được xác nhận');
+    }
+  };
+
+  const addNewButton = (
+    <div className="flex justify-center md:justify-start px-8">
+      {user.status === 1 ? (
+        <div className="flex justify-center md:justify-start px-8">
+        <Link to="add">
+          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+            <FiPlus size={20} className="mr-2" />
+            Thêm sản phẩm
+          </button>
+        </Link>
+      </div>
+      ) : (
+        <button
+        onClick={() => handleButtonClick(user.status)}
+        className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white"
+      >
+        <FiPlus size={20} className="mr-2" />
+        Thêm sản phẩm
+      </button>
+      )}
+    </div>
+  );
+
   return (
     <div className="flex flex-col gap-8 justify-between items-center py-4">
       {/* form search  */}
@@ -225,14 +260,7 @@ function ManuProductList() {
           Tìm kiếm
         </Button>
       </form>
-      <div className="flex justify-center md:justify-start px-8">
-        <Link to="add">
-          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
-            <FiPlus size={20} className="mr-2" />
-            Thêm sản phẩm
-          </button>
-        </Link>
-      </div>
+      {addNewButton}
       <div className="flex justify-center">
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
           {renderedProducts}
