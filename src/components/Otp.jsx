@@ -5,12 +5,12 @@ import { useSelector } from "react-redux";
 
 let currentOTPIndex = 0;
 export default function Otp({
-  onSubmit,
-  isLoading,
-  sendOtp,
-  inputsDisabled,
-  setInputsDisabled,
-  isOtpLoading
+  onSubmit, //do when finish all otp
+  isLoading, //status load otp
+  sendOtp, //function take otp
+  inputsDisabled, //state handle otp input
+  setInputsDisabled, //function handle otp input
+  isOtpLoading //status load otp
 }) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
