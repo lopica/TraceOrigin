@@ -47,15 +47,15 @@ const ChartVisit = ({ className }) => {
         display: true,
         align: 'top',
         anchor: 'end',
-        color: '#666', // Gray color for the font
+        color: '#666', 
         font: {
-          weight: 'normal', // Normal font weight
+          weight: 'normal', 
           size: 10,
         },
         formatter: (value) => value,
         padding: 6,
-        backgroundColor: 'rgba(255, 255, 255)', // Optional: background color for labels
-        borderRadius: 4, // Optional: rounded corners for label background
+        backgroundColor: 'rgba(255, 255, 255)', 
+        borderRadius: 4, 
       },
     },
     scales: {

@@ -13,7 +13,7 @@ const ChartTransport = ({ data = [] }) => {
     labels: sortedData.map(item => item.shortKey),
     datasets: [
       {
-        label: 'Số lượng',
+        label: 'Số lượng nhà cung cấp vận chuyển sử dụng',
         data: sortedData.map(item => item.value),
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',

@@ -51,7 +51,11 @@ function AdminMonitoring() {
       navigate("/portal/login");
     }
   }, [isAuthenticated, getToast, navigate]);
-
+// ==================== dummy data
+const dataDummy = [
+  { "key": "chứng chỉ hợp lệ", "value": 23 },
+  { "key": "chứng chỉ không hợp lệ", "value": 5 }
+]
   return (
     <div className="flex border p-4">
       <div className="w-1/2 border-r flex flex-col justify-center items-center">
@@ -77,8 +81,12 @@ function AdminMonitoring() {
             </div>
             <PieChart data={dataFetch?.InfoLocationTask?.pieCity} />
           </div>
+  
           <div className="w-1/2 p-4 bg-white rounded-box border">
-            <PieChart />
+          <div className="text-md font-bold text-gray-500 text-center mb-4">
+              Tỉ lệ chứng chỉ hợp lệ
+            </div>
+            <PieChart data={dataDummy}/>
           </div>
         </div>
       </div>
