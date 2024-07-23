@@ -7,37 +7,26 @@ import CustomerInfo from "../../components/UI/monitoring/CustomerInfo";
 import ChartVisit from "../../components/UI/ChartVisit";
 import PieChart from "../../components/UI/monitoring/PieChart";
 import { useAdminQuery } from "../../store/apis/monitoringApi";
-import { set } from "react-hook-form";
 import ChartTransport from "../../components/UI/ChartTransport.jsx";
+import TimeSelect from "../../components/UI/monitoring/TimeSelect";
 
 function AdminMonitoring() {
+  const [selectedTime, setSelectedTime] = useState('1d');
+  const handleChange = (event) => {
+    setSelectedTime(event.target.value);
+  };
+  
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const { data, isError  } = useAdminQuery();
+  const { data, isError } = useAdminQuery();
   const [dataFetch, setDataFetch] = useState({});
-  // const [dataTotal, setDataTotal] = useState({
-  //   InfoUserTask: "--",
-  //   InfoProductTask: "--",
-  //   InfoItemTask: "--"
-  // });
-  // const [dataMonthly, setDataMonthly] = useState({
-  //   InfoUserTask: "--",
-  //   InfoProductTask: "--",
-  //   InfoItemTask: "--"
-  // });
 
-  // ======= update data into useState
   useEffect(() => {
     if (data !== undefined) {
       setDataFetch(data);
     }
   }, [data]);
-  // ===============================
-  useEffect(() => {
-    if (isAuthenticated) {
-    }
-  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isError?.status === 401) {
@@ -51,15 +40,15 @@ function AdminMonitoring() {
       navigate("/portal/login");
     }
   }, [isAuthenticated, getToast, navigate]);
-// ==================== dummy data
-const dataDummy = [
-  { "key": "chứng chỉ hợp lệ", "value": 23 },
-  { "key": "chứng chỉ không hợp lệ", "value": 5 }
-]
+
+  const dataDummy = [
+    { "key": "chứng chỉ hợp lệ", "value": 23 },
+    { "key": "chứng chỉ không hợp lệ", "value": 5 }
+  ];
+
   return (
-    <div className="flex border p-4">
-      <div className="w-1/2 border-r flex flex-col justify-center items-center">
-        {/* <div className="flex w-full justify-around gap-2"> */}
+    <div className="flex flex-col md:flex-row p-4">
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center">
         <CustomerInfo
           numberCustomer={dataFetch?.InfoUserTask?.total}
           numberProduct={dataFetch?.InfoProductTask?.total}
@@ -73,25 +62,26 @@ const dataDummy = [
           type={"Tổng mới trong tháng"}
         />
 
-        {/* </div> */}
-        <div className="flex w-full justify-around gap-2">
-          <div className="w-1/2 p-4 bg-white rounded-box border">
+        <div className="flex flex-col md:flex-row w-full justify-around gap-2">
+          <div className="w-full md:w-1/2 p-4 bg-white rounded-box border">
             <div className="text-md font-bold text-gray-500 text-center mb-4">
               Khánh hàng chia theo khu vực
             </div>
             <PieChart data={dataFetch?.InfoLocationTask?.pieCity} />
           </div>
-  
-          <div className="w-1/2 p-4 bg-white rounded-box border">
-          <div className="text-md font-bold text-gray-500 text-center mb-4">
+
+          <div className="w-full md:w-1/2 p-4 bg-white rounded-box border">
+            <div className="text-md font-bold text-gray-500 text-center mb-4">
               Tỉ lệ chứng chỉ hợp lệ
             </div>
             <PieChart data={dataDummy}/>
           </div>
         </div>
       </div>
-      <div className="w-1/2 pl-4 flex flex-col justify-center items-cente gap-4">
-        <ChartVisit />
+
+      <div className="w-full md:w-1/2 pl-4 flex flex-col justify-center">
+        <TimeSelect value={selectedTime} onChange={handleChange}/>
+        <ChartVisit selectedTime={selectedTime}/>
         <ChartTransport data={dataFetch?.NumberTransportTask?.transport}/>
       </div>
     </div>

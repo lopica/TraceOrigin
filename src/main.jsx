@@ -25,6 +25,7 @@ import Layout from "./components/UI/Layout";
 import Splash from "./pages/public/Splash";
 import AdminMonitoring from "./pages/admin/AdminMonitoring";
 import ManuReportManager from "./pages/manufacturer/ManuReportManager";
+import ErrorPage from "./pages/public/ErrorPage";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -34,6 +35,7 @@ function AppRouter() {
     {
       path: "/",
       element: <Layout />,
+      errorElement: <ErrorPage />,
       children: [
         {
           index: true,
