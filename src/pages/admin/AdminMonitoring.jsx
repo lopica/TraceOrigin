@@ -4,16 +4,17 @@ import { Link, useNavigate } from "react-router-dom";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
 import CustomerInfo from "../../components/UI/monitoring/CustomerInfo";
-import ChartHomePage from "../../components/UI/ChartHomePage";
+import ChartVisit from "../../components/UI/ChartVisit";
 import PieChart from "../../components/UI/monitoring/PieChart";
 import { useAdminQuery } from "../../store/apis/monitoringApi";
 import { set } from "react-hook-form";
+import ChartTransport from "../../components/UI/ChartTransport.jsx";
 
 function AdminMonitoring() {
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const { data, isError } = useAdminQuery();
+  const { data, isError  } = useAdminQuery();
   const [dataFetch, setDataFetch] = useState({});
   // const [dataTotal, setDataTotal] = useState({
   //   InfoUserTask: "--",
@@ -82,8 +83,8 @@ function AdminMonitoring() {
         </div>
       </div>
       <div className="w-1/2 pl-4 flex flex-col justify-center items-center">
-        <ChartHomePage />
-        <ChartHomePage />
+        <ChartVisit />
+        <ChartTransport data={dataFetch?.NumberTransportTask?.transport}/>
       </div>
     </div>
   );

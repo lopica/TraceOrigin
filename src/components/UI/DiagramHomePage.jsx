@@ -1,4 +1,5 @@
-import ChartHomePage from "./ChartHomePage";
+import ChartVisit from "./ChartVisit";
+
 
 const DiagramHomePage = () => {
   return (
@@ -8,7 +9,7 @@ const DiagramHomePage = () => {
     Số lượt người dùng truy xuất nguồn gốc trong ngày
     </h2>
     <div className="w-full aspect-w-16 aspect-h-9">
-            <ChartHomePage />
+            <ChartVisit />
           </div>
   </div>
   );
