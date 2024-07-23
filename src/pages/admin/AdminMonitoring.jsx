@@ -90,7 +90,7 @@ const dataDummy = [
           </div>
         </div>
       </div>
-      <div className="w-1/2 pl-4 flex flex-col justify-center items-center">
+      <div className="w-1/2 pl-4 flex flex-col justify-center items-cente gap-4">
         <ChartVisit />
         <ChartTransport data={dataFetch?.NumberTransportTask?.transport}/>
       </div>
