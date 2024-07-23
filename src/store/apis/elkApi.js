@@ -28,9 +28,12 @@ const elkApi = createApi({
         }),
       }),
       getNumberVisitsDiagram: builder.query({
-        query: (options) => ({
+        query: (type) => ({
           url: '/getNumberVisitsDiagram',
-          method: 'GET',
+          method: 'POST',
+          body: {
+            "type": type || ""
+          }
         }),
       }),
     };

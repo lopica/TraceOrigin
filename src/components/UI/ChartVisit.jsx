@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; 
@@ -8,16 +8,10 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, T
 import { useGetNumberVisitsDiagramQuery } from '../../store/apis/elkApi';
 import TimeSelect from './monitoring/TimeSelect';
 
-const ChartVisit = ({ className }) => {
-  // ====================== select time
-  const [selectedTime, setSelectedTime] = useState('1d');
+const ChartVisit = ({selectedTime}) => {
 
-  const handleChange = (event) => {
-    setSelectedTime(event.target.value);
-  };
-  // ======================
-
-  const { data: apiData, error, isLoading } = useGetNumberVisitsDiagramQuery();
+  const { data: apiData, error, isLoading } = useGetNumberVisitsDiagramQuery(selectedTime);
+  
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
@@ -78,8 +72,7 @@ const ChartVisit = ({ className }) => {
   };
 
   return (
-    <div className={`w-full h-full ${className}`}>
-      <TimeSelect value={selectedTime} onChange={handleChange} />
+    <div className="w-full h-full mb-4">
         <Line data={data} options={options} />
   </div>
   );

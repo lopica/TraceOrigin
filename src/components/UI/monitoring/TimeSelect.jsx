@@ -2,7 +2,7 @@ import React from 'react';
 
 const TimeSelect = ({ value, onChange }) => {
   return (
-    <div className="relative inline-block w-fit mb-2">
+    <div className="relative inline-block w-fit">
       <select
         value={value}
         onChange={onChange}
