@@ -9,6 +9,7 @@ import Button from "./UI/Button";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { FaList } from 'react-icons/fa';
 
 let renderedListItem;
 export default function ItemList({ productId }) {
@@ -88,7 +89,10 @@ export default function ItemList({ productId }) {
 
   return (
     <section>
-      <h2 className="text-xl mb-4">Danh sách nhật ký</h2>
+       <div className="flex items-center mb-4">
+      <FaList className="text-2xl mr-2" />
+      <h2 className="text-xl font-bold">Danh sách nhật ký</h2>
+    </div>
       <form className="grid grid-cols-2 gap-2 lg:grid-cols-3 mb-4">
         <Input label="Từ" type="date" />
         <Input label="Đến" type="date" />

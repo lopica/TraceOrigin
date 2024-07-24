@@ -66,7 +66,7 @@ const ChartVisit = ({selectedTime}) => {
         beginAtZero: true,
       },
       y: {
-        beginAtZero: true,
+        beginAtZero: false,
       },
     },
   };

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getWarrantyDate } from "../utils/getWarrantyDate";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
+import { FaCalendarAlt, FaImages, FaInfoCircle, FaMapMarkerAlt, FaShieldAlt } from "react-icons/fa";
 
 let origin;
 
@@ -64,44 +65,55 @@ export default function ItemOrigin({ goToItemLine }) {
       origin = (
         <section className="text-xl">
           <h2 className="mb-4 text-center font-bold text-2xl">Nguồn gốc</h2>
-          <ul className="space-y-2 lg:pb-12">
+          <ul className="space-y-2 lg:pb-12 ">
             <li>
-              <p>Tên sản phẩm: {originData.productName || "không rõ"}</p>
+            <p><strong>Tên sản phẩm:</strong> {originData.productName || "không rõ"}</p>
             </li>
             <li>
               {/* <p>Mã sản phẩm: {productRecognition || "không rõ"}</p> */}
             </li>
             <li>
-              <p>Đơn vị sản xuất: {originData.orgName.trim() || "không rõ"}</p>
+              <p><strong>Đơn vị sản xuất: </strong> {originData.orgName.trim() || "không rõ"}</p>
             </li>
             <li>
-              <p className="mb-4">Các hình ảnh của sản phẩm: </p>
+              <p className="mb-4"><strong>hình ảnh của sản phẩm:</strong> </p>
               <Carousel slides={slides} />
             </li>
 
-            <li>
+            <li className="flex items-center">
+            <FaCalendarAlt className="mr-2 text-lg" />
               <p>
-                Thời gian tạo:{" "}
+              <strong>Thời gian tạo: </strong>
+                {" "}
                 {getDateFromEpochTime(originData.createAt) || "không rõ"}
               </p>
             </li>
-            <li>
+            <li className="flex items-center">
+            <FaInfoCircle className="mr-2 text-lg" />
               <p>
-                Mô tả sản phẩm: {originData.descriptionOrigin || "không rõ"}
+              <strong>Mô tả sản phẩm: </strong>
+                 {originData.descriptionOrigin || "không rõ"}
               </p>
             </li>
-            <li>
+            <li className="flex items-center">
+            <FaShieldAlt className="mr-2 text-lg" />
               <p>
-                Hạn bảo hành:{" "}
+              <strong>Hạn bảo hành:</strong>
+              {" "}
                 {getWarrantyDate(originData.createAt, originData.warranty) ||
                   "không rõ"}
               </p>
             </li>
-            <li>
-              <p className="mb-2">
-                Địa điểm sản xuất:{" "}
+            <li >
+            <div className="flex items-center">
+            <FaMapMarkerAlt className="mr-2 text-lg" />
+            <p className="mb-2">
+              <strong> Địa điểm sản xuất: </strong>
+               {" "}
                 {`${originData.locationDTO.address}, ${originData.locationDTO.ward}, ${originData.locationDTO.district}, ${originData.locationDTO.city} `}
               </p>
+            </div>
+             
               <Map
                 location={{
                   lat: originData.locationDTO.coordinateX,
@@ -116,7 +128,7 @@ export default function ItemOrigin({ goToItemLine }) {
   }
 
   return (
-    <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-white mb-8 mx-2 mt-2 lg:max-h-[88svh] overflow-y-auto lg:mb-0">
+    <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-white mb-8 mx-2 mt-4 lg:max-h-[88svh] overflow-y-auto lg:mb-0">
       <div className="mt-5 ml-4 lg:hidden">
         <Button primary outline onClick={goToItemLine}>
           <IoIosArrowBack /> Quay lại

@@ -36,7 +36,7 @@ const Carousel = ({ slides, options }) => {
   return (
     <div className="embla swiper-no-swiping" onTouchStart={stopPropagation} onTouchMove={stopPropagation} onTouchEnd={stopPropagation}>
       <div className="embla__viewport" ref={emblaMainRef}>
-        <div className="embla__container">
+        <div className="embla__container ">
           {slides.map((slide, index) => (
             <div className="embla__slide flex justify-center items-center" key={index}>
               <div className="max-h-[60svh] overflow-y-auto ">{slide}</div>
@@ -45,7 +45,7 @@ const Carousel = ({ slides, options }) => {
         </div>
       </div>
       <div className="embla-thumbs">
-        <div className="embla-thumbs__viewport" ref={emblaThumbsRef}>
+        <div className="embla-thumbs__viewport bg-white rounded-box" ref={emblaThumbsRef}>
           <div className="embla-thumbs__container flex justify-center items-center">
             {slides.map((slide, index) => (
               <Thumb
