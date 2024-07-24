@@ -17,8 +17,10 @@ import Content2HomePage from "../../components/UI/Content2HomePage";
 import Content3HomePage from "../../components/UI/Content3HomePage";
 import Footer from "../../components/UI/Footer";
 import ActiveMethodHomePage from "../../components/UI/ActiveMethodHomePage";
+import { useSearchAllManufacturerQuery } from "../../store/apis/userApi";
 
 function Home() {
+  console.log(data);
   const navigate = useNavigate();
   const {
     show: showModal,

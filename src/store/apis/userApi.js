@@ -89,9 +89,17 @@ const userApi = createApi({
           }
         }
       }),
+      searchAllManufacturer: builder.query({
+        query: () => {
+          return{
+            url: '/searchAllManufacturer',
+            method: 'GET',
+          }
+        }
+      }),
     };
   },
 });
 
 export { userApi };
-export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation, useCountRegisteredUserQuery } = userApi;
+export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation, useCountRegisteredUserQuery, useSearchAllManufacturerQuery } = userApi;
