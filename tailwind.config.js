@@ -13,10 +13,24 @@ export default {
         color1: '#76BCCE',
         colorBgHomePage: '#FFFFFF',
         color1Dark: '#5DA0B0',
-
+      },
+      animation: {
+        'scale-fade': 'scale-fade 2s infinite',
       },
       fontFamily: {
         'roboto': ['Roboto', 'sans-serif'],
+      },
+    },
+    keyframes: {
+      'scale-fade': {
+        '0%, 100%': {
+          transform: 'scale(1)',
+          opacity: '1',
+        },
+        '50%': {
+          transform: 'scale(1.1)',
+          opacity: '0.5',
+        },
       },
     },
   },
