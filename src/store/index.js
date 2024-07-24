@@ -29,6 +29,7 @@ import { productEditFormReducer } from "./slices/productEditFormSlice";
 import { elkApi } from "../store/apis/elkApi";
 import { thunk } from "redux-thunk";
 import { historySearchSliceReducer } from "./slices/historySeach";
+import { utilApi } from "./apis/utilApi";
 
 // Define the persist configuration
 const persistConfig = {
@@ -70,6 +71,7 @@ const rootReducer = combineReducers({
   [certificateApi.reducerPath]: certificateApi.reducer,
   [elkApi.reducerPath]: elkApi.reducer,
   [monitoringApi.reducerPath]: monitoringApi.reducer,
+  [utilApi.reducerPath]: utilApi.reducer,
 });
 
 // Apply persistReducer wrapper
@@ -102,6 +104,7 @@ const store = configureStore({
       certificateApi.middleware,
       elkApi.middleware,
       monitoringApi.middleware,
+      utilApi.middleware,
       thunk
       // serialRequestMiddleware
     ),
@@ -112,6 +115,7 @@ setupListeners(store.dispatch);
 const persistor = persistStore(store);
 
 export { store, persistor };
+export { useGetAllTransportsQuery } from "./apis/utilApi";
 export { updateQRList, updateAIList } from "./slices/historySeach";
 export {
   useCreateUserMutation,

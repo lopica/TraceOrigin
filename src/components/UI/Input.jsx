@@ -76,12 +76,18 @@ const Input = React.forwardRef(
               <Select
                 ref={ref}
                 options={options}
+                aria-errormessage={error}
                 onChange={(val) => {
                   onChange(val.value);
                   handleSelect(val);
                 }}
                 value={options?.find((option) => option.value === value)}
                 placeholder={placeholder}
+                styles={{
+                  menu: (provided) => ({
+                    ...provided,
+                  }),
+                }}
               />
             )}
           />
@@ -128,11 +134,13 @@ const Input = React.forwardRef(
       <>
         {unit ? (
           <label className="form-control w-fit">
-            {label && <div className="label">
-              <div className="tooltip" data-tip={tooltip}>
-                <span className="label-text text-base">{label}</span>
+            {label && (
+              <div className="label">
+                <div className="tooltip" data-tip={tooltip}>
+                  <span className="label-text text-base">{label}</span>
+                </div>
               </div>
-            </div>}
+            )}
             <label className="input input-bordered flex items-center gap-2">
               <input
                 ref={inputRef}
@@ -153,11 +161,13 @@ const Input = React.forwardRef(
           </label>
         ) : (
           <label className="form-control w-full">
-            {label && <div className="label">
-              <div className="tooltip" data-tip={tooltip}>
-                <span className="label-text text-base">{label}</span>
+            {label && (
+              <div className="label">
+                <div className="tooltip" data-tip={tooltip}>
+                  <span className="label-text text-base">{label}</span>
+                </div>
               </div>
-            </div>}
+            )}
             <input
               ref={inputRef}
               {...props}

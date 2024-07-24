@@ -15,17 +15,22 @@ import { IoIosWarning } from "react-icons/io";
 import {
   useCheckConsignRoleQuery,
   useConsignMutation,
+  useFetchEventByItemLogIdQuery,
+  useGetAllTransportsQuery,
   useIsPendingConsignQuery,
   useSendOtpOwnerMutation,
   useSendOtpReceiverMutation,
 } from "../store";
 import Otp from "./Otp";
+import ItemEvent from "./ItemEvent";
 
-let form;
+let form,
+  transportData = [];
 export default function Consign({ productRecognition }) {
   const { show, handleOpen, handleClose } = useShow();
   const { email } = useSelector((state) => state.userSlice);
   const [step, setStep] = useState("email");
+  const [isChecked, setIsChecked] = useState(false);
   /*//////////////
       email ->  otp-confirm           ->   consign-form  ->   consign-confirm
                 unauthorized-consign  ->   consign-info  ->   consign-confirm
@@ -35,6 +40,7 @@ export default function Consign({ productRecognition }) {
   const [guestEmail, setGuestEmail] = useState("");
   const [inputsDisabled, setInputsDisabled] = useState(false);
   const { coordinate } = useSelector((state) => state.locationData);
+  const { lastConsignEventId } = useSelector((state) => state.itemSlice);
   const [sendOtpOwner, { isLoading: isSendOtpOwnerLoading }] =
     useSendOtpOwnerMutation();
   const [sendOtpReceiver, { isLoading: isSendOtpReceiverLoading }] =
@@ -61,13 +67,28 @@ export default function Consign({ productRecognition }) {
       skip: !guestEmail || !productRecognition,
     }
   );
+  const {
+    data: transports,
+    isError: isTransportError,
+    isFetching: isTransportFetch,
+  } = useGetAllTransportsQuery();
+  const {
+    data: eventData,
+    isError: isEventError,
+    isFetching: isEventFetch,
+  } = useFetchEventByItemLogIdQuery(lastConsignEventId, {
+    skip: lastConsignEventId === "" && !isPendingConsign,
+  });
 
   const {
     register: registerEmailForm,
     handleSubmit: handleSubmitEmailForm,
     formState: { errors: emailFormError },
   } = useForm({ mode: "onTouched" });
-  const {} = useForm({ mode: "onTouched" });
+  // const {
+  //   register: pendingConsignRegister,
+  //   formState: {errors: pendingConsignError}
+  // } = useForm({ mode: "onTouched" });
   const {
     register: registerConsignForm,
     formState: { errors: consignFormErrors },
@@ -81,15 +102,23 @@ export default function Consign({ productRecognition }) {
 
   const onEmailSubmit = (formData) => {
     console.log(formData);
-    if (formData.email === guestEmail) { //if email is not change
+    if (formData.email === guestEmail) {
+      //if email is not change
       if (data === 1 || data === 2) {
         setInputsDisabled(false);
-        setStep(isOwner ? 'consign-form' : 'consign-info');
+        setStep(
+          isOwner
+            ? isPendingConsign
+              ? "consign-pending"
+              : "consign-form"
+            : "consign-info"
+        );
       }
       if (data === 3 || data === 4) setStep("unauthorized-consign");
-    } else { // if email change
+    } else {
+      // if email change
       setGuestEmail(formData.email);
-      setStep('otp-confirm')
+      setStep("otp-confirm");
     }
   };
 
@@ -162,9 +191,16 @@ export default function Consign({ productRecognition }) {
     if (email) setGuestEmail(email);
   }, [email]);
 
-  useEffect(()=>{
-    
-  },[guestEmail])
+  useEffect(() => {
+    if (eventData) {
+      setValue("authorizedName", eventData.partyFullname);
+      setValue("authorizedEmail", eventData.receiver);
+      setValue("assignPersonMail", eventData.sender);
+      setValue("address", eventData.addressInParty);
+      setValue("description", eventData.descriptionItemLog);
+      
+    }
+  }, [eventData]);
 
   useEffect(() => {
     if (
@@ -181,7 +217,9 @@ export default function Consign({ productRecognition }) {
           //dien thong tin nguoi duoc uy quyen va xac nhan
           setIsOwner(true);
           if (email) {
-            setStep("consign-info");
+            isPendingConsign
+              ? setStep("consign-pending")
+              : setStep("consign-form");
           } else {
             setStep("otp-confirm");
           }
@@ -204,31 +242,23 @@ export default function Consign({ productRecognition }) {
           setStep("unauthorized-consign");
         }
       }
-      // if (isPendingConsign) { // handle load befored
-      //   if (data === 0) {
-      //     //Sản phẩm ko được ủy quyền
-      //   } else if (data === 1) {
-      //     //Người đó đúng là currentOwner
-      //     //dien thong tin nguoi duoc uy quyen va xac nhan
-      //     setIsOwner(true);
-      //     setStep("consign-pending");
-      //   } else if (data === 2) {
-      //     //Người đó chính là người được ủy quyền
-      //     //show thong tin su kien -> xac nhan
-      //     setStep("consign-info");
-      //   } else if (data === 3) {
-      //     //Exception lỗi
-      //     //bao loi
-      //     setStep("unauthorized-consign");
-      //     // setStep("error");
-      //   } else if (data === 4) {
-      //     //Ko phải người ủy quyền cũng không phải currentOwner
-      //     //thong bao email nay khong duoc phep tham gia giao dich
-      //     setStep("unauthorized-consign");
-      //   }
-      // }
     }
   }, [isCheckRoleSuccess, isCheckRoleFetch, guestEmail]);
+
+  useEffect(() => {
+    if (isTransportFetch) {
+      transportData = [{ id: "loading", content: "Đang load dữ liệu" }];
+    } else if (isTransportError) {
+      transportData = [{ id: "loading", content: "Không thể tải dữ liệu" }];
+    } else {
+      if (transports) {
+        transportData = transports.map((transport) => ({
+          id: transport.id,
+          content: transport.transportName,
+        }));
+      }
+    }
+  }, [isTransportFetch, transports]);
 
   if (isCheckRoleError) {
     form = (
@@ -316,11 +346,11 @@ export default function Consign({ productRecognition }) {
             </Button>
           )}
           <form
-            className="flex flex-col items-start gap-4 h-auto overflow-y-auto"
+            className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
             onKeyDown={handleKeyDown}
             onSubmit={handleSubmitConsignForm(onConsignSubmit)}
           >
-            <div className="w-full h-auto mx-auto grow flex flex-col items-center justify-center">
+            <div className="w-full h-auto mx-auto grow flex flex-col items-start justify-start">
               <div className="relative h-auto w-full space-y-8">
                 <div className="relative w-full min-h-10 mt-4">
                   <input
@@ -394,7 +424,54 @@ export default function Consign({ productRecognition }) {
                   message="Địa chỉ người nhận"
                 />
               </div>
+              <div className="flex justify-start items-start gap-2 mt-4">
+                <input
+                  type="checkbox"
+                  id="checkbox"
+                  className="checkbox checkbox-info"
+                  checked={isChecked}
+                  onChange={(e) => setIsChecked(e.target.checked)}
+                />
+                <label htmlFor="checkbox" className="hover:cursor-pointer">
+                  Thêm thông tin vận chuyển
+                </label>
+              </div>
+              {isChecked && (
+                <div className="w-full space-y-6">
+                  <Input
+                    type="select"
+                    {...registerConsignForm("transport", {
+                      required: "Bạn cần chọn đơn vị vận chuyển",
+                    })}
+                    control={control}
+                    data={transportData}
+                    label="Đơn vị vận chuyển"
+                    placeholder="Chọn đơn vị"
+                    error={consignFormErrors.transport?.message}
+                  />
+                  <div className="relative w-full min-h-10 mt-4">
+                    <input
+                      {...registerConsignForm("descriptionTransport", {
+                        required: "Bạn cần điền mã vận chuyển",
+                      })}
+                      type="text"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
+                      placeholder="good wather"
+                    />
+                    <label
+                      htmlFor="description"
+                      className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                    >
+                      Mã vận chuyển
+                    </label>
+                    <span className="label-text-alt text-left text-error text-sm">
+                      {consignFormErrors.descriptionTransport?.message}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
+
             <div className="flex justify-end w-full min-h-15">
               <Button secondary className="h-15 w-15 rounded">
                 <GrFormNextLink className="h-8 w-8" />
@@ -405,20 +482,22 @@ export default function Consign({ productRecognition }) {
       );
     } else if (step === "consign-info") {
       //confirm receiver
-      form = <div className="flex flex-col gap-4 items-start px-4">
-      <Button
-        primary
-        outline
-        onClick={() => setStep("email")}
-        className="pb-0"
-      >
-        <IoIosArrowBack />
-        Quay lại
-      </Button>
-      <p className="pl-4">
-        consign info
-      </p>
-    </div>;
+      form = (
+        <div className="flex flex-col gap-4 items-start px-4">
+          {!email && (
+            <Button
+              primary
+              outline
+              onClick={() => setStep("email")}
+              className="pb-4 pl-0"
+            >
+              <IoIosArrowBack />
+              Quay lại
+            </Button>
+          )}
+          <p className="pl-4">consign info</p>
+        </div>
+      );
     } else if (step === "unauthorized-consign") {
       form = (
         <div className="flex flex-col gap-4 items-start px-4">
@@ -439,17 +518,153 @@ export default function Consign({ productRecognition }) {
       );
     } else if (step === "consign-pending") {
       form = (
-        <div className="flex flex-col gap-4 items-start">
-          <Button
-            primary
-            outline
-            onClick={() => setStep("email")}
-            className="pb-0"
-          >
-            <IoIosArrowBack />
-            Quay lại
-          </Button>
-          <p className="pl-4">Hiện đang chờ phản hồi từ người được ủy quyền.</p>
+        <div className="flex flex-col gap-4 items-start h-auto px-2">
+          {!email && (
+            <Button
+              primary
+              outline
+              onClick={() => setStep("email")}
+              className="pb-4 pl-0"
+            >
+              <IoIosArrowBack />
+              Quay lại
+            </Button>
+          )}
+          <div className="w-full">
+            <form
+              className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
+              onKeyDown={handleKeyDown}
+              onSubmit={handleSubmitConsignForm(onConsignSubmit)}
+            >
+              <div className="w-full h-auto mx-auto grow flex flex-col items-start justify-start">
+                <div className="relative h-auto w-full space-y-8">
+                  <div className="relative w-full min-h-10 mt-4">
+                    <input
+                      {...registerConsignForm("authorizedEmail", {
+                        required: "Bạn cần nhập email",
+                        pattern: {
+                          value: emailRegex,
+                          message: "Email chưa đúng format",
+                        },
+                        validate: (value) =>
+                          value !== guestEmail ||
+                          "Bạn không thể nhập email của mình.",
+                      })}
+                      type="email"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
+                      placeholder="john@doe.com"
+                    />
+                    <label
+                      htmlFor="authorizedEmail"
+                      className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none  peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm "
+                    >
+                      Email người nhận
+                    </label>
+                    <span className="label-text-alt text-left text-error text-sm">
+                      {consignFormErrors.authorizedEmail?.message}
+                    </span>
+                  </div>
+                  <div className="relative w-full min-h-10 mt-4 ">
+                    <input
+                      {...registerConsignForm("authorizedName", {
+                        required: "Bạn cần nhập tên người nhận",
+                      })}
+                      type="text"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
+                      placeholder="Nguyen Van A"
+                    />
+                    <label
+                      htmlFor="authorizedName"
+                      className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                    >
+                      Tên người nhận
+                    </label>
+                    <span className="label-text-alt text-left text-error text-sm">
+                      {consignFormErrors.authorizedName?.message}
+                    </span>
+                  </div>
+                  <div className="relative w-full min-h-10 mt-4">
+                    <input
+                      {...registerConsignForm("description", {})}
+                      type="text"
+                      className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
+                      placeholder="good wather"
+                    />
+                    <label
+                      htmlFor="description"
+                      className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                    >
+                      Miêu tả hoạt động
+                    </label>
+                    <span className="label-text-alt text-left text-error text-sm">
+                      {consignFormErrors.description?.message}
+                    </span>
+                  </div>
+                  <AddressInputGroup
+                    register={registerConsignForm}
+                    getValues={getValues}
+                    setValue={setValue}
+                    control={control}
+                    errors={consignFormErrors}
+                    noValidate
+                    message="Địa chỉ người nhận"
+                  />
+                </div>
+                <div className="flex justify-start items-start gap-2 mt-4">
+                  <input
+                    type="checkbox"
+                    id="checkbox"
+                    className="checkbox checkbox-info"
+                    checked={isChecked}
+                    onChange={(e) => setIsChecked(e.target.checked)}
+                  />
+                  <label htmlFor="checkbox" className="hover:cursor-pointer">
+                    Thêm thông tin vận chuyển
+                  </label>
+                </div>
+                {isChecked && (
+                  <div className="w-full space-y-6">
+                    <Input
+                      type="select"
+                      {...registerConsignForm("transport", {
+                        required: "Bạn cần chọn đơn vị vận chuyển",
+                      })}
+                      control={control}
+                      data={transportData}
+                      label="Đơn vị vận chuyển"
+                      placeholder="Chọn đơn vị"
+                      error={consignFormErrors.transport?.message}
+                    />
+                    <div className="relative w-full min-h-10 mt-4">
+                      <input
+                        {...registerConsignForm("descriptionTransport", {
+                          required: "Bạn cần điền mã vận chuyển",
+                        })}
+                        type="text"
+                        className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
+                        placeholder="good wather"
+                      />
+                      <label
+                        htmlFor="description"
+                        className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                      >
+                        Mã vận chuyển
+                      </label>
+                      <span className="label-text-alt text-left text-error text-sm">
+                        {consignFormErrors.descriptionTransport?.message}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end w-full min-h-15">
+                <Button secondary className="h-15 w-15 rounded">
+                  <GrFormNextLink className="h-8 w-8" />
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       );
     } else if (step === "consign-confirm") {
@@ -476,7 +691,7 @@ export default function Consign({ productRecognition }) {
               onClick={consignHandler}
               isLoading={isConsignLoading}
             >
-              {isOwner ? 'Ủy quyền' : 'Chấp nhận'}
+              {isOwner ? "Ủy quyền" : "Chấp nhận"}
             </Button>
           </div>
         </div>

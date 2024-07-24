@@ -7,9 +7,10 @@ import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./UI/Button";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaList } from 'react-icons/fa';
+import useShow from "../hooks/use-show";
 
 let renderedListItem;
 export default function ItemList({ productId }) {
@@ -21,12 +22,60 @@ export default function ItemList({ productId }) {
     paginate,
     setCurrentPage,
   } = useItem(productId);
+  
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const navigate = useNavigate();
   const { categoriesData } = useCategory();
   const { control, register } = useForm({ mode: "onTouched" });
+  const { show: showExport, handleFlip } = useShow(false);
+  const { show: chooseAll, handleFlip: handleChoose } = useShow(false);
+  const [checkedItems, setCheckedItems] = useState(new Set());
+
+  const handleCheckboxChange = (item) => {
+    setCheckedItems((prevCheckedItems) => {
+      const newCheckedItems = new Set(prevCheckedItems);
+      if (newCheckedItems.has(item)) {
+        newCheckedItems.delete(item);
+      } else {
+        newCheckedItems.add(item);
+      }
+      return newCheckedItems;
+    });
+  };
+
+  const handleChooseAll = () => {
+    if (chooseAll) {
+      // Uncheck all items
+      setCheckedItems(new Set());
+    } else {
+      // Check all items on the current page
+      const itemsOnPage = new Set(itemsData.map((item) => item.productRecognition));
+      setCheckedItems(itemsOnPage);
+    }
+    handleChoose(); // Toggle chooseAll state
+  };
+
+  const exportQr = () => {
+    console.log(checkedItems)
+  }
 
   const itemConfig = [
+    ...(showExport
+      ? [
+          {
+            label: "Chọn",
+            render: (item) => (
+              <input
+                type="checkbox"
+                id={`checkbox-${item.productRecognition}`}
+                className="checkbox checkbox-info"
+                checked={checkedItems.has(item.productRecognition)}
+                onChange={() => handleCheckboxChange(item.productRecognition)}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       label: "Mã Item",
       render: (item) => (
@@ -47,10 +96,7 @@ export default function ItemList({ productId }) {
     },
     {
       label: "Địa điểm hiện tại",
-      render: (item) => {
-        console.log(item);
-        return item.address;
-      },
+      render: (item) => item.address,
     },
     {
       label: "Trạng thái",
@@ -105,7 +151,21 @@ export default function ItemList({ productId }) {
           placeholder="Lựa chọn trạng thái"
         />
       </form>
-      <div className="flex justify-end mt-4 p-4">
+      <div className="flex justify-end mt-4 p-4 gap-4">
+        {/* xuat qr */}
+        {showExport && (
+          <Button onClick={exportQr} primary rounded>
+            Xuất QR
+          </Button>
+        )}
+        {showExport && (
+          <Button onClick={handleChooseAll} primary rounded>
+            {!chooseAll ? 'Chọn tất cả' : 'Bỏ chọn tất cả'}
+          </Button>
+        )}
+        <Button onClick={handleFlip} primary rounded>
+          {!showExport ? 'Xuất QR' : 'Bỏ xuất'}
+        </Button>
         <AddItem />
       </div>
       {renderedListItem}

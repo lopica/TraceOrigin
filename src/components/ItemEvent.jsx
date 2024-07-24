@@ -4,10 +4,9 @@ import { useFetchEventByItemLogIdQuery } from "../store";
 import { useSelector } from "react-redux";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import Map from "./Map";
-import { useEffect } from "react";
 
 let event;
-export default function ItemEvent({ goToItemLine, eventId }) {
+export default function ItemEvent({ goToItemLine, eventId, core }) {
   const { itemLine } = useSelector((state) => state.itemSlice);
   const { data: eventData, isError, isFetching } = useFetchEventByItemLogIdQuery(eventId, {
     skip: itemLine.length === 0 || !eventId,
@@ -40,7 +39,7 @@ export default function ItemEvent({ goToItemLine, eventId }) {
   } else {
     if (eventData) {
       event = (
-        <div className="card-body">
+        <>
           <h2 className="mb-4 text-center font-bold">{eventData?.eventType}</h2>
           <ul className="space-y-2">
             {/* uy quyen, giao hang, nhan */}
@@ -72,18 +71,20 @@ export default function ItemEvent({ goToItemLine, eventId }) {
               />
             </li>
           </ul>
-        </div>
+        </>
       );
     }
   }
 
+  if (core) return event
+
   return (
     <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-white mb-8 mx-2 mt-2 lg:max-h-[88svh] overflow-y-auto lg:mb-0">
-      <div className="mt-5 ml-4 lg:hidden">
+      {goToItemLine && <div className="mt-5 ml-4 lg:hidden">
         <Button primary outline onClick={goToItemLine}>
           <IoIosArrowBack /> Quay lại
         </Button>
-      </div>
+      </div>}
       <div className="card-body">{event}</div>
     </div>
   );
