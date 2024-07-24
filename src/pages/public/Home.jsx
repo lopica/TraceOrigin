@@ -20,7 +20,6 @@ import ActiveMethodHomePage from "../../components/UI/ActiveMethodHomePage";
 import { useSearchAllManufacturerQuery } from "../../store/apis/userApi";
 
 function Home() {
-  console.log(data);
   const navigate = useNavigate();
   const {
     show: showModal,

@@ -67,14 +67,14 @@ const handleSearch = () => {
           value={searchTerm}
           onChange={handleInputChange}
           placeholder="  Tìm kiếm tên nhãn hiệu ..."
-          className="bg-transparent w-full h-full bg-white  rounded-lg"
+          className="bg-transparent w-full h-full bg-white text-black rounded-lg p-4"
         />
       </div>
       {/* Danh sách lọc hiển thị dưới ô nhập liệu */}
       {filteredData.length > 0 && (
         <ul className="absolute w-full border border-gray-300 bg-white mt-2 rounded-lg shadow-lg z-10">
           {filteredData.map(item => (
-            <li key={item.userId} className="flex items-center px-4 py-2 hover:bg-gray-200  rounded-lg cursor-pointer">
+            <li key={item.userId} className="text-black flex items-center px-4 py-2 hover:bg-gray-200  rounded-lg cursor-pointer">
               <img
                 src={item.profileImage || "/default_avatar.png"}
                 alt={item.org_name}
