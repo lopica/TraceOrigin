@@ -15,7 +15,7 @@ import {
   Register,
 ManufacturerList,
 VerifyManufacturer,
-  ManuItemDetail
+  ManuItemDetail,
 } from "./pages";
 import ManuCertificateList from "./pages/manufacturer/ManuCertificateList";
 import ManuCertificateAdd from "./pages/manufacturer/ManuCertificateAdd";
@@ -26,6 +26,7 @@ import Splash from "./pages/public/Splash";
 import AdminMonitoring from "./pages/admin/AdminMonitoring";
 import ManuReportManager from "./pages/manufacturer/ManuReportManager";
 import ErrorPage from "./pages/public/ErrorPage";
+import CreateReport from "./pages/public/CreateReport";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -52,6 +53,7 @@ function AppRouter() {
             { path: "login", element: <Login /> },
             { path: "change-password", element: <ForgotPassword /> },
             { path: "register", element: <Register /> },
+            { path: "newReport", element: <CreateReport /> },
           ],
         },
         {
@@ -66,7 +68,8 @@ function AppRouter() {
             { path: "products/add", element: <ManuProductAdd /> },
             { path: "products/:productId/:itemId", element: <ManuItemDetail /> },
             { path: "reportManager", element: <ManuReportManager /> },
-            { path: "reportManager/:id", element: <ManuReportManager />}
+            { path: "reportManager/:id", element: <ManuReportManager />},
+            { path: "createReport", element: <ManuReportManager />}
           ],
         },
         {
