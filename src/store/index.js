@@ -115,7 +115,7 @@ setupListeners(store.dispatch);
 const persistor = persistStore(store);
 
 export { store, persistor };
-export { useGetAllTransportsQuery } from "./apis/utilApi";
+export { useGetAllTransportsQuery, useGetAllEventTypeQuery } from "./apis/utilApi";
 export { updateQRList, updateAIList } from "./slices/historySeach";
 export {
   useCreateUserMutation,

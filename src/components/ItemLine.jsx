@@ -5,12 +5,10 @@ import {
 } from "../store";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { useEffect, useRef } from "react";
-import { QRCodeSVG } from "qrcode.react";
-import Button from "./UI/Button";
 import Tooltip from "./UI/Tooltip";
+import QR from "./QR";
 
 let itemLine;
-let qr;
 export default function ItemLine({
   productRecognition,
   add,
@@ -26,30 +24,6 @@ export default function ItemLine({
     isFetching: isItemLogsFetching,
   } = useFetchItemLogsByProductRecognitionQuery(productRecognition);
 
-  const downloadQR = () => {
-    if (qrContainerRef.current) {
-      const svgElement = qrContainerRef.current.querySelector("svg");
-      if (svgElement) {
-        const serializer = new XMLSerializer();
-        const svgString = serializer.serializeToString(svgElement);
-        const svgBlob = new Blob([svgString], {
-          type: "image/svg+xml;charset=utf-8",
-        });
-        const URL = window.URL || window.webkitURL || window;
-        const blobURL = URL.createObjectURL(svgBlob);
-
-        const downloadLink = document.createElement("a");
-        downloadLink.href = blobURL;
-        downloadLink.download = `${productRecognition}.svg`; // Set the download file name
-        document.body.appendChild(downloadLink); // Append to body to make it work in Firefox
-        downloadLink.click();
-        document.body.removeChild(downloadLink); // Clean up
-      } else {
-        console.error("No SVG found");
-      }
-    }
-  };
-
   useEffect(() => {
     if (itemLogsData?.itemLogDTOs) {
       if (itemLogsData.itemLogDTOs.length > 0) {
@@ -57,23 +31,6 @@ export default function ItemLine({
       }
     }
   }, [itemLogsData]);
-
-  qr = (
-    <div className="flex flex-col gap-4 justify-center items-center">
-      <div ref={qrContainerRef}>
-        <QRCodeSVG
-          value={`https://trace-origin.netlify.app/item?productRecognition=${productRecognition}`}
-          size={200}
-          level="L"
-          includeMargin={true}
-          className="mx-auto"
-        />
-      </div>
-      <Button primary className="w-fit" onClick={downloadQR}>
-        Xuất ảnh QR
-      </Button>
-    </div>
-  );
 
   if (isItemLogsFetching) {
     itemLine = <div className="skeleton w-full h-32">&#8203;</div>;
@@ -137,7 +94,7 @@ export default function ItemLine({
   return (
     <div className="flex flex-col justify-between h-[90svh]">
       <div className="grow">{itemLine}</div>
-      {showQr && qr}
+      {showQr && <QR productRecognition={productRecognition} />}
     </div>
   );
 }

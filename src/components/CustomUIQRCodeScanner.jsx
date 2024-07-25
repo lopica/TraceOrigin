@@ -39,7 +39,7 @@ const QRCodeScanner = () => {
     }
   };
 
-  const handleSuccess = (decodedText , _) => {
+  const handleSuccess = (decodedText, _) => {
     console.log(decodedText);
     const url = new URL(decodedText);
     const productRecognition = url.searchParams.get("productRecognition");
@@ -56,7 +56,7 @@ const QRCodeScanner = () => {
     const html5QrCode = new Html5Qrcode("qr-reader");
     html5QrCode
       .scanFileV2(imageSrc, true)
-      .then(({decodedText}) => {
+      .then(({ decodedText }) => {
         handleSuccess(decodedText);
         setImageLoaded(true);
       })
@@ -108,7 +108,7 @@ const QRCodeScanner = () => {
         cameraType || { facingMode: "environment" },
         config,
         (decodedText, _) => {
-          console.log(decodedText)
+          console.log(decodedText);
           handleSuccess(decodedText);
         }
       );
@@ -268,7 +268,7 @@ const QRCodeScanner = () => {
           <div className="flex flex-col sm:flex-row pb-4">
             <div className="flex-1 max-w-full sm:max-w-[50%]">
               <div className="relative w-full bg-sky-200">
-                <div id={qrCodeRegionId} ></div>
+                <div id={qrCodeRegionId}></div>
               </div>
               <select
                 className="mt-2 block w-full text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
@@ -280,23 +280,46 @@ const QRCodeScanner = () => {
                 ))}
               </select>
             </div>
-            {item.itemId && (
-              <div className="flex-1 mx-auto sm:max-w-md lg:max-w-sm">
-                <h3 className="text-center text-3xl mb-6">{qrCodeData}</h3>
-                <div className="flex justify-between gap-2 mx-2">
-                  <div className="flex ">
-                    <div className="flex flex-col">
-                      <div className="stat-title">Mã sản phẩm</div>
-                      <div className="font-medium">{item.itemId}</div>
+            <div className="flex-1 max-w-full sm:max-w-[50%]">
+              {item.itemId && (
+                <div className="flex-1 mx-auto sm:max-w-md lg:max-w-sm">
+                  <h3 className="text-center text-3xl mb-6">{qrCodeData}</h3>
+                  <div className="flex justify-between gap-2 mx-2">
+                    <div className="flex">
+                      <div className="flex flex-col">
+                        <div className="stat-title">Mã sản phẩm</div>
+                        <div className="font-medium">
+                          <Link to={item.url}>
+                            <p className="hover:font-bold hover:text-sky-700">
+                              {item.itemId}
+                            </p>
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="stat-figure text-secondary"></div>
                     </div>
-                    <div className="stat-figure text-secondary"></div>
+                    <p className="underline cursor-pointer">
+                      {item.manufacturerName}
+                    </p>
                   </div>
-                  <p className="underline cursor-pointer">
-                    {item.manufacturerName}
-                  </p>
                 </div>
+              )}
+              <div className="mt-8 pl-4">
+                <h3 className="">Lịch sử tìm kiếm</h3>
+                <ul className="pl-8 flex gap-4 mt-2">
+                  {qrList.map((qr) => (
+                    <Link key={qr.id} to={qr.url}>
+                      <Button secondary rounded>
+                        {qr.id}
+                      </Button>
+                    </Link>
+                  ))}
+                  {qrList.length === 0 && (
+                    <p>Bạn chưa tìm kiếm sản phẩm nào.</p>
+                  )}
+                </ul>
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}

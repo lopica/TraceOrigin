@@ -36,7 +36,6 @@ function Card({ card, handleUpdate, handleDelete}) {
    //   </div>
    // </div>
    <div className="relative max-w-md mx-auto bg-white shadow-md rounded-box overflow-hidden">
-    {console.log(card)}
    <div className="md:flex">
      <div className="md:flex-shrink-0">
        <img className="h-48 w-full object-cover md:w-48" src={card.image || emptyProductImage} alt="product" />
