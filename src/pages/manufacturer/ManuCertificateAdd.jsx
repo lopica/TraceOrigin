@@ -5,7 +5,6 @@ import Input from "../../components/UI/Input";
 import ImageBox from "../../components/UI/ImageBox";
 import Wizzard from "../../components/Wizzard";
 import useToast from "../../hooks/use-toast";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { 
   useAddCertificateMutation,
   updateCertiForm,
