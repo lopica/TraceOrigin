@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import Select from "react-select";
 let options;
 const Input = React.forwardRef(
-  ({ label, tooltip, unit, error, data, addOnChange, ...props }, ref) => {
+  ({ label, tooltip, unit, error, data, addOnChange, required, ...props }, ref) => {
     const { type, placeholder, onBlur, name } = props;
     const inputRef = ref || useRef();
     const [selectedOption, setSelectedOption] = useState(null);
@@ -50,25 +50,9 @@ const Input = React.forwardRef(
         <label className="form-control w-full max-w-sm">
           <div className="label">
             <div className="tooltip" data-tip={tooltip}>
-              <span className="label-text text-base">{label}</span>
+              <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
             </div>
           </div>
-          {/* <select
-            ref={ref}
-            {...props}
-            onChange={onChange}
-            onBlur={onBlur}
-            className="select select-bordered"
-          >
-            <option key='placeholder' value="">{placeholder}</option>
-            {Array.isArray(data) &&
-              data.length &&
-              data.map((option, _) => (
-                <option key={option.id} value={`${option.id},${option.content}`}>
-                  {option.content}
-                </option>
-              ))}
-          </select> */}
           <Controller
             name={name}
             control={props.control}
@@ -108,7 +92,7 @@ const Input = React.forwardRef(
           <label className="form-control w-full max-w-sm">
             <div className="label">
               <div className="tooltip" data-tip={tooltip}>
-                <span className="label-text text-base">{label}</span>
+                <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
               </div>
             </div>
             <textarea
@@ -137,7 +121,7 @@ const Input = React.forwardRef(
             {label && (
               <div className="label">
                 <div className="tooltip" data-tip={tooltip}>
-                  <span className="label-text text-base">{label}</span>
+                  <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
                 </div>
               </div>
             )}
@@ -164,7 +148,7 @@ const Input = React.forwardRef(
             {label && (
               <div className="label">
                 <div className="tooltip" data-tip={tooltip}>
-                  <span className="label-text text-base">{label}</span>
+                  <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
                 </div>
               </div>
             )}

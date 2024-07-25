@@ -27,7 +27,15 @@ import Modal from "../../components/UI/Modal.jsx";
 const stepList = ["Thông tin cơ bản", "Thông tin liên hệ", "Tạo mật khẩu"];
 
 const validateStep = [
-  ["firstName", "lastName", "province", "district", "ward", "address"],
+  [
+    "firstName",
+    "lastName",
+    "orgName",
+    "province",
+    "district",
+    "ward",
+    "address",
+  ],
   ["email", "phone"],
   ["password", "cfPassword"],
 ];
@@ -67,7 +75,7 @@ function Register() {
     type: null, // 'error', 'success', or 'info'
     content: "",
   });
-  const [inputsDisabled, setInputsDisabled] = useState(false); 
+  const [inputsDisabled, setInputsDisabled] = useState(false);
 
   const onStepSubmit = () => {
     //get data and save to local storage
@@ -89,7 +97,7 @@ function Register() {
     };
     delete request.province;
     delete request.cfPassword;
-    // console.log(request)
+    console.log(request)
     dispatch(updateRegisterForm(request));
     handleOpen();
     sendOtp({
@@ -98,7 +106,10 @@ function Register() {
       .then(() => {
         getToast("Hãy kiểm tra email của bạn");
       })
-      .catch((res) => console.log(res));
+      .catch((res) => {
+        getToast('Không thể đăng ký thành công tài khoản mới')
+        console.log(res)
+      });
   };
 
   const handleRegister = (otp) => {
@@ -144,6 +155,7 @@ function Register() {
               <Input
                 label="Tên họ"
                 type="text"
+                required
                 className="grow"
                 placeholder="Nguyễn"
                 {...register("lastName", {
@@ -169,6 +181,7 @@ function Register() {
                 label="Tên đệm và chính"
                 type="text"
                 placeholder="Văn A"
+                required
                 {...register("firstName", {
                   required: "Bạn cần nhập tên họ",
                   maxLength: {
@@ -189,12 +202,20 @@ function Register() {
                 error={errors.firstName?.message}
               />
             </div>
+            <Input
+              label="Tên tổ chức/công ty của bạn"
+              type="text"
+              {...register("orgName")}
+              error={errors.orgName?.message}
+            />
             <AddressInputGroup
               register={register}
               getValues={getValues}
               setValue={setValue}
               errors={errors}
               control={control}
+              required
+              message='Địa chỉ của bạn'
             />
           </>
           <>
