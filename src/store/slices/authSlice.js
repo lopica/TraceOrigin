@@ -19,13 +19,13 @@ export const requireLoginAfterTimeout = createAsyncThunk(
       // console.log(elapsed);
       // console.log(TIMEOUT_DURATION);
       if (elapsed >= TIMEOUT_DURATION) {
-        // console.log("logout ngay");
+        console.log("logout ngay");
         dispatch(requireLogin());
         dispatch(updateUser({}));
         resolve();
       } else {
         setTimeout(() => {
-          // console.log("vo timeout");
+          console.log("vo timeout");
           // console.log(TIMEOUT_DURATION - elapsed);
           dispatch(requireLogin());
           dispatch(updateUser({}));

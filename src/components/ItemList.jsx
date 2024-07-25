@@ -1,6 +1,5 @@
 import useItem from "../hooks/use-item";
 import SortableTable from "./SortableTable";
-import useCategory from "../hooks/use-category";
 import Input from "./UI/Input";
 import AddItem from "./AddItem";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
@@ -9,11 +8,21 @@ import Button from "./UI/Button";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaList } from 'react-icons/fa';
+import { FaList } from "react-icons/fa";
 import useShow from "../hooks/use-show";
+import JSZip from "jszip";
+import { QRCodeSVG } from "qrcode.react";
+import ReactDOMServer from "react-dom/server";
+import { saveAs } from "file-saver";
+import useToast from "../hooks/use-toast";
+import { useGetAllEventTypeQuery } from "../store";
 
 let renderedListItem;
+let eventTypeData;
 export default function ItemList({ productId }) {
+  const [inputSearch, setInputSearch] = useState({
+    eventId: "",
+  });
   const {
     itemsData,
     isItemError,
@@ -21,15 +30,23 @@ export default function ItemList({ productId }) {
     error,
     paginate,
     setCurrentPage,
-  } = useItem(productId);
-  
+    refetch,
+  } = useItem(productId, inputSearch.eventId);
+  const {
+    data: eventTypes,
+    isError: isEventtypeError,
+    isFetching: isEventtypeFetch,
+  } = useGetAllEventTypeQuery();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const {
+    productDetail: { productName },
+  } = useSelector((state) => state.productSlice);
   const navigate = useNavigate();
-  const { categoriesData } = useCategory();
-  const { control, register } = useForm({ mode: "onTouched" });
+  const { control, register, watch } = useForm({ mode: "onTouched" });
   const { show: showExport, handleFlip } = useShow(false);
-  const { show: chooseAll, handleFlip: handleChoose } = useShow(false);
+  const { show: chooseAll, handleFlip: handleChooseFlip } = useShow(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
+  const { getToast } = useToast();
 
   const handleCheckboxChange = (item) => {
     setCheckedItems((prevCheckedItems) => {
@@ -43,21 +60,85 @@ export default function ItemList({ productId }) {
     });
   };
 
-  const handleChooseAll = () => {
-    if (chooseAll) {
-      // Uncheck all items
-      setCheckedItems(new Set());
+  const exportQr = () => {
+    console.log(checkedItems);
+    if (checkedItems.size !== 0) {
+      const zip = new JSZip();
+      checkedItems.forEach((item) => {
+        const svgString = ReactDOMServer.renderToString(
+          <QRCodeSVG
+            value={`https://trace-origin.netlify.app/item?productRecognition=${item}`}
+            size={200}
+            level="L"
+            includeMargin={true}
+            className="mx-auto"
+          />
+        );
+
+        const svgBlob = new Blob([svgString], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+
+        zip.file(`${item}.svg`, svgBlob);
+      });
+
+      zip.generateAsync({ type: "blob" }).then((content) => {
+        saveAs(content, `${productName}.zip`);
+      });
     } else {
-      // Check all items on the current page
-      const itemsOnPage = new Set(itemsData.map((item) => item.productRecognition));
-      setCheckedItems(itemsOnPage);
+      getToast("Bạn hãy chọn ít nhất 1 mã để tải xuống");
     }
-    handleChoose(); // Toggle chooseAll state
   };
 
-  const exportQr = () => {
-    console.log(checkedItems)
-  }
+  useEffect(() => {
+    if (chooseAll) {
+      const itemsOnPage = new Set(
+        itemsData.map((item) => item.productRecognition)
+      );
+      setCheckedItems((prevCheckedItems) => {
+        const newCheckedItems = new Set(prevCheckedItems);
+        itemsOnPage.forEach((item) => newCheckedItems.add(item));
+        return newCheckedItems;
+      });
+    } else {
+      setCheckedItems(new Set());
+    }
+  }, [chooseAll, itemsData]);
+
+  useEffect(() => {
+    if (!isEventtypeError && !isEventtypeFetch) {
+      eventTypeData = eventTypes.map((type) => ({
+        id: type.eventId,
+        content: type.event_type,
+      }));
+    }
+  }, [isEventtypeFetch, isEventtypeError]);
+
+  useEffect(() => {
+    const status = watch("status");
+    if (status) {
+      console.log('leu leu');
+      setInputSearch((prev) => ({
+        ...prev,
+        eventId: status.split(",")[0],
+      }));
+    }
+  }, [watch("status")]);
+
+  // useEffect(()=>{
+  //   if(inputSearch.eventId) refetch()
+  // },[inputSearch])
+
+  useEffect(() => {
+    if (error?.status === 401) navigate("/portal/login");
+  }, [isItemFetch]);
+
+  useEffect(() => {
+    if (!isItemFetch && !isAuthenticated) {
+      getToast("Phiên dăng nhập đã hết hạn");
+      navigate("/portal/login");
+    }
+  }, [isItemFetch, isAuthenticated]);
 
   const itemConfig = [
     ...(showExport
@@ -104,17 +185,6 @@ export default function ItemList({ productId }) {
     },
   ];
 
-  useEffect(() => {
-    if (error?.status === 401) navigate("/portal/login");
-  }, [isItemFetch]);
-
-  useEffect(() => {
-    if (!isItemFetch && !isAuthenticated) {
-      getToast("Phiên dăng nhập đã hết hạn");
-      navigate("/portal/login");
-    }
-  }, [isItemFetch, isAuthenticated]);
-
   if (isItemFetch) {
     renderedListItem = <div className="skeleton h-40 w-full"></div>;
   } else if (isItemError) {
@@ -135,10 +205,10 @@ export default function ItemList({ productId }) {
 
   return (
     <section>
-       <div className="flex items-center mb-4">
-      <FaList className="text-2xl mr-2" />
-      <h2 className="text-xl font-bold">Danh sách nhật ký</h2>
-    </div>
+      <div className="flex items-center mb-4">
+        <FaList className="text-2xl mr-2" />
+        <h2 className="text-xl font-bold">Danh sách nhật ký</h2>
+      </div>
       <form className="grid grid-cols-2 gap-2 lg:grid-cols-3 mb-4">
         <Input label="Từ" type="date" />
         <Input label="Đến" type="date" />
@@ -147,7 +217,7 @@ export default function ItemList({ productId }) {
           type="select"
           {...register("status")}
           control={control}
-          data={categoriesData}
+          data={eventTypeData}
           placeholder="Lựa chọn trạng thái"
         />
       </form>
@@ -155,16 +225,16 @@ export default function ItemList({ productId }) {
         {/* xuat qr */}
         {showExport && (
           <Button onClick={exportQr} primary rounded>
-            Xuất QR
+            Tải xuống
           </Button>
         )}
         {showExport && (
-          <Button onClick={handleChooseAll} primary rounded>
-            {!chooseAll ? 'Chọn tất cả' : 'Bỏ chọn tất cả'}
+          <Button onClick={handleChooseFlip} primary rounded>
+            {chooseAll ? "Bỏ chọn tất cả" : "Chọn tất cả"}
           </Button>
         )}
         <Button onClick={handleFlip} primary rounded>
-          {!showExport ? 'Xuất QR' : 'Bỏ xuất'}
+          {showExport ? "Bỏ xuất" : "Xuất QR"}
         </Button>
         <AddItem />
       </div>

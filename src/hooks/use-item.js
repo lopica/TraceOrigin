@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { requireLogin, updateItemList, updateUser, useSearchItemsQuery } from "../store";
+import {
+  requireLogin,
+  updateItemList,
+  updateUser,
+  useSearchItemsQuery,
+} from "../store";
 import useToast from "./use-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function useItem(productId) {
+export default function useItem(productId, eventId) {
   const dispatch = useDispatch();
   const [itemsData, setItemsData] = useState([]);
   const { getToast } = useToast();
-  const {isAuthenticated} = useSelector(state=>state.authSlice)
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [paginate, setPaginate] = useState({
     totalPages: 0,
     currentPage: 0,
@@ -18,19 +23,23 @@ export default function useItem(productId) {
     isFetching: isItemFetch,
     isSuccess,
     error,
-  } = useSearchItemsQuery({
-    productId,
-    pageSize: 6,
-    pageNumber: paginate.currentPage,
-    startDate: 0,
-    endDate: 0,
-    name: "",
-    type: "",
-    productRecognition: "",
-    eventTypeId: 0,
-  }, {
-    skip: !isAuthenticated,
-  });
+    refetch,
+  } = useSearchItemsQuery(
+    {
+      productId,
+      pageSize: 6,
+      pageNumber: paginate.currentPage,
+      startDate: 0,
+      endDate: 0,
+      name: "",
+      type: "",
+      productRecognition: "",
+      eventTypeId: eventId || 0,
+    },
+    {
+      skip: !isAuthenticated,
+    }
+  );
 
   const setCurrentPage = (newPage) => {
     setPaginate((prev) => {
@@ -45,12 +54,11 @@ export default function useItem(productId) {
     if (isItemError && isSuccess) {
       getToast("Gặp lỗi khi tải dữ liệu item");
       if (error.status === 401) {
-        dispatch(updateUser({}))
+        dispatch(updateUser({}));
         dispatch(requireLogin());
       }
     }
     if (!isItemError && !isItemFetch && data?.content) {
-      console.log(data);
       dispatch(updateItemList(data.content));
       setItemsData(data.content);
       setPaginate((prev) => {
@@ -70,5 +78,6 @@ export default function useItem(productId) {
     error,
     paginate,
     setCurrentPage,
+    refetch,
   };
 }

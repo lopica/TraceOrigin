@@ -11,6 +11,7 @@ import {
   updateCertiForm,
   resetCertiState
 } from "../../store";
+import { useEffect } from "react";
 
 const stepList = ["Thông tin cơ bản", "Hình ảnh chứng chỉ"];
 const validateStep = [["name", "issuanceDate", "issuanceAuthority"], ["images"]];

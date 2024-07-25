@@ -53,10 +53,10 @@ export default function ProductDetail({ productId }) {
       ))
       setSlides(
         [...imageSlides, 
-        <div className='sm:w-[32rem] aspect-video'>
-        {/* // <div className='w-[35rem] aspect-video bg-red-300'> */}
-          <Canvas3D />
-        </div>
+        // <div className='sm:w-[32rem] aspect-video'>
+        // {/* // <div className='w-[35rem] aspect-video bg-red-300'> */}
+        //   <Canvas3D />
+        // </div>
         ]
       );
     }
