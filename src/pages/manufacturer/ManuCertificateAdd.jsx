@@ -5,6 +5,7 @@ import Input from "../../components/UI/Input";
 import ImageBox from "../../components/UI/ImageBox";
 import Wizzard from "../../components/Wizzard";
 import useToast from "../../hooks/use-toast";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { 
   useAddCertificateMutation,
   updateCertiForm,
@@ -36,7 +37,7 @@ function ManuCertificateAdd() {
   
   useEffect(() => {
     console.log(user.status);
-    if (user.status !== 0 || user.status !== 7) { 
+    if (user.status !== 0 && user.status !== 7) { 
       getToast('Bạn không thể thêm mới chứng chỉ lúc này');
       navigate("/manufacturer/certificate");
     }
@@ -52,9 +53,10 @@ function ManuCertificateAdd() {
   };
 
   const onSubmit = (data) => {
+    
     const request = {
       ...data,
-      issuanceDate: new Date(data.issuanceDate).getTime()
+      issuanceDate: new Date(data.issuanceDate).getTime(),
     };
     addProduct(request)
       .unwrap()
