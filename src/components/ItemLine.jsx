@@ -4,7 +4,7 @@ import {
   useFetchItemLogsByProductRecognitionQuery,
 } from "../store";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Tooltip from "./UI/Tooltip";
 import QR from "./QR";
 
@@ -17,7 +17,6 @@ export default function ItemLine({
   showQr,
 }) {
   const dispatch = useDispatch();
-  const qrContainerRef = useRef(null);
   const {
     data: itemLogsData,
     isError: isItemLogsError,
@@ -40,6 +39,7 @@ export default function ItemLine({
     );
   } else {
     if (itemLogsData) {
+      const logLength = itemLogsData.itemLogDTOs.length;
       itemLine = (
         <ul className="timeline timeline-vertical max-w-lg mx-auto overflow-y-auto max-h-[65svh]">
           {itemLogsData.itemLogDTOs.map((log, index) => (
@@ -59,7 +59,7 @@ export default function ItemLine({
                   }
                 >
                   <button
-                    className="w-8 h-8 rounded-full bg-green-400 hover:bg-green-500"
+                    className={`w-8 h-8 rounded-full ${index === logLength - 1 ? 'bg-cyan-400 animate-pulse' : 'bg-green-400 hover:bg-green-500'}`}
                     onClick={
                       index === 0
                         ? goToItemOrigin
@@ -69,7 +69,7 @@ export default function ItemLine({
                 </Tooltip>
               </div>
               <div className="timeline-end timeline-box">{log.eventType}</div>
-              {(index !== itemLogsData?.itemLogDTOs?.length - 1 || add) && (
+              {(index !== logLength - 1 || add) && (
                 <hr className="bg-base-content " />
               )}
             </li>

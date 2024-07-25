@@ -89,25 +89,31 @@ const itemApi = createApi({
           return {
             url: 'sendCurrentOwnerOTP',
             method: 'POST',
-            body: request,
+            body: {...request},
           }
         }
       }),
       checkOTP: builder.mutation({
         query: (request) => {
           return {
-            url: 'confirmOTP',
+            url: `confirmOTP?productRecognition=${request.productRecognition}`,
             method: 'POST',
-            body: request,
+            body: {
+              email: request.email,
+              otp: request.otp,
+            },
           }
         }
       }),
       checkCurrentOwnerOTP: builder.mutation({
         query: (request) => {
           return {
-            url: 'confirmCurrentOwner',
+            url: `confirmCurrentOwner?productRecognition=${request.productRecognition}`,
             method: 'POST',
-            body: request,
+            body: {
+              email: request.email,
+              otp: request.otp,
+            },
           }
         }
       }),

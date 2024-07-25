@@ -6,11 +6,16 @@ import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
 import Dropzone from "./Dropzone";
 import { Camera } from "react-camera-pro";
+import useFetchJSON from "../hooks/use-fetch-json";
 
 const MOBILE_NET_INPUT_HEIGHT = 224,
   MOBILE_NET_INPUT_WIDTH = 224;
 
 export default function ImageClassification() {
+  const { data: classnames, loading, error } = useFetchJSON(
+    "https://res.cloudinary.com/ds2d9tipg/raw/upload/v1721924100/classNames"
+  );
+  const {data: model, loading: isModelLoad, error: isModelError} = useFetchJSON('https://lopica.github.io/model-hosting/model.json')
   const [step, setStep] = useState("choose");
   const [predictionResult, setPredictions] = useState([]);
   const [confidence, setConfidence] = useState(0);
@@ -80,11 +85,19 @@ export default function ImageClassification() {
   };
 
   useEffect(() => {
+    if (classnames) classNamesRef.current = classnames;
+  }, [classnames]);
+
+  useEffect(()=>{
+
+  }, [])
+
+  useEffect(() => {
     if (videoContainerRef.current) {
-      videoRef.current = videoContainerRef.current.querySelector('video');
+      videoRef.current = videoContainerRef.current.querySelector("video");
       if (videoRef.current) {
         videoRef.current.onloadeddata = () => {
-          console.log('Video loaded');
+          console.log("Video loaded");
           requestAnimationFrame(predictVideoFrame);
         };
       }
@@ -142,21 +155,21 @@ export default function ImageClassification() {
       }
     }
 
-    async function fetchClassNames() {
-      try {
-        const response = await fetch(
-          "https://lopica.github.io/model-hosting/classNames.json"
-        );
-        const classNames = await response.json();
-        classNamesRef.current = classNames;
-        console.log("Class names loaded successfully!");
-      } catch (error) {
-        console.error("Failed to load class names:", error);
-      }
-    }
+    // async function fetchClassNames() {
+    //   try {
+    //     const response = await fetch(
+    //       "https://lopica.github.io/model-hosting/classNames.json"
+    //     );
+    //     const classNames = await response.json();
+    //     classNamesRef.current = classNames;
+    //     console.log("Class names loaded successfully!");
+    //   } catch (error) {
+    //     console.error("Failed to load class names:", error);
+    //   }
+    // }
 
     loadCustomModel();
-    fetchClassNames();
+    // fetchClassNames();
 
     return () => {
       // Cleanup code here (if necessary)

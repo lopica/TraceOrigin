@@ -112,14 +112,14 @@ function ManuProductAdd() {
       avatar: data.avatar.split(",")[1],
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
-      file3D: ''
+      file3D: getValues('file3D') ? getValues('file3D').split(',')[1] : '',
     };
     delete request.length;
     delete request.width;
     delete request.height;
     delete request.category;
 
-    console.log(request);
+    // console.log(request);
     addProduct(request)
       .unwrap()
       .then(() => {

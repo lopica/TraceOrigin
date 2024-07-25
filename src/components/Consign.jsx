@@ -14,6 +14,8 @@ import AddressInputGroup from "./AddressInputGroup";
 import { IoIosWarning } from "react-icons/io";
 import {
   useCheckConsignRoleQuery,
+  useCheckCurrentOwnerOTPMutation,
+  useCheckOTPMutation,
   useConsignMutation,
   useFetchEventByItemLogIdQuery,
   useGetAllTransportsQuery,
@@ -22,6 +24,7 @@ import {
   useSendOtpReceiverMutation,
 } from "../store";
 import Otp from "./Otp";
+import useToast from '../hooks/use-toast'
 import ItemEvent from "./ItemEvent";
 
 let form,
@@ -31,6 +34,8 @@ export default function Consign({ productRecognition }) {
   const { email } = useSelector((state) => state.userSlice);
   const [step, setStep] = useState("email");
   const [isChecked, setIsChecked] = useState(false);
+  const [isOtpValid, setOtpValid] = useState(false);
+  const {getToast} = useToast()
   /*//////////////
       email ->  otp-confirm           ->   consign-form  ->   consign-confirm
                 unauthorized-consign  ->   consign-info  ->   consign-confirm
@@ -45,7 +50,8 @@ export default function Consign({ productRecognition }) {
     useSendOtpOwnerMutation();
   const [sendOtpReceiver, { isLoading: isSendOtpReceiverLoading }] =
     useSendOtpReceiverMutation();
-
+  const [checkOtpOwnner] = useCheckCurrentOwnerOTPMutation();
+  const [checkOtpReceiver] = useCheckOTPMutation();
   const [consign, { isLoading: isConsignLoading }] = useConsignMutation();
   const {
     data: isPendingConsign,
@@ -77,18 +83,13 @@ export default function Consign({ productRecognition }) {
     isError: isEventError,
     isFetching: isEventFetch,
   } = useFetchEventByItemLogIdQuery(lastConsignEventId, {
-    skip: lastConsignEventId === "" && !isPendingConsign,
+    skip: lastConsignEventId === "",
   });
-
   const {
     register: registerEmailForm,
     handleSubmit: handleSubmitEmailForm,
     formState: { errors: emailFormError },
   } = useForm({ mode: "onTouched" });
-  // const {
-  //   register: pendingConsignRegister,
-  //   formState: {errors: pendingConsignError}
-  // } = useForm({ mode: "onTouched" });
   const {
     register: registerConsignForm,
     formState: { errors: consignFormErrors },
@@ -101,9 +102,7 @@ export default function Consign({ productRecognition }) {
   const [consignFormData, setConsignFormData] = useState();
 
   const onEmailSubmit = (formData) => {
-    console.log(formData);
-    if (formData.email === guestEmail) {
-      //if email is not change
+    if (formData.email === guestEmail && isOtpValid) {
       if (data === 1 || data === 2) {
         setInputsDisabled(false);
         setStep(
@@ -122,11 +121,29 @@ export default function Consign({ productRecognition }) {
     }
   };
 
-  const otpHandler = () => {
-    if (isOwner) {
-      setStep("consign-form");
-    } else {
-      setStep("consign-info");
+  const otpHandler = (otp) => {
+    if (data === 1) {
+      checkOtpOwnner({
+        email: guestEmail,
+        otp: otp.join(''),
+        productRecognition,
+      })
+        .unwrap()
+        .then(() => setStep("consign-form"))
+        .catch((err) => {
+          getToast('Mã otp của bạn không đúng')
+          console.log(err)});
+    } else if (data === 2){
+      checkOtpReceiver({
+        email: guestEmail,
+        otp: otp.join(''),
+        productRecognition,
+      })
+        .unwrap()
+        .then(() => setStep("consign-info"))
+        .catch((err) => {
+          getToast('Mã otp của bạn không đúng')
+          console.log(err)});
     }
   };
 
@@ -198,7 +215,6 @@ export default function Consign({ productRecognition }) {
       setValue("assignPersonMail", eventData.sender);
       setValue("address", eventData.addressInParty);
       setValue("description", eventData.descriptionItemLog);
-      
     }
   }, [eventData]);
 
@@ -244,6 +260,22 @@ export default function Consign({ productRecognition }) {
       }
     }
   }, [isCheckRoleSuccess, isCheckRoleFetch, guestEmail]);
+
+  useEffect(() => {
+    if (step === "otp-confirm" && !isCheckPendingFetch && data) {
+      console.log(data);
+      data === 1 &&
+        sendOtpOwner({
+          email: guestEmail,
+          productRecognition: productRecognition,
+        });
+      data === 2 &&
+        sendOtpReceiver({
+          email: guestEmail,
+          productRecognition: productRecognition,
+        });
+    }
+  }, [step, isCheckPendingFetch, data]);
 
   useEffect(() => {
     if (isTransportFetch) {
@@ -495,7 +527,8 @@ export default function Consign({ productRecognition }) {
               Quay lại
             </Button>
           )}
-          <p className="pl-4">consign info</p>
+          <p>consign info</p>
+          {/* <ItemEvent eventId={} core /> */}
         </div>
       );
     } else if (step === "unauthorized-consign") {
