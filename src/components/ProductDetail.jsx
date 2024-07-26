@@ -53,10 +53,9 @@ export default function ProductDetail({ productId }) {
       ))
       setSlides(
         [...imageSlides, 
-        // <div className='sm:w-[32rem] aspect-video'>
-        // {/* // <div className='w-[35rem] aspect-video bg-red-300'> */}
-        //   <Canvas3D />
-        // </div>
+        <div className='sm:w-[32rem] aspect-video'>
+          <Canvas3D full />
+        </div>
         ]
       );
     }
@@ -83,7 +82,9 @@ export default function ProductDetail({ productId }) {
 
   return (
     <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-12">
-      <Carousel slides={slides} />
+      <Carousel slides={slides} thumb3D={<div className='sm:w-[32rem] aspect-video'>
+          <Canvas3D />
+        </div>}/>
       {renderedProductDetail}
     </section>
   );

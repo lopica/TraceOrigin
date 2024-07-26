@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-const Carousel = ({ slides, options }) => {
+const Carousel = ({ slides, options, thumb3D }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
@@ -24,6 +24,7 @@ const Carousel = ({ slides, options }) => {
   }, [emblaMainApi, emblaThumbsApi]);
 
   const stopPropagation = (e) => {
+    console.log("Event: ", e.type);
     e.stopPropagation();
   };
 
@@ -34,18 +35,31 @@ const Carousel = ({ slides, options }) => {
   }, [emblaMainApi, onSelect]);
 
   return (
-    <div className="embla swiper-no-swiping" onTouchStart={stopPropagation} onTouchMove={stopPropagation} onTouchEnd={stopPropagation}>
+    <div className="embla swiper-no-swiping">
       <div className="embla__viewport" ref={emblaMainRef}>
         <div className="embla__container ">
           {slides.map((slide, index) => (
-            <div className="embla__slide flex justify-center items-center" key={index}>
-              <div className="max-h-[60svh] overflow-y-auto ">{slide}</div>
+            <div
+              className="embla__slide flex justify-center items-center"
+              key={index}
+            >
+              <div
+                className="max-h-[60svh] overflow-y-auto"
+                onClick={(index === slides.length - 1 && thumb3D) && stopPropagation}
+                onMouseDown={(index === slides.length - 1 && thumb3D) && stopPropagation}
+                onMouseMove={(index === slides.length - 1 && thumb3D) && stopPropagation}
+              >
+                {slide}
+              </div>
             </div>
           ))}
         </div>
       </div>
       <div className="embla-thumbs">
-        <div className="embla-thumbs__viewport bg-white rounded-box" ref={emblaThumbsRef}>
+        <div
+          className="embla-thumbs__viewport bg-white rounded-box"
+          ref={emblaThumbsRef}
+        >
           <div className="embla-thumbs__container flex justify-center items-center">
             {slides.map((slide, index) => (
               <Thumb
@@ -53,7 +67,7 @@ const Carousel = ({ slides, options }) => {
                 onClick={() => onThumbClick(index)}
                 selected={index === selectedIndex}
                 index={index}
-                slide={slide}
+                slide={index === slides.length - 1 && thumb3D ? thumb3D : slide}
               />
             ))}
           </div>
