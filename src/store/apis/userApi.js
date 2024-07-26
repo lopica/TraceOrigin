@@ -43,6 +43,17 @@ const userApi = createApi({
           }
         }
       }),
+      getDetailUser: builder.query({
+        query: (id) => {
+          return{
+            url: '/getDetailUser',
+            method: 'POST',
+            body:{
+              "id" : id
+            }
+          }
+        }
+      }),
       getUsers: builder.query({
         query: (options) => ({
           url: '/getDataToTable',
@@ -102,4 +113,4 @@ const userApi = createApi({
 });
 
 export { userApi };
-export const { useFetchUserQuery, useGetUserDetailQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation, useCountRegisteredUserQuery, useSearchAllManufacturerQuery } = userApi;
+export const { useFetchUserQuery, useGetUserDetailQuery, useGetDetailUserQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation, useCountRegisteredUserQuery, useSearchAllManufacturerQuery } = userApi;

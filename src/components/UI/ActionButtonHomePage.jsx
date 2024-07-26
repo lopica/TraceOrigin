@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { FaArrowRight, FaSignInAlt, FaSearch, FaQrcode, FaRobot } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaSignInAlt,
+  FaSearch,
+  FaQrcode,
+  FaRobot,
+} from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import useShow from "../../hooks/use-show";
@@ -10,35 +16,49 @@ import ImageClassification from "../../components/ImageClassification";
 import QRCodeScanner from "../../components/QRCodeScanner";
 import CustomUIQRCodeScanner from "../../components/CustomUIQRCodeScanner";
 import { useSearchAllManufacturerQuery } from "../../store/apis/userApi";
+import ShowInfoHomePage from "./ShowInfoHomePage";
 
 const ActionButtonHomePage = () => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const { data: data } = useSearchAllManufacturerQuery();
   const [filteredData, setFilteredData] = useState([]);
+  // ====================select manufacturer
 
+  const handleItemClick = (id) => {
+    setSelectedId(id);
+    setIsPopupOpen(true);
+    console.log(`Selected ID: ${id}`);
+  };
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-// ====================search in button 
-const [searchTerm, setSearchTerm] = useState('');
 
-const handleInputChange = (e) => {
-  const value = e.target.value;
-  setSearchTerm(value);
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+    setSearchTerm("")
+  };
+  // ====================search in button
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Lọc dữ liệu nếu ô nhập liệu không rỗng
-  if (value.trim() === '') {
-    setFilteredData([]);
-  } else {
-    const filtered = data.filter(item =>
-      item.org_name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredData(filtered);
-  }
-};
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
 
-const handleSearch = () => {
-  // Xử lý tìm kiếm với searchTerm
-  console.log('Searching for:', searchTerm);
-};
-// ======================
+    // Lọc dữ liệu nếu ô nhập liệu không rỗng
+    if (value.trim() === "") {
+      setFilteredData([]);
+    } else {
+      const filtered = data.filter((item) =>
+        item.org_name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  };
+
+  const handleSearch = () => {
+    // Xử lý tìm kiếm với searchTerm
+    console.log("Searching for:", searchTerm);
+  };
+  // ======================
   const {
     show: showModal,
     handleOpen: handleClick,
@@ -59,33 +79,42 @@ const handleSearch = () => {
 
   return (
     <div className=" p-6 space-y-2">
-    <div className="relative w-full h-16 rounded-lg bg-white hover:text-color1">
-      <div className="flex justify-between items-center h-full bg-white rounded-lg px-4 py-2 ">
-        <FaSearch className="mr-2" />
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleInputChange}
-          placeholder="  Tìm kiếm tên nhãn hiệu ..."
-          className="bg-transparent w-full h-full bg-white text-black rounded-lg p-4"
-        />
+    <ShowInfoHomePage
+        id={selectedId}
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+      />
+      <div className="relative w-full h-16 rounded-lg bg-white hover:text-color1">
+        <div className="flex justify-between items-center h-full bg-white rounded-lg px-4 py-2 ">
+          <FaSearch className="mr-2" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleInputChange}
+            placeholder="  Tìm kiếm tên nhãn hiệu ..."
+            className="bg-transparent w-full h-full bg-white text-black rounded-lg p-4"
+          />
+        </div>
+        {/* Danh sách lọc hiển thị dưới ô nhập liệu */}
+        {filteredData.length > 0 && (
+          <ul className="absolute w-full border border-gray-300 bg-white mt-2 rounded-lg shadow-lg z-10">
+            {filteredData.map((item) => (
+              <li
+                key={item.userId}
+                onClick={() => handleItemClick(item.userId)}
+                className="text-black flex items-center px-4 py-2 hover:bg-gray-200  rounded-lg cursor-pointer"
+              >
+                <img
+                  src={item.profileImage || "/default_avatar.png"}
+                  alt={item.org_name}
+                  className="w-8 h-8 rounded-full mr-2"
+                />
+                {item.org_name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-      {/* Danh sách lọc hiển thị dưới ô nhập liệu */}
-      {filteredData.length > 0 && (
-        <ul className="absolute w-full border border-gray-300 bg-white mt-2 rounded-lg shadow-lg z-10">
-          {filteredData.map(item => (
-            <li key={item.userId} className="text-black flex items-center px-4 py-2 hover:bg-gray-200  rounded-lg cursor-pointer">
-              <img
-                src={item.profileImage || "/default_avatar.png"}
-                alt={item.org_name}
-                className="w-8 h-8 rounded-full mr-2"
-              />
-              {item.org_name}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
 
       <Link
         to={isAuthenticated ? "/manufacturer/products" : "/portal/login"}
@@ -103,9 +132,7 @@ const handleSearch = () => {
       >
         <div className="flex items-center">
           <FaRobot className="mr-2" />
-          <span className="font-bold ">
-            TRA CỨU SẢN PHẨM BẰNG AI{" "}
-          </span>
+          <span className="font-bold ">TRA CỨU SẢN PHẨM BẰNG AI </span>
         </div>
         <FaArrowRight />
       </button>

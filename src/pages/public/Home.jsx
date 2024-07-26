@@ -92,7 +92,7 @@ function Home() {
         {/* <DiagramHomePage className="w-full h-full" /> */}
       </div>
 
-      <Footer/>
+      <Footer />
     </main>
   );
 }

@@ -9,6 +9,7 @@ import PieChart from "../../components/UI/monitoring/PieChart";
 import { useAdminQuery } from "../../store/apis/monitoringApi";
 import ChartTransport from "../../components/UI/ChartTransport.jsx";
 import TimeSelect from "../../components/UI/monitoring/TimeSelect";
+import PieCertChart from "../../components/UI/monitoring/PieCertChart";
 
 function AdminMonitoring() {
   const [selectedTime, setSelectedTime] = useState('1d');
@@ -74,7 +75,7 @@ function AdminMonitoring() {
             <div className="text-md font-bold text-gray-500 text-center mb-4">
               Tỉ lệ chứng chỉ hợp lệ
             </div>
-            <PieChart data={dataDummy}/>
+            <PieCertChart data={dataFetch?.ratioTask}/>
           </div>
         </div>
       </div>
