@@ -7,9 +7,9 @@ export default {
       colors: {
         customSideBarHover: "rgb(3, 131, 255)",
         customSideBarBg: "rgb(6, 11, 24)",
-        color1: "#76BCCE",
+        color1: "#0284c7",
         colorBgHomePage: "#FFFFFF",
-        color1Dark: "#5DA0B0",
+        color1Dark: "#38bdf8",
         colorBtn: "#4A8ABF",
       },
       animation: {

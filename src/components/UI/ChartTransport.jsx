@@ -15,8 +15,8 @@ const ChartTransport = ({ data = [] }) => {
       {
         label: 'Số lượng nhà cung cấp vận chuyển sử dụng',
         data: sortedData.map(item => item.value),
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(2, 132, 199, 0.2)',
+        borderColor: 'rgba(2, 132, 199, 1)',
         borderWidth: 1,
       },
     ],

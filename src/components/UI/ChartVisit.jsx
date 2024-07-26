@@ -30,8 +30,8 @@ const ChartVisit = ({selectedTime}) => {
         data: dataValues,
         fill: false,
         tension: 0.1,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(2, 132, 199, 0.2)',
+        borderColor: 'rgba(2, 132, 199, 1)',
       },
     ],
   };
