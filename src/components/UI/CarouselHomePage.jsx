@@ -48,7 +48,7 @@ const CarouselHomePage = () => {
     <div className="hidden sm:block w-full max-w-full mx-auto p-6">
       <div className="max-w-4xl mx-auto px-4 py-8 ">
         <div className="flex items-center mb-4">
-          <h1 className="text-3xl font-bold text-yellow-500 text-left">
+          <h1 className="text-3xl font-bold  text-yellow-400 text-left">
             <span className="block">HỆ THỐNG</span>
             <span className="block">TRUY XUẤT NGUỒN GỐC</span>
           </h1>

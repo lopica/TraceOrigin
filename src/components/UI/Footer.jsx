@@ -1,3 +1,5 @@
+import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa'; // Import các icon từ react-icons
+
 const Footer = () => {
   return (
     <footer className="bg-color1 text-white py-6">
@@ -8,10 +10,19 @@ const Footer = () => {
         </div>
 
         {/* Bên phải: Thông tin */}
-        <div className="text-center md:text-right">
-          <p className="mb-2">Thông tin liên hệ: thanhnc942@gmail.com</p>
-          <p className="mb-2">Điện thoại: 0961-835-886</p>
-          <p>Địa chỉ: Đại học FPT</p>
+        <div className="text-center md:text-right font-bold">
+          <p className="mb-2 flex items-center">
+            <FaEnvelope className="mr-2" /> {/* Icon Email */}
+            Thông tin liên hệ: thanhnc942@gmail.com
+          </p>
+          <p className="mb-2 flex items-center">
+            <FaPhone className="mr-2" /> {/* Icon Điện thoại */}
+            Điện thoại: 0961-835-886
+          </p>
+          <p className="flex items-center">
+            <FaMapMarkerAlt className="mr-2" /> {/* Icon Địa chỉ */}
+            Địa chỉ: Đại học FPT
+          </p>
         </div>
       </div>
     </footer>

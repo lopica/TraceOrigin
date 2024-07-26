@@ -59,8 +59,8 @@ const handleSearch = () => {
 
   return (
     <div className=" p-6 space-y-2">
-    <div className="relative w-full h-16 rounded-lg bg-white hover:text-white">
-      <div className="flex justify-between items-center h-full bg-white rounded-lg px-4 py-2 hover:bg-color1 hover:border-color1">
+    <div className="relative w-full h-16 rounded-lg bg-white hover:text-color1">
+      <div className="flex justify-between items-center h-full bg-white rounded-lg px-4 py-2 ">
         <FaSearch className="mr-2" />
         <input
           type="text"

@@ -17,7 +17,7 @@ function Toast({ children, show }) {
 
     return (
         <div className={`fixed bottom-4 right-4 transition-all duration-500 ${show ? 'visible' : 'hidden'} z-30`}>
-            <div className="alert alert-info p-4 rounded">
+            <div className="alert alert-info p-5 rounded-box font-bold  text-white bg-green-500">
                 <span>{children}</span>
             </div>
         </div>

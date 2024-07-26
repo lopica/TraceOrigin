@@ -10,6 +10,7 @@ export default {
         color1: "#76BCCE",
         colorBgHomePage: "#FFFFFF",
         color1Dark: "#5DA0B0",
+        colorBtn: "#4A8ABF",
       },
       animation: {
         "scale-fade": "scale-fade 2s infinite",
