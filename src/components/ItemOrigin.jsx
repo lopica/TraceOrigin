@@ -76,7 +76,7 @@ export default function ItemOrigin({ goToItemLine }) {
               <p><strong>Đơn vị sản xuất: </strong> {originData.orgName.trim() || "không rõ"}</p>
             </li>
             <li>
-              <p className="mb-4"><strong>hình ảnh của sản phẩm:</strong> </p>
+              <p className="mb-4"><strong>Hình ảnh của sản phẩm:</strong> </p>
               <Carousel slides={slides} />
             </li>
 

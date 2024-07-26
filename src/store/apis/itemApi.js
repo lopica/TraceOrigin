@@ -19,7 +19,7 @@ const itemApi = createApi({
 
       // Determine the endpoint based on the URL or some other method
       const url = typeof input === "string" ? input : input.url;
-      if (url.includes("/search") || url.includes("/addItem") || url.includes("/checkEventAuthorized")) {
+      if (url.includes("/search") || url.includes("/addItem") ) {
         // Customize fetch options for this specific endpoint
         init = {
           ...init,

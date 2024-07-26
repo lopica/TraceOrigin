@@ -24,7 +24,7 @@ import {
   useSendOtpReceiverMutation,
 } from "../store";
 import Otp from "./Otp";
-import useToast from '../hooks/use-toast'
+import useToast from "../hooks/use-toast";
 import ItemEvent from "./ItemEvent";
 
 let form,
@@ -35,7 +35,7 @@ export default function Consign({ productRecognition }) {
   const [step, setStep] = useState("email");
   const [isChecked, setIsChecked] = useState(false);
   const [isOtpValid, setOtpValid] = useState(false);
-  const {getToast} = useToast()
+  const { getToast } = useToast();
   /*//////////////
       email ->  otp-confirm           ->   consign-form  ->   consign-confirm
                 unauthorized-consign  ->   consign-info  ->   consign-confirm
@@ -125,25 +125,27 @@ export default function Consign({ productRecognition }) {
     if (data === 1) {
       checkOtpOwnner({
         email: guestEmail,
-        otp: otp.join(''),
+        otp: otp.join(""),
         productRecognition,
       })
         .unwrap()
         .then(() => setStep("consign-form"))
         .catch((err) => {
-          getToast('Mã otp của bạn không đúng')
-          console.log(err)});
-    } else if (data === 2){
+          getToast("Mã otp của bạn không đúng");
+          console.log(err);
+        });
+    } else if (data === 2) {
       checkOtpReceiver({
         email: guestEmail,
-        otp: otp.join(''),
+        otp: otp.join(""),
         productRecognition,
       })
         .unwrap()
         .then(() => setStep("consign-info"))
         .catch((err) => {
-          getToast('Mã otp của bạn không đúng')
-          console.log(err)});
+          getToast("Mã otp của bạn không đúng");
+          console.log(err);
+        });
     }
   };
 
@@ -735,7 +737,7 @@ export default function Consign({ productRecognition }) {
     <div className="flex justify-center">
       <Button
         onClick={handleOpen}
-        className="absolute z-[5] bottom-24 right-6 bg-sky-500 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-400 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
+        className="fixed z-[5] bottom-24 right-6 bg-sky-500 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-400 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
       >
         <MdOutlineTransferWithinAStation className="w-8 h-8 fill-white" />
       </Button>

@@ -44,19 +44,19 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
           <ul className="space-y-2">
             {/* uy quyen, giao hang, nhan */}
             <li>
-              <p>Người gửi: {eventData?.sender || "chưa rõ"}</p>
+              <p>Người gửi: {eventData?.sender}</p>
             </li>
             <li>
-              <p>Người nhận: {eventData?.receiver || "chưa rõ"}</p>
+              <p>Người nhận: {eventData?.receiver}</p>
             </li>
             <li>
               <p>
                 Thời gian diễn ra:{" "}
-                {getDateFromEpochTime(eventData?.timeReceive) || "không rõ"}
+                {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
               </p>
             </li>
             <li>
-              <p>Mô tả sự kiện: {eventData?.descriptionItemLog || "không rõ"}</p>
+              <p>Mô tả sự kiện: {eventData?.descriptionItemLog || "không có"}</p>
             </li>
             <li>
               <p className="mb-2">

@@ -45,7 +45,7 @@ export default function Layout() {
       <header className="fixed top-0 left-0 right-0 w-full h-[8vh] z-10">
         <Header />
       </header>
-      <section className="pt-[8vh] min-h-screen flex">
+      <section className="pt-[8vh]  min-h-screen flex">
         {matchPaterm && (
           <aside className="hidden md:block md:w-[15vw]">
             <SideBar />

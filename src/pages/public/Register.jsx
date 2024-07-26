@@ -23,6 +23,7 @@ import useToast from "../../hooks/use-toast";
 import Otp from "../../components/Otp.jsx";
 import useShow from "../../hooks/use-show.js";
 import Modal from "../../components/UI/Modal.jsx";
+import { useCheckOrgNameExistMutation } from "../../store/apis/authApi.js";
 
 const stepList = ["Thông tin cơ bản", "Thông tin liên hệ", "Tạo mật khẩu"];
 
@@ -71,6 +72,7 @@ function Register() {
   const [createUser, { isLoading: isRegisterLoading }] =
     useCreateUserMutation();
   const [checkEmail, results] = useCheckEmailExistMutation();
+  const [checkOrgname] = useCheckOrgNameExistMutation();
   const [alertContent, setAlertContent] = useState({
     type: null, // 'error', 'success', or 'info'
     content: "",
@@ -97,7 +99,7 @@ function Register() {
     };
     delete request.province;
     delete request.cfPassword;
-    console.log(request)
+    console.log(request);
     dispatch(updateRegisterForm(request));
     handleOpen();
     sendOtp({
@@ -107,8 +109,8 @@ function Register() {
         getToast("Hãy kiểm tra email của bạn");
       })
       .catch((res) => {
-        getToast('Không thể đăng ký thành công tài khoản mới')
-        console.log(res)
+        getToast("Không thể đăng ký thành công tài khoản mới");
+        console.log(res);
       });
   };
 
@@ -126,7 +128,7 @@ function Register() {
       })
       .catch((err) => {
         console.log(err.error);
-        getToast("Gặp lỗi khi khi gửi yêu cầu");
+        getToast("Mã OTP của bạn không đúng");
         setInputsDisabled(false); // Enable inputs again if creation fails
       });
   };
@@ -205,7 +207,16 @@ function Register() {
             <Input
               label="Tên tổ chức/công ty của bạn"
               type="text"
-              {...register("orgName")}
+              {...register("orgName", {
+                validate: async (value) => {
+                  try {
+                    await checkOrgname({ orgName: value }).unwrap(); // Assuming unwrap() correctly resolves or rejects
+                    return true; // Validation passed
+                  } catch (error) {
+                    return 'Tên tổ chức đã tồn tại' || "Có lỗi xảy ra khi kiểm tra orgName"; // Return custom error message
+                  }
+                },
+              })}
               error={errors.orgName?.message}
             />
             <AddressInputGroup
@@ -215,7 +226,7 @@ function Register() {
               errors={errors}
               control={control}
               required
-              message='Địa chỉ của bạn'
+              message="Địa chỉ của bạn"
             />
           </>
           <>
@@ -236,7 +247,7 @@ function Register() {
                     await checkEmail({ email: value }).unwrap(); // Assuming unwrap() correctly resolves or rejects
                     return true; // Validation passed
                   } catch (error) {
-                    return error?.data || "Có lỗi xảy ra khi kiểm tra email"; // Return custom error message
+                    return 'Email này đã có tài khoản' || "Có lỗi xảy ra khi kiểm tra email"; // Return custom error message
                   }
                 },
               })}

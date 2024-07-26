@@ -92,7 +92,7 @@ export default function Otp({
   }, [otp, onSubmit, setInputsDisabled]);
 
   useEffect(()=>{
-    if (!isOtpLoading) setTimeLeft(120)
+    if (!isOtpLoading) setTimeLeft(10)
   },[isOtpLoading])
 
   return (

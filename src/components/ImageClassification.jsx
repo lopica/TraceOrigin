@@ -13,9 +13,8 @@ const MOBILE_NET_INPUT_HEIGHT = 224,
 
 export default function ImageClassification() {
   const { data: classnames, loading, error } = useFetchJSON(
-    "https://res.cloudinary.com/ds2d9tipg/raw/upload/v1721924100/classNames"
+    "https://storage.googleapis.com/storagetraceorigin/classNames.json"
   );
-  const {data: model, loading: isModelLoad, error: isModelError} = useFetchJSON('https://lopica.github.io/model-hosting/model.json')
   const [step, setStep] = useState("choose");
   const [predictionResult, setPredictions] = useState([]);
   const [confidence, setConfidence] = useState(0);
@@ -31,6 +30,7 @@ export default function ImageClassification() {
   const customModelRef = useRef(null);
   const imageRef = useRef(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const animationFrameId = useRef(null);
 
   const checkCameraAvailability = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -81,16 +81,14 @@ export default function ImageClassification() {
         setConfidence(Math.floor(predictionArray[highestIndex] * 100));
       });
     }
-    requestAnimationFrame(predictVideoFrame);
+    animationFrameId.current = requestAnimationFrame(predictVideoFrame);
   };
+
 
   useEffect(() => {
     if (classnames) classNamesRef.current = classnames;
   }, [classnames]);
 
-  useEffect(()=>{
-
-  }, [])
 
   useEffect(() => {
     if (videoContainerRef.current) {
@@ -98,10 +96,16 @@ export default function ImageClassification() {
       if (videoRef.current) {
         videoRef.current.onloadeddata = () => {
           console.log("Video loaded");
-          requestAnimationFrame(predictVideoFrame);
+          animationFrameId.current = requestAnimationFrame(predictVideoFrame);
         };
       }
     }
+
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
   }, [step]);
 
   useEffect(() => {
@@ -145,7 +149,7 @@ export default function ImageClassification() {
   useEffect(() => {
     async function loadCustomModel() {
       try {
-        const url = "https://lopica.github.io/model-hosting/model.json";
+        const url = "https://storage.googleapis.com/storagetraceorigin/model.json";
         const model = await tf.loadLayersModel(url);
         console.log("Custom model loaded successfully!");
         customModelRef.current = model;
