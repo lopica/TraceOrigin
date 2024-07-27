@@ -78,11 +78,11 @@ function Home() {
         </div>
       </div>
       {/* ============================ */}
-      <div className="bg-colorBgHomePage m-6 rounded-box">
+      <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
         <ActiveMethodHomePage />
       </div>
       <Content1HomePage />
-      <div className="bg-colorBgHomePage m-6 rounded-box">
+      <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
         <Content2HomePage />
       </div>
 
