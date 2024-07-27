@@ -2,14 +2,16 @@ import React, { useEffect, useState} from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { FaUsers, FaQrcode, FaRegRegistered } from 'react-icons/fa'; // Thay thế bằng icon bạn muốn sử dụng
+import { FaUsers, FaQrcode, FaRegRegistered } from 'react-icons/fa'; 
 import { useGetNumberVisitsAllTimeQuery } from '../../../store/apis/elkApi';
 import { useCountRegisteredProductQuery } from '../../../store/apis/productApi';
 import { useCountRegisteredUserQuery } from '../../../store/apis/userApi';
+
 // import SockJS from 'sockjs-client';
 // import SockJS from "sockjs-client/dist/sockjs"
 
 import { over } from 'stompjs';
+import Top5Carousel from './Top5Carousel';
 var stompClient = null;
 
 const CarouselHomePage = () => {
@@ -56,6 +58,7 @@ const CarouselHomePage = () => {
         <p className="text-lg text-white text-justify mb-8">
           Giải pháp dành cho tất cả mọi người thực hiện truy xuất nguồn gốc sản phẩm nhằm tăng giá trị và sự khác biệt so với các sản phẩm khác trên thị trường. Chứng nhận về chất lượng, nguồn.
         </p>
+        {/* thông số  */}
         <div className="flex justify-center gap-4">
           <div className=" bg-color1 text-white p-4 rounded-box flex items-center space-x-4 ">
             <FaUsers className="text-3xl" />
@@ -64,18 +67,12 @@ const CarouselHomePage = () => {
               <h2 className="text-sm \text-center">Đối tác và khách hàng</h2>
             </div>
             <div className="mx-4 border-l-2 border-white h-16"></div>
-
-          {/* </div> */}
-          {/* <div className="bg-color1 text-white p-2 rounded-box flex items-center space-x-4 w-80"> */}
             <FaQrcode className="text-3xl" />
             <div className="flex flex-col">
             <p className="text-2xl font-bold">{number2 !== undefined && number2 !== null ? number2 : "--"}</p>
               <h2 className="text-sm text-center">Lượt truy xuất nguồn gốc</h2>
             </div>
             <div className="mx-4 border-l-2 border-white h-16"></div>
-
-          {/* </div> */}
-          {/* <div className="bg-color1 text-white p-4 rounded-box flex items-center space-x-4 w-80"> */}
             <FaRegRegistered className="text-3xl" />
             <div className="flex flex-col">
             <p className="text-2xl font-bold">{number3 !== undefined && number3 !== null ? number3 : "--"}</p>
@@ -83,6 +80,7 @@ const CarouselHomePage = () => {
             </div>
           </div>
         </div>
+        <Top5Carousel />
       </div>
     </div> 
   );
