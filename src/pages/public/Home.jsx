@@ -9,14 +9,14 @@ import QRCodeScanner from "../../components/QRCodeScanner";
 import CustomUIQRCodeScanner from "../../components/CustomUIQRCodeScanner";
 import ImageClassification from "../../components/ImageClassification";
 import { FaArrowRight, FaSignInAlt, FaSearch } from "react-icons/fa";
-import CarouselHomePage from "../../components/UI/CarouselHomePage";
-import ActionButtonHomePage from "../../components/UI/ActionButtonHomePage";
-import DiagramHomePage from "../../components/UI/DiagramHomePage";
-import Content1HomePage from "../../components/UI/Content1HomePage";
-import Content2HomePage from "../../components/UI/Content2HomePage";
-import Content3HomePage from "../../components/UI/Content3HomePage";
+import CarouselHomePage from "../../components/UI/homepage/CarouselHomePage";
+import ActionButtonHomePage from "../../components/UI/homepage/ActionButtonHomePage";
+// import DiagramHomePage from "../../components/UI/homepage/DiagramHomePage";
+import Content1HomePage from "../../components/UI/homepage/Content1HomePage";
+import Content2HomePage from "../../components/UI/homepage/Content2HomePage";
+import Content3HomePage from "../../components/UI/homepage/Content3HomePage";
 import Footer from "../../components/UI/Footer";
-import ActiveMethodHomePage from "../../components/UI/ActiveMethodHomePage";
+import ActiveMethodHomePage from "../../components/UI/homepage/ActiveMethodHomePage";
 import { useSearchAllManufacturerQuery } from "../../store/apis/userApi";
 
 function Home() {

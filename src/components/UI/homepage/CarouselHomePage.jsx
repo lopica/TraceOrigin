@@ -3,9 +3,9 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaUsers, FaQrcode, FaRegRegistered } from 'react-icons/fa'; // Thay thế bằng icon bạn muốn sử dụng
-import { useGetNumberVisitsAllTimeQuery } from '../../store/apis/elkApi';
-import { useCountRegisteredProductQuery } from '../../store/apis/productApi';
-import { useCountRegisteredUserQuery } from '../../store/apis/userApi';
+import { useGetNumberVisitsAllTimeQuery } from '../../../store/apis/elkApi';
+import { useCountRegisteredProductQuery } from '../../../store/apis/productApi';
+import { useCountRegisteredUserQuery } from '../../../store/apis/userApi';
 // import SockJS from 'sockjs-client';
 // import SockJS from "sockjs-client/dist/sockjs"
 

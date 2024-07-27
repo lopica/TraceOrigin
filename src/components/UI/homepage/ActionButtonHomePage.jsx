@@ -9,13 +9,13 @@ import {
 } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import useShow from "../../hooks/use-show";
-import { usePredictMutation } from "../../store";
-import Modal from "../../components/UI/Modal";
-import ImageClassification from "../../components/ImageClassification";
-import QRCodeScanner from "../../components/QRCodeScanner";
-import CustomUIQRCodeScanner from "../../components/CustomUIQRCodeScanner";
-import { useSearchAllManufacturerQuery } from "../../store/apis/userApi";
+import useShow from "../../../hooks/use-show";
+import { usePredictMutation } from "../../../store";
+import Modal from "../Modal";
+import ImageClassification from "../../ImageClassification";
+import QRCodeScanner from "../../QRCodeScanner";
+import CustomUIQRCodeScanner from "../../CustomUIQRCodeScanner";
+import { useSearchAllManufacturerQuery } from "../../../store/apis/userApi";
 import ShowInfoHomePage from "./ShowInfoHomePage";
 
 const ActionButtonHomePage = () => {

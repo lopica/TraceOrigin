@@ -76,6 +76,18 @@ const productApi = createApi({
           };
         },
       }),
+      ViewProductByManufacturerId: builder.query({
+        query: (id, category) => {
+          return {
+            url: "/ViewProductByManufacturerId",
+            method: "POST",
+            body: {
+              id: id,
+              category: category || "", 
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -86,5 +98,6 @@ export const {
   useSearchProductQuery,
   useViewProductDetailQuery,
   useDeleteProductByIdMutation,
-  useCountRegisteredProductQuery
+  useCountRegisteredProductQuery,
+  useViewProductByManufacturerIdQuery
 } = productApi;
