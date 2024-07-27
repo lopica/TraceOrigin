@@ -20,7 +20,7 @@ const ActiveMethodHomePage = () => {
       {/* Hình ảnh */}
       <div className="p-1 md:p-8 w-full overflow-x-auto md:overflow-hidden">
         <img 
-          src="/workflow-process.png" // Đường dẫn tới logo của hãng
+          src="/workflow-process1.png" // Đường dẫn tới logo của hãng
           alt="Logo"
           className="object-contain" // Điều chỉnh kích thước logo theo ý muốn
         />

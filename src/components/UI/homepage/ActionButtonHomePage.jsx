@@ -34,7 +34,8 @@ const ActionButtonHomePage = () => {
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    setSearchTerm("")
+    setSearchTerm("");
+    setFilteredData([]);
   };
   // ====================search in button
   const [searchTerm, setSearchTerm] = useState("");

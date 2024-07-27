@@ -32,7 +32,7 @@ const Content3HomePage = () => {
             </p>
 
             <div className="space-y-4">
-              <div className=" bg-white p-4 rounded-box shadow">
+              <div className=" bg-white p-4 rounded-box shadow-md">
                 <h3 className="flex items-center text-xl font-semibold">
                   <FaBrain className="mr-2 text-color1" />
                   Áp dụng công nghệ AI
@@ -42,7 +42,7 @@ const Content3HomePage = () => {
                 </p>
               </div>
 
-              <div className="bg-white p-4 rounded-box shadow">
+              <div className="bg-white p-4 rounded-box shadow-md">
                 <h3 className="flex items-center text-xl font-semibold">
                   <SiBlockchaindotcom className="mr-2 text-color1" />
                   Áp dụng công nghệ Blockchain

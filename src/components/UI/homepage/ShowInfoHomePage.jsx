@@ -1,9 +1,11 @@
 import { useViewProductByManufacturerIdQuery } from "../../../store/apis/productApi";
 import { useGetDetailUserQuery } from "../../../store/apis/userApi";
-import { FaTimes } from "react-icons/fa"; // Import icon "X" từ react-icons
 import { useGetListCertificateByManuIdQuery } from "../../../store";
 import ProductList from "./ProductList";
 import CertificateList from "./CertificateList";
+import { useState } from "react";
+import { FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa"; // Import các biểu tượng
+import classNames from 'classnames';
 
 const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -11,10 +13,12 @@ const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
   const { data: dataProduct } = useViewProductByManufacturerIdQuery(id, "");
   const { data: dataCert } = useGetListCertificateByManuIdQuery(id);
 
+  const [showProducts, setShowProducts] = useState(false);
+  const [showCerts, setShowCerts] = useState(false);
   
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="relative bg-white rounded-lg shadow-lg max-w-sm w-full p-4">
+      <div className="relative bg-white rounded-lg shadow-lg w-2/3 h-[95vh] max-w-3xl p-4 overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -65,15 +69,58 @@ const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
         {/* Product Info */}
         <hr className="my-4" />
         <div>
-          <h3 className="font-bold mb-2 text-xl">Sản phẩm đã đăng ký:</h3>
-          <ProductList data ={dataProduct}/>
+        <button
+            onClick={() => setShowProducts(!showProducts)}
+            className="flex items-center text-xl font-bold text-color1 hover:text-color1Dark"
+          >
+            {showProducts ? (
+              <FaChevronUp className="mr-2" />
+            ) : (
+              <FaChevronDown className="mr-2" />
+            )}
+         Sản phẩm đã đăng ký
+          </button>
+          <div
+            className={classNames(
+              "transition-all duration-300 ease-in-out",
+              {
+                "max-h-0 opacity-0 overflow-hidden": !showProducts,
+                "max-h-screen opacity-100 overflow-visible": showProducts
+              }
+            )}
+          >
+            <ProductList data={dataProduct} />
+          </div>
         </div>
-            {/* Cert Info */}
-            <hr className="my-4" />
+
+        {/* Cert Info */}
+        <hr className="my-4" />
         <div>
-          <h3 className="font-bold mb-2 text-xl">Sản phẩm đã đăng ký:</h3>
-          <CertificateList data ={dataCert}/>
+        <button
+            onClick={() => setShowCerts(!showCerts)}
+            className="flex items-center text-xl font-bold text-color1 hover:text-color1Dark"
+          >
+            {showCerts ? (
+              <FaChevronUp className="mr-2" />
+            ) : (
+              <FaChevronDown className="mr-2" />
+            )}
+         Chứng chỉ
+          </button>
+          <div
+            className={classNames(
+              "transition-all duration-300 ease-in-out",
+              {
+                "max-h-0 opacity-0 overflow-hidden": !showCerts,
+                "max-h-screen opacity-100 overflow-visible": showCerts
+              }
+            )}
+          >
+            <CertificateList data={dataCert} />
+          </div>
         </div>
+        <hr className="my-4" />
+
       </div>
     </div>
   );
