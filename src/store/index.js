@@ -3,6 +3,7 @@ import { authApi } from "./apis/authApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { userApi } from "./apis/userApi";
 import { certificateApi } from "./apis/certificateApi";
+import { reportApi } from "./apis/reportApi";
 import { productApi } from "./apis/productApi";
 import { toastReducer } from "./slices/toastSlice";
 import { itemApi } from "./apis/itemApi";
@@ -72,6 +73,7 @@ const rootReducer = combineReducers({
   [elkApi.reducerPath]: elkApi.reducer,
   [monitoringApi.reducerPath]: monitoringApi.reducer,
   [utilApi.reducerPath]: utilApi.reducer,
+  [reportApi.reducerPath]: reportApi.reducer,
 });
 
 // Apply persistReducer wrapper
@@ -105,6 +107,7 @@ const store = configureStore({
       elkApi.middleware,
       monitoringApi.middleware,
       utilApi.middleware,
+      reportApi.middleware,
       thunk
       // serialRequestMiddleware
     ),
@@ -226,3 +229,4 @@ export {
   useDeleteCertCertIdMutation,
 } from "./apis/certificateApi";
 export { useGetNumberVisitsAllTimeQuery } from "./apis/elkApi";
+export { useGetListReportsQuery } from "./apis/reportApi";
