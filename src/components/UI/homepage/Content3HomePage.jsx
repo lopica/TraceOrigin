@@ -3,12 +3,12 @@ import { SiBlockchaindotcom } from "react-icons/si";
 
 const Content3HomePage = () => {
   return (
-    <div className="py-12 md:p-24">
+    <div className="py-12 md:p-12">
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto">
         {/* Nửa trái: Biểu đồ */}
         <div className="md:w-1/3 flex flex-col items-center justify-center text-center">
           <img
-            className="object-contain h-full w-auto"
+            className="object-contain h-3/4 w-auto"
             src="/phone_homepage.png"
             alt="Data Analysis Graph"
           />

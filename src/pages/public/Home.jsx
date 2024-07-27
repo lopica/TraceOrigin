@@ -18,6 +18,7 @@ import Content3HomePage from "../../components/UI/homepage/Content3HomePage";
 import Footer from "../../components/UI/Footer";
 import ActiveMethodHomePage from "../../components/UI/homepage/ActiveMethodHomePage";
 import { useSearchAllManufacturerQuery } from "../../store/apis/userApi";
+import ConsultationForm from "../../components/UI/homepage/ConsultationForm";
 
 function Home() {
   const navigate = useNavigate();
@@ -88,8 +89,8 @@ function Home() {
 
       <Content3HomePage />
       {/* ============================ */}
-      <div className="bg-colorBgHomePage">
-        {/* <DiagramHomePage className="w-full h-full" /> */}
+      <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
+        <ConsultationForm/>
       </div>
 
       <Footer />

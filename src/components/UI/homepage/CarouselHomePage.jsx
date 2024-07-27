@@ -57,21 +57,25 @@ const CarouselHomePage = () => {
           Giải pháp dành cho tất cả mọi người thực hiện truy xuất nguồn gốc sản phẩm nhằm tăng giá trị và sự khác biệt so với các sản phẩm khác trên thị trường. Chứng nhận về chất lượng, nguồn.
         </p>
         <div className="flex justify-center gap-4">
-          <div className=" bg-color1 text-white p-4 rounded-box flex items-center space-x-4 w-80">
+          <div className=" bg-color1 text-white p-4 rounded-box flex items-center space-x-4 ">
             <FaUsers className="text-3xl" />
             <div className="flex flex-col">
             <p className="text-2xl font-bold">{number1 !== undefined && number1 !== null ? number1 : "--"}</p>
               <h2 className="text-sm \text-center">Đối tác và khách hàng</h2>
             </div>
-          </div>
-          <div className="bg-color1 text-white p-2 rounded-box flex items-center space-x-4 w-80">
+            <div className="mx-4 border-l-2 border-white h-16"></div>
+
+          {/* </div> */}
+          {/* <div className="bg-color1 text-white p-2 rounded-box flex items-center space-x-4 w-80"> */}
             <FaQrcode className="text-3xl" />
             <div className="flex flex-col">
             <p className="text-2xl font-bold">{number2 !== undefined && number2 !== null ? number2 : "--"}</p>
               <h2 className="text-sm text-center">Lượt truy xuất nguồn gốc</h2>
             </div>
-          </div>
-          <div className="bg-color1 text-white p-4 rounded-box flex items-center space-x-4 w-80">
+            <div className="mx-4 border-l-2 border-white h-16"></div>
+
+          {/* </div> */}
+          {/* <div className="bg-color1 text-white p-4 rounded-box flex items-center space-x-4 w-80"> */}
             <FaRegRegistered className="text-3xl" />
             <div className="flex flex-col">
             <p className="text-2xl font-bold">{number3 !== undefined && number3 !== null ? number3 : "--"}</p>
