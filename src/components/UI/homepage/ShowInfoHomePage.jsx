@@ -11,7 +11,7 @@ const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
   const { data: dataProduct } = useViewProductByManufacturerIdQuery(id, "");
   const { data: dataCert } = useGetListCertificateByManuIdQuery(id);
 
-  
+  dssds
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="relative bg-white rounded-lg shadow-lg max-w-sm w-full p-4">
