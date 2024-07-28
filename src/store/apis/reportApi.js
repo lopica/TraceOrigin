@@ -48,10 +48,22 @@ const reportApi = createApi({
             productId: options.productId || -1
           }
         }),
+      }),
+      addNewReports: builder.mutation({
+        query: (options) => ({
+          url: '/createReport',
+          method: 'POST',
+          body: {
+            ...options,
+          },
+          responseHandler: (response) => {
+            return response.text();
+          },
+        }),
       })
     };
   },
 });
 
 export { reportApi };
-export const { useGetListReportsQuery } = reportApi;
+export const { useGetListReportsQuery, useAddNewReportsMutation } = reportApi;
