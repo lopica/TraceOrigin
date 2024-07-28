@@ -26,6 +26,7 @@ const initialData = [
 
 function CustomerService() {
   const [searchPhone, setSearchPhone] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
   const [searchName, setSearchName] = useState("");
   const [sortType, setSortType] = useState("all");
   const [data, setData] = useState(initialData);
@@ -66,6 +67,21 @@ function CustomerService() {
             type="text"
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="emailSearch"
+            className="block text-sm font-medium mb-1"
+          >
+            Tìm theo số Email:
+          </label>
+          <input
+            id="emailSearch"
+            type="text"
+            value={searchEmail}
+            onChange={(e) => setSearchEmail(e.target.value)}
             className="border border-gray-300 rounded-md p-2 w-full"
           />
         </div>
