@@ -20,7 +20,6 @@ export default function useImage(setValue) {
   );
 
   const handleImages = (e) => {
-    console.log("vo day");
     const files = Array.from(e.target.files);
 
     if (files.length === 0) {
@@ -79,10 +78,6 @@ export default function useImage(setValue) {
   const isAvatar = (image) => {
     return image === avatar;
   };
-
-  useEffect(() => {
-    console.log(imagesData);
-  }, [imagesData]);
 
   useEffect(() => {
     setValue("images", imagesData);

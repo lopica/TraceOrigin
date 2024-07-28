@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "./UI/Button";
 import handleKeyDown from "../utils/handleKeyDown";
 import useToast from "../hooks/use-toast";
@@ -19,6 +19,8 @@ function Wizzard({
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const { getToast } = useToast();
+  const imagesRef = useRef()
+  const avatarRef = useRef()
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
@@ -26,9 +28,8 @@ function Wizzard({
 
     if (identifier === "next") {
       if (validateStep[currentStep][0] === "images") {
-        const images = getValues("images");
-        const avatar = getValues("avatar");
-
+        const images = imagesRef.current;
+        const avatar = avatarRef.current;
         if (!images.length > 0) {
           getToast("Bạn hãy chọn ít nhất 1 ảnh.");
           return;
@@ -53,6 +54,11 @@ function Wizzard({
       onSubmit();
     }
   };
+
+  useEffect(() => {
+    if(getValues('images')) imagesRef.current = getValues("images")
+    if(getValues('avatar')) avatarRef.current = getValues('avatar')
+  }, [getValues("images"), getValues('avatar')]);
 
   return (
     <>
