@@ -249,19 +249,23 @@ function ManuProductList() {
             data={categoriesData}
             placeholder="Chọn danh mục"
           />
-          <Input
-            label="Từ ngày"
-            type="date"
-            {...register("startDate")}
-            placeholder="Chọn ngày bắt đầu"
-          />
-          <Input
-            label="Đến ngày"
-            type="date"
-            {...register("endDate")}
-            placeholder="Chọn ngày kết thúc"
-          />
-          <button className="flex items-center w-full mt-4 bg-color1 text-white  font-bold py-2 px-4 rounded-lg hover:bg-color1Dark ">
+          <div className="flex gap-4 mb-4">
+            <Input
+              label="Từ ngày"
+              type="date"
+              {...register("startDate")}
+              placeholder="Chọn ngày bắt đầu"
+              className="flex-1"
+            />
+            <Input
+              label="Đến ngày"
+              type="date"
+              {...register("endDate")}
+              placeholder="Chọn ngày kết thúc"
+              className="flex-1"
+            />
+          </div>
+          <button className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark">
             <FaSearch size={20} className="mr-2" />
             Tìm kiếm
           </button>
@@ -280,19 +284,18 @@ function ManuProductList() {
         </div>
         {/* phần paging  */}
         <div className="mt-4 flex justify-center w-full">
-  <div className="flex">
-    {Array.from({ length: paginate.totalPages }).map((_, idx) => (
-      <button
-        key={idx}
-        className="join-item btn"
-        onClick={() => setCurrentPage(idx)}
-      >
-        {idx + 1}
-      </button>
-    ))}
-  </div>
-</div>
-
+          <div className="flex">
+            {Array.from({ length: paginate.totalPages }).map((_, idx) => (
+              <button
+                key={idx}
+                className="join-item btn"
+                onClick={() => setCurrentPage(idx)}
+              >
+                {idx + 1}
+              </button>
+            ))}
+          </div>
+        </div>
         {isEditModalOpen && (
           <ManuProductEdit
             productId={selectedProductId}

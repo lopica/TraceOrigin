@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaCheck, FaHourglassHalf } from "react-icons/fa"; // Import biểu tượng dấu tích
+import { FaCheck, FaHourglassHalf } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ const initialData = [
     name: "Nguyễn Văn A",
     reason: "Tư vấn sản phẩm",
     consulted: true,
+    date: "2024-07-20", // Thêm dữ liệu ngày để kiểm tra
   },
   {
     id: 2,
@@ -20,16 +21,17 @@ const initialData = [
     name: "Trần Thị B",
     reason: "Hỗ trợ kỹ thuật",
     consulted: false,
+    date: "2024-07-25", // Thêm dữ liệu ngày để kiểm tra
   },
   // Thêm dữ liệu mẫu khác
 ];
 
 function CustomerService() {
-  const [searchPhone, setSearchPhone] = useState("");
-  const [searchEmail, setSearchEmail] = useState("");
-  const [searchName, setSearchName] = useState("");
+  const [searchKey, setSearchKey] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [sortType, setSortType] = useState("all");
-  const [data, setData] = useState(initialData);
+  const [note, setNote] = useState("");
   const { getToast } = useToast();
   const navigate = useNavigate();
 
@@ -41,15 +43,9 @@ function CustomerService() {
       navigate("/portal/login");
     }
   }, [isAuthenticated, getToast, navigate]);
+
   // Xử lý bộ lọc
-  const filteredData = data.filter((item) => {
-    return (
-      (item.phone.includes(searchPhone) || item.name.includes(searchName)) &&
-      (sortType === "all" ||
-        (sortType === "consulted" && item.consulted) ||
-        (sortType === "notConsulted" && !item.consulted))
-    );
-  });
+
 
   return (
     <div className="flex flex-col md:flex-row p-4">
@@ -57,48 +53,39 @@ function CustomerService() {
         <h2 className="text-lg font-semibold mb-4">Bộ lọc</h2>
         <div className="mb-4">
           <label
-            htmlFor="phoneSearch"
+            htmlFor="searchKey"
             className="block text-sm font-medium mb-1"
           >
-            Tìm theo số điện thoại:
+            Tìm theo số điện thoại và email:
           </label>
           <input
-            id="phoneSearch"
+            id="searchKey"
             type="text"
-            value={searchPhone}
-            onChange={(e) => setSearchPhone(e.target.value)}
+            value={searchKey}
+            onChange={(e) => setSearchKey(e.target.value)}
             className="border border-gray-300 rounded-md p-2 w-full"
           />
         </div>
         <div className="mb-4">
-          <label
-            htmlFor="emailSearch"
-            className="block text-sm font-medium mb-1"
-          >
-            Tìm theo số Email:
+          <label htmlFor="dateRange" className="block text-sm font-medium mb-1">
+            Tìm theo khoảng thời gian:
           </label>
-          <input
-            id="emailSearch"
-            type="text"
-            value={searchEmail}
-            onChange={(e) => setSearchEmail(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="nameSearch"
-            className="block text-sm font-medium mb-1"
-          >
-            Tìm theo tên:
-          </label>
-          <input
-            id="nameSearch"
-            type="text"
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-          />
+          <div className="flex space-x-2">
+            <input
+              id="startDate"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-1/2"
+            />
+            <input
+              id="endDate"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-1/2"
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="sortType" className="block text-sm font-medium mb-1">
@@ -114,6 +101,19 @@ function CustomerService() {
             <option value="consulted">Đã tư vấn</option>
             <option value="notConsulted">Chưa tư vấn</option>
           </select>
+        </div>
+        {/* Khu vực ghi chú */}
+        <div className="mb-4">
+          <label htmlFor="note" className="block text-sm font-medium mb-1">
+            Ghi chú:
+          </label>
+          <textarea
+            id="note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+            rows="4"
+          />
         </div>
       </div>
 
@@ -132,7 +132,7 @@ function CustomerService() {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item) => (
+            {initialData.map((item) => (
               <tr key={item.id}>
                 <td className="border border-gray-300 p-2">{item.id}</td>
                 <td className="border border-gray-300 p-2">{item.phone}</td>
