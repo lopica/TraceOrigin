@@ -27,6 +27,7 @@ import AdminMonitoring from "./pages/admin/AdminMonitoring";
 import ManuReportManager from "./pages/manufacturer/ManuReportManager";
 import ErrorPage from "./pages/public/ErrorPage";
 import CreateReport from "./pages/public/CreateReport";
+import CustomerService from "./pages/admin/CustomerService";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -76,6 +77,7 @@ function AppRouter() {
           path: "/admin",
           children: [
             { path: 'manufacturerList', element: <ManufacturerList /> },
+            { path: 'customerService', element: <CustomerService /> },
             { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
             { path: 'adminMonitoring', element: <AdminMonitoring /> },
           ]

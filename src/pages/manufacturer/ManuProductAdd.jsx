@@ -19,6 +19,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../../components/UI/Button";
 import { useDropzone } from "react-dropzone";
 import Canvas3D from "../../components/Canvas3D";
+import localforage from "localforage";
 
 const stepList = [
   "Thông tin cơ bản",
@@ -39,13 +40,15 @@ function ManuProductAdd() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const { images, form } = useSelector((state) => state.productForm);
+  const { images, avatar, avatarIdx } = useSelector(
+    (state) => state.productForm
+  );
+  const user = useSelector((state) => state.userSlice);
   const { categoriesData } = useCategory();
   const [addProduct, results] = useAddProductMutation();
   const { getToast } = useToast();
   const fileInputRef = useRef(null);
   const [progress, setProgress] = useState(0);
-
   const {
     register,
     handleSubmit,
@@ -56,16 +59,58 @@ function ManuProductAdd() {
     formState: { errors },
   } = useForm({
     mode: "onTouched",
-    defaultValues: { ...form },
   });
 
-  const user = useSelector((state) => state.userSlice);
+  useEffect(() => {
+    const fetchStoredData = async () => {
+      try {
+        if (user) {
+          const data = await localforage.getItem(`formData_${user.userId}`);
+          if (data) {
+            let jsonData;
+            try {
+              jsonData = JSON.parse(data);
+            } catch (parseError) {
+              console.error("Error parsing JSON data:", parseError);
+              return;
+            }
+            console.log("Fetched JSON data:", jsonData);
 
-  
+            setValue("productName", jsonData.productName || "");
+            setValue("category", jsonData.category || "");
+            setValue("description", jsonData.description || "");
+            setValue("warranty", jsonData.warranty || "");
+            setValue("length", jsonData.length || "");
+            setValue("width", jsonData.width || "");
+            setValue("height", jsonData.height || "");
+            setValue("weight", jsonData.weight || "");
+            setValue("material", jsonData.material || "");
+            setValue("images", jsonData.images || []);
+            setValue("avatar", jsonData.avatar || '');
+            dispatch(updateImages(jsonData.images || []));
+            dispatch(
+              updateAvatar({
+                avatar: jsonData.avatar || "",
+                avatarIdx: jsonData.avatarIdx || null,
+              })
+            );
+          } else {
+            console.log("No data found for user:", user.userId);
+          }
+        } else {
+          console.log("User is not defined");
+        }
+      } catch (error) {
+        console.error("Error fetching stored data:", error);
+      }
+    };
+    fetchStoredData();
+  }, [user, dispatch, setValue]);
+
   useEffect(() => {
     console.log(user.status);
-    if (user.status !== 1) { 
-      getToast('Bạn không có quyền thêm mới sản phẩm');
+    if (user.status !== 1) {
+      getToast("Bạn không có quyền thêm mới sản phẩm");
       navigate("/manufacturer/products");
     }
   }, [user]);
@@ -98,12 +143,50 @@ function ManuProductAdd() {
   });
 
   const onStepSubmit = (step) => {
-    const data = validateStep[step].reduce((obj, field) => {
-      obj[field] = getValues(field);
-      return obj;
-    }, {});
-    dispatch(updateCategories(categoriesData));
-    dispatch(updateForm(data));
+    try {
+      const data = validateStep[step].reduce((obj, field) => {
+        obj[field] = getValues(field);
+        return obj;
+      }, {});
+
+      if (step === 0) dispatch(updateCategories(categoriesData));
+      dispatch(updateForm(data));
+
+      const formData = {
+        ...data,
+      };
+
+      if (user) {
+        localforage.getItem(`formData_${user.userId}`).then((data) => {
+          let prevStoredFormData;
+          if (data) {
+            prevStoredFormData = JSON.parse(data);
+          } else {
+            prevStoredFormData = {};
+          }
+
+          const updatedImages = [...images];
+          const updatedAvatar = avatar || prevStoredFormData.avatar;
+          const updatedAvatarIdx =
+            avatarIdx !== undefined ? avatarIdx : prevStoredFormData.avatarIdx;
+
+          const updatedFormData = {
+            ...prevStoredFormData,
+            ...formData,
+            images: updatedImages,
+            avatar: updatedAvatar,
+            avatarIdx: updatedAvatarIdx,
+          };
+
+          localforage.setItem(
+            `formData_${user.userId}`,
+            JSON.stringify(updatedFormData)
+          );
+        });
+      }
+    } catch (error) {
+      console.error("Error during step submission:", error);
+    }
   };
 
   const onSubmit = (data) => {
@@ -112,25 +195,25 @@ function ManuProductAdd() {
       avatar: data.avatar.split(",")[1],
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
-      file3D: getValues('file3D') ? getValues('file3D').split(',')[1] : '',
+      file3D: getValues("file3D") ? getValues("file3D").split(",")[1] : "",
     };
     delete request.length;
     delete request.width;
     delete request.height;
     delete request.category;
 
-    // console.log(request);
-    addProduct(request)
-      .unwrap()
-      .then(() => {
-        dispatch(resetState());
-        getToast("Tạo mới thành công sản phẩm");
-        navigate("/manufacturer/products");
-      })
-      .catch((err) => {
-        getToast("Gặp lỗi khi tạo mới sản phẩm");
-        console.log(err);
-      });
+    console.log(request);
+    // addProduct(request)
+    //   .unwrap()
+    //   .then(() => {
+    //     dispatch(resetState());
+    //     getToast("Tạo mới thành công sản phẩm");
+    //     navigate("/manufacturer/products");
+    //   })
+    //   .catch((err) => {
+    //     getToast("Gặp lỗi khi tạo mới sản phẩm");
+    //     console.log(err);
+    //   });
   };
 
   useEffect(() => {
@@ -156,7 +239,8 @@ function ManuProductAdd() {
         getValues={getValues}
         reset={(e) => {
           e.preventDefault();
-          dispatch(resetState());
+          // dispatch(resetState());
+          localforage.removeItem(`formData_${user.userId}`);
           window.location.reload();
         }}
       >
@@ -296,19 +380,20 @@ function ManuProductAdd() {
         </>
         <>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4 justify-items-center">
-            {images.map((image, i) => (
-              <div key={i}>
-                <ImageBox
-                  image={image}
-                  show
-                  setValue={setValue}
-                  className="min-w-24 min-h-24 max-w-24 max-h-24 "
-                  idx={i}
-                />
-              </div>
-            ))}
+            {images &&
+              images.map((image, i) => (
+                <div key={i}>
+                  <ImageBox
+                    image={image}
+                    show
+                    setValue={setValue}
+                    className="min-w-24 min-h-24 max-w-24 max-h-24 "
+                    idx={i}
+                  />
+                </div>
+              ))}
 
-            {images.length < 5 && (
+            {images?.length < 5 && (
               <ImageBox
                 add
                 setValue={setValue}

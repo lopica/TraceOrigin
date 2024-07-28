@@ -7,6 +7,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import Dropzone from "./Dropzone";
 import { Camera } from "react-camera-pro";
 import useFetchJSON from "../hooks/use-fetch-json";
+import { useSelector } from "react-redux";
 
 const MOBILE_NET_INPUT_HEIGHT = 224,
   MOBILE_NET_INPUT_WIDTH = 224;
@@ -31,6 +32,8 @@ export default function ImageClassification() {
   const imageRef = useRef(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const animationFrameId = useRef(null);
+  const { aiList } = useSelector((state) => state.historySearchSlice);
+
 
   const checkCameraAvailability = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -213,10 +216,27 @@ export default function ImageClassification() {
             Quay lại
           </Button>
           {!imageUrl && (
+            <>
             <Dropzone
               className="max-w-4xl lg:mx-auto h-[20svh] mx-2"
               setImageUrl={setImageUrl}
             />
+            <div className="mt-8 pl-4">
+                <h3 className="">Lịch sử tìm kiếm</h3>
+                <ul className="pl-8 flex gap-4 mt-2">
+                  {aiList.map((product) => (
+                    <Link key={product.id} to={product.url}>
+                      <Button secondary rounded>
+                        {product.id}
+                      </Button>
+                    </Link>
+                  ))}
+                  {aiList.length === 0 && (
+                    <p>Bạn chưa tìm kiếm sản phẩm nào.</p>
+                  )}
+                </ul>
+              </div>
+            </>
           )}
           {imageUrl && (
             <div className="flex">
