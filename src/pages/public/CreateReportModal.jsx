@@ -45,6 +45,10 @@ const CreateReportModal = ({ isOpen, onRequestClose }) => {
     fileInputRef.current.click();
   };
 
+  const handleFatherDelete = (index) => {
+    setImageReports((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
   const onSubmit = async (data) => {
     const reportData = {
       title,
@@ -151,6 +155,8 @@ const CreateReportModal = ({ isOpen, onRequestClose }) => {
                 <ImageBox
                   image={`data:image/png;base64,${image}`}
                   show
+                  isReport = {true}
+                  handleFatherDelete={() => handleFatherDelete(i)}
                   setValue={setValue}
                   className="min-w-24 min-h-24 max-w-24 max-h-24"
                   idx={i}

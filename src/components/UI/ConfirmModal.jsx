@@ -8,8 +8,8 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, headerContent, content,
   if (!isOpen) return null;
 
   return (
-    <dialog id="confirm_modal" className="modal" open>
-      <div className="modal-box">
+    <dialog id="confirm_modal" className="modal bg-black bg-opacity-50" open>
+        <div className="modal-box">
         <h3 className="font-bold text-lg">{headerContent}</h3>
         <p className="py-4">{content}</p>
         <div className="modal-action">

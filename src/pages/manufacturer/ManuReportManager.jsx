@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { useGetListReportsQuery } from '../../store/index';
+import { useGetListReportsQuery, useReplyReportMutation } from '../../store/index';
 import {
   FaUser,
   FaCalendarAlt,
@@ -20,11 +20,12 @@ import {
   FaArrowRight
 } from 'react-icons/fa';
 import Pagination from "../../components/UI/Pagination";
+import InputTextModal from '../../components/UI/InputTextModal';
+import Select from 'react-select';
 
 const statusOptions = [
   { value: 0, label: 'Mở', icon: <FaHourglassHalf className="text-yellow-500" /> },
   { value: 1, label: 'Đã giải quyết', icon: <FaCheckCircle className="text-green-500" /> },
-  { value: 2, label: 'Đã hủy', icon: <FaBan className="text-red-500" /> }
 ];
 
 const priorityOptions = [
@@ -39,7 +40,7 @@ const typeOptions = [
   { value: 2, icon: <FaQuestionCircle className="text-blue-500" />, label: 'Hỏi đáp' }
 ];
 
-Modal.setAppElement('#root'); // Thêm dòng này để chỉ định phần tử gốc của ứng dụng
+Modal.setAppElement('#root');
 
 function ManuReportManager() {
   const { id } = useParams();
@@ -47,7 +48,7 @@ function ManuReportManager() {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
 
-  const { data, error, isLoading } = useGetListReportsQuery({
+  const { data, error, isLoading, refetch} = useGetListReportsQuery({
     code: "",
     title: "",
     reportTo: 22,
@@ -63,6 +64,7 @@ function ManuReportManager() {
     productId: ""
   });
 
+  const [replyReport] = useReplyReportMutation();
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [showCauseDetail, setShowCauseDetail] = useState(true);
   const [showResponseDetail, setShowResponseDetail] = useState(true);
@@ -70,11 +72,15 @@ function ManuReportManager() {
   const [showInfo, setShowInfo] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState('');
+  const [status, setStatus] = useState(-1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [textAreaValue, setTextAreaValue] = useState('');
 
   useEffect(() => {
     if (data) {
       const issue = data.content.find(issue => issue.id === parseInt(id));
       setSelectedIssue(issue || data.content[0]);
+      setStatus(data.content.status ?? -1);
     }
   }, [data, id]);
 
@@ -85,13 +91,12 @@ function ManuReportManager() {
 
   const handleStatusChange = (event) => {
     if (selectedIssue) {
+      const newStatus = parseInt(event.target.value);
+      if (newStatus === 1) {
+        setStatus(1);
+        setIsModalOpen(true);
+      }
       setSelectedIssue({ ...selectedIssue, status: parseInt(event.target.value) });
-    }
-  };
-
-  const handlePriorityChange = (event) => {
-    if (selectedIssue) {
-      setSelectedIssue({ ...selectedIssue, priority: parseInt(event.target.value) });
     }
   };
 
@@ -117,6 +122,9 @@ function ManuReportManager() {
   };
 
   const closeModal = () => {
+    if(status === 1) {
+      setStatus(0);
+    }
     setModalIsOpen(false);
   };
 
@@ -142,8 +150,40 @@ function ManuReportManager() {
     return <div>Error: {error.message}</div>;
   }
 
+  const closeConfirmModal = () => {
+    setStatus(0);
+    setSelectedIssue((prevIssue) => ({
+      ...prevIssue,
+      status: 0,
+    }));
+    setIsModalOpen(false);
+  };
+
+  const confirmChange = async () => {
+    try {
+      await replyReport({
+        reportId: selectedIssue.id,
+        responseDetail: textAreaValue,
+      }).unwrap();
+      refetch();
+      console.log('Reply sent successfully');
+      closeConfirmModal();
+    } catch (error) {
+      console.error('Failed to send reply:', error);
+    }
+  };
+
   return (
     <div className="flex h-screen font-sans bg-gray-100">
+      <InputTextModal
+        isOpen={isModalOpen}
+        onClose={closeConfirmModal}
+        onConfirm={confirmChange}
+        headerContent="Trả lời: "
+        isLoading={false}
+        textAreaValue={textAreaValue}
+        setTextAreaValue={setTextAreaValue}
+      />
       <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
         <div className="p-4">
           <ul className="list-none p-0 m-0">

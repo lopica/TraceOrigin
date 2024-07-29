@@ -231,4 +231,4 @@ export {
   useDeleteCertCertIdMutation,
 } from "./apis/certificateApi";
 export { useGetNumberVisitsAllTimeQuery } from "./apis/elkApi";
-export { useGetListReportsQuery } from "./apis/reportApi";
+export {  useGetListReportsQuery, useAddNewReportsMutation, useReplyReportMutation  } from "./apis/reportApi";

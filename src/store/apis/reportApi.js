@@ -60,10 +60,22 @@ const reportApi = createApi({
             return response.text();
           },
         }),
+      }),
+      replyReport: builder.mutation({
+        query: (options) => ({
+          url: '/replyReport',
+          method: 'POST',
+          body: {
+            ...options,
+          },
+          responseHandler: (response) => {
+            return response.text();
+          },
+        }),
       })
     };
   },
 });
 
 export { reportApi };
-export const { useGetListReportsQuery, useAddNewReportsMutation } = reportApi;
+export const { useGetListReportsQuery, useAddNewReportsMutation, useReplyReportMutation } = reportApi;

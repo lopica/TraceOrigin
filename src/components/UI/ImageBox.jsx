@@ -18,6 +18,8 @@ function ImageBox({
   setValue,
   isCer = false,
   isEditPro = false,
+  isReport = false,
+  handleFatherDelete,
   ...props
 }) {
   const {
@@ -68,13 +70,23 @@ function ImageBox({
       <div className="py-4 max-w-lg mx-auto">
         <img src={image} className="w-full h-full max-w-sm mx-auto" />
         <div className="flex justify-between mt-4">
+        {isReport ? (
+          <Button rounded secondary onClick={() => { handleFatherDelete(idx); handleDelete(); }}>
+            Bỏ chọn
+          </Button>
+        ) : (
           <Button rounded secondary onClick={handleDelete}>
             Bỏ chọn
           </Button>
-          {!isCer && (
+        )}
+          {!isCer ? (
             <Button rounded primary onClick={handleAvatar}>
               Đặt làm ảnh chính
             </Button>
+          ) : (
+            <div>
+
+            </div>
           )}
         </div>
       </div>
