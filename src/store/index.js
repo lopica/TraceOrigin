@@ -31,6 +31,7 @@ import { elkApi } from "../store/apis/elkApi";
 import { thunk } from "redux-thunk";
 import { historySearchSliceReducer } from "./slices/historySeach";
 import { utilApi } from "./apis/utilApi";
+import { customercareApi } from "./apis/customercareApi";
 
 // Define the persist configuration
 const persistConfig = {
@@ -71,6 +72,7 @@ const rootReducer = combineReducers({
   [certificateApi.reducerPath]: certificateApi.reducer,
   [elkApi.reducerPath]: elkApi.reducer,
   [monitoringApi.reducerPath]: monitoringApi.reducer,
+  [customercareApi.reducerPath]: customercareApi.reducer,
   [utilApi.reducerPath]: utilApi.reducer,
   [reportApi.reducerPath]: reportApi.reducer,
 });
@@ -105,6 +107,7 @@ const store = configureStore({
       certificateApi.middleware,
       elkApi.middleware,
       monitoringApi.middleware,
+      customercareApi.middleware,
       utilApi.middleware,
       reportApi.middleware,
       thunk

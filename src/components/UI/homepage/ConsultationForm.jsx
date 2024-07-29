@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { FaUser, FaPhoneAlt, FaEnvelope, FaClipboardList } from 'react-icons/fa';
+import { useAddMutation } from '../../../store/apis/customercareApi';
+import useToast from '../../../hooks/use-toast';
 
 const ConsultationForm = () => {
+  const [addMutation] = useAddMutation();
+  const { getToast } = useToast();
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    message: ''
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
+    content: ''
   });
 
   const handleChange = (e) => {
@@ -14,10 +18,17 @@ const ConsultationForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+    try {
+      // Thực hiện mutation
+      const result = await addMutation(formData).unwrap(); // unwrap() tùy thuộc vào hook bạn dùng
+      // Xử lý kết quả nếu cần
+      console.log('Form submitted:', result);
+    } catch (error) {
+      // Hiển thị thông báo lỗi nếu có
+      getToast("Bạn không có quyền thêm mới sản phẩm");
+    }
   };
 
   return (
@@ -36,16 +47,16 @@ const ConsultationForm = () => {
       <div className="md:w-1/2 flex flex-col items-center p-4">
         <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2" htmlFor="name">
+            <label className="block text-sm font-medium mb-2" htmlFor="customerName">
               Họ và tên
             </label>
             <div className="flex items-center border border-gray-300 rounded-md p-2">
               <FaUser className="mr-2 text-gray-500" />
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={formData.name}
+                id="customerName"
+                name="customerName"
+                value={formData.customerName}
                 onChange={handleChange}
                 className="w-full p-2 border-none focus:outline-none"
                 placeholder="Nhập họ và tên"
@@ -55,16 +66,16 @@ const ConsultationForm = () => {
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2" htmlFor="phone">
+            <label className="block text-sm font-medium mb-2" htmlFor="customerPhone">
               Số điện thoại
             </label>
             <div className="flex items-center border border-gray-300 rounded-md p-2">
               <FaPhoneAlt className="mr-2 text-gray-500" />
               <input
                 type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
+                id="customerPhone"
+                name="customerPhone"
+                value={formData.customerPhone}
                 onChange={handleChange}
                 className="w-full p-2 border-none focus:outline-none"
                 placeholder="Nhập số điện thoại"
@@ -74,16 +85,16 @@ const ConsultationForm = () => {
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2" htmlFor="email">
+            <label className="block text-sm font-medium mb-2" htmlFor="customerEmail">
               Email
             </label>
             <div className="flex items-center border border-gray-300 rounded-md p-2">
               <FaEnvelope className="mr-2 text-gray-500" />
               <input
                 type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                id="customerEmail"
+                name="customerEmail"
+                value={formData.customerEmail}
                 onChange={handleChange}
                 className="w-full p-2 border-none focus:outline-none"
                 placeholder="Nhập email"
@@ -93,15 +104,15 @@ const ConsultationForm = () => {
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2" htmlFor="message">
+            <label className="block text-sm font-medium mb-2" htmlFor="content">
               Nội dung
             </label>
             <div className="flex items-start border border-gray-300 rounded-md p-2">
               <FaClipboardList className="mr-2 text-gray-500" />
               <textarea
-                id="message"
-                name="message"
-                value={formData.message}
+                id="content"
+                name="content"
+                value={formData.content}
                 onChange={handleChange}
                 className="w-full p-2 border-none focus:outline-none"
                 placeholder="Nhập nội dung tư vấn"
