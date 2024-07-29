@@ -19,6 +19,7 @@ const ConsultationForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    getToast("Đợn đã được gửi, hãy để ý điện thoại chúng tôi sẽ liên hệ với bạn sớm nhất!");
     e.preventDefault();
     try {
       // Thực hiện mutation

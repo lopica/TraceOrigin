@@ -1,36 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { FaCheck, FaHourglassHalf } from "react-icons/fa";
+import { FaCheck, FaHourglassHalf, FaSearch, FaExclamationTriangle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-
-const initialData = [
-  {
-    id: 1,
-    phone: "0123456789",
-    email: "example1@mail.com",
-    name: "Nguyễn Văn A",
-    reason: "Tư vấn sản phẩm",
-    consulted: true,
-    date: "2024-07-20", // Thêm dữ liệu ngày để kiểm tra
-  },
-  {
-    id: 2,
-    phone: "0987654321",
-    email: "example2@mail.com",
-    name: "Trần Thị B",
-    reason: "Hỗ trợ kỹ thuật",
-    consulted: false,
-    date: "2024-07-25", // Thêm dữ liệu ngày để kiểm tra
-  },
-  // Thêm dữ liệu mẫu khác
-];
+import { useSearchCustomerCareQuery, useUpdateStatusMutation } from "../../store/apis/customercareApi";
 
 function CustomerService() {
-  const [searchKey, setSearchKey] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [sortType, setSortType] = useState("all");
+  const [updateStatus] = useUpdateStatusMutation();
+  const [shouldFetch, setShouldFetch] = useState(true);
+  const [body, setBody] = useState({
+    keyword: "",
+    startDate: 0,
+    endDate: 0,
+    status: 0,
+    pageNumber: 0,
+    pageSize: 10,
+    type: "",
+  });
+
+  const handleChange = (e) => {
+    if (shouldFetch) {
+      refetch();
+      setShouldFetch(false);
+    }
+    const { name, value } = e.target;
+
+    let convertedValue = value;
+    if (name === 'startDate' || name === 'endDate') {
+      const date = new Date(value);
+      if (!isNaN(date.getTime())) {
+        convertedValue = date.getTime();
+      } else {
+        console.warn('Invalid date format:', value);
+      }
+    }
+    if (name === 'status') {
+      if (value === '0') {
+        convertedValue = "";
+      } else if (value === '1') {
+        convertedValue = "1";
+      } else if (value === '2') {
+        convertedValue = "0";
+      } else {
+        console.warn('Invalid status value:', value);
+      }
+    }
+
+    setBody((prevData) => ({ ...prevData, [name]: convertedValue }));
+  };
+
+  const { data, error, isLoading, refetch, isSuccess } = useSearchCustomerCareQuery(body, {
+    skip: !shouldFetch,
+  });
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(parseInt(timestamp, 10));
+    return date.toLocaleString();
+  };
+
   const [note, setNote] = useState("");
   const { getToast } = useToast();
   const navigate = useNavigate();
@@ -44,64 +71,98 @@ function CustomerService() {
     }
   }, [isAuthenticated, getToast, navigate]);
 
-  // Xử lý bộ lọc
-
+  const handleSearch = () => {
+    setShouldFetch(true);
+    refetch();
+  };
+  //=============== handle update status
+  const onConfirmDone = async (careId) => {
+    try {
+      const updateStatusData = {
+        careId: careId,   
+        status: 1,         
+        note: note
+      };
+      const result = await updateStatus(updateStatusData).unwrap(); 
+      getToast("Cập nhật trạng thái thành công");
+    } catch (error) {
+      getToast("Lỗi cập nhật trạng thái");
+    } 
+    setShouldFetch(true);
+    refetch();
+   };
+  const buttonClass = note ? "bg-green-500 hover:bg-green-600 text-white" : "bg-blue-500 hover:bg-blue-600 text-white";
+  const alertClass = note ? "block" : "hidden";
 
   return (
     <div className="flex flex-col md:flex-row p-4">
       <div className="md:w-1/4 p-4">
         <h2 className="text-lg font-semibold mb-4">Bộ lọc</h2>
-        <div className="mb-4">
-          <label
-            htmlFor="searchKey"
-            className="block text-sm font-medium mb-1"
-          >
-            Tìm theo số điện thoại và email:
-          </label>
-          <input
-            id="searchKey"
-            type="text"
-            value={searchKey}
-            onChange={(e) => setSearchKey(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="dateRange" className="block text-sm font-medium mb-1">
-            Tìm theo khoảng thời gian:
-          </label>
-          <div className="flex space-x-2">
+        <form>
+          <div className="mb-4">
+            <label htmlFor="searchKey" className="block text-sm font-medium mb-1">
+              Tìm theo số điện thoại và email:
+            </label>
             <input
-              id="startDate"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-1/2"
-            />
-            <input
-              id="endDate"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-1/2"
+              id="searchKey"
+              name="keyword"
+              type="text"
+              value={body.keyword}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md p-2 w-full"
             />
           </div>
-        </div>
-        <div className="mb-4">
-          <label htmlFor="sortType" className="block text-sm font-medium mb-1">
-            Sắp xếp theo:
-          </label>
-          <select
-            id="sortType"
-            value={sortType}
-            onChange={(e) => setSortType(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-          >
-            <option value="all">Tất cả</option>
-            <option value="consulted">Đã tư vấn</option>
-            <option value="notConsulted">Chưa tư vấn</option>
-          </select>
-        </div>
+          <div className="mb-4">
+            <label htmlFor="dateRange" className="block text-sm font-medium mb-1">
+              Tìm theo khoảng thời gian:
+            </label>
+            <div className="flex space-x-2">
+              <input
+                id="startDate"
+                name="startDate"
+                type="date"
+                value={body.startDate}
+                onChange={handleChange}
+                className="border border-gray-300 rounded-md p-2 w-1/2"
+              />
+              <input
+                id="endDate"
+                name="endDate"
+                type="date"
+                value={body.endDate}
+                onChange={handleChange}
+                className="border border-gray-300 rounded-md p-2 w-1/2"
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="sortType" className="block text-sm font-medium mb-1">
+              Sắp xếp theo:
+            </label>
+            <select
+              id="sortType"
+              name="status"
+              value={body.status}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md p-2 w-full"
+            >
+              <option value={0}>Tất cả</option>
+              <option value={1}>Đã tư vấn</option>
+              <option value={2}>Chưa tư vấn</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <button
+              type="button"
+              onClick={handleSearch}
+              className="flex items-center justify-center w-full px-4 py-2 bg-color1 text-white rounded-md hover:bg-color1Dark"
+            >
+              <FaSearch className="mr-2" />
+              Tìm kiếm
+            </button>
+          </div>
+        </form>
+
         {/* Khu vực ghi chú */}
         <div className="mb-4">
           <label htmlFor="note" className="block text-sm font-medium mb-1">
@@ -114,48 +175,54 @@ function CustomerService() {
             className="border border-gray-300 rounded-md p-2 w-full"
             rows="4"
           />
+          <div className={`flex items-center mt-2 ${alertClass}`}>
+            <FaExclamationTriangle className="text-yellow-500 mr-2" />
+            <span className="text-yellow-500">Ấn vào nút hoạt động để ghi note</span>
+          </div>
         </div>
       </div>
 
       <div className="md:w-3/4 p-4">
         <h2 className="text-lg font-semibold mb-4">Danh sách khách hàng</h2>
-        <table className="min-w-full bg-white border border-gray-300 rounded-md">
+        <table className="min-w-full bg-white border text-xs  border-gray-300 rounded-md">
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 p-2">#</th>
-              <th className="border border-gray-300 p-2">Số điện thoại</th>
+              <th className="border border-gray-300 p-2">Tên khách hàng</th>
               <th className="border border-gray-300 p-2">Email</th>
-              <th className="border border-gray-300 p-2">Tên</th>
-              <th className="border border-gray-300 p-2">Lý do tư vấn</th>
+              <th className="border border-gray-300 p-2">Số điện thoại</th>
+              <th className="border border-gray-300 p-2">Nội dung</th>
+              <th className="border border-gray-300 p-2">Thời gian</th>
               <th className="border border-gray-300 p-2">Trạng thái</th>
               <th className="border border-gray-300 p-2">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {initialData.map((item) => (
-              <tr key={item.id}>
-                <td className="border border-gray-300 p-2">{item.id}</td>
-                <td className="border border-gray-300 p-2">{item.phone}</td>
-                <td className="border border-gray-300 p-2">{item.email}</td>
-                <td className="border border-gray-300 p-2">{item.name}</td>
-                <td className="border border-gray-300 p-2">{item.reason}</td>
+            {data?.content.map((item, index) => (
+              <tr key={item.careId}>
+                <td className="border border-gray-300 p-2">{index + 1}</td>
+                <td className="border border-gray-300 p-2">{item.customerName}</td>
+                <td className="border border-gray-300 p-2">{item.customerEmail}</td>
+                <td className="border border-gray-300 p-2">{item.customerPhone}</td>
+                <td className="border border-gray-300 p-2">{item.content}</td>
+                <td className="border border-gray-300 p-2">{formatTimestamp(item.timestamp)}</td>
                 <td className="border border-gray-300 p-2 text-center">
                   <div
                     className={`p-2 flex items-center justify-center rounded-full ${
-                      item.consulted ? "text-green-400" : "text-yellow-300"
+                      item.status === 1 ? "text-green-400" : "text-yellow-300"
                     }`}
                   >
-                    {item.consulted ? <FaCheck /> : <FaHourglassHalf />}
+                    {item.status === 1 ? <FaCheck /> : <FaHourglassHalf />}
                   </div>
                 </td>
                 <td className="border border-gray-300 p-2">
-                  {item.consulted ? (
+                  {item.status === 1 ? (
                     <></>
                   ) : (
                     <div className="flex items-center justify-center">
                       <button
-                        onClick={() => onConfirm(item)}
-                        className="bg-color1 text-white p-2 rounded hover:bg-color1Dark"
+                        onClick={() => onConfirmDone(item.careId)}
+                        className={`p-2 rounded  ${note ? "bg-yellow-500 text-white hover:bg-yellow-400" : "bg-green-500 hover:bg-green-400 text-white"}`}
                       >
                         đã tư vấn
                       </button>

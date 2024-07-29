@@ -38,6 +38,39 @@ const customercareApi = createApi({
           };
         },
       }),
+      updateStatus: builder.mutation({
+        query: (data) => {
+          return {
+            url: "/updateStatus",
+            method: "POST",
+            body: {
+              careId : data.careId,
+              status : data.status,
+              note : data.note,
+            },
+            responseHandler: (response) => {
+              return response.text();
+            },
+          };
+        },
+      }),
+      searchCustomerCare: builder.query({
+        query: (data) => {
+          return {
+            url: "/searchCustomerCare",
+            method: "POST",
+            body: {
+              keyword : data.keyword,
+              startDate : data.startDate,
+              endDate : data.endDate,
+              status : data.status,
+              pageNumber : data.pageNumber,
+              pageSize : data.pageSize,
+              type : data.type,
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -46,5 +79,7 @@ export { customercareApi };
 export const {
 
   useAddMutation,
+  useUpdateStatusMutation,
+  useSearchCustomerCareQuery,
 
 } = customercareApi;
