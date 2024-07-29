@@ -8,7 +8,7 @@ import {
 import useToast from "./use-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function useItem(productId, eventId) {
+export default function useItem(productId, inputSearch) {
   const dispatch = useDispatch();
   const [itemsData, setItemsData] = useState([]);
   const { getToast } = useToast();
@@ -29,12 +29,12 @@ export default function useItem(productId, eventId) {
       productId,
       pageSize: 6,
       pageNumber: paginate.currentPage,
-      startDate: 0,
-      endDate: 0,
+      startDate: inputSearch.startDate,
+      endDate: inputSearch.endDate,
       name: "",
       type: "",
       productRecognition: "",
-      eventTypeId: eventId || 0,
+      eventTypeId: inputSearch.eventId || 0,
     },
     {
       skip: !isAuthenticated,

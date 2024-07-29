@@ -8,6 +8,7 @@ import Map from "./Map";
 let event;
 export default function ItemEvent({ goToItemLine, eventId, core }) {
   const { itemLine } = useSelector((state) => state.itemSlice);
+  console.log(eventId)
   const { data: eventData, isError, isFetching } = useFetchEventByItemLogIdQuery(eventId, {
     skip: itemLine.length === 0 || !eventId,
   });
@@ -38,41 +39,77 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
     event = <p>Gặp lỗi khi tải dữ liệu về sự kiện này</p>;
   } else {
     if (eventData) {
-      event = (
-        <>
+      if (eventData.eventType === 'NHẬN HÀNG') {
+        event = <>
           <h2 className="mb-4 text-center font-bold">{eventData?.eventType}</h2>
-          <ul className="space-y-2">
-            {/* uy quyen, giao hang, nhan */}
-            <li>
-              <p>Người gửi: {eventData?.sender}</p>
-            </li>
-            <li>
-              <p>Người nhận: {eventData?.receiver}</p>
-            </li>
-            <li>
-              <p>
-                Thời gian diễn ra:{" "}
-                {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
-              </p>
-            </li>
-            <li>
-              <p>Mô tả sự kiện: {eventData?.descriptionItemLog || "không có"}</p>
-            </li>
-            <li>
-              <p className="mb-2">
-                Địa điểm diễn ra:{" "}
-                {`${eventData.addressInParty}`}
-              </p>
-              <Map
-                location={{
-                  lat: eventData.coordinateX,
-                  lng: eventData.coordinateY,
-                }}
-              />
-            </li>
-          </ul>
+            <ul className="space-y-2">
+              {/* uy quyen, giao hang, nhan */}
+              {/* <li>
+                <p>Người gửi: {eventData?.sender}</p>
+              </li> */}
+              <li>
+                <p>Người nhận: {eventData?.partyFullname}</p>
+              </li>
+              <li>
+                <p>
+                  Thời gian diễn ra:{" "}
+                  {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
+                </p>
+              </li>
+              {/* <li>
+                <p>Mô tả sự kiện: {eventData?.descriptionItemLog || "không có"}</p>
+              </li> */}
+              {/* <li>
+                <p className="mb-2">
+                  Địa điểm diễn ra:{" "}
+                  {`${eventData.addressInParty}`}
+                </p>
+                <Map
+                  location={{
+                    lat: eventData.coordinateX,
+                    lng: eventData.coordinateY,
+                  }}
+                />
+              </li> */}
+            </ul>
         </>
-      );
+      } else {
+        event = (
+          <>
+            <h2 className="mb-4 text-center font-bold">{eventData?.eventType}</h2>
+            <ul className="space-y-2">
+              {/* uy quyen, giao hang, nhan */}
+              <li>
+                <p>Người gửi: {eventData?.sender}</p>
+              </li>
+              <li>
+                <p>Người nhận: {eventData?.receiver}</p>
+              </li>
+              <li>
+                <p>
+                  Thời gian diễn ra:{" "}
+                  {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
+                </p>
+              </li>
+              <li>
+                <p>Mô tả sự kiện: {eventData?.descriptionItemLog || "không có"}</p>
+              </li>
+              <li>
+                <p className="mb-2">
+                  Địa điểm diễn ra:{" "}
+                  {`${eventData.addressInParty}`}
+                </p>
+                <Map
+                  location={{
+                    lat: eventData.coordinateX,
+                    lng: eventData.coordinateY,
+                  }}
+                />
+              </li>
+            </ul>
+          </>
+        );
+      }
     }
   }
 

@@ -83,7 +83,7 @@ export default function Consign({ productRecognition }) {
     isError: isEventError,
     isFetching: isEventFetch,
   } = useFetchEventByItemLogIdQuery(lastConsignEventId, {
-    skip: lastConsignEventId === "",
+    skip: !lastConsignEventId,
   });
   const {
     register: registerEmailForm,
@@ -113,11 +113,12 @@ export default function Consign({ productRecognition }) {
             : "consign-info"
         );
       }
-      if (data === 3 || data === 4) setStep("unauthorized-consign");
+      
+      if (data === 4) setStep("unauthorized-consign");
     } else {
       // if email change
-      setGuestEmail(formData.email);
-      setStep("otp-confirm");
+      
+      setStep('error')
     }
   };
 
@@ -129,7 +130,9 @@ export default function Consign({ productRecognition }) {
         productRecognition,
       })
         .unwrap()
-        .then(() => setStep("consign-form"))
+        .then(() => {
+          setOtpValid(true)
+          setStep("consign-form")})
         .catch((err) => {
           getToast("Mã otp của bạn không đúng");
           console.log(err);
@@ -141,7 +144,9 @@ export default function Consign({ productRecognition }) {
         productRecognition,
       })
         .unwrap()
-        .then(() => setStep("consign-info"))
+        .then(() => {
+          setOtpValid(true)
+          setStep("consign-info")})
         .catch((err) => {
           getToast("Mã otp của bạn không đúng");
           console.log(err);
@@ -207,8 +212,12 @@ export default function Consign({ productRecognition }) {
   };
 
   useEffect(() => {
-    if (email) setGuestEmail(email);
+    console.log(email)
+    if (email) {
+      setGuestEmail(email);
+    }
   }, [email]);
+
 
   useEffect(() => {
     if (eventData) {
@@ -221,12 +230,15 @@ export default function Consign({ productRecognition }) {
   }, [eventData]);
 
   useEffect(() => {
+    console.log(isCheckRoleError)
     if (
       isCheckRoleSuccess &&
       !isCheckRoleFetch &&
       isCheckPendingSuccess &&
       !isCheckPendingFetch
     ) {
+      console.log('vo day 2')
+
       if (data) {
         if (data === 0) {
           //Sản phẩm ko được ủy quyền
@@ -252,7 +264,7 @@ export default function Consign({ productRecognition }) {
         } else if (data === 3) {
           //Exception lỗi
           //bao loi
-          setStep("unauthorized-consign");
+          setStep("error");
           // setStep("error");
         } else if (data === 4) {
           //Ko phải người ủy quyền cũng không phải currentOwner
@@ -261,7 +273,11 @@ export default function Consign({ productRecognition }) {
         }
       }
     }
-  }, [isCheckRoleSuccess, isCheckRoleFetch, guestEmail]);
+    if(!isCheckRoleSuccess || !isCheckPendingSuccess) {
+      console.log('vo day')
+      setStep('error')
+    }
+  }, [isCheckRoleSuccess, isCheckRoleFetch, guestEmail, isCheckRoleError]);
 
   useEffect(() => {
     if (step === "otp-confirm" && !isCheckPendingFetch && data) {
@@ -277,6 +293,7 @@ export default function Consign({ productRecognition }) {
           productRecognition: productRecognition,
         });
     }
+    if (isCheckRoleError) setStep("error");
   }, [step, isCheckPendingFetch, data]);
 
   useEffect(() => {
@@ -729,6 +746,24 @@ export default function Consign({ productRecognition }) {
               {isOwner ? "Ủy quyền" : "Chấp nhận"}
             </Button>
           </div>
+        </div>
+      );
+    } else if (step === "error") {
+      form = (
+        <div className="flex flex-col gap-4 items-start px-4">
+        {console.log(email)}
+          {!email && <Button
+            primary
+            outline
+            onClick={() => setStep("email")}
+            className="pb-0"
+          >
+            <IoIosArrowBack />
+            Quay lại
+          </Button>}
+          <p className="text-center w-full">
+            Hệ thống hiện đang gặp lỗi. Bạn hãy thử lại sau nhé. 
+          </p>
         </div>
       );
     }
