@@ -2,22 +2,11 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getDateFromEpochTime } from "../../utils/getDateFromEpochTime.js";
-import {
-  useFetchEventByItemLogIdQuery,
-  useFetchItemLogsByProductRecognitionQuery,
-  useFetchOriginByItemLogIdQuery,
-} from "../../store";
-import { useDispatch, useSelector } from "react-redux";
-import { hideToast, showToast } from "../../store";
-import Toast from "../../components/UI/Toast";
 import ItemLine from "../../components/ItemLine.jsx";
 import ItemOrigin from "../../components/ItemOrigin.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import "swiper/css";
-import Button from "../../components/UI/Button.jsx";
-import { MdOutlineTransferWithinAStation } from "react-icons/md";
 import Consign from "../../components/Consign.jsx";
 import ItemEvent from "../../components/ItemEvent.jsx";
 
@@ -27,7 +16,7 @@ function Item() {
   let productRecognition = searchParams.get("productRecognition");
   const swiperRef = useRef(null);
   const [eventType, setEventType] = useState("origin");
-  const [currentEventId, setCurrentEventId] = useState("");
+  const [currentEventId, setCurrentEventId] = useState(undefined);
 
   const goToItemOrigin = () => {
     setEventType("origin");

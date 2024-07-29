@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "./UI/Button";
 import handleKeyDown from "../utils/handleKeyDown";
 import useToast from "../hooks/use-toast";
+import { useSelector } from "react-redux";
 
 let valid;
 
@@ -19,8 +20,7 @@ function Wizzard({
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const { getToast } = useToast();
-  const imagesRef = useRef()
-  const avatarRef = useRef()
+  const { images, avatar } = useSelector((state) => state.productForm);
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
@@ -28,8 +28,6 @@ function Wizzard({
 
     if (identifier === "next") {
       if (validateStep[currentStep][0] === "images") {
-        const images = imagesRef.current;
-        const avatar = avatarRef.current;
         if (!images.length > 0) {
           getToast("Bạn hãy chọn ít nhất 1 ảnh.");
           return;
@@ -55,10 +53,10 @@ function Wizzard({
     }
   };
 
-  useEffect(() => {
-    if(getValues('images')?.length !== 0) imagesRef.current = getValues("images")
-    if(getValues('avatar')?.length !== 0) avatarRef.current = getValues('avatar')
-  }, [getValues("images"), getValues('avatar')]);
+  // useEffect(() => {
+  //   if(getValues('images')?.length !== 0) imagesRef.current = getValues("images")
+  //   if(getValues('avatar')?.length !== 0) avatarRef.current = getValues('avatar')
+  // }, [getValues("images"), getValues('avatar')]);
 
   return (
     <>

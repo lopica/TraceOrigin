@@ -22,6 +22,8 @@ let eventTypeData;
 export default function ItemList({ productId }) {
   const [inputSearch, setInputSearch] = useState({
     eventId: "",
+    startData: 0,
+    endDate: 0,
   });
   const {
     itemsData,
@@ -31,7 +33,7 @@ export default function ItemList({ productId }) {
     paginate,
     setCurrentPage,
     refetch,
-  } = useItem(productId, inputSearch.eventId);
+  } = useItem(productId, inputSearch);
   const {
     data: eventTypes,
     isError: isEventtypeError,
@@ -42,7 +44,9 @@ export default function ItemList({ productId }) {
     productDetail: { productName },
   } = useSelector((state) => state.productSlice);
   const navigate = useNavigate();
-  const { control, register, watch } = useForm({ mode: "onTouched" });
+  const { control, register, watch, getValues, setValue } = useForm({
+    mode: "onTouched",
+  });
   const { show: showExport, handleFlip } = useShow(false);
   const { show: chooseAll, handleFlip: handleChooseFlip } = useShow(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
@@ -117,13 +121,38 @@ export default function ItemList({ productId }) {
   useEffect(() => {
     const status = watch("status");
     if (status) {
-      console.log('leu leu');
       setInputSearch((prev) => ({
         ...prev,
         eventId: status.split(",")[0],
       }));
     }
   }, [watch("status")]);
+
+  useEffect(() => {
+    const startDate = watch("startDate");
+    if (startDate) {
+      console.log(startDate);
+      const dateObject = new Date(startDate);
+      const epochTime = dateObject.getTime() / 1000;
+      setInputSearch((prev) => ({
+        ...prev,
+        startDate: epochTime,
+      }));
+    }
+  }, [watch("startDate")]);
+
+  useEffect(() => {
+    const endDate = watch("endDate");
+    if (endDate) {
+      console.log(endDate);
+      const dateObject = new Date(endDate);
+      const epochTime = dateObject.getTime() / 1000;
+      setInputSearch((prev) => ({
+        ...prev,
+        endDate: epochTime,
+      }));
+    }
+  }, [watch("endDate")]);
 
   // useEffect(()=>{
   //   if(inputSearch.eventId) refetch()
@@ -177,7 +206,7 @@ export default function ItemList({ productId }) {
     },
     {
       label: "Địa điểm hiện tại",
-      render: (item) => item.address,
+      render: (item) => item.address || "không rõ",
     },
     {
       label: "Trạng thái",
@@ -210,8 +239,8 @@ export default function ItemList({ productId }) {
         <h2 className="text-xl font-bold">Danh sách nhật ký</h2>
       </div>
       <form className="grid grid-cols-2 gap-2 lg:grid-cols-3 mb-4">
-        <Input label="Từ" type="date" />
-        <Input label="Đến" type="date" />
+        <Input label="Từ" type="date" {...register("startDate")} />
+        <Input label="Đến" type="date" {...register("endDate")} />
         <Input
           label="Trạng thái"
           type="select"

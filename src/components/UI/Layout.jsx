@@ -40,7 +40,7 @@ export default function Layout() {
     //   <footer></footer>
     // </Fragment>
 
-     <Fragment>
+    <Fragment>
       <Toast show={show}>{content}</Toast>
       <header className="fixed top-0 left-0 right-0 w-full h-[8vh] z-10">
         <Header />
@@ -51,10 +51,39 @@ export default function Layout() {
             <SideBar />
           </aside>
         )}
-        <main className={`flex-1 ${matchPaterm ? '' : ''}`}>
+        <main className={`flex-1 ${matchPaterm ? "" : ""}`}>
           {/* <Breadcrumps /> */}
           <Outlet />
         </main>
+        {!matchPaterm && (
+          <df-messenger
+            intent="WELCOME"
+            chat-title="TraceOrigin"
+            agent-id="67bc6c72-5b16-436a-9aaa-80a9a098625b"
+            language-code="en"
+            chat-icon="/logo_white.png"
+            auto-open="false"
+          >
+            <style>
+              {`
+              df-messenger {
+                margin: 0;
+                padding: 0;
+                position: fixed;
+                right: 0;
+                z-index: 10;
+                --df-messenger-bot-message: #fff;
+                --df-messenger-button-titlebar-color: #38bdf8;
+                --df-messenger-chat-background-color: #fafafa;
+                --df-messenger-send-icon: #38bdf8;
+                --df-messenger-titlebar-icon-width: 24px;
+                --df-messenger-titlebar-icon-height: 24px;
+                --df-messenger-titlebar-icon-padding: 0 12px 0 0;
+              }
+            `}
+            </style>
+          </df-messenger>
+        )}
       </section>
       <footer></footer>
     </Fragment>
