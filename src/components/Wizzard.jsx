@@ -56,8 +56,8 @@ function Wizzard({
   };
 
   useEffect(() => {
-    if(getValues('images')) imagesRef.current = getValues("images")
-    if(getValues('avatar')) avatarRef.current = getValues('avatar')
+    if(getValues('images')?.length !== 0) imagesRef.current = getValues("images")
+    if(getValues('avatar')?.length !== 0) avatarRef.current = getValues('avatar')
   }, [getValues("images"), getValues('avatar')]);
 
   return (

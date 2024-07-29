@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CONSTANTS } from "../../services/Constants";
 import { updateUser } from "./userSlice";
+import { updateAvatar, updateImages } from "./productFormSlice";
 
 const TIMEOUT_DURATION = 60 * 60 * 1000 * CONSTANTS.key_expire;
 // const TIMEOUT_DURATION = 20 * 1000 * CONSTANTS.key_expire;
@@ -29,6 +30,8 @@ export const requireLoginAfterTimeout = createAsyncThunk(
           // console.log(TIMEOUT_DURATION - elapsed);
           dispatch(requireLogin());
           dispatch(updateUser({}));
+          dispatch(updateImages([]))
+          dispatch(updateAvatar(''))
           resolve();
         }, TIMEOUT_DURATION - elapsed);
       }

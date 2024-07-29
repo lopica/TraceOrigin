@@ -74,7 +74,6 @@ function ManuProductAdd() {
               console.error("Error parsing JSON data:", parseError);
               return;
             }
-            console.log("Fetched JSON data:", jsonData);
 
             setValue("productName", jsonData.productName || "");
             setValue("category", jsonData.category || "");
@@ -86,7 +85,7 @@ function ManuProductAdd() {
             setValue("weight", jsonData.weight || "");
             setValue("material", jsonData.material || "");
             setValue("images", jsonData.images || []);
-            setValue("avatar", jsonData.avatar || '');
+            setValue("avatar", jsonData.avatar || "");
             dispatch(updateImages(jsonData.images || []));
             dispatch(
               updateAvatar({
@@ -164,8 +163,8 @@ function ManuProductAdd() {
           } else {
             prevStoredFormData = {};
           }
-
           const updatedImages = [...images];
+          setValue("images", [...images]);
           const updatedAvatar = avatar || prevStoredFormData.avatar;
           const updatedAvatarIdx =
             avatarIdx !== undefined ? avatarIdx : prevStoredFormData.avatarIdx;
@@ -177,7 +176,6 @@ function ManuProductAdd() {
             avatar: updatedAvatar,
             avatarIdx: updatedAvatarIdx,
           };
-
           localforage.setItem(
             `formData_${user.userId}`,
             JSON.stringify(updatedFormData)
@@ -203,17 +201,17 @@ function ManuProductAdd() {
     delete request.category;
 
     console.log(request);
-    // addProduct(request)
-    //   .unwrap()
-    //   .then(() => {
-    //     dispatch(resetState());
-    //     getToast("Tạo mới thành công sản phẩm");
-    //     navigate("/manufacturer/products");
-    //   })
-    //   .catch((err) => {
-    //     getToast("Gặp lỗi khi tạo mới sản phẩm");
-    //     console.log(err);
-    //   });
+    addProduct(request)
+      .unwrap()
+      .then(() => {
+        dispatch(resetState());
+        getToast("Tạo mới thành công sản phẩm");
+        navigate("/manufacturer/products");
+      })
+      .catch((err) => {
+        getToast("Gặp lỗi khi tạo mới sản phẩm");
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -404,8 +402,14 @@ function ManuProductAdd() {
           </div>
         </>
         <>
-          <label className="form-control w-full">
-            <div className="label">
+          <label className="form-control w-full ">
+            <div
+              className="label"
+              onClick={(e) => {
+                e.preventDefault();
+                // e.stopPropagation()
+              }}
+            >
               <span className="label-text">Chọn file 3D của sản phẩm:</span>
             </div>
             {!getValues("file3D") && (
@@ -420,32 +424,51 @@ function ManuProductAdd() {
                   type="file"
                   ref={fileInputRef}
                   className="hidden"
-                  accept=".obj, .stl, .fbx, .3ds, .ply"
+                  accept=".stl, .glb"
                 />
                 <div>
-                  <p className="text-center ">Chọn hoặc kéo thả tệp vào đây</p>
+                  {!(progress > 0 && progress < 100) && (
+                    <>
+                      <p className="text-center ">
+                        Chọn hoặc kéo thả tệp vào đây
+                      </p>
+                      <p>(.stl, .glb)</p>
+                    </>
+                  )}
+                  {progress > 0 && progress < 100 && (
+                    <progress
+                      className="progress progress-info w-56"
+                      value={progress}
+                      max="100"
+                    ></progress>
+                  )}
                 </div>
               </div>
             )}
-            {progress > 0 && progress < 100 && (
+            {/* {progress > 0 && progress < 100 && (
               <progress
                 className="progress progress-info w-56"
                 value={progress}
                 max="100"
               ></progress>
-            )}
+            )} */}
             {getValues("file3D") && (
-              <div>
+              <div onClick={e=>e.preventDefault()}>
+                <div className="flex justify-end">
                 <Button
                   primary
                   outline
+                  className='text-sky-500 hover:text-sky-700'
                   onClick={(e) => {
                     e.preventDefault();
+                    
+                    setProgress(0);
                     setValue("file3D", undefined);
                   }}
                 >
                   Chọn lại
                 </Button>
+                </div>
                 <div className="h-[50svh]">
                   <Canvas3D modelBase64={getValues("file3D")} full />
                 </div>
