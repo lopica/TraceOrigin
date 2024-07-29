@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { FaCheck, FaHourglassHalf, FaSearch, FaExclamationTriangle } from "react-icons/fa";
+import {
+  FaCheck,
+  FaHourglassHalf,
+  FaSearch,
+  FaExclamationTriangle,
+  FaStickyNote,
+  FaTimes 
+} from "react-icons/fa";
+
 import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { useSearchCustomerCareQuery, useUpdateStatusMutation } from "../../store/apis/customercareApi";
+import {
+  useSearchCustomerCareQuery,
+  useUpdateStatusMutation,
+} from "../../store/apis/customercareApi";
+import Pagination from "../../components/UI/Pagination";
 
 function CustomerService() {
+  const [page, setPage] = useState(0);
   const [updateStatus] = useUpdateStatusMutation();
   const [shouldFetch, setShouldFetch] = useState(true);
   const [body, setBody] = useState({
@@ -14,44 +27,40 @@ function CustomerService() {
     endDate: 0,
     status: 0,
     pageNumber: 0,
-    pageSize: 10,
+    pageSize: 6,
     type: "",
   });
-
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    setBody((prevData) => ({ ...prevData, pageNumber: newPage }));
+  };
+ 
+  
   const handleChange = (e) => {
     if (shouldFetch) {
-      refetch();
+      // refetch();
       setShouldFetch(false);
     }
     const { name, value } = e.target;
 
     let convertedValue = value;
-    if (name === 'startDate' || name === 'endDate') {
+    if (name === "startDate" || name === "endDate") {
       const date = new Date(value);
       if (!isNaN(date.getTime())) {
         convertedValue = date.getTime();
       } else {
-        console.warn('Invalid date format:', value);
+        console.warn("Invalid date format:", value);
       }
     }
-    if (name === 'status') {
-      if (value === '0') {
-        convertedValue = "";
-      } else if (value === '1') {
-        convertedValue = "1";
-      } else if (value === '2') {
-        convertedValue = "0";
-      } else {
-        console.warn('Invalid status value:', value);
-      }
-    }
+
 
     setBody((prevData) => ({ ...prevData, [name]: convertedValue }));
   };
 
-  const { data, error, isLoading, refetch, isSuccess } = useSearchCustomerCareQuery(body, {
-    skip: !shouldFetch,
-  });
+  const { data, error, isLoading, refetch, isSuccess } =
+    useSearchCustomerCareQuery(body, {
+      skip: !shouldFetch,
+    });
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(parseInt(timestamp, 10));
@@ -75,23 +84,31 @@ function CustomerService() {
     setShouldFetch(true);
     refetch();
   };
+  //=============== tooltip
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleTooltip = () => {
+    setIsVisible(!isVisible);
+  };
   //=============== handle update status
   const onConfirmDone = async (careId) => {
     try {
       const updateStatusData = {
-        careId: careId,   
-        status: 1,         
-        note: note
+        careId: careId,
+        status: 1,
+        note: note,
       };
-      const result = await updateStatus(updateStatusData).unwrap(); 
+      const result = await updateStatus(updateStatusData).unwrap();
       getToast("Cập nhật trạng thái thành công");
     } catch (error) {
       getToast("Lỗi cập nhật trạng thái");
-    } 
+    }
     setShouldFetch(true);
     refetch();
-   };
-  const buttonClass = note ? "bg-green-500 hover:bg-green-600 text-white" : "bg-blue-500 hover:bg-blue-600 text-white";
+  };
+  const buttonClass = note
+    ? "bg-green-500 hover:bg-green-600 text-white"
+    : "bg-blue-500 hover:bg-blue-600 text-white";
   const alertClass = note ? "block" : "hidden";
 
   return (
@@ -100,7 +117,10 @@ function CustomerService() {
         <h2 className="text-lg font-semibold mb-4">Bộ lọc</h2>
         <form>
           <div className="mb-4">
-            <label htmlFor="searchKey" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="searchKey"
+              className="block text-sm font-medium mb-1"
+            >
               Tìm theo số điện thoại và email:
             </label>
             <input
@@ -113,7 +133,10 @@ function CustomerService() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="dateRange" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="dateRange"
+              className="block text-sm font-medium mb-1"
+            >
               Tìm theo khoảng thời gian:
             </label>
             <div className="flex space-x-2">
@@ -136,7 +159,10 @@ function CustomerService() {
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="sortType" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="sortType"
+              className="block text-sm font-medium mb-1"
+            >
               Sắp xếp theo:
             </label>
             <select
@@ -177,7 +203,9 @@ function CustomerService() {
           />
           <div className={`flex items-center mt-2 ${alertClass}`}>
             <FaExclamationTriangle className="text-yellow-500 mr-2" />
-            <span className="text-yellow-500">Ấn vào nút hoạt động để ghi note</span>
+            <span className="text-yellow-500">
+              Ấn vào nút hoạt động để ghi note
+            </span>
           </div>
         </div>
       </div>
@@ -201,12 +229,21 @@ function CustomerService() {
             {data?.content.map((item, index) => (
               <tr key={item.careId}>
                 <td className="border border-gray-300 p-2">{index + 1}</td>
-                <td className="border border-gray-300 p-2">{item.customerName}</td>
-                <td className="border border-gray-300 p-2">{item.customerEmail}</td>
-                <td className="border border-gray-300 p-2">{item.customerPhone}</td>
+                <td className="border border-gray-300 p-2">
+                  {item.customerName}
+                </td>
+                <td className="border border-gray-300 p-2">
+                  {item.customerEmail}
+                </td>
+                <td className="border border-gray-300 p-2">
+                  {item.customerPhone}
+                </td>
                 <td className="border border-gray-300 p-2">{item.content}</td>
-                <td className="border border-gray-300 p-2">{formatTimestamp(item.timestamp)}</td>
+                <td className="border border-gray-300 p-2">
+                  {formatTimestamp(item.timestamp)}
+                </td>
                 <td className="border border-gray-300 p-2 text-center">
+                <div className="flex items-center justify-start space-x-2">
                   <div
                     className={`p-2 flex items-center justify-center rounded-full ${
                       item.status === 1 ? "text-green-400" : "text-yellow-300"
@@ -214,6 +251,23 @@ function CustomerService() {
                   >
                     {item.status === 1 ? <FaCheck /> : <FaHourglassHalf />}
                   </div>
+                  {item.note && (
+                    <div className="relative inline-block">
+                      <FaStickyNote
+                        className="text-gray-500 cursor-pointer"
+                        onClick={toggleTooltip}
+                      />
+                      <div
+                        className={`tooltip absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 bg-gray-700 text-white text-xs rounded py-1 px-2 transition-opacity duration-300 ease-in-out ${
+                          isVisible ? "opacity-100" : "opacity-0"
+                        } whitespace-nowrap max-w-48`}
+                      >
+                        {item.note}
+                      </div>
+                    </div>
+                  )}
+                  </div>
+
                 </td>
                 <td className="border border-gray-300 p-2">
                   {item.status === 1 ? (
@@ -222,9 +276,13 @@ function CustomerService() {
                     <div className="flex items-center justify-center">
                       <button
                         onClick={() => onConfirmDone(item.careId)}
-                        className={`p-2 rounded  ${note ? "bg-yellow-500 text-white hover:bg-yellow-400" : "bg-green-500 hover:bg-green-400 text-white"}`}
+                        className={`p-2 whitespace-nowrap rounded  ${
+                          note
+                            ? "bg-yellow-500 text-white hover:bg-yellow-400"
+                            : "bg-green-500 hover:bg-green-400 text-white"
+                        }`}
                       >
-                        đã tư vấn
+                        tư vấn thành công 
                       </button>
                     </div>
                   )}
@@ -233,6 +291,14 @@ function CustomerService() {
             ))}
           </tbody>
         </table>
+        {/* paging */}
+        <div className="flex justify-end mt-4">
+        <Pagination
+          active={page}
+          totalPages={data?.totalPages || 0}
+          onPageChange={handlePageChange}
+        />
+      </div>
       </div>
     </div>
   );

@@ -45,8 +45,8 @@ const customercareApi = createApi({
             method: "POST",
             body: {
               careId : data.careId,
-              status : data.status,
-              note : data.note,
+              status : status,
+              note : note,
             },
             responseHandler: (response) => {
               return response.text();
@@ -63,7 +63,7 @@ const customercareApi = createApi({
               keyword : data.keyword,
               startDate : data.startDate,
               endDate : data.endDate,
-              status : data.status,
+              status: data.status == 0 ? '' : data.status == 1 ? 1 : 0,
               pageNumber : data.pageNumber,
               pageSize : data.pageSize,
               type : data.type,
