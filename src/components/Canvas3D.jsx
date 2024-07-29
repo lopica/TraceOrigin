@@ -1,14 +1,14 @@
-import {
-  Environment,
-  OrbitControls,
-  PresentationControls,
-  Stage,
-  useTexture,
-} from "@react-three/drei";
+import { Environment, OrbitControls, Stage } from "@react-three/drei";
 import { Canvas, useLoader, useThree } from "@react-three/fiber";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader.js";
+import { TDSLoader } from "three/examples/jsm/loaders/TDSLoader.js";
+import { Box3, Vector3 } from "three";
 import * as THREE from "three";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { twMerge } from "tailwind-merge";
 import Button from "./UI/Button";
 import { MdOutlineZoomOutMap } from "react-icons/md";
@@ -17,6 +17,7 @@ import { FaVideo } from "react-icons/fa";
 import { IoMdImage } from "react-icons/io";
 import useShow from "../hooks/use-show";
 import Modal from "./UI/Modal";
+import { getExtension, getMimeTypeFromBase64 } from "../utils/getExtention";
 
 function VideoBackground() {
   const { scene } = useThree();
@@ -58,19 +59,62 @@ function VideoBackground() {
   return null; // This component does not render anything itself
 }
 
-function Model({ modelUrl }) {
-  const stl = useLoader(STLLoader, modelUrl); // Load the STL file
-  return (
-    <mesh geometry={stl}>
-      <meshStandardMaterial attach="material"  />
-    </mesh>
-  );
+function Model({ modelUrl, extension }) {
+  const modelRef = useRef();
+
+  // useEffect(() => {
+  //   if (modelRef.current) {
+  //     // Center the model
+  //     const box = new Box3().setFromObject(modelRef.current);
+  //     const center = box.getCenter(new Vector3());
+  //     modelRef.current.position.sub(center);
+  //   }
+  // }, [modelUrl, extension]);
+  
+  let model;
+  if (extension) {
+    console.log(extension);
+    switch (extension) {
+      case "obj":
+        model = useLoader(OBJLoader, modelUrl);
+        return <primitive ref={modelRef} object={model} />;
+      case "3ds":
+        model = useLoader(TDSLoader, modelUrl);
+        return <primitive ref={modelRef} object={model} />;
+      case "fbx":
+        model = useLoader(FBXLoader, modelUrl);
+        return <primitive ref={modelRef} object={model} />;
+      case "stl":
+        model = useLoader(STLLoader, modelUrl);
+        return (
+          <mesh ref={modelRef} geometry={model}>
+            <meshStandardMaterial attach="material" />
+          </mesh>
+        );
+      case "ply":
+        model = useLoader(PLYLoader, modelUrl);
+        return (
+          <mesh ref={modelRef} geometry={model}>
+            <meshStandardMaterial attach="material" />
+          </mesh>
+        );
+      case "gltf":
+      case "glb":
+        model = useLoader(GLTFLoader, modelUrl);
+        console.log(model);
+        return <primitive ref={modelRef} object={model.scene} />;
+      default:
+        console.error(`Unsupported file extension: ${extension}`);
+        return null;
+    }
+  }
 }
 
 function Canvas3D({ modelBase64, full }) {
   const { show, handleFlip, handleClose } = useShow(false);
   const { show: background, handleFlip: flipBackground } = useShow(false);
   const [modelUrl, setModelUrl] = useState(null);
+  const [extension, setExtension] = useState("");
 
   const handleZoomModal = (e) => {
     e.preventDefault();
@@ -78,30 +122,34 @@ function Canvas3D({ modelBase64, full }) {
   };
 
   const stopPropagation = (e) => {
-    console.log("Event: ", e.type);
-    e.stopPropagation();
     e.preventDefault();
+    // console.log(e)
+    e.stopPropagation();
   };
 
   useEffect(() => {
     if (modelBase64) {
       const byteCharacters = atob(modelBase64.split(",")[1]);
       const byteNumbers = new Array(byteCharacters.length);
+      const mimeType = getMimeTypeFromBase64(modelBase64);
       for (let i = 0; i < byteCharacters.length; i++) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: "application/sla" });
-      const url = URL.createObjectURL(blob);
+      const newBlob = new Blob([byteArray], { type: mimeType });
+      const url = URL.createObjectURL(newBlob);
+      setExtension(getExtension(modelBase64));
       setModelUrl(url);
 
       // Clean up URL object when component unmounts
-      return () => URL.revokeObjectURL(url);
+      return () => {
+        console.log('vo day')
+        URL.revokeObjectURL(url);}
     }
   }, [modelBase64]);
 
   return (
-    <div className="h-full w-full relative ">
+    <div className="h-full w-full relative">
       {show && (
         <Modal onClose={handleClose} full>
           <Button
@@ -116,10 +164,10 @@ function Canvas3D({ modelBase64, full }) {
           </Button>
           <Button
             className="rounded-full absolute bottom-2 left-2 z-30 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-            onClick={(e)=>{
-            e.preventDefault()
-            flipBackground()
-          }}
+            onClick={(e) => {
+              e.preventDefault();
+              flipBackground();
+            }}
           >
             {!background ? (
               <FaVideo color="white" className="h-10 w-10" />
@@ -140,7 +188,10 @@ function Canvas3D({ modelBase64, full }) {
           >
             <OrbitControls />
             <Stage environment={"city"}>
-              {modelUrl && <Model modelUrl={modelUrl} />}
+              {modelUrl && (
+                
+                  <Model modelUrl={modelUrl} extension={extension} />
+              )}
             </Stage>
             {background ? (
               <VideoBackground />
@@ -165,9 +216,9 @@ function Canvas3D({ modelBase64, full }) {
       {full && (
         <Button
           className="rounded-full absolute bottom-2 left-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-          onClick={(e)=>{
-            e.preventDefault()
-            flipBackground()
+          onClick={(e) => {
+            e.preventDefault();
+            flipBackground();
           }}
         >
           {!background ? (
@@ -177,10 +228,23 @@ function Canvas3D({ modelBase64, full }) {
           )}
         </Button>
       )}
-      <Canvas style={{ touchAction: "none" }} dpr={[1, 2]} camera={{ fov: 45 }}>
+      <Canvas
+        style={{ touchAction: "none" }}
+        dpr={[1, 2]}
+        camera={{ fov: 45 }}
+        onClick={stopPropagation}
+        onMouseDown={stopPropagation}
+        onMouseMove={stopPropagation}
+        onTouchStart={stopPropagation}
+        onTouchMove={stopPropagation}
+        onTouchEnd={stopPropagation}
+      >
         <OrbitControls />
         <Stage environment={"city"}>
-          {modelUrl && <Model modelUrl={modelUrl} />}
+          {modelUrl && (
+            
+              <Model modelUrl={modelUrl} extension={extension} />
+          )}
         </Stage>
         {background ? (
           <VideoBackground />

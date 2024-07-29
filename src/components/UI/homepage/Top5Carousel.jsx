@@ -31,7 +31,7 @@ const Top5Carousel = () => {
   return (
     <div className="overflow-hidden">
       <Slider {...settings}>
-        {data?.map((item, index) => (
+        {data && data.map((item, index) => (
           <div key={index}>
             <div
               onClick={() => handleItemClick(item.userId)}
