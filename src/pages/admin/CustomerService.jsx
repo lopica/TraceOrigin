@@ -111,7 +111,6 @@ function CustomerService() {
           status: st,
           note: note,
         };
-        console.log(updateStatusData + " gfgfgg");
         const result = await updateStatus(updateStatusData).unwrap();
         getToast("Cập nhật trạng thái thành công");
       } catch (error) {
@@ -228,7 +227,7 @@ function CustomerService() {
       <div className="md:w-3/4 p-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Danh sách khách hàng</h2>
-        <CustomerCareInfo done={2} cancel={2} waiting={3} />
+        <CustomerCareInfo done={dataCount[1]} cancel={dataCount[2]} waiting={dataCount[0]} />
       </div>
         <table className="min-w-full bg-white border text-xs  border-gray-300 rounded-md">
           <thead>
