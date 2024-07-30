@@ -4,8 +4,10 @@ const locationDataSlice = createSlice({
   name: "locationDataSlice",
   initialState: {
     provincesData: [],
-    districtsData: [{ id: 'initial', content: 'Bạn cần chọn tỉnh, thành phố trước' }],
-    wardsData: [{ id: 'initial', content: 'Bạn cần chọn quận, huyện trước' }],
+    districtsData: [
+      { id: "initial", content: "Bạn cần chọn tỉnh, thành phố trước" },
+    ],
+    wardsData: [{ id: "initial", content: "Bạn cần chọn quận, huyện trước" }],
     currentLocationId: {
       provinceId: "",
       districtId: "",
@@ -30,13 +32,20 @@ const locationDataSlice = createSlice({
       state.currentLocationId = action.payload;
     },
     updateCoordinate(state, action) {
-      state.coordinate = [action.payload.lat, action.payload.lng]
+      state.coordinate = [...action.payload];
     },
     updateNewAddress(state, action) {
-      state.loadingNewAddress = action.payload
-    }
+      state.loadingNewAddress = action.payload;
+    },
   },
 });
 
-export const { updateProvinces, updateDistricts, updateWards, updateCurrentLocationId, updateCoordinate, updateNewAddress } = locationDataSlice.actions;
+export const {
+  updateProvinces,
+  updateDistricts,
+  updateWards,
+  updateCurrentLocationId,
+  updateCoordinate,
+  updateNewAddress,
+} = locationDataSlice.actions;
 export const locationDataReducer = locationDataSlice.reducer;

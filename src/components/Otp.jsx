@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Modal from "./UI/Modal";
 import Button from "./UI/Button";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ export default function Otp({
   const [timeLeft, setTimeLeft] = useState(120);
   const { email } = useSelector((state) => state.registerForm);
   const [lastSubmittedOtp, setLastSubmittedOtp] = useState("");
+  const timerRef = useRef(null); // Use ref to track the timer
 
   const inputRef = useRef(null);
 
@@ -63,19 +64,6 @@ export default function Otp({
     inputRef.current?.focus();
   }, [activeOTPIndex]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTimeLeft) => {
-        if (prevTimeLeft <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prevTimeLeft - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     if (otp.every((value) => value !== "" && !isNaN(value))) {
@@ -91,9 +79,25 @@ export default function Otp({
     }
   }, [otp, onSubmit, setInputsDisabled]);
 
-  useEffect(()=>{
-    if (!isOtpLoading) setTimeLeft(10)
-  },[isOtpLoading])
+  useEffect(() => {
+    if (!isOtpLoading) {
+      setTimeLeft(120);} // Reset timeLeft when isOtpLoading changes
+      const startTimer = () => {
+        if (timerRef.current) clearInterval(timerRef.current); // Clear any existing timer
+        timerRef.current = setInterval(() => {
+          setTimeLeft((prevTimeLeft) => {
+            if (prevTimeLeft <= 1) {
+              clearInterval(timerRef.current);
+              return 0;
+            }
+            return prevTimeLeft - 1;
+          });
+        }, 1000);
+      };
+  
+      startTimer();
+      return () => clearInterval(timerRef.current); 
+  }, [isOtpLoading]);
 
   return (
     <>
@@ -103,7 +107,7 @@ export default function Otp({
       </div>
       <div className="flex justify-center items-center space-x-2 mb-4">
         {otp.map((_, index) => (
-          <React.Fragment key={index}>
+          <Fragment key={index}>
             <input
               ref={activeOTPIndex === index ? inputRef : null}
               type="number"
@@ -119,7 +123,7 @@ export default function Otp({
             {index === otp.length - 1 ? null : (
               <span className="w-2 py-0.5 bg-gray-400" />
             )}
-          </React.Fragment>
+          </Fragment>
         ))}
       </div>
       <div className="flex justify-center">
@@ -128,7 +132,7 @@ export default function Otp({
             Mã xác thực còn có hiệu lực trong {timeLeft} giây
           </p>
         ) : (
-          <Button primary rounded onClick={() => sendOtp({ email })} isLoading={isOtpLoading}>
+          <Button primary rounded onClick={() => sendOtp(email)} isLoading={isOtpLoading}>
             Gửi lại
           </Button>
         )}

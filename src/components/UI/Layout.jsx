@@ -55,7 +55,7 @@ export default function Layout() {
           {/* <Breadcrumps /> */}
           <Outlet />
         </main>
-        {!matchPaterm && (
+        {!matchPaterm && !currentPath.startsWith("/portal") && (
           <df-messenger
             intent="WELCOME"
             chat-title="TraceOrigin"

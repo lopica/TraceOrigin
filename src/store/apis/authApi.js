@@ -12,13 +12,23 @@ const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/auth`,
-    credentials: "include",
-    // baseUrl: "http://localhost:3001",
-    // fetchFn: async (...args) => {
-    //   // REMOVE FOR PRODUCTION
-    //   await pause(3000);
-    //   return fetch(...args);
-    // },
+    // credentials: "include",
+    fetchFn: async (input, init, ...args) => {
+      // REMOVE FOR PRODUCTION
+      // await pause(3000);
+
+      // Determine the endpoint based on the URL or some other method
+      const url = typeof input === "string" ? input : input.url;
+      if (url.includes("/login") || url.includes("/logout") || url.includes("/changePassword")) {
+        // Customize fetch options for this specific endpoint
+        init = {
+          ...init,
+          credentials: "include", // Include credentials specifically for this endpoint
+        };
+      }
+
+      return fetch(input, init, ...args);
+    },
   }),
 
   endpoints(builder) {
