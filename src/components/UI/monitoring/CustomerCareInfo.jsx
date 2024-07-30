@@ -10,17 +10,17 @@ const CustomerCareInfo = ({
   <div className="flex">
     <div className="w-1/3 border-r px-2 flex flex-col justify-between">
       <div className="text-md font-bold  text-center text-green-500">
-        {done || "--"}
+        {done}
       </div>
     </div>
     <div className="w-1/3 border-r px-2 flex flex-col justify-between">
       <div className="text-md font-bold  text-center text-red-500">
-        {cancel || "--"}
+        {cancel}
       </div>
     </div>
     <div className="w-1/3 flex px-2 flex-col justify-between">
       <div className="text-md font-bold  text-center text-yellow-400">
-        {waiting || "--"}
+        {waiting}
       </div>
     </div>
   </div>

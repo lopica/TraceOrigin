@@ -1,34 +1,24 @@
 import React, { useEffect, useState } from "react";
-import {
-  FaCheck,
-  FaHourglassHalf,
-  FaSearch,
-  FaTimes,
-  FaExclamationTriangle,
-  FaStickyNote,
-  FaTimesCircle,
-  FaCheckCircle,
-  
-} from "react-icons/fa";
+
+import { FaCheckCircle,FaRegEye, FaTimesCircle, FaSearch, FaHourglassHalf } from 'react-icons/fa';
 
 import { useSelector } from "react-redux";
-import useToast from "../../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import {
   useCountStatusQuery,
   useSearchCustomerCareQuery,
-  useUpdateStatusMutation,
 } from "../../store/apis/customercareApi";
 import Pagination from "../../components/UI/Pagination";
 import CustomerCareInfo from "../../components/UI/monitoring/CustomerCareInfo";
+import PopupCustomerCare from "../../components/UI/monitoring/PopupCustomerCare";
+import useToast from "../../hooks/use-toast";
 
 function CustomerService() {
-  const [errorMsg, setErrorMsg] = useState("");
-  const [page, setPage] = useState(0);
-  const [updateStatus] = useUpdateStatusMutation();
-  const [shouldFetch, setShouldFetch] = useState(true);
-  const [note, setNote] = useState("");
   const { getToast } = useToast();
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // To control popup visibility
+  const [dataSelected, setDataSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [shouldFetch, setShouldFetch] = useState(true);
   const navigate = useNavigate();
   const [body, setBody] = useState({
     keyword: "",
@@ -37,7 +27,7 @@ function CustomerService() {
     status: 3,
     pageNumber: 0,
     pageSize: 8,
-    type: "",
+    type: "desc",
   });
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -93,36 +83,16 @@ function CustomerService() {
     refetch();
     refetchDataCount();
   };
-  //=============== tooltip
-  const [isVisible, setIsVisible] = useState(false);
-
-  const toggleTooltip = () => {
-    setIsVisible(!isVisible);
-  };
   //=============== handle update status
-  const onConfirm = async (careId, st) => {
-    if (!note) {
-      setErrorMsg(true);
-    } else {
-      setErrorMsg(false);
-      try {
-        const updateStatusData = {
-          careId: careId,
-          status: st,
-          note: note,
-        };
-        const result = await updateStatus(updateStatusData).unwrap();
-        getToast("Cập nhật trạng thái thành công");
-      } catch (error) {
-        error;
-      }
-      setShouldFetch(true);
-      refetch();
-      refetchDataCount();
-    }
-  };
+  
 
-  const alertClass = errorMsg ? "block" : "hidden";
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+  const openPopup = (item) => {
+    setDataSelected(item);
+    setIsPopupOpen(true);
+  };
 
   return (
     <div className="flex flex-col md:flex-row p-4">
@@ -178,6 +148,7 @@ function CustomerService() {
             >
               Sắp xếp theo:
             </label>
+            <div className="flex space-x-2">
             <select
               id="sortType"
               name="status"
@@ -190,6 +161,18 @@ function CustomerService() {
               <option value={0}>Chưa tư vấn</option>
               <option value={2}>Tư vấn không thành công</option>
             </select>
+            <select
+              id="type"
+              name="type"
+              value={body.type}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md p-2 w-full"
+            >
+              <option value={"desc"}>Mới nhất</option>
+              <option value={"acs"}>Cũ nhất</option>
+
+            </select>
+            </div>
           </div>
           <div className="mb-4">
             <button
@@ -203,31 +186,13 @@ function CustomerService() {
           </div>
         </form>
 
-        {/* Khu vực ghi chú */}
-        <div className="mb-4">
-          <label htmlFor="note" className="block text-sm font-medium mb-1">
-            Ghi chú:
-          </label>
-          <textarea
-            id="note"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-            rows="4"
-          />
-          <div className={`flex items-center mt-2 ${alertClass}`}>
-            <FaExclamationTriangle className="text-yellow-500 mr-2" />
-            <span className="text-yellow-500">
-              Bạn cần ghi note trước khi bấm nút hành động
-            </span>
-          </div>
-        </div>
+        
       </div>
 
       <div className="md:w-3/4 p-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Danh sách khách hàng</h2>
-        <CustomerCareInfo done={dataCount[1]} cancel={dataCount[2]} waiting={dataCount[0]} />
+        <CustomerCareInfo done={dataCount?.cancel} cancel={dataCount?.waiting} waiting={dataCount?.done} />
       </div>
         <table className="min-w-full bg-white border text-xs  border-gray-300 rounded-md">
           <thead>
@@ -260,50 +225,26 @@ function CustomerService() {
                   {formatTimestamp(item.timestamp)}
                 </td>
                 <td className="border border-gray-300 p-2 text-center">
-                  <div className="flex items-center justify-start space-x-2">
+                  <div className="flex text-center items-center justify-center">
                     <div
-                      className={`p-2 flex items-center justify-center rounded-full ${
+                      className={`p-2 ${
                         item.status === 1 ? "text-green-400" : item.status === 2 ? "text-red-400" : "text-yellow-300"
                       }`}
                     >
-                      {item.status === 1 ? <FaCheck /> : item.status === 2 ? <FaTimes />: <FaHourglassHalf />}
+                      {item.status === 1 ? <FaCheckCircle /> : item.status === 2 ? <FaTimesCircle />: <FaHourglassHalf />}
                     </div>
-                    {item.note && (
-                      <div className="relative inline-block">
-                        <FaStickyNote
-                          className="text-gray-500 cursor-pointer"
-                          onClick={toggleTooltip}
-                        />
-                        <div
-                          className={`tooltip absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 bg-gray-700 text-white text-xs rounded py-1 px-2 transition-opacity duration-300 ease-in-out ${
-                            isVisible ? "opacity-100" : "opacity-0"
-                          } whitespace-nowrap max-w-48`}
-                        >
-                          {item.note}
-                        </div>
-                      </div>
-                    )}
+                  
                   </div>
                 </td>
-                <td className="border border-gray-300 p-2">
-                  {item.status === 1 ? (
-                    <></>
-                  ) : (
+                <td className="border border-gray-300 p-2">   
                     <div className="flex items-center justify-center gap-1">
                       <button
-                        onClick={() => onConfirm(item.careId, 1)}
-                        className="p-0.5 whitespace-nowrap rounded-full bg-green-500 hover:bg-green-400 text-white"
+                        onClick={() => openPopup(item)}
+                        className="p-0 whitespace-nowrap rounded-full text-blue-500 hover:text-blue-400 "
                       >
-                        <FaCheckCircle size={24} />
-                      </button>
-                      <button
-                        onClick={() => onConfirm(item.careId, 2)}
-                        className="p-0.5 whitespace-nowrap rounded-full bg-red-500 hover:bg-red-400 text-white"
-                      >
-                        <FaTimesCircle size={24} />
+                        <FaRegEye size={24} />
                       </button>
                     </div>
-                  )}
                 </td>
               </tr>
             ))}
@@ -318,6 +259,12 @@ function CustomerService() {
           />
         </div>
       </div>
+      <PopupCustomerCare
+        isOpen={isPopupOpen}
+        onClose={closePopup}
+        refetch={handleSearch}
+        item={dataSelected}
+      />
     </div>
   );
 }
