@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  updateCoordinate,
   updateRegisterForm,
   useCheckEmailExistMutation,
   useCreateUserMutation,
@@ -83,6 +84,17 @@ function Register() {
     //get data and save to local storage
   };
 
+  const handleSendOtp = (email) => {
+    sendOtp({ email })
+      .then(() => {
+        getToast("Hãy kiểm tra email của bạn");
+      })
+      .catch((res) => {
+        getToast("Không thể gửi mã OTP");
+        console.log(res);
+      });
+  };
+
   const onSubmit = (data) => {
     province = getValues("province").split(",");
     district = getValues("district").split(",");
@@ -102,16 +114,7 @@ function Register() {
     console.log(request);
     dispatch(updateRegisterForm(request));
     handleOpen();
-    sendOtp({
-      email: request.email,
-    })
-      .then(() => {
-        getToast("Hãy kiểm tra email của bạn");
-      })
-      .catch((res) => {
-        getToast("Không thể đăng ký thành công tài khoản mới");
-        console.log(res);
-      });
+    handleSendOtp(request.email);
   };
 
   const handleRegister = (otp) => {
@@ -121,17 +124,20 @@ function Register() {
     })
       .unwrap()
       .then((res) => {
-        console.log(res);
-        dispatch(updateCoordinate([]));
-        getToast("Tạo tài khoản thành công");
         navigate("/portal/login");
+        getToast("Tạo tài khoản thành công");
       })
       .catch((err) => {
-        console.log(err.error);
         getToast("Mã OTP của bạn không đúng");
-        setInputsDisabled(false); // Enable inputs again if creation fails
+        setInputsDisabled(false);
       });
   };
+
+  useEffect(()=>{
+    return ()=>{
+      dispatch(updateCoordinate([]));
+    }
+  },[])
 
   alert = (
     <Alert {...{ [alertContent.type]: true }}>{alertContent.content}</Alert>
@@ -207,13 +213,17 @@ function Register() {
             <Input
               label="Tên tổ chức/công ty của bạn"
               type="text"
+              placeholder="Vinamilk"
               {...register("orgName", {
                 validate: async (value) => {
                   try {
                     await checkOrgname({ orgName: value }).unwrap(); // Assuming unwrap() correctly resolves or rejects
                     return true; // Validation passed
                   } catch (error) {
-                    return 'Tên tổ chức đã tồn tại' || "Có lỗi xảy ra khi kiểm tra orgName"; // Return custom error message
+                    return (
+                      "Tên tổ chức đã tồn tại" ||
+                      "Có lỗi xảy ra khi kiểm tra orgName"
+                    ); // Return custom error message
                   }
                 },
               })}
@@ -247,7 +257,10 @@ function Register() {
                     await checkEmail({ email: value }).unwrap(); // Assuming unwrap() correctly resolves or rejects
                     return true; // Validation passed
                   } catch (error) {
-                    return 'Email này đã có tài khoản' || "Có lỗi xảy ra khi kiểm tra email"; // Return custom error message
+                    return (
+                      "Email này đã có tài khoản" ||
+                      "Có lỗi xảy ra khi kiểm tra email"
+                    ); // Return custom error message
                   }
                 },
               })}
@@ -309,8 +322,8 @@ function Register() {
               <Otp
                 onSubmit={handleRegister}
                 isLoading={isRegisterLoading}
-                sendOtp={sendOtp}
-                isSendOtpLoading={isOtpLoading}
+                sendOtp={handleSendOtp}
+                isOtpLoading={isOtpLoading}
                 inputsDisabled={inputsDisabled}
                 setInputsDisabled={setInputsDisabled}
               />
@@ -318,7 +331,7 @@ function Register() {
           </Modal>
         )}
         <div className="mt-5 text-sm flex justify-center items-center">
-          <p>Đã tài khoản?</p>
+          <p>Đã có tài khoản?</p>
           <Link to="/portal/login">
             <Button link className="p-2">
               Đăng nhập ngay

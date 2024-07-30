@@ -229,6 +229,8 @@ export default function ItemList({ productId }) {
           />
         </div>
       );
+    } else {
+      renderedListItem = <p className="text-center">Bạn chưa có nhật ký nào</p>
     }
   }
 

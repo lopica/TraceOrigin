@@ -185,7 +185,7 @@ export default function ImageClassification() {
 
   return (
     <section>
-      <h2 className="text-center pt-4 text-xl pb-2">Nhận diện hình ảnh</h2>
+      <h2 className="text-center pt-4 text-3xl pb-2">Nhận diện hình ảnh</h2>
       {step === "choose" && (
         <div className="flex justify-around mt-4 mx-auto max-w-2xl">
           <div

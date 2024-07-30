@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/use-toast";
-import Canvas3D from "./Canvas3D"
+import Canvas3D from "./Canvas3D";
 
 const productConfig = [
   {
@@ -26,14 +26,8 @@ export default function ProductDetail({ productId }) {
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [slides, setSlides] = useState([]);
   const { getToast } = useToast();
-  const {
-    productData,
-    name,
-    images,
-    isProductFetch,
-    isProductError,
-    error,
-  } = useProductDetail(productId);
+  const { productData, name, images, isProductFetch, isProductError, error } =
+    useProductDetail(productId);
 
   useEffect(() => {
     if (error?.status === 401) navigate("/portal/login");
@@ -50,14 +44,13 @@ export default function ProductDetail({ productId }) {
     if (images.length > 0) {
       const imageSlides = images.map((image, idx) => (
         <img src={image} alt={`${name} ${idx}`} />
-      ))
-      setSlides(
-        [...imageSlides, 
-        <div className='sm:w-[32rem] aspect-video'>
+      ));
+      setSlides([
+        ...imageSlides,
+        <div className="sm:w-[32rem] aspect-video">
           <Canvas3D full />
-        </div>
-        ]
-      );
+        </div>,
+      ]);
     }
   }, [images]);
 
@@ -82,9 +75,14 @@ export default function ProductDetail({ productId }) {
 
   return (
     <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-12">
-      <Carousel slides={slides} thumb3D={<div className='sm:w-[32rem] aspect-video'>
-          <Canvas3D />
-        </div>}/>
+      <Carousel
+        slides={slides}
+        thumb3D={
+          <div className="sm:w-[32rem] aspect-video">
+            <Canvas3D />
+          </div>
+        }
+      />
       {renderedProductDetail}
     </section>
   );

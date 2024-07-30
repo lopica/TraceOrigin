@@ -39,10 +39,8 @@ function Login() {
   };
 
   useEffect(() => {
-    console.log(role)
     if (isAuthenticated && role) {
       if (role == 1) {
-        console.log('vo admin')
         navigate("/admin/ManufacturerList");
       } else if (role == 2) {
         navigate("/manufacturer/products");

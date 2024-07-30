@@ -188,12 +188,16 @@ function ManuProductAdd() {
   };
 
   const onSubmit = (data) => {
+    let imagesFormat = data.images.map(image=>(image.split(',')[1]))
+
     request = {
       ...data,
       avatar: data.avatar.split(",")[1],
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
       file3D: getValues("file3D") ? getValues("file3D").split(",")[1] : "",
+      avatar: data.avatar.split(',')[1],
+      images: imagesFormat
     };
     delete request.length;
     delete request.width;
@@ -205,6 +209,7 @@ function ManuProductAdd() {
       .unwrap()
       .then(() => {
         dispatch(resetState());
+        localforage.removeItem(`formData_${user.userId}`)
         getToast("Tạo mới thành công sản phẩm");
         navigate("/manufacturer/products");
       })
