@@ -45,12 +45,20 @@ const customercareApi = createApi({
             method: "POST",
             body: {
               careId : data.careId,
-              status : status,
-              note : note,
+              status : data.status,
+              note : data.note,
             },
             responseHandler: (response) => {
               return response.text();
             },
+          };
+        },
+      }),
+      countStatus: builder.query({
+        query: () => {
+          return {
+            url: "/countStatus",
+            method: "GET",
           };
         },
       }),
@@ -63,7 +71,7 @@ const customercareApi = createApi({
               keyword : data.keyword,
               startDate : data.startDate,
               endDate : data.endDate,
-              status: data.status == 0 ? '' : data.status == 1 ? 1 : 0,
+              status: data.status,
               pageNumber : data.pageNumber,
               pageSize : data.pageSize,
               type : data.type,
@@ -80,6 +88,7 @@ export const {
 
   useAddMutation,
   useUpdateStatusMutation,
+  useCountStatusQuery,
   useSearchCustomerCareQuery,
 
 } = customercareApi;
