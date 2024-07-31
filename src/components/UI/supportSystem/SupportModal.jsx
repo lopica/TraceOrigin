@@ -3,13 +3,31 @@ import React, { useState } from 'react';
 const SupportModal = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
 
   if (!isOpen) return null;
 
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const fileReaders = files.map(file => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(fileReaders).then(base64Images => {
+      setImages(base64Images);
+    }).catch(error => {
+      console.error("Error reading files", error);
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ title, content, image });
+    onSubmit({ title, content, images });
     onClose();
   };
 
@@ -47,13 +65,24 @@ const SupportModal = ({ isOpen, onClose, onSubmit }) => {
             ></textarea>
           </div>
           <div className="mb-4">
-            <label htmlFor="image" className="block mb-1">Image:</label>
+            <label htmlFor="images" className="block mb-1">Images:</label>
             <input
               type="file"
-              id="image"
-              onChange={(e) => setImage(e.target.files[0])}
+              id="images"
+              multiple
+              onChange={handleFileChange}
               className="border p-2 w-full"
             />
+            <div className="mt-2">
+              {images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Preview ${index}`}
+                  className="w-32 h-32 object-cover rounded-md mt-2"
+                />
+              ))}
+            </div>
           </div>
           <button
             type="submit"
