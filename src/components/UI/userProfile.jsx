@@ -20,7 +20,7 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
   useEffect(() => {
     if (data) {
       setAvatar(data.profileIMG || null);
-      setCoverImage(data.coverIMG || null);
+      setCoverImage(data.orgIMG || null);
       setDescription(data.description || "");
     }
     refetch();
