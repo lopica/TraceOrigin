@@ -173,7 +173,7 @@ function VerifyManufacturer() {
         />
       </div>
       {isModalOpenProfile && (
-        <ProfileModal userId={selectedUserId} closeModal={handleCloseModalProfile} />
+        <ProfileModal userId={selectedUserId} closeModal={handleCloseModalProfile} isEditable = {false}/>
       )}
       {isModalOpenImage && (
         <CarouselModal

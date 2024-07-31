@@ -6,13 +6,12 @@ import { Link, useNavigate } from "react-router-dom";
 import ProfileModal from "../../components/UI/userProfile";
 import handleKeyDown from "../../utils/handleKeyDown";
 import { useForm } from "react-hook-form";
-import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import { useGetAllDistinctCityQuery } from "../../store/apis/mapApi";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
 
-function VerifyManufacturer() {
+function ManufacturerList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
@@ -26,7 +25,7 @@ function VerifyManufacturer() {
     onConfirm: null,
   });
 
-  const { handleSubmit, register, control } = useForm({
+  const { handleSubmit, register, control, reset } = useForm({
     mode: "onTouched",
     defaultValues: {
       nameSearch: "",
@@ -64,27 +63,26 @@ function VerifyManufacturer() {
 
   useEffect(() => {
     if (isError?.status === 401 && !isFetching) {
-      console.log('vo error 401')
+      console.log('vo error 401');
       navigate("/portal/login");
     }
   }, [isError, navigate]);
 
   useEffect(() => {
     if (!isFetching && !isAuthenticated) {
-      console.log('vo timeout')
+      console.log('vo timeout');
       getToast('Phiên đăng nhập đã hết hạn');
       navigate("/portal/login");
     }
   }, [isFetching, isAuthenticated, getToast, navigate]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!isError && !isFetching) {
       if (data) {
-        console.log(data)
-        
+        console.log(data);
       }
     }
-  },[isError, isFetching])
+  }, [isError, isFetching]);
 
   const handleUserClick = (userId) => {
     setSelectedUserId(userId);
@@ -208,6 +206,10 @@ function VerifyManufacturer() {
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
+    setSearchParams((prevParams) => ({
+      ...prevParams,
+      page: newPage.toString(),
+    }));
     refetch();
   };
 
@@ -225,51 +227,97 @@ function VerifyManufacturer() {
     });
   };
 
+  const resetHandler = () => {
+    reset({
+      nameSearch: "",
+      citySearch: "",
+      statusSearch: ""
+    });
+    setSearchParams({
+      ...searchParams,
+      email: "",
+      city: "",
+      status: "",
+      page: 0
+    });
+    refetch();
+  };
+  
+  const cityOptions = [{ id: "", content: "" }, ...(citiesData?.map(city => ({ id: city, content: city })) || [])];
+
   const statusData = [
-    { id: "1", content: "Active" },
-    { id: "2", content: "Lock" },
-    { id: "-1", content: "Inactive" }
+    { id: "", content: " " },
+    { id: "1", content: "Đã kích hoạt" },
+    { id: "0", content: "Chưa kích hoạt" },
+    { id: "2", content: "Bị khóa" }
   ];
 
   return (
     <div className="table-responsive p-5">
       <form
-        className="flex items-end flex-col justify-between gap-2 mx-auto 
-        md:flex-row md:justify-start md:gap-2 md:items-end"
+        className="flex flex-col md:flex-row md:flex-wrap items-end gap-4 mx-auto"
         onKeyDown={handleKeyDown}
         onSubmit={handleSubmit(searchHandler)}
       >
-        <Input
-          label="Tên sản phẩm"
-          {...register("nameSearch")}
-          type="search"
-          placeholder="Tên sản phẩm"
-        />
-        <Input
-          label="Thành phố"
-          type="select"
-          control={control}
-          {...register("citySearch")}
-          data={citiesData?.map(city => ({id:city.text ,  content: city.text })) || []}
-          placeholder="Chọn thành phố"
-        />
-        <Input
-          label="Trạng thái"
-          type="select"
-          control={control}
-          {...register("statusSearch")}
-          data={statusData}
-          placeholder="Chọn trạng thái"
-        />
-        <Button
-          primary
-          rounded
-          className="whitespace-nowrap h-[5svh] w-full md:w-fit md:py-6 md:px-10"
-        >
-          Tìm kiếm
-        </Button>
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          <label htmlFor="nameSearch" className="block text-sm font-medium text-gray-700">
+            Tên đăng kí
+          </label>
+          <input
+            id="nameSearch"
+            {...register("nameSearch")}
+            type="search"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholder="Tên đăng kí"
+          />
+        </div>
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          <label htmlFor="citySearch" className="block text-sm font-medium text-gray-700">
+            Thành phố
+          </label>
+          <select
+            id="citySearch"
+            {...register("citySearch")}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            {cityOptions.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.content}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          <label htmlFor="statusSearch" className="block text-sm font-medium text-gray-700">
+            Trạng thái
+          </label>
+          <select
+            id="statusSearch"
+            {...register("statusSearch")}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            {statusData.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.content}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-full md:w-auto flex justify-end mt-2 md:mt-0">
+          <Button primary rounded className="whitespace-nowrap h-[5svh] w-full md:w-auto md:py-2 md:px-4">
+            Tìm kiếm
+          </Button>
+          <Button
+            secondary
+            rounded
+            className="whitespace-nowrap h-[5svh] w-full md:w-auto md:py-2 md:px-4 ml-2"
+            onClick={resetHandler}
+          >
+            Reset
+          </Button>
+        </div>
       </form>
-      <table className="table table-zebra">
+      <table className="table table-zebra mt-4">
         <thead>
           <tr>
             <th>#</th>
@@ -282,15 +330,9 @@ function VerifyManufacturer() {
         {renderTableBody()}
       </table>
       <div className="flex justify-end mt-4">
-        <Pagination
-          active={page}
-          totalPages={data?.totalPages || 0}
-          onPageChange={handlePageChange}
-        />
+        <Pagination active={page} totalPages={data?.totalPages || 0} onPageChange={handlePageChange} />
       </div>
-      {selectedUserId && (
-        <ProfileModal userId={selectedUserId} closeModal={handleCloseModal} />
-      )}
+      {selectedUserId && <ProfileModal userId={selectedUserId} closeModal={handleCloseModal} />}
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
         onClose={closeModal}
@@ -303,4 +345,4 @@ function VerifyManufacturer() {
   );
 }
 
-export default VerifyManufacturer;
+export default ManufacturerList;

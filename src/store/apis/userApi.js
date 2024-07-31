@@ -108,9 +108,49 @@ const userApi = createApi({
           }
         }
       }),
+      updateOrgImage: builder.mutation({
+        query: (options) => {
+          return{
+            url: '/updateOrgImage',
+            method: 'POST',
+            body: {
+              file : options.file || "",
+            }
+          }
+        }
+      }),
+      updateAvatar: builder.mutation({
+        query: (options) => {
+          return{
+            url: '/updateAvatar',
+            method: 'POST',
+            body: {
+              file : options.file || "",
+            }
+          }
+        }
+      }),
+      updateDescription: builder.mutation({
+        query: (options) => {
+          return{
+            url: '/updateDescription',
+            method: 'POST',
+            body: {
+              description : options.description || "",
+            }
+          }
+        }
+      }),
     };
   },
 });
 
 export { userApi };
-export const { useFetchUserQuery, useGetUserDetailQuery, useGetDetailUserQuery, useGetUsersQuery , useLockUserMutation , useUpdateStatusMutation, useCountRegisteredUserQuery, useSearchAllManufacturerQuery } = userApi;
+export const { useFetchUserQuery, 
+  useGetUserDetailQuery, 
+  useGetDetailUserQuery, 
+  useGetUsersQuery , 
+  useLockUserMutation , 
+  useUpdateStatusMutation, 
+  useCountRegisteredUserQuery, useSearchAllManufacturerQuery, 
+  useUpdateOrgImageMutation, useUpdateAvatarMutation, useUpdateDescriptionMutation } = userApi;

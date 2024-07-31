@@ -43,21 +43,39 @@ function Avatar() {
     if (isAuthenticated) refetch();
   }, [isAuthenticated]);
 
+  const renderAvatar = (profileIMG, firstName) => {
+    if (profileIMG) {
+      return (
+        <img
+          src={profileIMG}
+          alt="Profile"
+          className="w-10 h-10 rounded-full"
+        />
+      );
+    }
+
+    const initial = firstName ? firstName.charAt(0).toUpperCase() : "U";
+    return (
+      <div className=" w-10 h-10 rounded-full bg-neutral text-neutral-content flex items-center justify-center">
+        <span className="text-2xl">
+          {initial}
+        </span>
+      </div>
+    );
+  };
+
   if (isFetching) {
     avatar = <div className="skeleton h-10 w-10 shrink-0 rounded-full"></div>;
   } else if (isError) {
     avatar = (
       <img
-        alt="Tailwind CSS Navbar component"
+        alt="Error loading avatar"
         src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+        className="w-10 h-10 rounded-full"
       />
     );
   } else {
-    if (user.profileImage) {
-      avatar = <img alt="default avatar" src={user.profileImage} />;
-    } else {
-      avatar = <img alt="default avatar" src="/default_avatar.png" />;
-    }
+    avatar = renderAvatar(user.profileImage, user.firstName);
   }
 
   return (
@@ -101,7 +119,7 @@ function Avatar() {
         </li>
       </ul>
       {selectedUserId && (
-        <ProfileModal userId={selectedUserId} closeModal={handleCloseModal} />
+        <ProfileModal userId={selectedUserId} closeModal={handleCloseModal} isEditable={true} />
       )}
       {isChangePasswordOpen && (
         <ChangePassword isOpen={isChangePasswordOpen} onClose={handleCloseChangePassword} />

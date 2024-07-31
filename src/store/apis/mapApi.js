@@ -50,7 +50,7 @@ const mapApi = createApi({
       getAllDistinctCity: builder.query({
         query: (address) => {
           return {
-            url: '/getAllCity',
+            url: '/getListDistinctCity',
             method: 'GET'
           }
         }
