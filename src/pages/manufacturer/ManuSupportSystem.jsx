@@ -5,7 +5,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Pagination from "../../components/UI/Pagination";
 import SupportList from "../../components/UI/supportSystem/SupportList";
 import SupportModal from "../../components/UI/supportSystem/SupportModal";
-import { useAddSupportMutation, useListAllByUserQuery } from "../../store/apis/supportSystemApi";
+import { useAddSupportMutation, useListAllByUserQuery, useReplyByUserMutation } from "../../store/apis/supportSystemApi";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
 
@@ -64,6 +64,29 @@ function ManuSupportSystem() {
     setPage(newPage);
     setBody((prevData) => ({ ...prevData, pageNumber: newPage }));
   };
+    // =============================== handle add reply
+    const [replyByUser] = useReplyByUserMutation();
+
+    const handleSubmitReply = async (formData) => {
+      try {
+        const base64Prefix = 'data:image/png;base64,';
+        const cleanedImages = formData?.images.map(image =>
+          image.startsWith(base64Prefix) ? image.replace(base64Prefix, '') : image
+        );
+  
+        const replyByUserData = {
+          id: formData.supportSystemId.value,
+          content: formData.content,
+          images: cleanedImages ? cleanedImages: []
+        };
+        const result = await replyByUser(replyByUserData).unwrap();
+        getToast("Phản hồi hệ thống thành công");
+      } catch (error) {
+        console.error(error);
+      }  
+      setShouldFetch(true);
+      refetch();
+    };
   return (
 <div className="flex flex-col p-4">
   <div className="flex justify-end mb-4">
@@ -74,7 +97,7 @@ function ManuSupportSystem() {
       Thêm hỗ trợ
     </button>
   </div>
-  <SupportList items={data?.content} />
+  <SupportList items={data?.content} onSubmit={handleSubmitReply}/>
 
     {/*================================== modal add ticket */}
   <SupportModal

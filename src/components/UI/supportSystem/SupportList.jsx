@@ -3,44 +3,41 @@ import React, { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa"; // Import icon bạn muốn sử dụng
 
-const SupportList = ({ items = [] }) => {
+const SupportList = ({ items = [], onSubmit }) => {
   const [openIndex, setOpenIndex] = useState(null);
-  const [replies, setReplies] = useState(
-    items.map(() => ({ text: "", image: "" }))
-  );
+  const [content, setContent] = useState("");
+  const [images, setImages] = useState([]);
 
   const toggleDetails = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+  // =============================== convert and save in hook
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const fileReaders = files.map((file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    });
 
-  const handleReplyChange = (index, e) => {
-    const { name, value } = e.target;
-    setReplies(
-      replies.map((reply, i) =>
-        i === index ? { ...reply, [name]: value } : reply
-      )
-    );
+    Promise.all(fileReaders)
+      .then((base64Images) => {
+        setImages(base64Images);
+      })
+      .catch((error) => {
+        console.error("Error reading files", error);
+      });
+  };
+  // ============================= send reply by supporter
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({ supportSystemId, content, images });
   };
 
-  const handleFileChange = (index, e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setReplies(
-          replies.map((reply, i) =>
-            i === index ? { ...reply, image: reader.result } : reply
-          )
-        );
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSendReply = (index) => {
-    // Handle sending the reply here (e.g., update the server or state)
-    console.log("Reply sent:", replies[index]);
-  };
+  // ============================= convert timestamp to datetime
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(parseInt(timestamp, 10));
@@ -68,12 +65,12 @@ const SupportList = ({ items = [] }) => {
                 <td className="p-4">{item.title}</td>
                 <td
                   className={`p-4 ${
-                    item.status === "resolved"
+                    item.status === "1"
                       ? "text-green-500"
                       : "text-red-500"
                   }`}
                 >
-                  {item.status === "resolved" ? "Đã xử lý" : "Chưa xử lý"}
+                  {item.status === "1" ? "Đã xử lý" : "Đang chờ xử lý"}
                 </td>
                 <td className="p-4">{formatTimestamp(item.timestamp)}</td>
                 <td className="p-4">{item.supporterName}</td>
@@ -91,7 +88,7 @@ const SupportList = ({ items = [] }) => {
                   <td colSpan="6" className="p-4">
                     <div className="mt-4">
                       {item?.subSupport?.map((support, supportIndex) => {
-                        const isLastItem = supportIndex === item.subSupport.length - 1;          
+                        const isLastItem = supportIndex === item.subSupport.length - 1;
                         const isFirstItem = supportIndex === 0;
                         return (
                           <div key={supportIndex} className="mb-4">
@@ -146,68 +143,81 @@ const SupportList = ({ items = [] }) => {
                                   Thời gian:{" "}
                                   {formatTimestamp(support.supportTimestamp)}
                                 </p>
-                                {support?.supportImage?.length > 0 ? (
-                                  support?.supportImage?.map(
-                                    (image, imgIndex) => (
+                                {support?.supportImage?.length > 0 && (
+                                  <div className="flex space-x-2 mt-2">
+                                    {support?.supportImage?.map((image, imgIndex) => (
                                       <a
                                         href={image}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         key={imgIndex}
+                                        className="block"
                                       >
-                                        <strong>Hình ảnh: </strong>
                                         <img
                                           src={image}
-                                          alt="Support"
-                                          className="cursor-pointer mt-2"
+                                          alt={`Support ${imgIndex}`}
+                                          className="w-12 h-12 object-cover rounded-md cursor-pointer"
                                         />
                                       </a>
-                                    )
-                                  )
-                                ) : (
-                                  <></>
+                                    ))}
+                                  </div>
                                 )}
                               </>
                             ) : (
                               <></>
                             )}
+                            {support.supportContent && isLastItem &&  (
+                      <form onSubmit={handleSubmit}>
+                        <div>
+                          <label htmlFor="content" className="block mb-1">
+                            Trả lời khách hàng:
+                          </label>
+                          <input
+                            className="hidden"
+                            id="supportSystemId"
+                            value={support?.supportSystemId}
+                          />
+                          <textarea
+                            id="content"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            className="border p-2 w-full"
+                            rows="4"
+                            required
+                          ></textarea>
+                        </div>
+                        <div>
+                          <input
+                            type="file"
+                            id="images"
+                            multiple
+                            onChange={handleFileChange}
+                            className="border p-2 w-full"
+                          />
+                          <div className="mt-2">
+                            {images.map((image, index) => (
+                              <img
+                                key={index}
+                                src={image}
+                                alt={`Preview ${index}`}
+                                className="w-32 h-32 object-cover rounded-md mt-2"
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <button
+                          type="submit"
+                          className="bg-green-500 text-white px-4 py-2 rounded"
+                        >
+                          Gửi
+                        </button>
+                      </form>
+                    )}
                           </div>
                         );
                       })}
                     </div>
-                    {support.supportContent && isLastItem && (
-                      <div className="mt-4">
-                        <h3 className="text-xl font-bold">Phản hồi mới</h3>
-                        <textarea
-                          name="text"
-                          value={replies[index]?.text}
-                          onChange={(e) => handleReplyChange(index, e)}
-                          className="w-full p-2 border border-gray-300 rounded"
-                          rows="4"
-                          placeholder="Nhập nội dung phản hồi"
-                        />
-                        <div className="mt-2">
-                          <input
-                            type="file"
-                            onChange={(e) => handleFileChange(index, e)}
-                            className="mb-2"
-                          />
-                          {replies[index]?.image && (
-                            <img
-                              src={replies[index]?.image}
-                              alt="Attachment"
-                              className="w-full h-auto mt-2 cursor-pointer"
-                            />
-                          )}
-                        </div>
-                        <button
-                          onClick={() => handleSendReply(index)}
-                          className="mt-2 bg-blue-500 text-white py-2 px-4 rounded"
-                        >
-                          Gửi
-                        </button>
-                      </div>
-                    )}
+                   
                   </td>
                 </tr>
               )}

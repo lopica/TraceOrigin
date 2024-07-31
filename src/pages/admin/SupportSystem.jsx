@@ -40,7 +40,6 @@ function SupportSystem() {
     }, [isAuthenticated, getToast, navigate]);
       // =============================== 
   const handleSubmit = async (formData) => {
-    console.log(formData.supportSystemId.value+ "dfdfdff");
     try {
       const base64Prefix = 'data:image/png;base64,';
       const cleanedImages = formData?.images.map(image =>
@@ -57,8 +56,6 @@ function SupportSystem() {
     } catch (error) {
       console.error(error);
     }
-    console.log("Submitted Data:", replyBySupporterData);
-
     setShouldFetch(true);
     refetch();
   };

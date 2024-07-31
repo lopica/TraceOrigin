@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa"; // Import icon bạn muốn sử dụng
 
-
 const SupportListForAdmin = ({ items = [], onSubmit }) => {
   const [openIndex, setOpenIndex] = useState(null);
   const [content, setContent] = useState("");
@@ -65,9 +64,7 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                 <td className="p-4">{item.title}</td>
                 <td
                   className={`p-4 ${
-                    item.status === "1"
-                      ? "text-green-500"
-                      : "text-red-500"
+                    item.status === "1" ? "text-green-500" : "text-red-500"
                   }`}
                 >
                   {item.status === "1" ? "Đã xử lý" : "Đang chờ xử lý"}
@@ -88,7 +85,8 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                   <td colSpan="6" className="p-4">
                     <div className="mt-4">
                       {item?.subSupport?.map((support, supportIndex) => {
-                        const isLastItem = supportIndex === item.subSupport.length - 1;
+                        const isLastItem =
+                          supportIndex === item.subSupport.length - 1;
                         const isFirstItem = supportIndex === 0;
                         return (
                           <div key={supportIndex} className="mb-4">
@@ -143,83 +141,87 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                                   Thời gian:{" "}
                                   {formatTimestamp(support.supportTimestamp)}
                                 </p>
-                                {support?.supportImage?.length > 0 ? (
-                                  support?.supportImage?.map(
-                                    (image, imgIndex) => (
+                                {support?.images?.length > 0 && (
+                                  <strong>Hình ảnh: </strong>
+                                )}
+
+                                {support?.supportImage?.length > 0 && (
+                                  <div className="flex space-x-2 mt-2">
+                                    {support?.supportImage?.map((image, imgIndex) => (
                                       <a
                                         href={image}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         key={imgIndex}
+                                        className="block"
                                       >
-                                        <strong>Hình ảnh: </strong>
                                         <img
                                           src={image}
-                                          alt="Support"
-                                          className="cursor-pointer mt-2"
+                                          alt={`Support ${imgIndex}`}
+                                          className="w-12 h-12 object-cover rounded-md cursor-pointer"
                                         />
                                       </a>
-                                    )
-                                  )
-                                ) : (
-                                  <></>
+                                    ))}
+                                  </div>
                                 )}
                               </>
                             ) : (
                               <></>
                             )}
-                            {!support.supportContent && isLastItem &&  (
-                      <form onSubmit={handleSubmit}>
-                        <div>
-                          <label htmlFor="content" className="block mb-1">
-                            Trả lời khách hàng:
-                          </label>
-                          <input
-                            className="hidden"
-                            id="supportSystemId"
-                            value={item?.supportSystemId}
-                          />
-                          <textarea
-                            id="content"
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            className="border p-2 w-full"
-                            rows="4"
-                            required
-                          ></textarea>
-                        </div>
-                        <div>
-                          <input
-                            type="file"
-                            id="images"
-                            multiple
-                            onChange={handleFileChange}
-                            className="border p-2 w-full"
-                          />
-                          <div className="mt-2">
-                            {images.map((image, index) => (
-                              <img
-                                key={index}
-                                src={image}
-                                alt={`Preview ${index}`}
-                                className="w-32 h-32 object-cover rounded-md mt-2"
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <button
-                          type="submit"
-                          className="bg-green-500 text-white px-4 py-2 rounded"
-                        >
-                          Gửi
-                        </button>
-                      </form>
-                    )}
+                            {((!support.supportContent) && isLastItem ) && (
+                              <form onSubmit={handleSubmit}>
+                                <div>
+                                  <label
+                                    htmlFor="content"
+                                    className="block mb-1"
+                                  >
+                                    Trả lời khách hàng:
+                                  </label>
+                                  <input
+                                    className="hidden"
+                                    id="supportSystemId"
+                                    value={support?.supportSystemId}
+                                  />
+                                  <textarea
+                                    id="content"
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    className="border p-2 w-full"
+                                    rows="4"
+                                    required
+                                  ></textarea>
+                                </div>
+                                <div>
+                                  <input
+                                    type="file"
+                                    id="images"
+                                    multiple
+                                    onChange={handleFileChange}
+                                    className="border p-2 w-full"
+                                  />
+                                  <div className="mt-2">
+                                    {images.map((image, index) => (
+                                      <img
+                                        key={index}
+                                        src={image}
+                                        alt={`Preview ${index}`}
+                                        className="w-32 h-32 object-cover rounded-md mt-2"
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                                <button
+                                  type="submit"
+                                  className="bg-green-500 text-white px-4 py-2 rounded"
+                                >
+                                  Gửi
+                                </button>
+                              </form>
+                            )}
                           </div>
                         );
                       })}
                     </div>
-                   
                   </td>
                 </tr>
               )}
