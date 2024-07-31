@@ -4,7 +4,7 @@ import Select from "react-select";
 let options;
 const Input = React.forwardRef(
   ({ label, tooltip, unit, error, data, addOnChange, required, ...props }, ref) => {
-    const { type, placeholder, onBlur, name } = props;
+    const { type, placeholder, onBlur, name, className } = props;
     const inputRef = ref || useRef();
     const [selectedOption, setSelectedOption] = useState(null);
 
@@ -47,7 +47,7 @@ const Input = React.forwardRef(
 
     if (type === "select") {
       return (
-        <label className="form-control w-full max-w-sm">
+        <label className={`form-control w-full ${className}`}>
           <div className="label">
             <div className="tooltip" data-tip={tooltip}>
               <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>

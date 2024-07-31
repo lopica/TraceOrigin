@@ -752,7 +752,7 @@ export default function Consign({ productRecognition }) {
       form = (
         <div className="flex flex-col gap-4 items-start px-4">
         {console.log(email)}
-          {!email && <Button
+          {/* {!email && <Button
             primary
             outline
             onClick={() => setStep("email")}
@@ -760,7 +760,7 @@ export default function Consign({ productRecognition }) {
           >
             <IoIosArrowBack />
             Quay lại
-          </Button>}
+          </Button>} */}
           <p className="text-center w-full">
             Hệ thống hiện đang gặp lỗi. Bạn hãy thử lại sau nhé. 
           </p>
