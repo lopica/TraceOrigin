@@ -1,4 +1,4 @@
-import { FaProductHunt,FaLifeRing, FaUserShield, FaCertificate, FaUserCog, FaCheckCircle, FaChartLine, FaInfo } from 'react-icons/fa';
+import { FaProductHunt,FaLifeRing, FaUserShield, FaRegLifeRing, FaCertificate, FaUserCog, FaCheckCircle, FaChartLine, FaInfo } from 'react-icons/fa';
 
 export const CONSTANTS = {
     brand: 'TraceOrigin',
@@ -11,6 +11,7 @@ export const CONSTANTS = {
         // {name: 'Warranty', url: '/manufacturer/products'},
         {name: 'Màn giám sát', url: '/admin/adminMonitoring', icon: FaChartLine, role: '1'},
         {name: 'Chăm sóc khách hàng', url: '/admin/customerService',  icon: FaUserShield , role: '1'},
+        {name: 'Hỗ trợ hệ thống', url: '/admin/supportSystem',  icon: FaRegLifeRing , role: '1'},
         {
             name: 'Quản lý nhà sản xuất', role: '1',
             children: [

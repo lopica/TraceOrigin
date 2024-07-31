@@ -1,9 +1,8 @@
-import { support } from "jszip";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa"; // Import icon bạn muốn sử dụng
 
-const SupportList = ({ items = [], onSubmit }) => {
+const SupportListForAdmin = ({ items = [], onSubmit }) => {
   const [openIndex, setOpenIndex] = useState(null);
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
@@ -65,9 +64,7 @@ const SupportList = ({ items = [], onSubmit }) => {
                 <td className="p-4">{item.title}</td>
                 <td
                   className={`p-4 ${
-                    item.status === "1"
-                      ? "text-green-500"
-                      : "text-red-500"
+                    item.status === "1" ? "text-green-500" : "text-red-500"
                   }`}
                 >
                   {item.status === "1" ? "Đã xử lý" : "Đang chờ xử lý"}
@@ -88,7 +85,8 @@ const SupportList = ({ items = [], onSubmit }) => {
                   <td colSpan="6" className="p-4">
                     <div className="mt-4">
                       {item?.subSupport?.map((support, supportIndex) => {
-                        const isLastItem = supportIndex === item.subSupport.length - 1;
+                        const isLastItem =
+                          supportIndex === item.subSupport.length - 1;
                         const isFirstItem = supportIndex === 0;
                         return (
                           <div key={supportIndex} className="mb-4">
@@ -143,6 +141,10 @@ const SupportList = ({ items = [], onSubmit }) => {
                                   Thời gian:{" "}
                                   {formatTimestamp(support.supportTimestamp)}
                                 </p>
+                                {support?.images?.length > 0 && (
+                                  <strong>Hình ảnh: </strong>
+                                )}
+
                                 {support?.supportImage?.length > 0 && (
                                   <div className="flex space-x-2 mt-2">
                                     {support?.supportImage?.map((image, imgIndex) => (
@@ -166,58 +168,60 @@ const SupportList = ({ items = [], onSubmit }) => {
                             ) : (
                               <></>
                             )}
-                            {support.supportContent && isLastItem &&  (
-                      <form onSubmit={handleSubmit}>
-                        <div>
-                          <label htmlFor="content" className="block mb-1">
-                            Trả lời khách hàng:
-                          </label>
-                          <input
-                            className="hidden"
-                            id="supportSystemId"
-                            value={support?.supportSystemId}
-                          />
-                          <textarea
-                            id="content"
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            className="border p-2 w-full"
-                            rows="4"
-                            required
-                          ></textarea>
-                        </div>
-                        <div>
-                          <input
-                            type="file"
-                            id="images"
-                            multiple
-                            onChange={handleFileChange}
-                            className="border p-2 w-full"
-                          />
-                          <div className="mt-2">
-                            {images.map((image, index) => (
-                              <img
-                                key={index}
-                                src={image}
-                                alt={`Preview ${index}`}
-                                className="w-32 h-32 object-cover rounded-md mt-2"
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <button
-                          type="submit"
-                          className="bg-green-500 text-white px-4 py-2 rounded"
-                        >
-                          Gửi
-                        </button>
-                      </form>
-                    )}
+                            {((!support.supportContent) && isLastItem ) && (
+                              <form onSubmit={handleSubmit}>
+                                <div>
+                                  <label
+                                    htmlFor="content"
+                                    className="block mb-1"
+                                  >
+                                    Trả lời khách hàng:
+                                  </label>
+                                  <input
+                                    className="hidden"
+                                    id="supportSystemId"
+                                    value={support?.supportSystemId}
+                                  />
+                                  <textarea
+                                    id="content"
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    className="border p-2 w-full"
+                                    rows="4"
+                                    required
+                                  ></textarea>
+                                </div>
+                                <div>
+                                  <input
+                                    type="file"
+                                    id="images"
+                                    multiple
+                                    onChange={handleFileChange}
+                                    className="border p-2 w-full"
+                                  />
+                                  <div className="mt-2">
+                                    {images.map((image, index) => (
+                                      <img
+                                        key={index}
+                                        src={image}
+                                        alt={`Preview ${index}`}
+                                        className="w-32 h-32 object-cover rounded-md mt-2"
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                                <button
+                                  type="submit"
+                                  className="bg-green-500 text-white px-4 py-2 rounded"
+                                >
+                                  Gửi
+                                </button>
+                              </form>
+                            )}
                           </div>
                         );
                       })}
                     </div>
-                   
                   </td>
                 </tr>
               )}
@@ -229,4 +233,4 @@ const SupportList = ({ items = [], onSubmit }) => {
   );
 };
 
-export default SupportList;
+export default SupportListForAdmin;
