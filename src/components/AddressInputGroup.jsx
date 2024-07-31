@@ -100,7 +100,7 @@ export default function AddressInputGroup({
 
   return (
     <>
-      <div className="join w-full gap-2 h-fit">
+      <div className="w-full gap-2 h-fit grid grid-cols-1 sm:grid-cols-3 items-end">
         <Input
           label={message || "Địa chỉ"}
           type="select"
@@ -118,7 +118,7 @@ export default function AddressInputGroup({
           error={errors.province?.message}
         />
         <Input
-          label="&nbsp;"
+          // label="&nbsp;"
           type="select"
           control={control}
           data={districts}
@@ -133,7 +133,7 @@ export default function AddressInputGroup({
           error={errors.district?.message}
         />
         <Input
-          label="&nbsp;"
+          // label="&nbsp;"
           type="select"
           control={control}
           data={wards}

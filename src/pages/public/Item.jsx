@@ -9,6 +9,7 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import "swiper/css";
 import Consign from "../../components/Consign.jsx";
 import ItemEvent from "../../components/ItemEvent.jsx";
+import NoApiConsign from "../../components/NoApiConsign.jsx";
 
 function Item() {
   //   const [originId, setOriginId] = useState("");
@@ -51,6 +52,7 @@ function Item() {
   return (
     <section>
       <Consign productRecognition={productRecognition} />
+      <NoApiConsign />
       <div className="block lg:hidden">
         <Swiper
           autoHeight
