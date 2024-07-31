@@ -28,6 +28,7 @@ import ManuReportManager from "./pages/manufacturer/ManuReportManager";
 import ErrorPage from "./pages/public/ErrorPage";
 import CreateReport from "./pages/public/CreateReport";
 import CustomerService from "./pages/admin/CustomerService";
+import ManuSupportSystem from "./pages/manufacturer/ManuSupportSystem";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -70,7 +71,8 @@ function AppRouter() {
             { path: "products/:productId/:itemId", element: <ManuItemDetail /> },
             { path: "reportManager", element: <ManuReportManager /> },
             { path: "reportManager/:id", element: <ManuReportManager />},
-            { path: "createReport", element: <ManuReportManager />}
+            { path: "createReport", element: <ManuReportManager />},
+            { path: "support", element: <ManuSupportSystem /> },
           ],
         },
         {
