@@ -175,7 +175,7 @@ export {
   useGetDistrictByProvinceIdQuery,
   useGetWardByDistrictIdQuery,
 } from "./apis/locationApi";
-export { useGetAllCategoriesQuery } from "./apis/categoryApi";
+export { useGetAllCategoriesQuery, useGetCategoryForAdminQuery } from "./apis/categoryApi";
 export { usePredictMutation } from "./apis/classifierApi";
 export {
   useGetCoordinateByAddressMutation,

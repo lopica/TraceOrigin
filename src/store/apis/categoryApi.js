@@ -13,7 +13,7 @@ const categoryApi = createApi({
   reducerPath: "category",
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/category`,
-    // credentials: "include",
+    credentials: "include",
     fetchFn: async (...args) => {
       // REMOVE FOR PRODUCTION
       await pause(3000);
@@ -30,9 +30,32 @@ const categoryApi = createApi({
           };
         },
       }),
+      getCategoryForAdmin: builder.query({
+        query: () => {
+          return {
+            url: "/getCategoryForAdmin",
+            method: "GET",
+          };
+        },
+      }),
+      addListCategory: builder.mutation({
+        query: (categories) => ({
+          url: "/addListCategory",
+          method: "POST",
+          body: categories,
+        }),
+      }),
+      getNextId: builder.query({
+        query: () => {
+          return {
+            url: "/getNextId",
+            method: "GET",
+          };
+        },
+      }),
     };
   },
 });
 
 export { categoryApi };
-export const { useGetAllCategoriesQuery } = categoryApi;
+export const { useGetAllCategoriesQuery, useGetCategoryForAdminQuery, useAddListCategoryMutation, useGetNextIdQuery } = categoryApi;

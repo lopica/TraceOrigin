@@ -30,6 +30,8 @@ import CreateReport from "./pages/public/CreateReport";
 import CustomerService from "./pages/admin/CustomerService";
 import ManuSupportSystem from "./pages/manufacturer/ManuSupportSystem";
 import SupportSystem from "./pages/admin/SupportSystem";
+import CategoryTable from "./pages/admin/CategoryTable";
+
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -85,6 +87,7 @@ function AppRouter() {
             { path: 'verifyManufacturers', element: <VerifyManufacturer /> },
             { path: 'adminMonitoring', element: <AdminMonitoring /> },
             { path: 'supportSystem', element: <SupportSystem /> },
+            { path: 'categoryManager', element: <CategoryTable /> },
 
           ]
           }
