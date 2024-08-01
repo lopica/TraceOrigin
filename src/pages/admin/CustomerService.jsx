@@ -194,37 +194,37 @@ function CustomerService() {
         <h2 className="text-lg font-semibold">Danh sách khách hàng</h2>
         <CustomerCareInfo done={dataCount?.cancel} cancel={dataCount?.waiting} waiting={dataCount?.done} />
       </div>
-        <table className="min-w-full bg-white border text-xs  border-gray-300 rounded-md">
+      <table className="min-w-full bg-white border border-gray-200 text-xs">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 p-2">#</th>
-              <th className="border border-gray-300 p-2">Tên khách hàng</th>
-              <th className="border border-gray-300 p-2">Email</th>
-              <th className="border border-gray-300 p-2">Số điện thoại</th>
-              <th className="border border-gray-300 p-2">Nội dung</th>
-              <th className="border border-gray-300 p-2">Thời gian</th>
-              <th className="border border-gray-300 p-2">Trạng thái</th>
-              <th className="border border-gray-300 p-2">Hành động</th>
+            <tr >
+              <th className="p-2 border-b">#</th>
+              <th className="p-6 border-b">Tên khách hàng</th>
+              <th className="p-4 border-b">Email</th>
+              <th className="p-4 border-b">Số điện thoại</th>
+              <th className="p-4 border-b">Nội dung</th>
+              <th className="p-4 border-b">Thời gian</th>
+              <th className="border-b">Trạng thái</th>
+              <th className="p-2 border-b">Chi tiết</th>
             </tr>
           </thead>
           <tbody>
             {data?.content.map((item, index) => (
-              <tr key={item.careId}>
-                <td className="border border-gray-300 p-2">{index + 1}</td>
-                <td className="border border-gray-300 p-2">
+              <tr className="border-b" key={item.careId}>
+                <td className="p-2">{index + 1}</td>
+                <td className="p-2">
                   {item.customerName}
                 </td>
-                <td className="border border-gray-300 p-2">
+                <td className="p-2">
                   {item.customerEmail}
                 </td>
-                <td className="border border-gray-300 p-2">
+                <td className="p-2">
                   {item.customerPhone}
                 </td>
-                <td className="border border-gray-300 p-2">{item.content}</td>
-                <td className="border border-gray-300 p-2">
+                <td className="p-2">{item.content}</td>
+                <td className="p-2">
                   {formatTimestamp(item.timestamp)}
                 </td>
-                <td className="border border-gray-300 p-2 text-center">
+                <td className=" p-2 text-center">
                   <div className="flex text-center items-center justify-center">
                     <div
                       className={`p-2 ${
@@ -236,7 +236,7 @@ function CustomerService() {
                   
                   </div>
                 </td>
-                <td className="border border-gray-300 p-2">   
+                <td className="p-2">   
                     <div className="flex items-center justify-center gap-1">
                       <button
                         onClick={() => openPopup(item)}
