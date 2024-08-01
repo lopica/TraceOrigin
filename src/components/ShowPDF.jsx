@@ -15,3 +15,7 @@ export default function ShowPDF({ pdfURL }) {
     </Worker>
   );
 }
+{/* <iframe
+src='https://res.cloudinary.com/ds2d9tipg/image/upload/v1720535292/trace_origin_cert_of%2BI3ZTQwYjE5.pdf'
+className="w-full h-[80svh]"
+></iframe> */}
