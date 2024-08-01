@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 function Modal({ onClose, children, className, primary, easy, full }) {
   const dynamicClasses = classNames("relative bg-white rounded", {
-    "w-full max-h-[80svh] min-h-[40svh] container max-w-3xl": !full,
+    "w-full max-h-[80svh] h-auto container max-w-3xl": !full,
     "w-screen h-screen": full,
     "border-blue-500 bg-sky-500 text-white": primary,
   });
@@ -38,7 +38,7 @@ function Modal({ onClose, children, className, primary, easy, full }) {
             </button>
             <div
               className={`flex flex-col gap-6 overflow-y-auto ${
-                full ? "h-[calc(100vh)]" : "max-h-[80svh] min-h-[40svh]"
+                full ? "h-[calc(100vh)]" : "max-h-[80svh] h-auto"
               }`}
             >
               {children}

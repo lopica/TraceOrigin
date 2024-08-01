@@ -4,7 +4,7 @@ import Select from "react-select";
 let options;
 const Input = React.forwardRef(
   ({ label, tooltip, unit, error, data, addOnChange, required, ...props }, ref) => {
-    const { type, placeholder, onBlur, name, className } = props;
+    const { type, placeholder, onBlur, name, className, disabled } = props;
     const inputRef = ref || useRef();
     const [selectedOption, setSelectedOption] = useState(null);
 
@@ -67,6 +67,7 @@ const Input = React.forwardRef(
                 }}
                 value={options?.find((option) => option.value === value)}
                 placeholder={placeholder}
+                isDisabled={disabled}
                 styles={{
                   menu: (provided) => ({
                     ...provided,

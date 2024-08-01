@@ -18,6 +18,7 @@ export default function AddressInputGroup({
   noValidate,
   message,
   required,
+  disabled
 }) {
   const dispatch = useDispatch();
   const [getCoordinate, results] = useGetCoordinateByAddressMutation();
@@ -107,6 +108,7 @@ export default function AddressInputGroup({
           control={control}
           data={provinces}
           required={required}
+          disabled={disabled}
           placeholder="Tỉnh, thành phố"
           {...register(
             "province",
