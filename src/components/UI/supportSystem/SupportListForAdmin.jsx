@@ -49,11 +49,14 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
         <thead>
           <tr>
             <th className="p-4 border-b">#</th>
-            <th className="p-4 border-b">Title</th>
-            <th className="p-4 border-b">Status</th>
+            <th className="p-4 border-b">Chủ đề</th>
+            <th className="p-4 border-b">Email người dùng</th>
             <th className="p-4 border-b">Ngày gửi</th>
             <th className="p-4 border-b">Tên người hỗ trợ</th>
-            <th className="p-4 border-b">Actions</th>
+            <th className="p-4 border-b">Trạng thái</th>
+
+
+            <th className="p-4 border-b">Chi Tiết</th>
           </tr>
         </thead>
         <tbody>
@@ -62,6 +65,10 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
               <tr className="border-b">
                 <td className="p-4">{index + 1}</td>
                 <td className="p-4">{item.title}</td>
+
+                <td className="p-4">{item.email}</td>
+                <td className="p-4">{formatTimestamp(item.timestamp)}</td>
+                <td className="p-4">{item.supporterName}</td>
                 <td
                   className={`p-4 ${
                     item.status === "1" ? "text-green-500" : "text-red-500"
@@ -69,8 +76,6 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                 >
                   {item.status === "1" ? "Đã xử lý" : "Đang chờ xử lý"}
                 </td>
-                <td className="p-4">{formatTimestamp(item.timestamp)}</td>
-                <td className="p-4">{item.supporterName}</td>
                 <td className="p-4">
                   <button
                     onClick={() => toggleDetails(index)}
@@ -141,7 +146,7 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                                   Thời gian:{" "}
                                   {formatTimestamp(support.supportTimestamp)}
                                 </p>
-                                {support?.images?.length > 0 && (
+                                {support?.supportImage?.length > 0 && (
                                   <strong>Hình ảnh: </strong>
                                 )}
 

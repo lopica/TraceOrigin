@@ -38,6 +38,7 @@ function ManuSupportSystem() {
     }, [isAuthenticated, getToast, navigate]);
       // =============================== 
   const handleSubmit = async (formData) => {
+    getToast("Hệ thống đang xử lý");
     try {
       const base64Prefix = 'data:image/png;base64,';
       const cleanedImages = formData?.images.map(image =>
