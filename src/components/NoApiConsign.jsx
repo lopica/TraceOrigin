@@ -13,6 +13,7 @@ import AddressInputGroup from "./AddressInputGroup";
 import Input from "./UI/Input";
 import ShowPDF from "./ShowPDF";
 import { FaBook } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import ItemEvent from "./ItemEvent";
 
 let form;
@@ -22,6 +23,9 @@ export default function NoApiConsign() {
   const [inputsDisabled, setInputsDisabled] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [roleDiary, setRoleDiary] = useState("");
+  const [nextStep, setNextStep] = useState("");
+  const [lastStep, setLastStep] = useState('')
+  // const [pendingAction, setPendingAction] = useState('')
   const {
     handleSubmit: handleSubmitEmailForm,
     register: registerEmailForm,
@@ -51,42 +55,33 @@ export default function NoApiConsign() {
   const {} = useForm({ mode: "onTouched" });
 
   function onEmailSubmit(data) {
-    setStep("otp");
-  }
-
-  function onOtpSubmit(otp) {
-    const res = otp.join("");
-    switch (res) {
-      // <li>11111: current-owner</li>
-      // <li>11112: pending-receiver</li>
-      // <li>11113: pending-old</li>
-      // <li>11114: old</li>
-      // <li>11115: no-permission</li>
-      // <li>other: error</li>
-      case "111111":
+    const email = data.email;
+    switch (email) {
+      case "anhvdhe160063@fpt1.edu.vn":
         setRoleDiary("current-owner");
-        setStep("option"); //current-owner
         break;
-      case "111112":
+      case "anhvdhe160063@fpt2.edu.vn":
         setRoleDiary("pending-receiver");
-        setStep("option"); //current-receiver
         break;
-      case "111113":
+      case "anhvdhe160063@fpt3.edu.vn":
         setRoleDiary("pending-old");
-        setStep("option"); //old-owner
         break;
-      case "111114":
+      case "anhvdhe160063@fpt4.edu.vn":
         setRoleDiary("old");
-        setStep("option"); //old-receiver
         break;
-      case "111115":
-        setRoleDiary("no-permission");
-        setStep("no-permission"); //old-receiver
-        break;
+      case "anhvdhe160063@fpt5.edu.vn":
+        setStep("no-permission");
+        return;
       default:
         setStep("error");
-        break;
+        return;
     }
+    setStep("option");
+  }
+
+  function onOtpSubmit(otp, nextStep) {
+    const res = otp.join("");
+    setStep(nextStep);
   }
 
   function onConsignSubmit(data) {
@@ -131,6 +126,23 @@ export default function NoApiConsign() {
     </Button>
   );
 
+  function customOtp(nextStep) {}
+
+
+
+  let certificateBtn = (
+    <div
+      className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
+      onClick={() => {
+        setStep("otp");
+        setLastStep('option')
+        setNextStep("certificate");
+      }}
+    >
+      <p>Xem chứng chỉ</p>
+    </div>
+  );
+
   switch (step) {
     case "email":
       form = (
@@ -165,6 +177,13 @@ export default function NoApiConsign() {
               </span>
             </div>
           </div>
+          <ul className="flex flex-col justify-center items-start w-full">
+            <li>"anhvdhe160063@fpt1.edu.vn": current-owner</li>
+            <li>"anhvdhe160063@fpt2.edu.vn": pending-receiver</li>
+            <li>"anhvdhe160063@fpt3.edu.vn": pending-old</li>
+            <li>"anhvdhe160063@fpt4.edu.vn": old</li>
+            <li>"anhvdhe160063@fpt5.edu.vn": no-permission</li>
+          </ul>
           <div className="flex justify-end p-2 pr-4">{nextBtn}</div>
         </form>
       );
@@ -172,22 +191,14 @@ export default function NoApiConsign() {
     case "otp":
       form = (
         <div>
-          {backBtn("email")}
+          {backBtn(lastStep)}
           <div className="grow flex flex-col items-center justify-center">
             <Otp
-              onSubmit={onOtpSubmit}
+              onSubmit={(otp) => onOtpSubmit(otp, nextStep)}
               sendOtp={() => {}}
               inputsDisabled={inputsDisabled}
               setInputsDisabled={() => setInputsDisabled(false)}
             />
-            <ul>
-              <li>11111: current-owner</li>
-              <li>11112: pending-receiver</li>
-              <li>11113: pending-old</li>
-              <li>11114: old</li>
-              <li>11115: no-permission</li>
-              <li>other: error</li>
-            </ul>
           </div>
         </div>
       );
@@ -210,12 +221,7 @@ export default function NoApiConsign() {
               >
                 <p>Ủy quyền</p>
               </div>
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("certificate")}
-              >
-                <p>Xem chứng chỉ</p>
-              </div>
+              {certificateBtn}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("cancel")}
@@ -240,12 +246,7 @@ export default function NoApiConsign() {
               >
                 <p>Nhận hàng</p>
               </div>
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("certificate")}
-              >
-                <p>Xem chứng chỉ</p>
-              </div>
+              {certificateBtn}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -270,12 +271,7 @@ export default function NoApiConsign() {
               >
                 <p>Ủy quyền</p>
               </div>
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("certificate")}
-              >
-                <p>Xem chứng chỉ</p>
-              </div>
+              {certificateBtn}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -300,12 +296,7 @@ export default function NoApiConsign() {
               >
                 <p>Ủy quyền</p>
               </div>
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("certificate")}
-              >
-                <p>Xem chứng chỉ</p>
-              </div>
+              {certificateBtn}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -476,7 +467,15 @@ export default function NoApiConsign() {
             >
               Xem lại
             </Button>
-            <Button primary rounded>
+            <Button
+              primary
+              rounded
+              onClick={() => {
+                setStep("otp");
+                setLastStep('confirm')
+                setNextStep("success");
+              }}
+            >
               Ủy quyền
             </Button>
           </div>
@@ -770,8 +769,32 @@ export default function NoApiConsign() {
             >
               Quay lại
             </Button>
-            <Button primary rounded>
+            <Button primary rounded onClick={() => {
+              setStep('otp')
+              setNextStep('success')
+              setLastStep('confirm-receive')
+            }}>
               Cập nhật
+            </Button>
+          </div>
+        </div>
+      );
+      break;
+    case "success":
+      form = (
+        <div className="p-6 pt-0 h-full flex flex-col justify-center items-center">
+          <FaCheck className=" fill-green-300 h-20 w-20" />
+          <p className="text-center text-2xl font-light text-slate-600">
+            Ghi sự kiện thành công
+          </p>
+          <div className="flex justify-center gap-8 mt-8">
+            <Button
+              primary
+              outline
+              onClick={() => setStep("option")}
+              // disabled={isConsignLoading}
+            >
+              Quay lại
             </Button>
           </div>
         </div>
@@ -810,12 +833,6 @@ export default function NoApiConsign() {
               type="text"
               className="peer h-10  border-b-2 w-40 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
             />
-            {/* <label
-              htmlFor="confirm"
-              className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
-            >
-              Xác nhận
-            </label> */}
             <span className="label-text-alt text-left text-error text-sm">
               {endFormErrors.confirm?.message}
             </span>
@@ -829,7 +846,15 @@ export default function NoApiConsign() {
             >
               Hủy
             </Button>
-            <Button primary rounded>
+            <Button
+              primary
+              rounded
+              onClick={() => {
+                setStep("otp");
+                setLastStep("cancel")
+                setNextStep("success");
+              }}
+            >
               Kết thúc
             </Button>
           </div>
