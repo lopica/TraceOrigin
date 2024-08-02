@@ -886,7 +886,7 @@ export default function NoApiConsign({productRecognition}) {
 
   return (
     <div className="flex justify-center">
-       <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productCode}/>
+       <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productRecognition}/>
       <Button
         onClick={openModal}
         className="fixed z-[5] bottom-40 right-6 bg-red-500 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-400 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
