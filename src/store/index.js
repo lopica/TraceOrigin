@@ -155,6 +155,7 @@ export {
   updateCurrentLocationId,
   updateCoordinate,
   updateNewAddress,
+  updateVerifyAddress,
 } from "./slices/locationDataSlice";
 export {
   useFetchItemLogsByProductRecognitionQuery,

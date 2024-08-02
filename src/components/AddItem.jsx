@@ -23,6 +23,7 @@ export default function AddItem() {
     control,
     formState: { errors },
     handleSubmit,
+    watch,
   } = useForm({
     mode: "onTouched",
     defaultValues: { warranty: productDetail.warranty },
@@ -33,10 +34,16 @@ export default function AddItem() {
     handleClose,
   } = useShow(false);
   const [addItem, { isLoading, isSuccess, isError }] = useAddItemMutation();
-  const { coordinate } = useSelector((state) => state.locationData);
+  const { coordinate, verifyAddress } = useSelector(
+    (state) => state.locationData
+  );
   const { getToast } = useToast();
 
   const onSubmit = (data) => {
+    if (!verifyAddress) {
+      getToast("Bạn cần xác thực địa chỉ để tạo nhật ký");
+      return;
+    }
     province = getValues("province").split(",");
     district = getValues("district").split(",");
     ward = getValues("ward").split(",");
@@ -94,6 +101,7 @@ export default function AddItem() {
         <Input
           label="Số lượng sản phẩm"
           type="number"
+          required
           unit="cái"
           {...register("quantity", {
             required: "Bạn cần nhập số lượng",
@@ -115,6 +123,8 @@ export default function AddItem() {
           setValue={setValue}
           errors={errors}
           control={control}
+          required
+          watch={watch}
         />
         <Input
           label="Mô tả tình trạng sản phẩm hiện tại"

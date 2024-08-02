@@ -38,6 +38,7 @@ export default function NoApiConsign() {
     control: consignControl,
     getValues: consignGetValues,
     setValue: consignSetValue,
+    watch: consignWatch
   } = useForm({ mode: "onTouched" });
   const {
     handleSubmit: handleSubmitEndForm,
@@ -51,6 +52,7 @@ export default function NoApiConsign() {
     control: receiveControl,
     getValues: receiveGetValues,
     setValue: receiveSetValue,
+    watch: receiveWatch,
   } = useForm({ mode: "onTouched" });
   const {} = useForm({ mode: "onTouched" });
 
@@ -395,6 +397,7 @@ export default function NoApiConsign() {
                   errors={consignFormErrors}
                   noValidate
                   message="Địa chỉ hiện tại"
+                  watch={consignWatch}
                 />
               </div>
               <div className="flex justify-start items-start gap-2 mt-4">
@@ -747,6 +750,7 @@ export default function NoApiConsign() {
               errors={receiveFormErrors}
               noValidate
               message="Địa chỉ nhận hàng"
+              watch={receiveWatch}
             />
             <div className="flex justify-end w-full min-h-15">{nextBtn}</div>
           </form>

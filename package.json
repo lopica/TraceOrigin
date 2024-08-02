@@ -25,6 +25,7 @@
     "@tensorflow/tfjs": "^4.20.0",
     "@types/three": "^0.164.0",
     "bignumber.js": "^9.1.2",
+    "capstone": "file:",
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
     "classnames": "^2.5.1",

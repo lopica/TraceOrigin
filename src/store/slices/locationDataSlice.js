@@ -14,6 +14,7 @@ const locationDataSlice = createSlice({
     },
     coordinate: [],
     loadingNewAddress: false,
+    verifyAddress: false,
   },
   reducers: {
     // Action to update the list of provinces
@@ -37,6 +38,9 @@ const locationDataSlice = createSlice({
     updateNewAddress(state, action) {
       state.loadingNewAddress = action.payload;
     },
+    updateVerifyAddress(state, action) {
+      state.verifyAddress = action.payload;
+    },
   },
 });
 
@@ -47,5 +51,6 @@ export const {
   updateCurrentLocationId,
   updateCoordinate,
   updateNewAddress,
+  updateVerifyAddress,
 } = locationDataSlice.actions;
 export const locationDataReducer = locationDataSlice.reducer;

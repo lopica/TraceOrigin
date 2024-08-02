@@ -4,10 +4,14 @@ import Map from "./Map";
 import Input from "./UI/Input";
 import {
   updateCoordinate,
+  updateVerifyAddress,
   updateWards,
   useGetCoordinateByAddressMutation,
 } from "../store";
 import { useEffect, useState } from "react";
+import Button from "./UI/Button";
+import useShow from "../hooks/use-show";
+import useToast from "../hooks/use-toast";
 
 export default function AddressInputGroup({
   register,
@@ -18,11 +22,17 @@ export default function AddressInputGroup({
   noValidate,
   message,
   required,
-  disabled
+  disabled,
+  watch,
 }) {
   const dispatch = useDispatch();
   const [getCoordinate, results] = useGetCoordinateByAddressMutation();
-  const [addressBlurred, setAddressBlurred] = useState(false);
+  const {
+    show: controlCall,
+    handleOpen: turnOn,
+    handleClose: turnOff,
+  } = useShow();
+  const { getToast } = useToast();
   const {
     provincesData: provinces,
     districtsData: districts,
@@ -31,11 +41,8 @@ export default function AddressInputGroup({
   } = useAddress();
   const locationState = useSelector((state) => state.locationData);
   const { currentLocationId, coordinate, loadingNewAddress } = locationState;
-  // const [map, setMap] = useState(null)
 
-  const handleAddressBlur = () => {
-    setAddressBlurred(true); // Set to true when the input loses focus
-  };
+
 
   const handleInputChange = (identifier, event) => {
     const value = event.target.value.split(",");
@@ -52,40 +59,70 @@ export default function AddressInputGroup({
         districtId: value[0],
       });
     }
+    dispatch(updateVerifyAddress(false))
   };
 
-  useEffect(() => {
-    if (
-      addressBlurred && // Check if address field has lost focus
-      getValues("province") &&
-      getValues("district") &&
-      getValues("ward") &&
-      getValues("address")
-    ) {
-      getCoordinate({
-        address: `${getValues("address")}, ${getValues("ward")}, ${getValues(
-          "district"
-        )}, ${getValues("province")}`,
-      })
-        .unwrap()
-        .then((res) => {
-          const { lat, lng } = res[0].geometry;
-          if (lat && lng) {
-            dispatch(updateCoordinate([lat, lng]));
-          }
-        })
-        .catch((err) => console.log(err));
-    }
+  // useEffect(() => {
+  //   if (
+  //     addressBlurred && // Check if address field has lost focus
+  //     getValues("province") &&
+  //     getValues("district") &&
+  //     getValues("ward") &&
+  //     getValues("address")
+  //   ) {
+  //     getCoordinate({
+  //       address: `${getValues("address")}, ${getValues("ward")}, ${getValues(
+  //         "district"
+  //       )}, ${getValues("province")}`,
+  //     })
+  //       .unwrap()
+  //       .then((res) => {
+  //         const { lat, lng } = res[0].geometry;
+  //         if (lat && lng) {
+  //           dispatch(updateCoordinate([lat, lng]));
+  //         }
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
 
-    // Reset addressBlurred to allow for re-checking if needed
-    setAddressBlurred(false);
-  }, [
-    addressBlurred,
-    // getValues("province"),
-    // getValues("district"),
-    // getValues("ward"),
-    // getValues("address"),
-  ]);
+  //   // Reset addressBlurred to allow for re-checking if needed
+  //   setAddressBlurred(false);
+  // }, [addressBlurred]);
+
+  useEffect(() => {
+    if (controlCall) {
+      if (
+        getValues("province") &&
+        getValues("district") &&
+        getValues("ward") &&
+        getValues("address")
+      ) {
+        //call api
+        getCoordinate({
+          address: `${getValues("address")}, ${getValues("ward")}, ${getValues(
+            "district"
+          )}, ${getValues("province")}`,
+        })
+          .unwrap()
+          .then((res) => {
+            const { lat, lng } = res[0].geometry;
+            if (lat && lng) {
+              dispatch(updateCoordinate([lat, lng]));
+            }
+            //update global state
+            dispatch(updateVerifyAddress(true))
+          })
+          .catch(() => getToast("Gặp lỗi trong quá trình xác thực"));
+      } else {
+        getToast("Bạn cần điền đầy đủ thông tin để có thể xác thực");
+      }
+      turnOff();
+    }
+  }, [controlCall]);
+
+  useEffect(()=>{
+    dispatch(updateVerifyAddress(false))
+  },[getValues('ward'), watch('address')])
 
   let map = null;
   if (results.isLoading) {
@@ -95,13 +132,12 @@ export default function AddressInputGroup({
   } else if (coordinate?.length > 0) {
     map = <Map location={coordinate} setValue={setValue} />;
   } else {
-    console.log("vo day");
     map = null;
   }
 
   return (
     <>
-      <div className="w-full gap-2 h-fit grid grid-cols-1 sm:grid-cols-3 items-end">
+      <div className="w-full gap-2 h-fit grid grid-cols-1 sm:grid-cols-3 items-start">
         <Input
           label={message || "Địa chỉ"}
           type="select"
@@ -120,7 +156,7 @@ export default function AddressInputGroup({
           error={errors.province?.message}
         />
         <Input
-          // label="&nbsp;"
+          label="&nbsp;"
           type="select"
           control={control}
           data={districts}
@@ -135,7 +171,7 @@ export default function AddressInputGroup({
           error={errors.district?.message}
         />
         <Input
-          // label="&nbsp;"
+          label="&nbsp;"
           type="select"
           control={control}
           data={wards}
@@ -159,7 +195,6 @@ export default function AddressInputGroup({
             required: "Bạn cần nhập địa chỉ cụ thể để mình định vị nhé",
           }
         )}
-        onBlur={handleAddressBlur}
         unit={
           loadingNewAddress && (
             <span className="loading loading-spinner loading-sm"></span>
@@ -167,6 +202,18 @@ export default function AddressInputGroup({
         }
         error={errors.address?.message}
       />
+      <div className="flex justify-end">
+        <Button
+          primary
+          outline
+          onClick={(e) => {
+            e.preventDefault();
+            turnOn();
+          }}
+        >
+          Xác thực địa chỉ
+        </Button>
+      </div>
       {map && <div className="mt-4">{map}</div>}
     </>
   );

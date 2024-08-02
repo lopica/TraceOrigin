@@ -60,6 +60,7 @@ function Register() {
     getValues,
     setValue,
     trigger,
+    watch,
     control,
   } = useForm({
     mode: "onTouched",
@@ -237,6 +238,7 @@ function Register() {
               control={control}
               required
               message="Địa chỉ của bạn"
+              watch={watch}
             />
           </>
           <>

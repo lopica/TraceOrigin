@@ -96,6 +96,7 @@ export default function Consign({ productRecognition }) {
     setValue,
     getValues,
     control,
+    watch: consignWatch,
     handleSubmit: handleSubmitConsignForm,
   } = useForm({ mode: "onTouched" });
 
@@ -471,6 +472,7 @@ export default function Consign({ productRecognition }) {
                   setValue={setValue}
                   control={control}
                   errors={consignFormErrors}
+                  watch={consignWatch}
                   noValidate
                   message="Địa chỉ người nhận"
                 />
@@ -658,6 +660,7 @@ export default function Consign({ productRecognition }) {
                     setValue={setValue}
                     control={control}
                     errors={consignFormErrors}
+                    watch={consignWatch}
                     noValidate
                     message="Địa chỉ người nhận"
                   />

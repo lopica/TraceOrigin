@@ -21,6 +21,8 @@ function Wizzard({
   const [currentStep, setCurrentStep] = useState(0);
   const { getToast } = useToast();
   const { images, avatar } = useSelector((state) => state.productForm);
+  const {verifyAddress} = useSelector(state=>state.locationData)
+  const [hasAddress, setHasAddress] = useState(false)
 
   const handleWizzard = async (identifier, e) => {
     e.preventDefault();
@@ -38,13 +40,23 @@ function Wizzard({
           valid = true;
         }
       } else {
-        valid = await trigger(validateStep[currentStep]);
+        let addCondition = true
+        for (const validate of validateStep[currentStep]) {
+          if (validate === 'address') {
+            setHasAddress(true)
+            addCondition = verifyAddress
+            break
+          }
+        }
+        valid = await trigger(validateStep[currentStep]) && addCondition;
       }
 
       if (valid) {
         // Save to local storage by Redux
         onStepSubmit && onStepSubmit(currentStep);
         setCurrentStep(currentStep + 1);
+      } else {
+        hasAddress && !verifyAddress && getToast('Bạn cần xác thực địa chỉ để tiếp tục')
       }
     } else if (identifier === "back") {
       setCurrentStep(currentStep - 1);
@@ -52,6 +64,10 @@ function Wizzard({
       onSubmit();
     }
   };
+
+  // useEffect(()=>{
+  //   console.log(loadingNewAddress)
+  // },[loadingNewAddress])
 
   // useEffect(() => {
   //   if(getValues('images')?.length !== 0) imagesRef.current = getValues("images")

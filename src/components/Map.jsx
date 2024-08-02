@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import {
   updateCoordinate,
   updateNewAddress,
+  updateVerifyAddress,
   useGetAddressByCoordinateMutation,
 } from "../store";
 
@@ -59,7 +60,8 @@ const LocationMarker = ({ location, setValue }) => {
 
   useMapEvents({
     click(e) {
-      dispatch(updateCoordinate({ lat: e.latlng.lat, lng: e.latlng.lng }));
+      dispatch(updateCoordinate([e.latlng.lat, e.latlng.lng]));
+      dispatch(updateVerifyAddress(false))
       // Update address based on new mark
       setValue &&
         getAddress({ lat: e.latlng.lat, lng: e.latlng.lng })
@@ -69,6 +71,7 @@ const LocationMarker = ({ location, setValue }) => {
             setValue("address", newAddress[0]);
             dispatch(updateNewAddress(results.isLoading));
             console.log(res[0].formatted);
+            dispatch(updateVerifyAddress(true))
           })
           .catch((err) => {
             dispatch(updateNewAddress(results.isLoading));
