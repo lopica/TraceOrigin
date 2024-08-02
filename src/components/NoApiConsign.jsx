@@ -16,14 +16,14 @@ import { FaBook } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
 import ItemEvent from "./ItemEvent";
 import CreateReportModal from '../components/UI/CreateReportModal';
-
+import useDiary from "../hooks/use-diary";
 let form;
-export default function NoApiConsign({productCode}) {
+export default function NoApiConsign({productRecognition}) {
   const { show, handleOpen, handleClose } = useShow();
-  const [step, setStep] = useState("email");
+  const { step, roleDiary, setStep, onEmailSubmit, emailLoading, onOtpSubmit, sendOtp } =
+    useDiary(productRecognition);
   const [inputsDisabled, setInputsDisabled] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [roleDiary, setRoleDiary] = useState("");
   const [nextStep, setNextStep] = useState("");
   const [lastStep, setLastStep] = useState('')
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -49,7 +49,7 @@ export default function NoApiConsign({productCode}) {
     control: consignControl,
     getValues: consignGetValues,
     setValue: consignSetValue,
-    watch: consignWatch
+    watch: consignWatch,
   } = useForm({ mode: "onTouched" });
   const {
     handleSubmit: handleSubmitEndForm,
@@ -67,35 +67,7 @@ export default function NoApiConsign({productCode}) {
   } = useForm({ mode: "onTouched" });
   const {} = useForm({ mode: "onTouched" });
 
-  function onEmailSubmit(data) {
-    const email = data.email;
-    switch (email) {
-      case "anhvdhe160063@fpt1.edu.vn":
-        setRoleDiary("current-owner");
-        break;
-      case "anhvdhe160063@fpt2.edu.vn":
-        setRoleDiary("pending-receiver");
-        break;
-      case "anhvdhe160063@fpt3.edu.vn":
-        setRoleDiary("pending-old");
-        break;
-      case "anhvdhe160063@fpt4.edu.vn":
-        setRoleDiary("old");
-        break;
-      case "anhvdhe160063@fpt5.edu.vn":
-        setStep("no-permission");
-        return;
-      default:
-        setStep("error");
-        return;
-    }
-    setStep("option");
-  }
 
-  function onOtpSubmit(otp, nextStep) {
-    const res = otp.join("");
-    setStep(nextStep);
-  }
 
   function onConsignSubmit(data) {
     setStep("confirm");
@@ -115,40 +87,33 @@ export default function NoApiConsign({productCode}) {
     console.log(step);
   }, [step]);
 
-  const backBtn = (step) => {
+  const BackBtn = ({ step }) => (
+    <Button primary outline onClick={() => setStep(step)} className="mb-4 pl-0">
+      <IoIosArrowBack />
+      Quay lại
+    </Button>
+  );
+
+  const NextBtn = ({ isLoading }) => {
     return (
       <Button
-        primary
-        outline
-        onClick={() => setStep(step)}
-        className="mb-4 pl-0"
+        secondary
+        className="h-15 w-15 p-2 rounded"
+        isLoading={isLoading || false}
       >
-        <IoIosArrowBack />
-        Quay lại
+        <GrFormNextLink className="h-8 w-8" />
       </Button>
     );
   };
 
-  const nextBtn = (
-    <Button
-      secondary
-      className="h-15 w-15 p-2 rounded"
-      //   isLoading={isCheckRoleFetch}
-    >
-      <GrFormNextLink className="h-8 w-8" />
-    </Button>
-  );
-
   function customOtp(nextStep) {}
-
-
 
   let certificateBtn = (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
       onClick={() => {
         setStep("otp");
-        setLastStep('option')
+        setLastStep("option");
         setNextStep("certificate");
       }}
     >
@@ -190,25 +155,27 @@ export default function NoApiConsign({productCode}) {
               </span>
             </div>
           </div>
-          <ul className="flex flex-col justify-center items-start w-full">
+          {/* <ul className="flex flex-col justify-center items-start w-full">
             <li>"anhvdhe160063@fpt1.edu.vn": current-owner</li>
             <li>"anhvdhe160063@fpt2.edu.vn": pending-receiver</li>
             <li>"anhvdhe160063@fpt3.edu.vn": pending-old</li>
             <li>"anhvdhe160063@fpt4.edu.vn": old</li>
             <li>"anhvdhe160063@fpt5.edu.vn": no-permission</li>
-          </ul>
-          <div className="flex justify-end p-2 pr-4">{nextBtn}</div>
+          </ul> */}
+          <div className="flex justify-end p-2 pr-4">
+            <NextBtn isLoading={emailLoading} />
+          </div>
         </form>
       );
       break;
     case "otp":
       form = (
         <div>
-          {backBtn(lastStep)}
+          <BackBtn step={lastStep} />
           <div className="grow flex flex-col items-center justify-center">
             <Otp
               onSubmit={(otp) => onOtpSubmit(otp, nextStep)}
-              sendOtp={() => {}}
+              sendOtp={sendOtp}
               inputsDisabled={inputsDisabled}
               setInputsDisabled={() => setInputsDisabled(false)}
             />
@@ -322,7 +289,7 @@ export default function NoApiConsign({productCode}) {
       }
       form = (
         <div>
-          {backBtn("email")}
+          <BackBtn step="email" />
           {choices}
         </div>
       );
@@ -330,7 +297,7 @@ export default function NoApiConsign({productCode}) {
     case "consign":
       form = (
         <div className="h-full">
-          {backBtn("option")}
+          <BackBtn step="option" />
           <form
             className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
             onKeyDown={handleKeyDown}
@@ -460,7 +427,9 @@ export default function NoApiConsign({productCode}) {
               )}
             </div>
 
-            <div className="flex justify-end w-full min-h-15">{nextBtn}</div>
+            <div className="flex justify-end w-full min-h-15">
+              <NextBtn />
+            </div>
           </form>
         </div>
       );
@@ -486,7 +455,7 @@ export default function NoApiConsign({productCode}) {
               rounded
               onClick={() => {
                 setStep("otp");
-                setLastStep('confirm')
+                setLastStep("confirm");
                 setNextStep("success");
               }}
             >
@@ -500,7 +469,7 @@ export default function NoApiConsign({productCode}) {
       form = (
         <div className="h-full">
           <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
-          {backBtn("option")}
+          <BackBtn step="option" />
           <div className="flex justify-end">
             <Button
               primary
@@ -619,7 +588,9 @@ export default function NoApiConsign({productCode}) {
               </div>
             </div>
 
-            <div className="flex justify-end w-full min-h-15">{nextBtn}</div>
+            <div className="flex justify-end w-full min-h-15">
+              <NextBtn />
+            </div>
           </form>
         </div>
       );
@@ -628,7 +599,7 @@ export default function NoApiConsign({productCode}) {
       form = (
         <div className="h-full">
           <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
-          {backBtn("receive")}
+          <BackBtn step="receive" />
           <form
             className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
             onKeyDown={handleKeyDown}
@@ -734,7 +705,9 @@ export default function NoApiConsign({productCode}) {
               </div>
             </div>
 
-            <div className="flex justify-end w-full min-h-15">{nextBtn}</div>
+            <div className="flex justify-end w-full min-h-15">
+              <NextBtn />
+            </div>
           </form>
         </div>
       );
@@ -743,7 +716,7 @@ export default function NoApiConsign({productCode}) {
       form = (
         <div>
           <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
-          {backBtn("receive")}
+          <BackBtn step="receive" />
           <form
             className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
             onKeyDown={handleKeyDown}
@@ -763,7 +736,9 @@ export default function NoApiConsign({productCode}) {
               message="Địa chỉ nhận hàng"
               watch={receiveWatch}
             />
-            <div className="flex justify-end w-full min-h-15">{nextBtn}</div>
+            <div className="flex justify-end w-full min-h-15">
+              <NextBtn />
+            </div>
           </form>
         </div>
       );
@@ -784,11 +759,15 @@ export default function NoApiConsign({productCode}) {
             >
               Quay lại
             </Button>
-            <Button primary rounded onClick={() => {
-              setStep('otp')
-              setNextStep('success')
-              setLastStep('confirm-receive')
-            }}>
+            <Button
+              primary
+              rounded
+              onClick={() => {
+                setStep("otp");
+                setNextStep("success");
+                setLastStep("confirm-receive");
+              }}
+            >
               Cập nhật
             </Button>
           </div>
@@ -818,7 +797,7 @@ export default function NoApiConsign({productCode}) {
     case "certificate":
       form = (
         <div>
-          {backBtn("option")}
+          <BackBtn step="option" />
           <div className="h-auto">
             <ShowPDF pdfURL="https://res.cloudinary.com/ds2d9tipg/image/upload/v1720535292/trace_origin_cert_of%2BI3ZTQwYjE5.pdf" />
           </div>
@@ -866,7 +845,7 @@ export default function NoApiConsign({productCode}) {
               rounded
               onClick={() => {
                 setStep("otp");
-                setLastStep("cancel")
+                setLastStep("cancel");
                 setNextStep("success");
               }}
             >
@@ -879,7 +858,7 @@ export default function NoApiConsign({productCode}) {
     case "report":
       form = (
         <div>
-          {backBtn("option")}
+          <BackBtn step="option" />
           hello report
         </div>
       );
@@ -887,7 +866,7 @@ export default function NoApiConsign({productCode}) {
     case "no-permission":
       form = (
         <div>
-          {backBtn("email")}
+          <BackBtn step="email" />
           <p>
             Email này không có quyền ghi nhật ký sản phẩm này. Bạn có thể thử
             dùng email khác nhé.
@@ -898,7 +877,7 @@ export default function NoApiConsign({productCode}) {
     default:
       form = (
         <div>
-          {backBtn("email")}
+          <BackBtn step="email" />
           <p>Hệ thống đang gặp lỗi, bạn hãy thử lại sau nhé.</p>
         </div>
       );

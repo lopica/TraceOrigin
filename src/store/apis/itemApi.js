@@ -75,21 +75,13 @@ const itemApi = createApi({
           };
         },
       }),
-      sendOtpReceiver: builder.mutation({
+      sendItemOtp: builder.mutation({
         query: (request) => {
           return {
             url: 'sendOTP',
             method: 'POST',
             body: request,
-          }
-        }
-      }),
-      sendOtpOwner: builder.mutation({
-        query: (request) => {
-          return {
-            url: 'sendCurrentOwnerOTP',
-            method: 'POST',
-            body: {...request},
+            responseHandler: res => res.text()
           }
         }
       }),
@@ -97,18 +89,6 @@ const itemApi = createApi({
         query: (request) => {
           return {
             url: `confirmOTP?productRecognition=${request.productRecognition}`,
-            method: 'POST',
-            body: {
-              email: request.email,
-              otp: request.otp,
-            },
-          }
-        }
-      }),
-      checkCurrentOwnerOTP: builder.mutation({
-        query: (request) => {
-          return {
-            url: `confirmCurrentOwner?productRecognition=${request.productRecognition}`,
             method: 'POST',
             body: {
               email: request.email,
@@ -145,6 +125,15 @@ const itemApi = createApi({
           }
         }
       }),
+      getCertificate: builder.mutation({
+        query: (request) => {
+          return {
+            url: 'getCetificate',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
     };
   },
 });
@@ -156,10 +145,9 @@ export const {
   useSearchItemsQuery,
   useAddItemMutation,
   useCheckConsignRoleQuery,
-  useSendOtpOwnerMutation,
-  useSendOtpReceiverMutation,
-  useCheckCurrentOwnerOTPMutation,
+  useSendItemOtpMutation,
   useCheckOTPMutation,
   useConsignMutation,
   useIsPendingConsignQuery,
+  useGetCertificateMutation,
 } = itemApi;

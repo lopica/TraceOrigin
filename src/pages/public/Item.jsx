@@ -51,8 +51,8 @@ function Item() {
 
   return (
     <section>
-      <Consign productRecognition={productRecognition} />
-      <NoApiConsign  productCode={productRecognition}/>
+      {/* <Consign productRecognition={productRecognition} /> */}
+      <NoApiConsign productRecognition={productRecognition} />
       <div className="block lg:hidden">
         <Swiper
           autoHeight
