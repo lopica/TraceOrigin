@@ -15,9 +15,10 @@ import ShowPDF from "./ShowPDF";
 import { FaBook } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
 import ItemEvent from "./ItemEvent";
+import CreateReportModal from '../components/UI/CreateReportModal';
 
 let form;
-export default function NoApiConsign() {
+export default function NoApiConsign({productCode}) {
   const { show, handleOpen, handleClose } = useShow();
   const [step, setStep] = useState("email");
   const [inputsDisabled, setInputsDisabled] = useState(false);
@@ -25,7 +26,17 @@ export default function NoApiConsign() {
   const [roleDiary, setRoleDiary] = useState("");
   const [nextStep, setNextStep] = useState("");
   const [lastStep, setLastStep] = useState('')
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   // const [pendingAction, setPendingAction] = useState('')
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   const {
     handleSubmit: handleSubmitEmailForm,
     register: registerEmailForm,
@@ -896,13 +907,14 @@ export default function NoApiConsign() {
 
   return (
     <div className="flex justify-center">
+       <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productCode}/>
       <Button
-        onClick={handleOpen}
+        onClick={openModal}
         className="fixed z-[5] bottom-40 right-6 bg-red-500 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-400 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
       >
         <FaBook className="w-7 h-7 fill-white" />
       </Button>
-      {show && (
+      {/* {show && (
         <Modal onClose={handleClose} className="h-auto">
           <div className="md:flex">
             <div className="bg-sky-200 h-[15rem] md:w-1/3 md:h-auto rounded-t md:rounded-none md:rounded-l">
@@ -932,7 +944,7 @@ export default function NoApiConsign() {
             </div>
           </div>
         </Modal>
-      )}
+      )} */}
     </div>
   );
 }

@@ -52,7 +52,7 @@ function Item() {
   return (
     <section>
       <Consign productRecognition={productRecognition} />
-      <NoApiConsign />
+      <NoApiConsign  productCode={productRecognition}/>
       <div className="block lg:hidden">
         <Swiper
           autoHeight

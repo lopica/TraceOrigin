@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import CreateReportModal from './CreateReportModal';
+import CreateReportModal from '../../components/UI/CreateReportModal';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root');

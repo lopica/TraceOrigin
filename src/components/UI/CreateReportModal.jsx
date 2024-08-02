@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
-import ImageBox from "../../components/UI/ImageBox";
+import ImageBox from "./ImageBox";
 import { useForm, Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useAddNewReportsMutation } from '../../store/apis/reportApi';
@@ -17,11 +17,12 @@ const componentOptions = [
   { value: 8, label: 'Khác...', type: 2, priority: 2 }
 ];
 
-const CreateReportModal = ({ isOpen, onRequestClose }) => {
+const CreateReportModal = ({ isOpen, onRequestClose, productCode }) => {
   const { control, handleSubmit, setValue } = useForm();
   const [title, setTitle] = useState('');
   const [causeDetail, setCauseDetail] = useState('');
   const [imageReports, setImageReports] = useState([]);
+  const [email, setEmail] = useState(''); // Trạng thái email
   const fileInputRef = useRef(null);
 
   const [addNewReport, { isLoading }] = useAddNewReportsMutation();
@@ -56,7 +57,9 @@ const CreateReportModal = ({ isOpen, onRequestClose }) => {
       component: data.component,
       priority: componentOptions.find(opt => opt.value === data.component).priority,
       causeDetail,
-      imageReports
+      imageReports,
+      createBy: email, // Gán giá trị email vào trường createBy
+      productCode: productCode // Gán productCode từ tham số vào dữ liệu báo cáo
     };
 
     try {
@@ -109,6 +112,17 @@ const CreateReportModal = ({ isOpen, onRequestClose }) => {
           />
         </div>
         <div>
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email của bạn"
+            className="mt-1 p-2 w-full border rounded-lg"
+            required
+          />
+        </div>
+        <div>
           <label className="form-control">
             <div className="label">
               <span className="label-text text-base">Thành phần</span>
@@ -155,7 +169,7 @@ const CreateReportModal = ({ isOpen, onRequestClose }) => {
                 <ImageBox
                   image={`data:image/png;base64,${image}`}
                   show
-                  isReport = {true}
+                  isReport={true}
                   handleFatherDelete={() => handleFatherDelete(i)}
                   setValue={setValue}
                   className="min-w-24 min-h-24 max-w-24 max-h-24"
