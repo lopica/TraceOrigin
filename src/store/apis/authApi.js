@@ -19,7 +19,11 @@ const authApi = createApi({
 
       // Determine the endpoint based on the URL or some other method
       const url = typeof input === "string" ? input : input.url;
-      if (url.includes("/login") || url.includes("/logout") || url.includes("/changePassword")) {
+      if (
+        url.includes("/login") ||
+        url.includes("/logout") ||
+        url.includes("/changePassword")
+      ) {
         // Customize fetch options for this specific endpoint
         init = {
           ...init,
@@ -75,6 +79,7 @@ const authApi = createApi({
             url: "/sendEmailVerify",
             method: "POST",
             body: request,
+            responseHandler: (res) => res.text(),
           };
         },
       }),

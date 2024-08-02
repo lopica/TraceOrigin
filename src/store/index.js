@@ -163,12 +163,11 @@ export {
   useSearchItemsQuery,
   useAddItemMutation,
   useCheckConsignRoleQuery,
-  useSendOtpOwnerMutation,
-  useSendOtpReceiverMutation,
-  useCheckCurrentOwnerOTPMutation,
+  useSendItemOtpMutation,
   useCheckOTPMutation,
   useConsignMutation,
   useIsPendingConsignQuery,
+  useGetCertificateMutation,
 } from "./apis/itemApi";
 export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";
 export {
