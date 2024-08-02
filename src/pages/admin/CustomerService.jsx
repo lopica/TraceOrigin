@@ -192,7 +192,7 @@ function CustomerService() {
       <div className="md:w-3/4 p-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Danh sách khách hàng</h2>
-        <CustomerCareInfo done={dataCount?.cancel} cancel={dataCount?.waiting} waiting={dataCount?.done} />
+        <CustomerCareInfo done={dataCount?.done} cancel={dataCount?.cancel} waiting={dataCount?.waiting} />
       </div>
       <table className="min-w-full bg-white border border-gray-200 text-xs">
           <thead>

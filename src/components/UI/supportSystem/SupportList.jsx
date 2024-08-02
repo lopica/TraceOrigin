@@ -50,11 +50,11 @@ const SupportList = ({ items = [], onSubmit }) => {
         <thead>
           <tr>
             <th className="p-4 border-b">#</th>
-            <th className="p-4 border-b">Title</th>
-            <th className="p-4 border-b">Status</th>
+            <th className="p-4 border-b">Tiêu đề</th>
+            <th className="p-4 border-b">Trạng thái</th>
             <th className="p-4 border-b">Ngày gửi</th>
             <th className="p-4 border-b">Tên người hỗ trợ</th>
-            <th className="p-4 border-b">Actions</th>
+            <th className="p-4 border-b"></th>
           </tr>
         </thead>
         <tbody>
@@ -67,7 +67,7 @@ const SupportList = ({ items = [], onSubmit }) => {
                   className={`p-4 ${
                     item.status === "1"
                       ? "text-green-500"
-                      : "text-red-500"
+                      : "text-yellow-500"
                   }`}
                 >
                   {item.status === "1" ? "Đã xử lý" : "Đang chờ xử lý"}
@@ -90,6 +90,7 @@ const SupportList = ({ items = [], onSubmit }) => {
                       {item?.subSupport?.map((support, supportIndex) => {
                         const isLastItem = supportIndex === item.subSupport.length - 1;
                         const isFirstItem = supportIndex === 0;
+                        
                         return (
                           <div key={supportIndex} className="mb-4">
                             {!isFirstItem && (
@@ -175,7 +176,7 @@ const SupportList = ({ items = [], onSubmit }) => {
                           <input
                             className="hidden"
                             id="supportSystemId"
-                            value={support?.supportSystemId}
+                            value={item?.subSupport[0]?.supportSystemId}
                           />
                           <textarea
                             id="content"

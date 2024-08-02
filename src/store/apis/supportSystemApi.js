@@ -104,7 +104,14 @@ const supportSystemApi = createApi({
           };
         },
       }),
-
+      countStatus: builder.query({
+        query: () => {
+          return {
+            url: "/countStatus",
+            method: "GET",
+          };
+        },
+      }),
     };
   },
 });
@@ -117,5 +124,6 @@ export const {
   useAddSupportMutation,
   useListAllBySupporterQuery,
   useListAllByUserQuery,
+  useCountStatusQuery
 
 } = supportSystemApi;

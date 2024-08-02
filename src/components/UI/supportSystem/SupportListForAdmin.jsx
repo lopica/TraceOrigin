@@ -45,12 +45,14 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
 
   return (
     <div className="overflow-x-auto w-full">
-      <table className="min-w-full bg-white border border-gray-200">
+      <table className="min-w-full bg-white border border-gray-200 text-xs">
         <thead>
           <tr>
             <th className="p-4 border-b">#</th>
             <th className="p-4 border-b">Chủ đề</th>
             <th className="p-4 border-b">Email người dùng</th>
+            <th className="p-4 border-b">số điện thoại</th>
+
             <th className="p-4 border-b">Ngày gửi</th>
             <th className="p-4 border-b">Tên người hỗ trợ</th>
             <th className="p-4 border-b">Trạng thái</th>
@@ -67,11 +69,12 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                 <td className="p-4">{item.title}</td>
 
                 <td className="p-4">{item.email}</td>
+                <td className="p-4">{item.phoneNumber}</td>
                 <td className="p-4">{formatTimestamp(item.timestamp)}</td>
                 <td className="p-4">{item.supporterName}</td>
                 <td
                   className={`p-4 ${
-                    item.status === "1" ? "text-green-500" : "text-red-500"
+                    item.status === "1" ? "text-green-500" : "text-yellow-500"
                   }`}
                 >
                   {item.status === "1" ? "Đã xử lý" : "Đang chờ xử lý"}
@@ -91,7 +94,7 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                     <div className="mt-4">
                       {item?.subSupport?.map((support, supportIndex) => {
                         const isLastItem =
-                          supportIndex === item.subSupport.length - 1;
+                          supportIndex === item?.subSupport?.length - 1;
                         const isFirstItem = supportIndex === 0;
                         return (
                           <div key={supportIndex} className="mb-4">
