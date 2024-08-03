@@ -99,12 +99,10 @@ export default function useDiary(productRecognition) {
 
   useEffect(() => {
     if (step === "otp")
-      sendOtp({
-        email: guestEmail,
-      })
+      sendOtp(guestEmail)
         .unwrap()
         .then(() => getToast("Bạn hãy kiểm tra email của bạn"))
-        .catch();
+        .catch(() => getToast("Gặp lỗi khi gửi otp"));
   }, [step]);
 
   function onEmailSubmit(data) {

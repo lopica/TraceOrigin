@@ -78,7 +78,7 @@ const itemApi = createApi({
       sendItemOtp: builder.mutation({
         query: (request) => {
           return {
-            url: 'sendOTP',
+            url: `sendOTP?email=${request}`,
             method: 'POST',
             body: request,
             responseHandler: res => res.text()
