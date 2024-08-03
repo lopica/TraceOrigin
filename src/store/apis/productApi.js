@@ -77,13 +77,13 @@ const productApi = createApi({
         },
       }),
       ViewProductByManufacturerId: builder.query({
-        query: (id, category) => {
+        query: (data) => {
           return {
             url: "/ViewProductByManufacturerId",
             method: "POST",
             body: {
-              id: id,
-              category: category || "", 
+              id: data.id,
+              categoryId: data.categoryId || 0, 
             },
           };
         },

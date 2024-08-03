@@ -6,11 +6,34 @@ import CertificateList from "./CertificateList";
 import { useState } from "react";
 import { FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa"; // Import các biểu tượng
 import classNames from "classnames";
+import { useFindCategoryByManufacturerQuery } from "../../../store/apis/categoryApi";
 
 const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
   if (!isOpen) return null;
+  const [shouldFetch, setShouldFetch] = useState(true);
+  const [body, setBody] = useState({
+    id: id,
+    categoryId: 0,
+
+  });
+
   const { data: dataUser } = useGetDetailUserQuery(id);
-  const { data: dataProduct } = useViewProductByManufacturerIdQuery(id, "");
+  const { data: dataCategory} =useFindCategoryByManufacturerQuery(id);
+  const { data: dataProduct, error, isLoading, refetch, isSuccess } =
+  useViewProductByManufacturerIdQuery(body, {
+    skip: !shouldFetch,
+  });
+
+    // ================================ select 
+    const [selectedCategory, setSelectedCategory] = useState('');
+  
+    const handleChange = (event) => {
+        setSelectedCategory(event.target.value);
+        setBody((prevData) => ({ ...prevData, categoryId: event.target.value }));
+
+    };
+    // ================================
+  // const { data: dataProduct } = useViewProductByManufacturerIdQuery(id, selectedCategory);
   const { data: dataCert } = useGetListCertificateByManuIdQuery(id);
 
   const [showUser, setShowUser] = useState(false);
@@ -112,6 +135,30 @@ const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
               "max-h-screen opacity-100 overflow-visible": showProducts,
             })}
           >
+          {/* ======================= select category  */}
+          <div>
+            <label htmlFor="categorySelect" className="block text-sm font-medium text-gray-700">
+                Chọn danh mục
+            </label>
+            <select
+                id="categorySelect"
+                name="category"
+                value={selectedCategory}
+                onChange={handleChange}
+                className="mt-1 block w-fit border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
+            >
+                <option value="" disabled>Chọn một danh mục</option>
+                <option  value={0}>
+                       Tất cả
+                    </option>
+                {dataCategory?.map((category) => (
+                    <option key={category.categoryId} value={category.categoryId}>
+                        {category.name}
+                    </option>
+                ))}
+            </select>
+        </div>
+        {/* ================================ */}
             <ProductList data={dataProduct} />
           </div>
         </div>

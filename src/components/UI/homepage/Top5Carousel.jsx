@@ -28,7 +28,7 @@ const Top5Carousel = () => {
     cssEase: "linear",
   };
   return (
-    <div  className="flex flex-col md:p-12">
+    <div  className="flex flex-col py-12 md:p-12">
      <h2 className="text-md md:text-xl mb-12 font-bold text-center">
       NHỮNG ĐỐI TÁC TIÊU BIỂU
       </h2>

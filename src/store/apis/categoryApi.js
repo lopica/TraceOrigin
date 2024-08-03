@@ -53,9 +53,19 @@ const categoryApi = createApi({
           };
         },
       }),
+      findCategoryByManufacturer: builder.query({
+        query: (id) => ({
+          url: "/findCategoryByManufacturer",
+          method: "POST",
+          body: 
+          {
+            id: id
+          },
+        }),
+      }),
     };
   },
 });
 
 export { categoryApi };
-export const { useGetAllCategoriesQuery, useGetCategoryForAdminQuery, useAddListCategoryMutation, useGetNextIdQuery } = categoryApi;
+export const { useGetAllCategoriesQuery, useGetCategoryForAdminQuery, useAddListCategoryMutation, useGetNextIdQuery, useFindCategoryByManufacturerQuery } = categoryApi;
