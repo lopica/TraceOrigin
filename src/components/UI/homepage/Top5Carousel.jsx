@@ -1,52 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import Slider from "react-slick";
-import { useSearchAllManufacturerQuery } from "../../../store/apis/userApi";
+import { useTop5OrgNamesQuery } from "../../../store/apis/userApi";
+import ShowInfoHomePage from "./ShowInfoHomePage";
 
-const marqueeData = [
-  "Người nổi bật 1",
-  "Người nổi bật 2",
-  "Người nổi bật 3",
-  "Người nổi bật 4",
-  "Người nổi bật 5",
-];
 
-const handleItemClick = (id) => {
-  // Xử lý sự kiện khi click vào item
-};
 const Top5Carousel = () => {
-  const { data: data } = useSearchAllManufacturerQuery();
-
+  const { data: data } = useTop5OrgNamesQuery();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  // ========================================================= handle click 
+  const handleItemClick = (id) => {
+    setSelectedId(id);
+    setIsPopupOpen(true);
+  };
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
   const settings = {
     infinite: true,
-    speed: 10000, // Tốc độ chạy của marquee
-    slidesToShow: 2, // Hiển thị tất cả các item
+    speed: 1000,
+    slidesToShow: 3, // Hiển thị 3 item cùng lúc
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 0, // Tốc độ tự động chạy liên tục
-    pauseOnHover: false,
-    arrows: false,
-    dots: false,
-    cssEase: "linear", // Đảm bảo hiệu ứng mượt mà
+    autoplay: true, // Bật tự động chạy
+    autoplaySpeed: 3000, // Thay đổi tốc độ tự động chạy (3 giây)
+    // arrows: true, // Hiển thị mũi tên điều hướng
+    // dots: true, // Hiển thị các chấm điều hướng
+    cssEase: "linear",
   };
   return (
-    <div className="overflow-hidden">
+    <div  className="flex flex-col md:p-12">
+     <h2 className="text-md md:text-xl mb-12 font-bold text-center">
+      NHỮNG ĐỐI TÁC TIÊU BIỂU
+      </h2>
+    <div>
+        <ShowInfoHomePage
+        id={selectedId}
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+      />
       <Slider {...settings}>
         {data && data.map((item, index) => (
           <div key={index}>
             <div
               onClick={() => handleItemClick(item.userId)}
-              className="flex items-center text-center justify-center p-4"
+              className="flex items-center text-center justify-center cursor-pointer p-4"
             >
               <img
-                src={item.profileImage || "/default_avatar.png"}
-                alt={item.org_name}
-                className="w-12 h-12 rounded-full mr-2"
+                src={item.userImage || "/default_avatar.png"}
+                alt={item.orgName}
+                className="w-16 h-16 rounded-full mr-2"
               />
-              <span className="text-white font-bold">{item.org_name}</span>
+              <span className="text-black text-md font-bold">{item.orgName}</span>
             </div>
           </div>
         ))}
       </Slider>
+    </div>
     </div>
   );
 };

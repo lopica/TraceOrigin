@@ -108,6 +108,14 @@ const userApi = createApi({
           }
         }
       }),
+      top5OrgNames: builder.query({
+        query: () => {
+          return{
+            url: '/top5OrgNames',
+            method: 'GET',
+          }
+        }
+      }),
       updateOrgImage: builder.mutation({
         query: (options) => {
           return{
@@ -152,5 +160,5 @@ export const { useFetchUserQuery,
   useGetUsersQuery , 
   useLockUserMutation , 
   useUpdateStatusMutation, 
-  useCountRegisteredUserQuery, useSearchAllManufacturerQuery, 
+  useCountRegisteredUserQuery, useSearchAllManufacturerQuery, useTop5OrgNamesQuery, 
   useUpdateOrgImageMutation, useUpdateAvatarMutation, useUpdateDescriptionMutation } = userApi;
