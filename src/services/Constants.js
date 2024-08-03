@@ -9,9 +9,10 @@ export const CONSTANTS = {
 
         // {name: 'Report', url: '/manufacturer/products'},
         // {name: 'Warranty', url: '/manufacturer/products'},
+        {name: 'Chăm sóc khách hàng', url: '/admin/customerService',  icon: FaUserShield , role: '3'},
+        {name: 'Hỗ trợ hệ thống', url: '/admin/supportSystem',  icon: FaRegLifeRing , role: '3'},
+
         {name: 'Màn giám sát', url: '/admin/adminMonitoring', icon: FaChartLine, role: '1'},
-        {name: 'Chăm sóc khách hàng', url: '/admin/customerService',  icon: FaUserShield , role: '1'},
-        {name: 'Hỗ trợ hệ thống', url: '/admin/supportSystem',  icon: FaRegLifeRing , role: '1'},
         {name: 'Quản lí danh mục sản phẩm', url: '/admin/categoryManager',  icon: FaRegLifeRing , role: '1'},
         {
             name: 'Quản lý nhà sản xuất', role: '1',

@@ -45,6 +45,9 @@ function Login() {
       } else if (role == 2) {
         navigate("/manufacturer/products");
       }
+      else if (role == 3) {
+        navigate("/admin/customerService");
+      }
     }
   }, [isAuthenticated, role]);
 
