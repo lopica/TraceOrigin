@@ -15,17 +15,31 @@ import ShowPDF from "./ShowPDF";
 import { FaBook } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
 import ItemEvent from "./ItemEvent";
-import CreateReportModal from '../components/UI/CreateReportModal';
+import CreateReportModal from "../components/UI/CreateReportModal";
 import useDiary from "../hooks/use-diary";
+import Tooltip from "./UI/Tooltip";
 let form;
-export default function NoApiConsign({productRecognition}) {
+export default function NoApiConsign({ productRecognition }) {
   const { show, handleOpen, handleClose } = useShow();
-  const { step, roleDiary, setStep, onEmailSubmit, emailLoading, onOtpSubmit, sendOtp } =
-    useDiary(productRecognition);
+  const {
+    step,
+    roleDiary,
+    setStep,
+    onEmailSubmit,
+    emailLoading,
+    onOtpSubmit,
+    sendOtp,
+    certificateUrl,
+    hasCertificate,
+    onCancelSubmit,
+    identifier,
+    setIdentifier,
+  } = useDiary(productRecognition);
   const [inputsDisabled, setInputsDisabled] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [nextStep, setNextStep] = useState("");
-  const [lastStep, setLastStep] = useState('')
+  const [lastStep, setLastStep] = useState("");
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   // const [pendingAction, setPendingAction] = useState('')
 
@@ -65,18 +79,31 @@ export default function NoApiConsign({productRecognition}) {
     setValue: receiveSetValue,
     watch: receiveWatch,
   } = useForm({ mode: "onTouched" });
+  const {
+    handleSubmit: handleSubmitCancelForm,
+    register: registerCancelForm,
+    formState: { errors: cancelFormErrors },
+    control: cancelControl,
+    getValues: cancelGetValues,
+    setValue: cancelSetValue,
+    watch: cancelWatch,
+  } = useForm({ mode: "onTouched" });
   const {} = useForm({ mode: "onTouched" });
-
-
 
   function onConsignSubmit(data) {
     setStep("confirm");
   }
 
-  function onCancelSubmit() {}
-
   function onReceiveSubmit() {
     setStep("confirm-receive");
+  }
+
+
+  function onEndSubmit() {
+    setStep("otp");
+    setIdentifier('cancel')
+    setLastStep("cancel");
+    setNextStep("success");
   }
 
   useEffect(() => {
@@ -106,12 +133,22 @@ export default function NoApiConsign({productRecognition}) {
     );
   };
 
+  const cancelBtn = (
+    <div
+      className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
+      onClick={() => setStep("cancel-form")}
+    >
+      <p>Kết thúc nhật ký</p>
+    </div>
+  );
+
   function customOtp(nextStep) {}
 
-  let certificateBtn = (
+  let certificateBtn = hasCertificate ? (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
       onClick={() => {
+        setIdentifier("certificate");
         setStep("otp");
         setLastStep("option");
         setNextStep("certificate");
@@ -119,6 +156,19 @@ export default function NoApiConsign({productRecognition}) {
     >
       <p>Xem chứng chỉ</p>
     </div>
+  ) : (
+    <Tooltip content="Sản phẩm này hiện không đủ điều kiện có chứng chỉ">
+      <div
+        className="w-full h-20 bg-red-100 flex justify-center items-center cursor-pointer"
+        onClick={() => {
+          setStep("otp");
+          setLastStep("option");
+          setNextStep("certificate");
+        }}
+      >
+        <p>Xem chứng chỉ</p>
+      </div>
+    </Tooltip>
   );
 
   switch (step) {
@@ -174,7 +224,7 @@ export default function NoApiConsign({productRecognition}) {
           <BackBtn step={lastStep} />
           <div className="grow flex flex-col items-center justify-center">
             <Otp
-              onSubmit={(otp) => onOtpSubmit(otp, nextStep)}
+              onSubmit={(otp) => onOtpSubmit(otp, nextStep, identifier)}
               sendOtp={sendOtp}
               inputsDisabled={inputsDisabled}
               setInputsDisabled={() => setInputsDisabled(false)}
@@ -202,12 +252,7 @@ export default function NoApiConsign({productRecognition}) {
                 <p>Ủy quyền</p>
               </div>
               {certificateBtn}
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("cancel")}
-              >
-                <p>Kết thúc nhật ký</p>
-              </div>
+              {cancelBtn}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -226,7 +271,7 @@ export default function NoApiConsign({productRecognition}) {
               >
                 <p>Nhận hàng</p>
               </div>
-              {certificateBtn}
+              {/* {certificateBtn} */}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -276,7 +321,6 @@ export default function NoApiConsign({productRecognition}) {
               >
                 <p>Ủy quyền</p>
               </div>
-              {certificateBtn}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -799,7 +843,7 @@ export default function NoApiConsign({productRecognition}) {
         <div>
           <BackBtn step="option" />
           <div className="h-auto">
-            <ShowPDF pdfURL="https://res.cloudinary.com/ds2d9tipg/image/upload/v1720535292/trace_origin_cert_of%2BI3ZTQwYjE5.pdf" />
+            <ShowPDF pdfURL={certificateUrl} />
           </div>
         </div>
       );
@@ -808,7 +852,7 @@ export default function NoApiConsign({productRecognition}) {
       form = (
         <form
           className="p-6 pt-0 h-full flex flex-col justify-center items-center"
-          onSubmit={handleSubmitEndForm(onCancelSubmit)}
+          onSubmit={handleSubmitEndForm(onEndSubmit)}
         >
           <IoIosWarning className=" fill-red-300 h-20 w-20" />
           <p className="text-center text-2xl font-light text-slate-600">
@@ -835,24 +879,66 @@ export default function NoApiConsign({productRecognition}) {
             <Button
               primary
               outline
-              onClick={() => setStep("option")}
+              onClick={() => setStep("cancel-form")}
               // disabled={isConsignLoading}
             >
               Hủy
             </Button>
-            <Button
-              primary
-              rounded
-              onClick={() => {
-                setStep("otp");
-                setLastStep("cancel");
-                setNextStep("success");
-              }}
-            >
+            <Button primary rounded>
               Kết thúc
             </Button>
           </div>
         </form>
+      );
+      break;
+    case "cancel-form":
+      form = (
+        <div>
+          <h2 className="text-center text-2xl">Kết thúc nhật ký</h2>
+          <BackBtn step="option" />
+          <form
+            className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
+            onKeyDown={handleKeyDown}
+            onSubmit={handleSubmitCancelForm(onCancelSubmit)}
+          >
+            <p>
+              {/* Để có thể kết thúc nhật ký sản phẩm này, bạn cần điền địa chỉ nơi
+              sản phẩm này được hủy hoặc sử dụng. */}
+              (Tùy chọn) Bạn có thể điền thêm thông tin về sự kiện kết thúc nhật
+              ký của sản phẩm này.
+            </p>
+            <AddressInputGroup
+              register={registerCancelForm}
+              getValues={cancelGetValues}
+              setValue={cancelSetValue}
+              control={cancelControl}
+              errors={cancelFormErrors}
+              noValidate
+              message="Địa chỉ nhận hàng"
+              watch={cancelWatch}
+            />
+            <div className="relative w-full min-h-10 mt-4">
+              <input
+                {...registerCancelForm("description")}
+                type="text"
+                className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
+                placeholder="good wather"
+              />
+              <label
+                htmlFor="description"
+                className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+              >
+                Miêu tả sự kiện
+              </label>
+              <span className="label-text-alt text-left text-error text-sm">
+                {cancelFormErrors.description?.message}
+              </span>
+            </div>
+            <div className="flex justify-end w-full min-h-15">
+              <NextBtn />
+            </div>
+          </form>
+        </div>
       );
       break;
     case "report":
@@ -886,14 +972,15 @@ export default function NoApiConsign({productRecognition}) {
 
   return (
     <div className="flex justify-center">
-       <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productRecognition}/>
+      {/* <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productRecognition}/> */}
       <Button
-        onClick={openModal}
-        className="fixed z-[5] bottom-40 right-6 bg-red-500 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-400 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
+        // onClick={openModal}
+        onClick={handleOpen}
+        className="fixed z-[5] bottom-24 right-6 bg-sky-400 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-500 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
       >
         <FaBook className="w-7 h-7 fill-white" />
       </Button>
-      {/* {show && (
+      {show && (
         <Modal onClose={handleClose} className="h-auto">
           <div className="md:flex">
             <div className="bg-sky-200 h-[15rem] md:w-1/3 md:h-auto rounded-t md:rounded-none md:rounded-l">
@@ -910,6 +997,7 @@ export default function NoApiConsign({productRecognition}) {
                 {step !== "confirm" &&
                   step !== "otp" &&
                   step !== "cancel" &&
+                  step !== "cancel-form" &&
                   step !== "receive" &&
                   step !== "receive-form" &&
                   step !== "confirm-receive" &&
@@ -923,7 +1011,7 @@ export default function NoApiConsign({productRecognition}) {
             </div>
           </div>
         </Modal>
-      )} */}
+      )}
     </div>
   );
 }

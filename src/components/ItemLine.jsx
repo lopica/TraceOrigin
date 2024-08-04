@@ -7,6 +7,7 @@ import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { useEffect } from "react";
 import Tooltip from "./UI/Tooltip";
 import QR from "./QR";
+import { updateCertificate } from "../store/slices/itemSlice";
 
 let itemLine;
 export default function ItemLine({
@@ -27,6 +28,10 @@ export default function ItemLine({
     if (itemLogsData?.itemLogDTOs) {
       if (itemLogsData.itemLogDTOs.length > 0) {
         dispatch(updateItemLine(itemLogsData.itemLogDTOs));
+        const hasCertificate = !itemLogsData.itemLogDTOs.some(
+          (item) => item.checkPoint === false
+        );
+        dispatch(updateCertificate(hasCertificate))
       }
     }
   }, [itemLogsData]);
@@ -59,7 +64,11 @@ export default function ItemLine({
                   }
                 >
                   <button
-                    className={`w-8 h-8 rounded-full ${index === logLength - 1 ? 'bg-cyan-400 animate-pulse' : 'bg-green-400 hover:bg-green-500'}`}
+                    className={`w-8 h-8 rounded-full ${
+                      index === logLength - 1
+                        ? "bg-cyan-400 animate-pulse"
+                        : "bg-green-400 hover:bg-green-500"
+                    }`}
                     onClick={
                       index === 0
                         ? goToItemOrigin

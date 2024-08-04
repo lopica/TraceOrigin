@@ -195,7 +195,7 @@ function ManuProductAdd() {
       avatar: data.avatar.split(",")[1],
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
-      file3D: getValues("file3D") ? getValues("file3D").split(",")[1] : "",
+      // file3D: getValues("file3D") ? getValues("file3D").split(",")[1] : "",
       avatar: data.avatar.split(',')[1],
       images: imagesFormat
     };
@@ -217,6 +217,7 @@ function ManuProductAdd() {
         getToast("Gặp lỗi khi tạo mới sản phẩm");
         console.log(err);
       });
+    
   };
 
   useEffect(() => {

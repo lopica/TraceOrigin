@@ -36,6 +36,7 @@ const QRCodeScanner = () => {
     handleClose: deny,
   } = useShow(false);
   const html5QrCodeRef = useRef(null);
+  const [isCameraLoading, setIsCameraLoading] = useState(false);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -49,7 +50,7 @@ const QRCodeScanner = () => {
   };
 
   const handleSuccess = (decodedText, _) => {
-    console.log(decodedText);
+    // console.log(decodedText);
     const url = new URL(decodedText);
     const productRecognition = url.searchParams.get("productRecognition");
     setQRCodeData(productRecognition);
@@ -81,11 +82,11 @@ const QRCodeScanner = () => {
       const videoInputs = devices.filter(
         (device) => device.kind === "videoinput"
       );
-      console.log(videoInputs);
+      // console.log(videoInputs);
       setListCamera(
         videoInputs.map((device) => ({ id: device.id, label: device.label }))
       );
-      console.log("vo day");
+      // console.log("vo day");
     } catch (error) {}
   };
 
@@ -93,13 +94,13 @@ const QRCodeScanner = () => {
     setCameraType(event.target.value);
   };
 
-  useEffect(() => {
-    console.log(permission);
-  }, [permission]);
+  // useEffect(() => {
+  //   console.log('permission: ' + permission);
+  // }, [permission]);
 
-  useEffect(() => {
-    console.log(show);
-  }, [show]);
+  // useEffect(() => {
+  //   console.log('show: ' + show);
+  // }, [show]);
 
   useEffect(() => {
     async function loadCamera() {
@@ -116,11 +117,15 @@ const QRCodeScanner = () => {
   };
 
   useEffect(() => {
+    console.log(html5QrCodeRef.current);
+  }, [html5QrCodeRef]);
+
+  useEffect(() => {
     if (step === "video") {
       const html5QrCode = new Html5Qrcode(qrCodeRegionId, config, false);
       html5QrCodeRef.current = html5QrCode;
       return async () => {
-        console.log(permission);
+        console.log("permission: " + permission);
         if (permission) {
           if (show) {
             // handleFlip()
@@ -131,6 +136,8 @@ const QRCodeScanner = () => {
           }
         }
       };
+    } else {
+      turnOff()
     }
   }, [step, permission]);
 
@@ -140,28 +147,28 @@ const QRCodeScanner = () => {
   // },[html5QrCodeRef.current])
 
   useEffect(() => {
-    console.log(permission);
+    console.log("vo day");
     if (permission) {
       if (html5QrCodeRef.current) {
         if (show) {
-          html5QrCodeRef.current.start(
-            cameraType || { facingMode: "environment" },
-            config,
-            (decodedText, _) => {
-              console.log(decodedText);
-              handleSuccess(decodedText);
-            }
-          );
+          setIsCameraLoading(true);
+          html5QrCodeRef.current
+            .start(
+              cameraType || { facingMode: "environment" },
+              config,
+              (decodedText, _) => {
+                // console.log(decodedText);
+                handleSuccess(decodedText);
+              }
+            )
+            .then(() => setIsCameraLoading(false));
         } else {
-          html5QrCodeRef.current.stop().catch((err) => {
-            // Stop failed, handle it.
-            // console.log('Không dừng được camera ' + err)
-          });
+          html5QrCodeRef.current.stop();
         }
       }
     } else {
       if (show) {
-         console.log('call permis')
+        console.log("call permis");
         //call permission
         navigator.permissions
           .query({ name: "camera" })
@@ -171,7 +178,7 @@ const QRCodeScanner = () => {
           .catch((err) => deny());
       }
     }
-  }, [show]);
+  }, [show, permission]);
 
   return (
     <section>
@@ -303,7 +310,6 @@ const QRCodeScanner = () => {
             primary
             outline
             onClick={() => {
-              turnOff();
               setStep("choose");
             }}
             className="mb-4"
@@ -330,6 +336,7 @@ const QRCodeScanner = () => {
                   secondary
                   className="h-10 w-10 rounded"
                   onClick={handleFlip}
+                  isLoading={isCameraLoading}
                 >
                   <FaPowerOff />
                 </Button>
