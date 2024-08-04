@@ -78,7 +78,7 @@ const itemApi = createApi({
       sendItemOtp: builder.mutation({
         query: (request) => {
           return {
-            url: 'sendOTP',
+            url: `sendOTP?email=${request}`,
             method: 'POST',
             body: request,
             responseHandler: res => res.text()
@@ -128,9 +128,30 @@ const itemApi = createApi({
       getCertificate: builder.mutation({
         query: (request) => {
           return {
-            url: 'getCetificate',
+            url: 'getCertificate',
             method: 'POST',
             body: request,
+            responseHandler: res => res.text()
+          }
+        }
+      }),
+      checkPartyFirst: builder.query({
+        query: (request) => {
+          return {
+            url: 'checPartyFirst',
+            method: 'POST',
+            body: request
+          }
+        }
+      }),
+      endItemLine: builder.mutation({
+        invalidatesTags: ['consign'],
+        query: (request) => {
+          return {
+            url: 'abortItem',
+            method: 'POST',
+            body: request,
+            responseHandler: res => res.text()
           }
         }
       }),
@@ -150,4 +171,6 @@ export const {
   useConsignMutation,
   useIsPendingConsignQuery,
   useGetCertificateMutation,
+  useCheckPartyFirstQuery,
+  useEndItemLineMutation,
 } = itemApi;

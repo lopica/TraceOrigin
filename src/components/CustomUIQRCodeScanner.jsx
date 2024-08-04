@@ -4,10 +4,12 @@ import { FaCamera } from "react-icons/fa";
 import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
+import { FaPowerOff } from "react-icons/fa";
 import Dropzone from "./Dropzone";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { updateQRList } from "../store";
+import useShow from "../hooks/use-show";
 
 const QRCodeScanner = () => {
   const [qrCodeData, setQRCodeData] = useState(null);
@@ -27,6 +29,15 @@ const QRCodeScanner = () => {
   const [cameraType, setCameraType] = useState("");
   const { qrList } = useSelector((state) => state.historySearchSlice);
   const dispatch = useDispatch();
+  const { show, handleFlip, handleClose: turnOff } = useShow(false);
+  const {show: cameraOn, handleOpen, handleClose} = useShow()
+  const {
+    show: permission,
+    handleOpen: accept,
+    handleClose: deny,
+  } = useShow(false);
+  const html5QrCodeRef = useRef(null);
+  const [isCameraLoading, setIsCameraLoading] = useState(false);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -40,7 +51,7 @@ const QRCodeScanner = () => {
   };
 
   const handleSuccess = (decodedText, _) => {
-    console.log(decodedText);
+    // console.log(decodedText);
     const url = new URL(decodedText);
     const productRecognition = url.searchParams.get("productRecognition");
     setQRCodeData(productRecognition);
@@ -67,24 +78,30 @@ const QRCodeScanner = () => {
   };
 
   const checkCameraAvailability = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const videoInputs = devices.filter(
-      (device) => device.kind === "videoinput"
-    );
-    console.log(videoInputs);
-    setCameraType(videoInputs[0].id);
-    setListCamera(
-      videoInputs.map((device) => ({ id: device.id, label: device.label }))
-    );
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoInputs = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
+      // console.log(videoInputs);
+      setListCamera(
+        videoInputs.map((device) => ({ id: device.id, label: device.label }))
+      );
+      // console.log("vo day");
+    } catch (error) {}
   };
 
   const handleCameraChange = (event) => {
     setCameraType(event.target.value);
   };
 
-  useEffect(() => {
-    console.log(qrList);
-  }, [qrList]);
+  // useEffect(() => {
+  //   console.log('permission: ' + permission);
+  // }, [permission]);
+
+  // useEffect(() => {
+  //   console.log('show: ' + show);
+  // }, [show]);
 
   useEffect(() => {
     async function loadCamera() {
@@ -95,38 +112,73 @@ const QRCodeScanner = () => {
     loadCamera();
   }, [step]);
 
+  const config = {
+    fps: 30,
+    qrbox: 200,
+  };
+
+  useEffect(() => {
+    console.log(html5QrCodeRef.current);
+  }, [html5QrCodeRef]);
+
   useEffect(() => {
     if (step === "video") {
-      const config = {
-        fps: 30,
-        qrbox: 200,
-      };
-      // Html5Qrcode.getCameras().then((devices)=>).catch(err=>console.log(err))
-      const html5QrCode = new Html5Qrcode(qrCodeRegionId, config, false);
-
-      html5QrCode.start(
-        cameraType || { facingMode: "environment" },
-        config,
-        (decodedText, _) => {
-          console.log(decodedText);
-          handleSuccess(decodedText);
-        }
-      );
-      return () => {
-        html5QrCode
-          .stop()
-          .then((_) => {
-            html5QrCode.clear().catch((error) => {
-              console.error("Failed to clear html5QrCodeScanner. ", error);
-            });
-          })
-          .catch((err) => {
-            // Stop failed, handle it.
-            // console.log('Không dừng được camera ' + err)
-          });
-      };
+      turnOff();
+      handleClose();
     }
   }, [step]);
+
+  useEffect(() => {
+    if (step === "video") {
+      const html5QrCode = new Html5Qrcode(qrCodeRegionId, config, false);
+      html5QrCodeRef.current = html5QrCode;
+
+      return async () => {
+        console.log("permission: " + permission);
+        if (permission) {
+          console.log("vo day nhe");
+          if (cameraOn) await html5QrCodeRef.current.stop();
+          await html5QrCodeRef.current.clear();
+        }
+      };
+    }
+  }, [step, permission]);
+
+  useEffect(() => {
+    if (permission) {
+      if (html5QrCodeRef.current) {
+        if (show) {
+          setIsCameraLoading(true);
+          html5QrCodeRef.current
+            .start(
+              cameraType || { facingMode: "environment" },
+              config,
+              (decodedText, _) => {
+                // console.log(decodedText);
+                handleSuccess(decodedText);
+              }
+            )
+            .then(() => {setIsCameraLoading(false)
+              handleOpen()
+            });
+        } else {
+          console.log("phai vo day");
+          cameraOn && html5QrCodeRef.current.stop();
+        }
+      }
+    } else {
+      if (show) {
+        console.log("call permis");
+        //call permission
+        navigator.permissions
+          .query({ name: "camera" })
+          .then((permissionObj) => {
+            if (permissionObj?.state === "granted") accept();
+          })
+          .catch((err) => deny());
+      }
+    }
+  }, [show, permission]);
 
   return (
     <section>
@@ -270,15 +322,25 @@ const QRCodeScanner = () => {
               <div className="relative w-full bg-sky-200">
                 <div id={qrCodeRegionId}></div>
               </div>
-              <select
-                className="mt-2 block w-full text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                onChange={handleCameraChange}
-                value={cameraType}
-              >
-                {listCamera.map((camera) => (
-                  <option key={camera.id}>{camera.label}</option>
-                ))}
-              </select>
+              <div className="flex items-center justify-center gap-2 mt-2">
+                <select
+                  className="block w-full text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  onChange={handleCameraChange}
+                  value={cameraType}
+                >
+                  {listCamera.map((camera) => (
+                    <option key={camera.id || "none"}>{camera.label}</option>
+                  ))}
+                </select>
+                <Button
+                  secondary
+                  className="h-10 w-10 rounded"
+                  onClick={handleFlip}
+                  isLoading={isCameraLoading}
+                >
+                  <FaPowerOff />
+                </Button>
+              </div>
             </div>
             <div className="flex-1 max-w-full sm:max-w-[50%]">
               {item.itemId && (

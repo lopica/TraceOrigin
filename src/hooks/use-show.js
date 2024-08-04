@@ -12,7 +12,7 @@ function useShow(initial) {
     setShow(!show);
   };
 
-  return { show, handleOpen, handleClose, handleFlip };
+  return { show, handleOpen, handleClose, handleFlip, setShow };
 }
 
 export default useShow;
