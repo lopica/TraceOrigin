@@ -88,6 +88,27 @@ const productApi = createApi({
           };
         },
       }),
+      saveFileAI: builder.mutation({
+        query: ({weights, classNames, model, description}) => {
+          const formData = new FormData();
+          if (weights) {
+            formData.append("weights", weights);
+          }
+          if (classNames) {
+            formData.append("classNames", classNames);
+          }
+          if (model) {
+            formData.append("model", model);
+          }
+          formData.append("description", description || "");
+
+          return {
+            url: "/saveFileAI",
+            method: "POST",
+            body: formData,
+          };
+        },
+      }),
     };
   },
 });
@@ -99,5 +120,6 @@ export const {
   useViewProductDetailQuery,
   useDeleteProductByIdMutation,
   useCountRegisteredProductQuery,
-  useViewProductByManufacturerIdQuery
+  useViewProductByManufacturerIdQuery,
+  useSaveFileAIMutation,
 } = productApi;

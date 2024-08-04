@@ -36,9 +36,16 @@ const elkApi = createApi({
           }
         }),
       }),
+      getHistoryUploadAI: builder.query({
+        query: () => ({
+          url: '/getHistoryUploadAI',
+          method: 'GET',
+        }),
+      }),
     };
+    
   },
 });
 
 export { elkApi };
-export const { useGetNumberVisitsAllTimeQuery, useGetNumberVisitsDiagramQuery} = elkApi;
+export const { useGetNumberVisitsAllTimeQuery, useGetNumberVisitsDiagramQuery, useGetHistoryUploadAIQuery } = elkApi;
