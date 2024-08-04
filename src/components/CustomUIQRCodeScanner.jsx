@@ -30,6 +30,7 @@ const QRCodeScanner = () => {
   const { qrList } = useSelector((state) => state.historySearchSlice);
   const dispatch = useDispatch();
   const { show, handleFlip, handleClose: turnOff } = useShow(false);
+  const {show: cameraOn, handleOpen, handleClose} = useShow()
   const {
     show: permission,
     handleOpen: accept,
@@ -122,32 +123,28 @@ const QRCodeScanner = () => {
 
   useEffect(() => {
     if (step === "video") {
+      turnOff();
+      handleClose();
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (step === "video") {
       const html5QrCode = new Html5Qrcode(qrCodeRegionId, config, false);
       html5QrCodeRef.current = html5QrCode;
+
       return async () => {
         console.log("permission: " + permission);
         if (permission) {
-          if (show) {
-            // handleFlip()
-            await html5QrCodeRef.current.stop();
-            await html5QrCodeRef.current.clear();
-          } else {
-            html5QrCodeRef.current.clear();
-          }
+          console.log("vo day nhe");
+          if (cameraOn) await html5QrCodeRef.current.stop();
+          await html5QrCodeRef.current.clear();
         }
       };
-    } else {
-      turnOff()
     }
   }, [step, permission]);
 
-  // useEffect(()=>{
-  //   console.log(html5QrCodeRef.current)
-  //   // if (!html5QrCodeRef.current) handleFlip()
-  // },[html5QrCodeRef.current])
-
   useEffect(() => {
-    console.log("vo day");
     if (permission) {
       if (html5QrCodeRef.current) {
         if (show) {
@@ -161,9 +158,12 @@ const QRCodeScanner = () => {
                 handleSuccess(decodedText);
               }
             )
-            .then(() => setIsCameraLoading(false));
+            .then(() => {setIsCameraLoading(false)
+              handleOpen()
+            });
         } else {
-          html5QrCodeRef.current.stop();
+          console.log("phai vo day");
+          cameraOn && html5QrCodeRef.current.stop();
         }
       }
     } else {
