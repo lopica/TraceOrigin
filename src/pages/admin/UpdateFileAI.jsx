@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useSaveFileAIMutation } from "../../store/apis/productApi";
 import useToast from "../../hooks/use-toast";
 import { useGetHistoryUploadAIQuery } from "../../store/apis/elkApi";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function UpdateFileAI() {
   const [saveFileAI] = useSaveFileAIMutation();
@@ -79,6 +81,17 @@ function UpdateFileAI() {
     
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
+    // =============================== handle logout
+    const navigate = useNavigate();
+    const { isAuthenticated } = useSelector((state) => state.authSlice);
+  
+    useEffect(() => {
+      if (!isAuthenticated) {
+        getToast("Phiên đăng nhập đã hết hạn");
+        navigate("/portal/login");
+      }
+    }, [isAuthenticated, getToast, navigate]);
+    // ===============================
   return (
     <div className="flex flex-col md:flex-row p-4">
       <div className="md:w-1/3 p-4">

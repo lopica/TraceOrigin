@@ -148,6 +148,31 @@ const userApi = createApi({
           };
         },
       }),
+      deleteSupporter: builder.mutation({
+        query: (options) => {
+          return {
+            url: "/deleteSupporter",
+            method: "POST",
+            body: {
+              id: options.id,
+            },
+          };
+        },
+      }),
+      listAllCustomerSupport: builder.query({
+        query: (options) => {
+          return {
+            url: "/listAllCustomerSupport",
+            method: "POST",
+            body: {
+              pageNumber: options.pageNumber,
+              pageSize: options.pageSize,
+              email: options.email || "",
+              type: options.type || "",
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -166,4 +191,6 @@ export const {
   useUpdateOrgImageMutation,
   useUpdateAvatarMutation,
   useUpdateDescriptionMutation,
+  useDeleteSupporterMutation,
+  useListAllCustomerSupportQuery
 } = userApi;

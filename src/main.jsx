@@ -32,6 +32,7 @@ import ManuSupportSystem from "./pages/manufacturer/ManuSupportSystem";
 import SupportSystem from "./pages/admin/SupportSystem";
 import CategoryTable from "./pages/admin/CategoryTable";
 import UpdateFileAI from "./pages/admin/UpdateFileAI";
+import CustomerSupportList from "./pages/admin/CustomerSupportList";
 
 const persistor = persistStore(store);
 
@@ -90,6 +91,8 @@ function AppRouter() {
             { path: 'supportSystem', element: <SupportSystem /> },
             { path: 'categoryManager', element: <CategoryTable /> },
             { path: 'uploadFileAI', element: <UpdateFileAI /> },
+            { path: 'CustomerSupportList', element: <CustomerSupportList /> },
+
           ]
           }
         ,
