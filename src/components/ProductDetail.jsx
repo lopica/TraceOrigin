@@ -1,11 +1,13 @@
 import Table from "./UI/Table";
 import useProductDetail from "../hooks/use-product-detail";
 import Carousel from "./UI/Carousel";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/use-toast";
 import Canvas3D from "./Canvas3D";
+import ImageBox from "../components/UI/ImageBox"
+import { FaPlus } from 'react-icons/fa';
 
 const productConfig = [
   {
@@ -25,7 +27,10 @@ export default function ProductDetail({ productId }) {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [slides, setSlides] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageReports, setImageReports] = useState([]);
   const { getToast } = useToast();
+  const fileInputRef = useRef(null);
   const { productData, name, images, isProductFetch, isProductError, error } =
     useProductDetail(productId);
 
@@ -54,6 +59,27 @@ export default function ProductDetail({ productId }) {
     }
   }, [images]);
 
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleImageUpload = (event) => {
+
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFatherDelete = (index) => {
+    const newReports = imageReports.filter((_, i) => i !== index);
+    setImageReports(newReports);
+  };
+
   if (isProductFetch) {
     renderedProductDetail = <div className="skeleton h-[40svh] w-full"></div>;
   } else if (isProductError) {
@@ -68,6 +94,15 @@ export default function ProductDetail({ productId }) {
             config={productConfig}
             keyFn={(item) => item.label}
           />
+          <p className="mt-4 text-center">
+            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn?{" "}
+            <a
+              onClick={handleModalOpen}
+              className="text-blue-500 underline cursor-pointer"
+            >
+              Đăng kí quét hình ảnh sản phẩm
+            </a>
+          </p>
         </div>
       );
     }
@@ -84,6 +119,50 @@ export default function ProductDetail({ productId }) {
         }
       />
       {renderedProductDetail}
+      
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-lg relative">
+            <button
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+              onClick={handleModalClose}
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-semibold mb-4">Tải lên hình ảnh nhận diện</h2>
+            <p className="mb-4">
+              Vui lòng tải lên tối thiểu 16 ảnh. Ảnh nên được chụp ở nơi sáng và rõ nét để đảm bảo chất lượng tốt nhất.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              {imageReports.map((image, i) => (
+                <div key={i}>
+                  <ImageBox
+                    image={`data:image/png;base64,${image}`}
+                    show
+                    isReport={true}
+                    handleFatherDelete={() => handleFatherDelete(i)}
+                    setValue={setValue}
+                    className="min-w-24 min-h-24 max-w-24 max-h-24"
+                    idx={i}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="hover:cursor-pointer bg-sky-200 flex items-center justify-center min-w-24 min-h-24 max-w-24 max-h-24" onClick={triggerFileInput}>
+              <FaPlus className="text-2xl fill-white" />
+              <input
+                ref={fileInputRef}
+                name="images"
+                type="file"
+                className="file-input hidden"
+                accept="image/png, image/gif, image/jpeg"
+                multiple
+                onChange={handleImageUpload}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
