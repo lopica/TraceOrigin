@@ -25,6 +25,7 @@ const itemSlice = createSlice({
     hasCertificate: false,
     cancelForm: {},
     consignForm: {},
+    receiveForm: {},
   },
   reducers: {
     updateItemDetail(state, action) {
@@ -46,6 +47,9 @@ const itemSlice = createSlice({
     updateConsignForm(state, action) {
       state.consignForm = { ...action.payload };
     },
+    updateReceiveForm(state, action) {
+      state.receiveForm = { ...action.payload };
+    },
   },
 });
 
@@ -56,5 +60,6 @@ export const {
   updateCertificate,
   updateCancelForm,
   updateConsignForm,
+  updateReceiveForm,
 } = itemSlice.actions;
 export const itemSliceReducer = itemSlice.reducer;

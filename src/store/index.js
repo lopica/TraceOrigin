@@ -238,6 +238,7 @@ export {
   updateConsignForm,
   updateCancelForm,
   updateCertificate,
+  updateReceiveForm,
 } from "./slices/itemSlice";
 export {
   useGetListManuToVerifyQuery,

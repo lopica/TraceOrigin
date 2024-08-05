@@ -49,10 +49,20 @@ const itemLogApi = createApi({
         },
       }),
       createTransportEvent: builder.mutation({
-        invalidatesTags: ['consign'],
+        invalidatesTags: ["consign"],
         query: (request) => {
           return {
             url: "addItemLogTransport",
+            method: "POST",
+            body: request,
+          };
+        },
+      }),
+      addReceiveLocation: builder.mutation({
+        invalidatesTags: ["consign"],
+        query: (request) => {
+          return {
+            url: "updateItemLog",
             method: "POST",
             body: request,
           };
@@ -66,4 +76,5 @@ export { itemLogApi };
 export const {
   useFetchEventByItemLogIdQuery,
   useCreateTransportEventMutation,
+  useAddReceiveLocationMutation,
 } = itemLogApi;

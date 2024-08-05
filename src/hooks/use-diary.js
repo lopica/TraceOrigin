@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import {
   updateCancelForm,
   updateConsignForm,
+  updateCoordinate,
+  updateReceiveForm,
   updateVerifyAddress,
   useCheckConsignRoleQuery,
   useCheckOTPMutation,
@@ -9,6 +11,7 @@ import {
   useConsignMutation,
   useCreateTransportEventMutation,
   useEndItemLineMutation,
+  useFetchEventByItemLogIdQuery,
   useGetAllTransportsQuery,
   useGetCertificateMutation,
   useIsPendingConsignQuery,
@@ -16,7 +19,8 @@ import {
 } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import useToast from "./use-toast";
-import { useReducedMotion } from "framer-motion";
+import { findLastConsignAndTransportEvents } from "../utils/getConsignAndTransportEventId";
+import { useAddReceiveLocationMutation } from "../store/apis/itemLogApi";
 
 export default function useDiary(productRecognition, consignWatch) {
   const { getToast } = useToast();
@@ -24,18 +28,25 @@ export default function useDiary(productRecognition, consignWatch) {
   const [step, setStep] = useState("email");
   const [roleDiary, setRoleDiary] = useState("");
   const { email } = useSelector((state) => state.userSlice);
-  const { hasCertificate, cancelForm, consignForm } = useSelector(
+  const { hasCertificate, cancelForm, consignForm, receiveForm } = useSelector(
     (state) => state.itemSlice
   );
   const { coordinate, verifyAddress } = useSelector(
     (state) => state.locationData
   );
+  const { itemLine } = useSelector((state) => state.itemSlice);
   const [guestEmail, setGuestEmail] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
   const [certificateUrl, setCertificateUrl] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [transportList, setTransportList] = useState([]);
   const [consignLoading, setConsignLoading] = useState(false);
+  const [packReceiveId, setPackReceiveId] = useState({
+    consignId: "",
+    transportId: "",
+  });
+  const [nextStep, setNextStep] = useState("");
+  const [lastStep, setLastStep] = useState("");
 
   const {
     data: roleCode,
@@ -55,13 +66,29 @@ export default function useDiary(productRecognition, consignWatch) {
     isFetching: isCheckPendingFetch,
     isSuccess: isCheckPendingSuccess,
   } = useIsPendingConsignQuery(productRecognition);
+  const {
+    data: consignData,
+    isFetching: isConsignDataFetch,
+    isSuccess: isConsignDataSuccess,
+  } = useFetchEventByItemLogIdQuery(packReceiveId.consignId, {
+    skip: !packReceiveId.consignId,
+  });
+  const {
+    data: transportData,
+    isFetching: isTransportDataFetch,
+    isSuccess: isTransportDataSuccess,
+  } = useFetchEventByItemLogIdQuery(packReceiveId.transportId, {
+    skip: !packReceiveId.transportId,
+  });
 
-  const [sendOtp, {isLoading: isSendOtpLoading}] = useSendItemOtpMutation();
   const [getCertificate] = useGetCertificateMutation();
   const [abort] = useEndItemLineMutation();
   const [consign, { isLoading: isMainConsignLoad }] = useConsignMutation();
   const [consignTransport, { isLoading: isConsignTransLoad }] =
     useCreateTransportEventMutation();
+  const [sendOtp, { isLoading: isSendOtpLoading }] = useSendItemOtpMutation();
+  const [receive] = useCheckOTPMutation();
+  const [receiveLocation] = useAddReceiveLocationMutation();
 
   // const {
   //   data: firstPartyCode,
@@ -85,13 +112,36 @@ export default function useDiary(productRecognition, consignWatch) {
 
   //api call
   useEffect(() => {
+    if (itemLine.length > 0 && roleDiary === "pending-receiver") {
+      setPackReceiveId(findLastConsignAndTransportEvents(itemLine));
+    }
+  }, [itemLine, roleDiary]);
+
+  useEffect(() => {
+    if (isConsignDataSuccess && !isConsignDataFetch) {
+      //set data or send it immediately
+      if (consignData) {
+        console.log(consignData);
+      }
+    }
+  }, [isConsignDataSuccess, isConsignDataFetch]);
+
+  useEffect(() => {
+    if (isTransportDataSuccess && !isTransportDataFetch) {
+      //set data or send it immediately
+      if (transportData) {
+        console.log(transportData);
+      }
+    }
+  }, [isTransportDataSuccess, isTransportDataFetch]);
+
+  useEffect(() => {
     if (isMainConsignLoad || isConsignTransLoad) setConsignLoading(true);
     else setConsignLoading(false);
   }, [isMainConsignLoad, isConsignTransLoad]);
 
   useEffect(() => {
     if (isTransportSuccess && !isTransportFetch) {
-      console.log(transports);
       const list = transports.map((transport) => ({
         id: transport.transportId,
         content: transport.transportName,
@@ -315,6 +365,7 @@ export default function useDiary(productRecognition, consignWatch) {
         consign(request)
           .unwrap()
           .then((res) => {
+            dispatch(updateCoordinate([]));
             console.log(res);
             request = {
               transportId: consignForm.transport
@@ -334,7 +385,38 @@ export default function useDiary(productRecognition, consignWatch) {
               });
           })
           .catch(() => getToast("Mã otp của bạn không chính xác"));
-
+        break;
+      case "receive":
+        request = {
+          email: guestEmail,
+          otp: fixOtp,
+          productRecognition,
+        };
+        receive(request)
+          .unwrap()
+          .then(() => setStep(nextStep))
+          .catch(() => getToast("Mã otp của bạn không chính xác"));
+        break;
+      case "receive-location":
+        request = {
+          location: {
+            address: receiveForm.address,
+            city: receiveForm.province
+              ? receiveForm.province.split(",")[1]
+              : "",
+            country: receiveForm.province ? "Vietnam" : "",
+            district: receiveForm.district
+              ? receiveForm.district.split(",")[1]
+              : "",
+            ward: receiveForm.ward ? receiveForm.ward.split(",")[1] : "",
+            coordinateX: coordinate[0],
+            coordinateY: coordinate[1],
+          },
+          description: receiveForm.description,
+          email: guestEmail,
+          productRecognition,
+          otp: fixOtp,
+        };
         break;
       default:
         console.log(identifier);
@@ -359,6 +441,17 @@ export default function useDiary(productRecognition, consignWatch) {
     setIdentifier("cancel");
   }
 
+  function onReceiveSubmit(data) {
+    console.log(data);
+    updateReceiveForm(data)
+    if (verifyAddress) {
+      setStep("otp");
+      setIdentifier("receive-location");
+      setNextStep("success");
+      setLastStep("receive-form");
+    } else getToast("Bạn cần xác thực nếu điền thông tin địa chỉ");
+  }
+
   return {
     step,
     roleDiary,
@@ -374,10 +467,17 @@ export default function useDiary(productRecognition, consignWatch) {
     setIdentifier,
     email,
     onConsignSubmit,
+    onReceiveSubmit,
     guestEmail,
     transportList,
     coordinate,
     consignLoading,
     isSendOtpLoading,
+    consignData,
+    transportData,
+    nextStep,
+    lastStep,
+    setNextStep,
+    setLastStep,
   };
 }
