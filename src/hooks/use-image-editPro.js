@@ -18,6 +18,7 @@ export default function useImageEditPro(setValue) {
 
   const handleImages = (e) => {
     const files = Array.from(e.target.files);
+    console.log(files);
 
     if (files.length === 0) {
       alert("Bạn hãy chọn ít nhất 1 ảnh.");

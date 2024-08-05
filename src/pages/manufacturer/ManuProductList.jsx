@@ -20,6 +20,7 @@ import {
   updateProductEditForm,
   resetProductEditState,
   useViewProductDetailQuery,
+  updateProductEditCategories
 } from "../../store";
 import useUpdateImageFromApi from "../../hooks/use-update-Images-FromApi";
 
@@ -127,6 +128,7 @@ function ManuProductList() {
 
       dispatch(updateProductEditForm(updatedProductDetail));
       updateImagesFromApi(productDetail.listImages, productDetail.avatar);
+      // updateProductEditCategories(productDetail.)
       setEditModalOpen(true);
     }
   }, [

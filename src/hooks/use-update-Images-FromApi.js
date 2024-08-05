@@ -2,15 +2,15 @@ import { useDispatch } from "react-redux";
 import {
   updateProductEditImages,
   updateProductEditImagesData,
-  updateProductEditAvatar
+  updateProductEditAvatar,
 } from "../store"; // Adjust the import path according to your file structure
 
 const urlToBase64 = (url) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.onload = function() {
+    xhr.onload = function () {
       const reader = new FileReader();
-      reader.onloadend = function() {
+      reader.onloadend = function () {
         resolve(reader.result.split(",")[1]);
       };
       reader.readAsDataURL(xhr.response);
@@ -30,19 +30,25 @@ export default function useUpdateImageFromApi() {
     let imagesShow = [];
 
     try {
+      // Convert listImages from URLs to base64
       const base64Images = await Promise.all(listImages.map(urlToBase64));
-      const avatarBase64 = await Promise.all(avatar.map(urlToBase64));
+      
+      // Convert avatar from URL to base64
+      const avatarBase64 = await urlToBase64(avatar);
+
+      // Process the list of images
       base64Images.forEach((base64) => {
         imageUrls.push(base64);
         imagesShow.push(`data:image/png;base64,${base64}`);
       });
-      avatarBase64.forEach((base64) => {
-        imageUrls.push(base64);
-        imagesShow.push(`data:image/png;base64,${base64}`);
-      });
 
+      // Dispatch actions to update the list of images
       dispatch(updateProductEditImages([...imagesShow]));
+
+      // Dispatch actions to update image data
       dispatch(updateProductEditImagesData([...imageUrls]));
+
+      // Update the avatar separately
       dispatch(updateProductEditAvatar(`data:image/png;base64,${avatarBase64}`));
       
     } catch (error) {

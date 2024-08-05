@@ -17,10 +17,21 @@ function Wizzard({
   getValues,
   reset,
   noStepShow,
+  isEdit = false,
+  isCerti = false
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const { getToast } = useToast();
-  const { images, avatar } = useSelector((state) => state.productForm);
+  const selectFormState = () => {
+    if (isEdit) {
+      return useSelector((state) => state.productEditForm);
+    } else if (isCerti) {
+      return useSelector((state) => state.certiForm);
+    } else {
+      return useSelector((state) => state.productForm);
+    }
+  };
+  const { images, avatar } = selectFormState();
   const {verifyAddress} = useSelector(state=>state.locationData)
   const [hasAddress, setHasAddress] = useState(false)
 
@@ -29,6 +40,7 @@ function Wizzard({
     valid = false;
 
     if (identifier === "next") {
+      console.log(images);
       if (validateStep[currentStep][0] === "images") {
         if (!images.length > 0) {
           getToast("Bạn hãy chọn ít nhất 1 ảnh.");

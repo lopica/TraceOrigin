@@ -80,6 +80,7 @@ function ManuCertificateAdd() {
         onStepSubmit={onStepSubmit}
         isLoading={results.isLoading}
         getValues={getValues}
+        isCerti={true}
         reset={(e) => {
           e.preventDefault();
           dispatch(resetCertiState());

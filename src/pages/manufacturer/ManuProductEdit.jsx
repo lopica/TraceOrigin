@@ -125,7 +125,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
         closeModal();
       })
       .catch((err) => {
-        getToast("Gặp lỗi khi tạo mới sản phẩm");
+        getToast("Lỗi khi sửa sản phẩm");
         console.log(err);
       });
   };
@@ -144,6 +144,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
         </form>
           <Wizzard
             stepList={stepList}
+            isEdit={true}
             onSubmit={handleSubmit(onSubmit)}
             validateStep={validateStep}
             trigger={trigger}

@@ -27,6 +27,7 @@ export const CONSTANTS = {
             icon: FaUserCog
         },
         {name: 'Xem báo cáo', url: '/manufacturer/reportManager', icon: FaInfo, role: '2'},
+        {name: 'Xem yêu cầu traning hình ảnh', url: '/admin/managerRequestTranningImage', icon: FaInfo, role: '1'},
     ],
     openCage_API_KEY: '322f7bf039244925a233610a1e61360a',
     domain: 'https://traceorigin.click/api',
