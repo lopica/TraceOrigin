@@ -20,37 +20,6 @@ import useDiary from "../hooks/use-diary";
 import Tooltip from "./UI/Tooltip";
 let form;
 export default function NoApiConsign({ productRecognition }) {
-  const { show, handleOpen, handleClose } = useShow();
-  const {
-    step,
-    roleDiary,
-    setStep,
-    onEmailSubmit,
-    emailLoading,
-    onOtpSubmit,
-    sendOtp,
-    certificateUrl,
-    hasCertificate,
-    onCancelSubmit,
-    identifier,
-    setIdentifier,
-  } = useDiary(productRecognition);
-  const [inputsDisabled, setInputsDisabled] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [nextStep, setNextStep] = useState("");
-  const [lastStep, setLastStep] = useState("");
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  // const [pendingAction, setPendingAction] = useState('')
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
   const {
     handleSubmit: handleSubmitEmailForm,
     register: registerEmailForm,
@@ -89,19 +58,50 @@ export default function NoApiConsign({ productRecognition }) {
     watch: cancelWatch,
   } = useForm({ mode: "onTouched" });
   const {} = useForm({ mode: "onTouched" });
+  const { show, handleOpen, handleClose } = useShow();
+  const {
+    step,
+    roleDiary,
+    setStep,
+    onEmailSubmit,
+    emailLoading,
+    onOtpSubmit,
+    sendOtp,
+    certificateUrl,
+    hasCertificate,
+    onCancelSubmit,
+    onConsignSubmit,
+    identifier,
+    setIdentifier,
+    email,
+    guestEmail,
+    transportList,
+    consignLoading,
+    isSendOtpLoading,
+  } = useDiary(productRecognition, consignWatch);
+  const [inputsDisabled, setInputsDisabled] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+  const [nextStep, setNextStep] = useState("");
+  const [lastStep, setLastStep] = useState("");
 
-  function onConsignSubmit(data) {
-    setStep("confirm");
-  }
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  // const [pendingAction, setPendingAction] = useState('')
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   function onReceiveSubmit() {
     setStep("confirm-receive");
   }
 
-
   function onEndSubmit() {
     setStep("otp");
-    setIdentifier('cancel')
+    setIdentifier("cancel");
     setLastStep("cancel");
     setNextStep("success");
   }
@@ -158,14 +158,7 @@ export default function NoApiConsign({ productRecognition }) {
     </div>
   ) : (
     <Tooltip content="Sản phẩm này hiện không đủ điều kiện có chứng chỉ">
-      <div
-        className="w-full h-20 bg-red-100 flex justify-center items-center cursor-pointer"
-        onClick={() => {
-          setStep("otp");
-          setLastStep("option");
-          setNextStep("certificate");
-        }}
-      >
+      <div className="w-full h-20 bg-red-100 flex justify-center items-center cursor-not-allowed">
         <p>Xem chứng chỉ</p>
       </div>
     </Tooltip>
@@ -228,6 +221,8 @@ export default function NoApiConsign({ productRecognition }) {
               sendOtp={sendOtp}
               inputsDisabled={inputsDisabled}
               setInputsDisabled={() => setInputsDisabled(false)}
+              isOtpLoading={isSendOtpLoading}
+              isLoading={consignLoading}
             />
           </div>
         </div>
@@ -236,6 +231,7 @@ export default function NoApiConsign({ productRecognition }) {
     case "option":
       let choices;
       switch (roleDiary) {
+        case "pending-old":
         case "current-owner":
           choices = (
             <div className=" w-full grid grid-cols-1 sm:grid-cols-2 gap-4 pr-2">
@@ -243,14 +239,16 @@ export default function NoApiConsign({ productRecognition }) {
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("receive")}
               >
-                <p>Nhận hàng</p>
+                <p>Các sự kiện đã tham gia</p>
               </div>
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("consign")}
-              >
-                <p>Ủy quyền</p>
-              </div>
+              {roleDiary === "pending-old" ? undefined : (
+                <div
+                  className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
+                  onClick={() => setStep("consign")}
+                >
+                  <p>Ủy quyền</p>
+                </div>
+              )}
               {certificateBtn}
               {cancelBtn}
               <div
@@ -262,16 +260,25 @@ export default function NoApiConsign({ productRecognition }) {
             </div>
           );
           break;
+        case "old":
         case "pending-receiver":
           choices = (
             <div className=" w-full grid grid-cols-1 sm:grid-cols-2 gap-4 pr-2">
+              {/* da tham gia */}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("receive")}
               >
-                <p>Nhận hàng</p>
+                <p>Các sự kiện đã tham gia</p>
               </div>
-              {/* {certificateBtn} */}
+              {roleDiary === "pending-receiver" && (
+                <div
+                  className="w-full h-20 bg-sky-200 hover:bg-sky-300 flex justify-center items-center cursor-pointer"
+                  onClick={() => setStep("")}
+                >
+                  <p>Tiếp nhận ủy quyền</p>
+                </div>
+              )}
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -281,46 +288,16 @@ export default function NoApiConsign({ productRecognition }) {
             </div>
           );
           break;
-        case "pending-old":
+        case "abort":
           choices = (
             <div className=" w-full grid grid-cols-1 sm:grid-cols-2 gap-4 pr-2">
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("receive")}
               >
-                <p>Nhận hàng</p>
-              </div>
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("consign")}
-              >
-                <p>Ủy quyền</p>
+                <p>Các sự kiện đã tham gia</p>
               </div>
               {certificateBtn}
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("report")}
-              >
-                <p>Báo lỗi</p>
-              </div>
-            </div>
-          );
-          break;
-        case "old":
-          choices = (
-            <div className=" w-full grid grid-cols-1 sm:grid-cols-2 gap-4 pr-2">
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("receive")}
-              >
-                <p>Nhận hàng</p>
-              </div>
-              <div
-                className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-                onClick={() => setStep("consign")}
-              >
-                <p>Ủy quyền</p>
-              </div>
               <div
                 className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
                 onClick={() => setStep("report")}
@@ -333,7 +310,7 @@ export default function NoApiConsign({ productRecognition }) {
       }
       form = (
         <div>
-          <BackBtn step="email" />
+          {!email ? <BackBtn step="email" /> : <div className="p-4"></div>}
           {choices}
         </div>
       );
@@ -357,9 +334,9 @@ export default function NoApiConsign({ productRecognition }) {
                         value: emailRegex,
                         message: "Email chưa đúng format",
                       },
-                      // validate: (value) =>
-                      //   value !== guestEmail ||
-                      //   "Bạn không thể nhập email của mình.",
+                      validate: (value) =>
+                        value !== guestEmail ||
+                        "Bạn không thể nhập email của mình.",
                     })}
                     type="email"
                     className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -379,6 +356,11 @@ export default function NoApiConsign({ productRecognition }) {
                   <input
                     {...registerConsignForm("authorizedName", {
                       required: "Bạn cần nhập tên người nhận",
+                      minLength: {
+                        value: 5,
+                        message:
+                          "Tên người nhận cần nhiều hơn hoặc bằng 5 ký tự",
+                      },
                     })}
                     type="text"
                     className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -422,7 +404,7 @@ export default function NoApiConsign({ productRecognition }) {
                   watch={consignWatch}
                 />
               </div>
-              <div className="flex justify-start items-start gap-2 mt-4">
+              <div className="flex justify-start items-start gap-2 my-4">
                 <input
                   type="checkbox"
                   id="checkbox"
@@ -439,11 +421,19 @@ export default function NoApiConsign({ productRecognition }) {
                   <Input
                     type="select"
                     {...registerConsignForm("transport", {
-                      required: "Bạn cần chọn đơn vị vận chuyển",
+                      required: {
+                        value: isChecked,
+                        message: "Bạn cần chọn đơn vị vận chuyển",
+                      },
                     })}
                     className="w-full"
                     control={consignControl}
-                    data={[]}
+                    data={
+                      transportList || [
+                        { id: "none", content: "không có dữ liệu" },
+                      ]
+                    }
+                    required
                     label="Đơn vị vận chuyển"
                     placeholder="Chọn đơn vị"
                     error={consignFormErrors.transport?.message}
@@ -451,7 +441,10 @@ export default function NoApiConsign({ productRecognition }) {
                   <div className="relative w-full min-h-10 mt-4">
                     <input
                       {...registerConsignForm("descriptionTransport", {
-                        required: "Bạn cần điền mã vận chuyển",
+                        required: {
+                          value: isChecked,
+                          message: "Bạn cần điền mã vận chuyển",
+                        },
                       })}
                       type="text"
                       className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -459,7 +452,7 @@ export default function NoApiConsign({ productRecognition }) {
                     />
                     <label
                       htmlFor="description"
-                      className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                      className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
                     >
                       Mã vận chuyển
                     </label>
@@ -501,6 +494,7 @@ export default function NoApiConsign({ productRecognition }) {
                 setStep("otp");
                 setLastStep("confirm");
                 setNextStep("success");
+                setIdentifier("consign");
               }}
             >
               Ủy quyền
@@ -901,6 +895,25 @@ export default function NoApiConsign({ productRecognition }) {
             onKeyDown={handleKeyDown}
             onSubmit={handleSubmitCancelForm(onCancelSubmit)}
           >
+            <div className="relative w-full min-h-10 mt-4">
+              <input
+                {...registerCancelForm("partyFullName", {
+                  required: "Bạn cần phải điền tên của bạn",
+                })}
+                type="text"
+                className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
+                placeholder="good wather"
+              />
+              <label
+                htmlFor="description"
+                className='absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm after:content-["*"] after:ml-0.5 after:text-red-500'
+              >
+                Tên của bạn
+              </label>
+              <span className="label-text-alt text-left text-error text-sm">
+                {cancelFormErrors.partyFullName?.message}
+              </span>
+            </div>
             <p>
               {/* Để có thể kết thúc nhật ký sản phẩm này, bạn cần điền địa chỉ nơi
               sản phẩm này được hủy hoặc sử dụng. */}
@@ -940,6 +953,9 @@ export default function NoApiConsign({ productRecognition }) {
           </form>
         </div>
       );
+      break;
+    case "history-list":
+      form;
       break;
     case "report":
       form = (

@@ -98,6 +98,7 @@ const itemApi = createApi({
         }
       }),
       checkConsignRole: builder.query({
+        providesTags: ['consign'],
         query: (request) => {
           return {
             url: 'check',
@@ -118,6 +119,7 @@ const itemApi = createApi({
         }
       }),
       isPendingConsign: builder.query({
+        providesTags: ['consign'],
         query: (request) => {
           return {
             url: `checkEventAuthorized?productRecognition=${request}`,
@@ -138,7 +140,7 @@ const itemApi = createApi({
       checkPartyFirst: builder.query({
         query: (request) => {
           return {
-            url: 'checPartyFirst',
+            url: 'checkPartyFirst',
             method: 'POST',
             body: request
           }

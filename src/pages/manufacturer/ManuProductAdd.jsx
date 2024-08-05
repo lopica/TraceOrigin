@@ -49,6 +49,7 @@ function ManuProductAdd() {
   const { getToast } = useToast();
   const fileInputRef = useRef(null);
   const [progress, setProgress] = useState(0);
+  const file3DRef = useRef()
   const {
     register,
     handleSubmit,
@@ -117,6 +118,7 @@ function ManuProductAdd() {
   const onDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
+      file3DRef.current = file;
       const reader = new FileReader();
 
       reader.onprogress = (event) => {
@@ -451,13 +453,6 @@ function ManuProductAdd() {
                 </div>
               </div>
             )}
-            {/* {progress > 0 && progress < 100 && (
-              <progress
-                className="progress progress-info w-56"
-                value={progress}
-                max="100"
-              ></progress>
-            )} */}
             {getValues("file3D") && (
               <div onClick={e=>e.preventDefault()}>
                 <div className="flex justify-end">

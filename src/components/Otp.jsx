@@ -10,7 +10,7 @@ export default function Otp({
   sendOtp, //function take otp
   inputsDisabled, //state handle otp input
   setInputsDisabled, //function handle otp input
-  isOtpLoading //status load otp
+  isOtpLoading, //status load otp
 }) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
@@ -64,7 +64,6 @@ export default function Otp({
     inputRef.current?.focus();
   }, [activeOTPIndex]);
 
-
   useEffect(() => {
     if (otp.every((value) => value !== "" && !isNaN(value))) {
       const currentOtpString = otp.join("");
@@ -81,22 +80,23 @@ export default function Otp({
 
   useEffect(() => {
     if (!isOtpLoading) {
-      setTimeLeft(120);} // Reset timeLeft when isOtpLoading changes
-      const startTimer = () => {
-        if (timerRef.current) clearInterval(timerRef.current); // Clear any existing timer
-        timerRef.current = setInterval(() => {
-          setTimeLeft((prevTimeLeft) => {
-            if (prevTimeLeft <= 1) {
-              clearInterval(timerRef.current);
-              return 0;
-            }
-            return prevTimeLeft - 1;
-          });
-        }, 1000);
-      };
-  
-      startTimer();
-      return () => clearInterval(timerRef.current); 
+      setTimeLeft(120);
+    } // Reset timeLeft when isOtpLoading changes
+    const startTimer = () => {
+      if (timerRef.current) clearInterval(timerRef.current); // Clear any existing timer
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prevTimeLeft) => {
+          if (prevTimeLeft <= 1) {
+            clearInterval(timerRef.current);
+            return 0;
+          }
+          return prevTimeLeft - 1;
+        });
+      }, 1000);
+    };
+
+    startTimer();
+    return () => clearInterval(timerRef.current);
   }, [isOtpLoading]);
 
   return (
@@ -132,9 +132,16 @@ export default function Otp({
             Mã xác thực còn có hiệu lực trong {timeLeft} giây
           </p>
         ) : (
-          <Button primary rounded onClick={() => sendOtp(email)} isLoading={isOtpLoading}>
-            Gửi lại
-          </Button>
+          timeLeft === 0 && (
+            <Button
+              primary
+              rounded
+              onClick={() => sendOtp(email)}
+              isLoading={isOtpLoading}
+            >
+              Gửi lại
+            </Button>
+          )
         )}
         {isLoading && (
           <span className="loading loading-spinner loading-lg"></span>

@@ -30,7 +30,8 @@ export const CONSTANTS = {
         {name: 'Xem báo cáo', url: '/manufacturer/reportManager', icon: FaInfo, role: '2'},
     ],
     openCage_API_KEY: '322f7bf039244925a233610a1e61360a',
-    domain: 'https://traceorigin.click/api',
+    // domain: 'https://traceorigin.click/api',
+    domain: 'http://localhost:8080/api',
     //domain: 'http://localhost:8080/api',
     key_expire: 1,
     
