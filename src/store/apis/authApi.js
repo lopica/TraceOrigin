@@ -121,6 +121,24 @@ const authApi = createApi({
           responseHandler: (res) => res.text(),
         }),
       }),
+      signupForCustomerSupport: builder.mutation({
+        query: (options) => ({
+          url: "/signupForCustomerSupport",
+          method: "POST",
+          body: { 
+            email: options.email,
+            password: options.password,
+            firstName: options.firstName,
+            lastName: options.lastName,
+            phone: options.phone
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",  // This should be placed in the fetch options if using fetch API
+        }),
+        responseHandler: (res) => res.text(),
+      }),
     };
   },
 });
@@ -134,5 +152,6 @@ export const {
   useCheckOrgNameExistMutation,
   useForgotPasswordMutation,
   useChangePasswordMutation,
+  useSignupForCustomerSupportMutation
 } = authApi;
 export { authApi };

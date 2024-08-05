@@ -174,7 +174,10 @@ export {
   useCheckPartyFirstQuery,
   useEndItemLineMutation,
 } from "./apis/itemApi";
-export { useFetchEventByItemLogIdQuery } from "./apis/itemLogApi";
+export {
+  useFetchEventByItemLogIdQuery,
+  useCreateTransportEventMutation,
+} from "./apis/itemLogApi";
 export {
   useGetAllProvincesQuery,
   useGetDistrictByProvinceIdQuery,
@@ -232,6 +235,10 @@ export {
   updateItemDetail,
   updateItemList,
   updateItemLine,
+  updateConsignForm,
+  updateCancelForm,
+  updateCertificate,
+  updateReceiveForm,
 } from "./slices/itemSlice";
 export {
   useGetListManuToVerifyQuery,

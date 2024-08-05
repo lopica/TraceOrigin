@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import {
+  updateCertificate,
   updateItemLine,
   useFetchItemLogsByProductRecognitionQuery,
 } from "../store";
@@ -7,7 +8,6 @@ import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { useEffect } from "react";
 import Tooltip from "./UI/Tooltip";
 import QR from "./QR";
-import { updateCertificate } from "../store/slices/itemSlice";
 
 let itemLine;
 export default function ItemLine({
