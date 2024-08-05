@@ -62,33 +62,6 @@ export default function AddressInputGroup({
     dispatch(updateVerifyAddress(false))
   };
 
-  // useEffect(() => {
-  //   if (
-  //     addressBlurred && // Check if address field has lost focus
-  //     getValues("province") &&
-  //     getValues("district") &&
-  //     getValues("ward") &&
-  //     getValues("address")
-  //   ) {
-  //     getCoordinate({
-  //       address: `${getValues("address")}, ${getValues("ward")}, ${getValues(
-  //         "district"
-  //       )}, ${getValues("province")}`,
-  //     })
-  //       .unwrap()
-  //       .then((res) => {
-  //         const { lat, lng } = res[0].geometry;
-  //         if (lat && lng) {
-  //           dispatch(updateCoordinate([lat, lng]));
-  //         }
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-
-  //   // Reset addressBlurred to allow for re-checking if needed
-  //   setAddressBlurred(false);
-  // }, [addressBlurred]);
-
   useEffect(() => {
     if (controlCall) {
       if (

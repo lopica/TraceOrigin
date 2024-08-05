@@ -24,6 +24,7 @@ const itemSlice = createSlice({
     lastConsignEventId: "",
     hasCertificate: false,
     cancelForm: {},
+    consignForm: {},
   },
   reducers: {
     updateItemDetail(state, action) {
@@ -42,6 +43,9 @@ const itemSlice = createSlice({
     updateCancelForm(state, action) {
       state.cancelForm = { ...action.payload };
     },
+    updateConsignForm(state, action) {
+      state.consignForm = { ...action.payload };
+    },
   },
 });
 
@@ -51,5 +55,6 @@ export const {
   updateItemLine,
   updateCertificate,
   updateCancelForm,
+  updateConsignForm,
 } = itemSlice.actions;
 export const itemSliceReducer = itemSlice.reducer;
