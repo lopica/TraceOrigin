@@ -68,6 +68,15 @@ const itemLogApi = createApi({
           };
         },
       }),
+      updateReceiveLocation: builder.mutation({
+        query: (request) => {
+          return {
+            url: "editItemLogByParty",
+            method: "POST",
+            body: request
+          }
+        }
+      })
     };
   },
 });
@@ -77,4 +86,5 @@ export const {
   useFetchEventByItemLogIdQuery,
   useCreateTransportEventMutation,
   useAddReceiveLocationMutation,
+  useUpdateReceiveLocationMutation,
 } = itemLogApi;

@@ -1,13 +1,13 @@
 import { useFloating, useHover, useInteractions } from "@floating-ui/react";
 import { useState } from "react";
 
-export default function Tooltip({ children, content }) {
+export default function Tooltip({ children, content, position }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    placement: "right",
+    placement: position ? position : "right",
     strategy: "fixed",
   });
 

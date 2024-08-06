@@ -157,6 +157,15 @@ const itemApi = createApi({
           }
         }
       }),
+      getHistory: builder.query({
+        query: (request) => {
+          return {
+            url: 'listPartyJoin',
+            method: 'POST',
+            body: request,
+          }
+        }
+      }),
     };
   },
 });
@@ -175,4 +184,5 @@ export const {
   useGetCertificateMutation,
   useCheckPartyFirstQuery,
   useEndItemLineMutation,
+  useGetHistoryQuery,
 } = itemApi;

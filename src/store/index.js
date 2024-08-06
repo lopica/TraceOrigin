@@ -173,10 +173,13 @@ export {
   useGetCertificateMutation,
   useCheckPartyFirstQuery,
   useEndItemLineMutation,
+  useGetHistoryQuery,
 } from "./apis/itemApi";
 export {
   useFetchEventByItemLogIdQuery,
   useCreateTransportEventMutation,
+  useAddReceiveLocationMutation,
+  useUpdateReceiveLocationMutation,
 } from "./apis/itemLogApi";
 export {
   useGetAllProvincesQuery,
