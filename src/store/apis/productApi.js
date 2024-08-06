@@ -109,6 +109,18 @@ const productApi = createApi({
           };
         },
       }),
+      saveModel3D: builder.mutation({
+        query: ({ id, file3D }) => {
+          const formData = new FormData();
+          formData.append("file3D", file3D); 
+          return {
+            url: `/saveModel3D/${id}`, 
+            method: "POST",
+            body: formData,
+          };
+        },
+      }),
+      
     };
   },
 });
@@ -122,4 +134,5 @@ export const {
   useCountRegisteredProductQuery,
   useViewProductByManufacturerIdQuery,
   useSaveFileAIMutation,
+  useSaveModel3DMutation,
 } = productApi;

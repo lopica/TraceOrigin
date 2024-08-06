@@ -40,10 +40,10 @@ function Card({ card, handleUpdate, handleDelete}) {
      <div className="md:flex-shrink-0">
        <img className="h-48 w-full object-cover md:w-48" src={card.image || emptyProductImage} alt="product" />
      </div>
-     <div className="p-4">
-       <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
-       <p className="mt-2 text-xs text-gray-500">{card.description}</p>
-     </div>
+     <div className="p-4 h-48 overflow-y-auto">
+  <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
+  <p className="mt-2 text-xs text-gray-500">{card.description}</p>
+</div>
     </div>
     {card.status === 0 && ( 
     <div className="absolute bottom-3 right-3 flex space-x-2">

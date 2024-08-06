@@ -6,8 +6,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useToast from "../hooks/use-toast";
 import Canvas3D from "./Canvas3D";
-import ImageBox from "../components/UI/ImageBox"
-import { FaPlus } from 'react-icons/fa';
+import ImageBox from "../components/UI/ImageBox";
+import { FaPlus, FaUpload } from "react-icons/fa";
+import UploadModel3DModal from "../components/UI/UploadModel3DModal";
+import { useSaveModel3DMutation } from "../store/apis/productApi";
 
 const productConfig = [
   {
@@ -67,9 +69,7 @@ export default function ProductDetail({ productId }) {
     setIsModalOpen(false);
   };
 
-  const handleImageUpload = (event) => {
-
-  };
+  const handleImageUpload = (event) => {};
 
   const triggerFileInput = () => {
     fileInputRef.current.click();
@@ -107,7 +107,28 @@ export default function ProductDetail({ productId }) {
       );
     }
   }
+  // ================================================ add model 3D
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+  const [saveModel3D] = useSaveModel3DMutation();
 
+  const handleUploadModel3D = async (file3D) => {
+    getToast("Hệ thống đang xử lý");
+    const formData = {
+      id: productId,
+      file3D: file3D
+   };
+    try {
+      await saveModel3D(formData).unwrap();
+      getToast("Hệ thống đã tiếp nhận đơn của bạn");
+    } catch (error) {
+      console.error(error);
+    }
+    console.log("Submitted Data:", formData);
+
+
+  };
   return (
     <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-12">
       <Carousel
@@ -119,7 +140,20 @@ export default function ProductDetail({ productId }) {
         }
       />
       {renderedProductDetail}
-      
+      {/* // ================================================ add model 3D */}
+      <button
+        onClick={openModal}
+        className="add-button w-fit flex items-center p-2  text-green-500 rounded-md hover:bg-green-500 hover:text-white border-2 border-dashed border-green-500"
+      >
+        <FaUpload className="mr-2" />
+        Upload Model 3D
+      </button>
+      <UploadModel3DModal
+        isOpen={modalIsOpen}
+        onClose={closeModal}
+        onSubmit={handleUploadModel3D}
+      />
+        {/* ================================================  */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-lg relative">
@@ -129,9 +163,12 @@ export default function ProductDetail({ productId }) {
             >
               &times;
             </button>
-            <h2 className="text-xl font-semibold mb-4">Tải lên hình ảnh nhận diện</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Tải lên hình ảnh nhận diện
+            </h2>
             <p className="mb-4">
-              Vui lòng tải lên tối thiểu 16 ảnh. Ảnh nên được chụp ở nơi sáng và rõ nét để đảm bảo chất lượng tốt nhất.
+              Vui lòng tải lên tối thiểu 16 ảnh. Ảnh nên được chụp ở nơi sáng và
+              rõ nét để đảm bảo chất lượng tốt nhất.
             </p>
             <div className="flex flex-wrap gap-4">
               {imageReports.map((image, i) => (
@@ -148,7 +185,10 @@ export default function ProductDetail({ productId }) {
                 </div>
               ))}
             </div>
-            <div className="hover:cursor-pointer bg-sky-200 flex items-center justify-center min-w-24 min-h-24 max-w-24 max-h-24" onClick={triggerFileInput}>
+            <div
+              className="hover:cursor-pointer bg-sky-200 flex items-center justify-center min-w-24 min-h-24 max-w-24 max-h-24"
+              onClick={triggerFileInput}
+            >
               <FaPlus className="text-2xl fill-white" />
               <input
                 ref={fileInputRef}
