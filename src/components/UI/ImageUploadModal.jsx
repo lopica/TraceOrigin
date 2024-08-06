@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FaPlus, FaTimes } from 'react-icons/fa';
 import Modal from './Modal';
 import Button from './Button';
@@ -7,33 +7,36 @@ import { useRequestScanImageMutation } from '../../store/apis/productApi';
 export default function ImageUploadModal({
   isOpen,
   onClose,
-  imageReports,
-  handleImageUpload,
-  handleFatherDelete,
   productId,
+  imageReports,
+  onImageReportsChange,
 }) {
   const fileInputRef = useRef(null);
   const [images, setImages] = useState(imageReports);
   const [selectedImage, setSelectedImage] = useState(null);
   const [requestScanImage] = useRequestScanImageMutation();
 
+  useEffect(() => {
+    setImages(imageReports);
+  }, [imageReports]);
+
   const handleFileChange = (event) => {
     const files = event.target.files;
     if (files) {
       const newImages = Array.from(files).map(file => URL.createObjectURL(file));
-      setImages(prevImages => [...newImages, ...prevImages]);
-      handleImageUpload(event);
+      setImages(prevImages => [...newImages, ...prevImages]); // Add new images to the left
+      onImageReportsChange && onImageReportsChange(newImages.map(file => file.split(',')[1])); // Update imageReports
     }
   };
 
   const handleDelete = (idx) => {
     const updatedImages = images.filter((_, index) => index !== idx);
     setImages(updatedImages);
-    handleFatherDelete && handleFatherDelete(idx);
+    onImageReportsChange && onImageReportsChange(updatedImages.map(image => image.split(',')[1])); // Update imageReports
   };
 
   const handleImageClick = (event, image) => {
-    event.stopPropagation(); // Prevents the click event from propagating
+    event.stopPropagation();
     setSelectedImage(image);
   };
 
@@ -56,8 +59,8 @@ export default function ImageUploadModal({
   };
 
   const handleSubmitImages = async () => {
-    if (images.length < 16) {
-      alert('Bạn cần tải lên ít nhất 16 ảnh.');
+    if (images.length < 2) {
+      alert('Bạn cần tải lên ít nhất 2 ảnh.');
       return;
     }
 
@@ -78,8 +81,10 @@ export default function ImageUploadModal({
     try {
       await requestScanImage(data).unwrap();
       alert('Hình ảnh đã được gửi thành công!');
+      onClose(); // Close modal after successful submission
     } catch (error) {
-      console.error('Gửi yêu cầu thất bại:', error);
+      alert('Gửi hình ảnh thất bại');
+      console.error(error);
     }
   };
 
@@ -90,7 +95,7 @@ export default function ImageUploadModal({
       <Modal onClose={onClose}>
         <div className="py-4 max-w-lg mx-auto">
           <h2 className="text-xl font-semibold mb-2">Tải lên hình ảnh nhận diện</h2>
-          <p className="text-gray-600 mb-4">Vui lòng tải lên tối thiểu 16 ảnh. Ảnh nên được chụp ở nơi sáng và rõ nét để đảm bảo chất lượng tốt nhất.</p>
+          <p className="text-gray-600 mb-4">Vui lòng tải lên tối thiểu 2 ảnh. Ảnh nên được chụp ở nơi sáng và rõ nét để đảm bảo chất lượng tốt nhất.</p>
           <div className="flex flex-wrap justify-center gap-4 relative">
             {images.map((image, idx) => (
               <div key={idx} className="relative min-w-24 min-h-24 max-w-24 max-h-24">
@@ -104,7 +109,7 @@ export default function ImageUploadModal({
                   rounded
                   secondary
                   onClick={(event) => {
-                    event.stopPropagation(); // Prevents the click event from propagating
+                    event.stopPropagation();
                     handleDelete(idx);
                   }}
                   className="absolute top-2 right-2 bg-red-500 hover:bg-red-700"
@@ -115,7 +120,6 @@ export default function ImageUploadModal({
             ))}
             <div
               className="group hover:bg-sky-300 p-4 flex items-center justify-center min-w-24 min-h-24 max-w-24 max-h-24 border-2 border-dashed border-sky-300 rounded-lg cursor-pointer relative"
-              onClick={() => fileInputRef.current.click()}
             >
               <FaPlus className="text-3xl text-white" />
               <input

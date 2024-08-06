@@ -120,7 +120,34 @@ const productApi = createApi({
           };
         },
       }),
-      
+      getimageRequest: builder.query({
+        query: (data) => {
+          return {
+            url: "/getImageRequest",
+            method: "POST",
+            body: {
+              orderBy: data.orderBy || "productId",
+              productName: data.productName || "",
+              manufactorName: data.manufactorName || "",
+              page: data.page || 0,
+              size: data.size || 10,
+              isDesc: data.isDesc,
+            },
+          };
+        },
+      }),
+      requestScanImage: builder.mutation({
+        query: (data) => {
+          return {
+            url: "/requestScanImage",
+            method: "POST",
+            body: {
+              productId: data.productId,
+              image: data.image
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -135,4 +162,6 @@ export const {
   useViewProductByManufacturerIdQuery,
   useSaveFileAIMutation,
   useSaveModel3DMutation,
+  useGetimageRequestQuery,
+  useRequestScanImageMutation
 } = productApi;
