@@ -19,6 +19,9 @@ import CreateReportModal from "../components/UI/CreateReportModal";
 import useDiary from "../hooks/use-diary";
 import Tooltip from "./UI/Tooltip";
 import Map from "./Map";
+import SortableTable from "./SortableTable";
+import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
+import { ImCross } from "react-icons/im";
 let form;
 export default function NoApiConsign({ productRecognition }) {
   const {
@@ -86,9 +89,14 @@ export default function NoApiConsign({ productRecognition }) {
     lastStep,
     setNextStep,
     setLastStep,
-  } = useDiary(productRecognition, consignWatch);
+    historyData,
+    historyChooseHandle,
+    updateReceiveData,
+    isChecked,
+    setIsChecked,
+    updateConsignData,
+  } = useDiary(productRecognition, consignWatch, receiveWatch, consignSetValue);
   const [inputsDisabled, setInputsDisabled] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   // const [pendingAction, setPendingAction] = useState('')
@@ -111,6 +119,36 @@ export default function NoApiConsign({ productRecognition }) {
   useEffect(() => {
     console.log(step);
   }, [step]);
+
+  const historyConfig = [
+    {
+      label: "Thời gian tạo",
+      render: (item) => (
+        <Button
+          primary
+          outline
+          className="underline"
+          // onClick={(e, item) => historyChooseHandle(e, item.createdAt)}
+          onClick={() => {
+            // console.log(item)
+            historyChooseHandle(item);
+          }}
+        >
+          {getDateFromEpochTime(item.createdAt)}
+        </Button>
+      ),
+      sortValue: (item) => item?.createdAt,
+    },
+    {
+      label: "Loại sự kiện",
+      render: (item) => item?.eventType,
+    },
+    {
+      label: "Đủ thông tin",
+      render: (item) => (item.checkPoint ? <FaCheck /> : <ImCross />),
+      sortValue: (item) => item?.checkPoint,
+    },
+  ];
 
   const BackBtn = ({ step }) => (
     <Button primary outline onClick={() => setStep(step)} className="mb-4 pl-0">
@@ -140,8 +178,6 @@ export default function NoApiConsign({ productRecognition }) {
     </div>
   );
 
-  function customOtp(nextStep) {}
-
   let certificateBtn = hasCertificate ? (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
@@ -155,7 +191,14 @@ export default function NoApiConsign({ productRecognition }) {
       <p>Xem chứng chỉ</p>
     </div>
   ) : (
-    <Tooltip content="Sản phẩm này hiện không đủ điều kiện có chứng chỉ">
+    <Tooltip
+      content={
+        <p>
+          Sản phẩm này hiện không đủ <br /> điều kiện có chứng chỉ
+        </p>
+      }
+      position="top"
+    >
       <div className="w-full h-20 bg-red-100 flex justify-center items-center cursor-not-allowed">
         <p>Xem chứng chỉ</p>
       </div>
@@ -744,17 +787,63 @@ export default function NoApiConsign({ productRecognition }) {
     case "receive-form":
       form = (
         <div>
-          <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
-          <BackBtn step="receive" />
+          <h2 className="text-center text-2xl">
+            {roleDiary === "pending-receiver"
+              ? "Thông tin nhận hàng"
+              : "Cập nhật thông tin nhận hàng"}
+          </h2>
+          <BackBtn
+            step={roleDiary === "pending-receiver" ? "receive" : "history-list"}
+          />
+          {roleDiary !== "pending-receiver" ? (
+            <>
+              {updateReceiveData?.checkPoint ? (
+                <div className="flex justify-end items-center gap-2">
+                  <FaCheck />
+                  <p>Đủ Thông tin</p>
+                </div>
+              ) : (
+                <div className="flex justify-end items-center gap-2">
+                  <ImCross />
+                  <p>Không đủ Thông tin</p>
+                </div>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
           <form
             className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
             onKeyDown={handleKeyDown}
             onSubmit={handleSubmitReceiveForm(onReceiveSubmit)}
           >
-            <p>
-              (Tùy chọn) Bạn có thể nhập địa chỉ nhận hàng của bạn để hệ thống
-              có thể tạo chứng chỉ chứng minh sự minh bạch toàn bộ quá trình
-            </p>
+            <div className="relative w-full min-h-10 mt-4">
+              <input
+                type="text"
+                id="old-address"
+                value={updateReceiveData?.addressInParty || "Chưa có"}
+                disabled
+                placeholder="something"
+                className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+              />
+              <label
+                htmlFor="old-address"
+                className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+              >
+                Địa chỉ đã ghi nhận
+              </label>
+            </div>
+            {roleDiary === "pending-receiver" ? (
+              <p>
+                (Tùy chọn) Bạn có thể nhập địa chỉ nhận hàng của bạn để hệ thống
+                có thể tạo chứng chỉ chứng minh sự minh bạch toàn bộ quá trình
+              </p>
+            ) : (
+              <p>
+                Bạn có thể cập nhập địa chỉ nhận hàng của bạn để hệ thống có thể
+                tạo chứng chỉ chứng minh sự minh bạch toàn bộ quá trình
+              </p>
+            )}
             <AddressInputGroup
               register={registerReceiveForm}
               getValues={receiveGetValues}
@@ -769,27 +858,29 @@ export default function NoApiConsign({ productRecognition }) {
               <input
                 type="text"
                 {...registerReceiveForm("description")}
-                className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                placeholder="something"
+                className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
               />
               <label
                 htmlFor="description"
-                placeholder="something"
                 className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
               >
                 Ghi chú thêm
               </label>
             </div>
             <div className="flex justify-end w-full min-h-15 gap-4">
-              <Button
-                primary
-                outline
-                onClick={(e) => {
-                  e.preventDefault();
-                  setStep("success");
-                }}
-              >
-                Để sau
-              </Button>
+              {roleDiary === "pending-receiver" && (
+                <Button
+                  primary
+                  outline
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setStep("success");
+                  }}
+                >
+                  Để sau
+                </Button>
+              )}
               <NextBtn />
             </div>
           </form>
@@ -971,9 +1062,20 @@ export default function NoApiConsign({ productRecognition }) {
       );
       break;
     case "history-list":
-      form = <div>
-      <BackBtn step="option" />
-      hello history</div>;
+      form = (
+        <div>
+          <h2 className="text-center text-2xl">Lịch sử nhật ký</h2>
+          <BackBtn step="option" />
+          <div className="">
+            {/* table */}
+            <SortableTable
+              data={historyData || []}
+              config={historyConfig}
+              keyFn={(item) => item.itemLogId}
+            />
+          </div>
+        </div>
+      );
       break;
     case "report":
       form = (
@@ -1007,13 +1109,15 @@ export default function NoApiConsign({ productRecognition }) {
   return (
     <div className="flex justify-center">
       {/* <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productRecognition}/> */}
-      <Button
-        // onClick={openModal}
-        onClick={handleOpen}
-        className="fixed z-[5] bottom-24 right-6 bg-sky-400 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-500 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
-      >
-        <FaBook className="w-7 h-7 fill-white" />
-      </Button>
+      <Tooltip content='Ghi nhật ký' position='top'>
+        <Button
+          // onClick={openModal}
+          onClick={handleOpen}
+          className="fixed z-[5] bottom-24 right-6 bg-sky-400 rounded-full h-12 w-12 p-2 shadow-lg hover:bg-sky-500 hover:border-sky-700 hover:p-3 hover:shadow-md hover:shadow-sky-500 transition-all duration-100"
+        >
+          <FaBook className="w-7 h-7 fill-white" />
+        </Button>
+      </Tooltip>
       {show && (
         <Modal onClose={handleClose} className="h-auto">
           <div className="md:flex">
@@ -1035,7 +1139,8 @@ export default function NoApiConsign({ productRecognition }) {
                   step !== "receive" &&
                   step !== "receive-form" &&
                   step !== "confirm-receive" &&
-                  step !== "history" && (
+                  step !== "history" &&
+                  step !== "history-list" && (
                     <h2 className="text-2xl text-center ">Nhật ký</h2>
                   )}
                 <div className="flex flex-col grow h-auto overflow-y-auto">

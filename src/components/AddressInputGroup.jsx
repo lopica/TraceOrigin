@@ -187,7 +187,9 @@ export default function AddressInputGroup({
           Xác thực địa chỉ
         </Button>
       </div>
-      {map && <div className="mt-4">{map}</div>}
+      {map && <div className="mt-4 w-full">
+
+      {map}</div>}
     </>
   );
 }
