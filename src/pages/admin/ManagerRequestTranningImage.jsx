@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FaEye, FaDownload } from "react-icons/fa";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import Carousel from "../../components/UI/Carousel";
-import { useGetimageRequestQuery } from "../../store/apis/productApi";
+import { useGetimageRequestQuery, useApprovalImageRequestMutation } from "../../store/apis/productApi";
 import Pagination from "../../components/UI/Pagination";
-
-const dummyData = [
-  // ... dữ liệu mẫu
-];
+import { useSelector } from "react-redux";
+import {  useNavigate } from "react-router-dom";
+import useToast from "../../hooks/use-toast";
 
 const formatDate = (timestamp) => {
+  if (!timestamp) return "N/A";
   const date = new Date(timestamp);
   return date.toLocaleDateString();
 };
@@ -20,8 +20,13 @@ const ManagerRequestTranningImage = () => {
   const [slides, setSlides] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [page, setPage] = useState(0);
+  const navigate = useNavigate();
+  const [approvalImageRequest] = useApprovalImageRequestMutation();
+  const { getToast } = useToast();
 
-  const [filter, setFilter] = useState({
+
+
+  const [filter, setFilter, error] = useState({
     orderBy: "productId",
     productName: "",
     manufactorName: "",
@@ -30,7 +35,23 @@ const ManagerRequestTranningImage = () => {
     size: 10,
   });
 
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+  useEffect(() => {
+    if (error?.status === 401) navigate("/portal/login");
+  }, [error]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      getToast("Phiên đăng nhập đã hết hạn");
+      navigate("/portal/login");
+    }
+  }, [isAuthenticated]);
+  
   const { data, refetch } = useGetimageRequestQuery(filter);
+
+  // useEffect(() => {
+  //   refetch();
+  // }, [filter]);
 
   const handleViewFiles = (files) => {
     const images = files.map((file) => file);
@@ -51,7 +72,7 @@ const ManagerRequestTranningImage = () => {
         const blob = await response.blob();
         folder.file(`file_${i + 1}.jpg`, blob);
       } catch (error) {
-        // console.error(error.message);
+        console.error(error.message);
       }
     }
 
@@ -60,10 +81,23 @@ const ManagerRequestTranningImage = () => {
     });
   };
 
+  const handleApproval = async (productId) => {
+    try {
+      await approvalImageRequest({
+        type: 2,
+        productId: [productId]
+      }).unwrap();
+      alert("Image request approved successfully.");
+      refetch();
+    } catch (error) {
+      console.error("Error approving image request:", error);
+    }
+  };
+
   const handleDownloadAllFiles = async () => {
     const zip = new JSZip();
 
-    for (const request of dummyData) {
+    for (const request of data.content || []) {
       const folder = zip.folder(`${request.productName}-${request.manufactorName}`);
       
       for (let i = 0; i < request.filePath.length; i++) {
@@ -92,7 +126,7 @@ const ManagerRequestTranningImage = () => {
   };
 
   const handleSearch = () => {
-    setPage(0); // Reset về trang đầu tiên khi tìm kiếm mới
+    setPage(0);
     refetch();
   };
 
@@ -145,7 +179,6 @@ const ManagerRequestTranningImage = () => {
             >
               <option value="productId">Mã sản phẩm</option>
               <option value="productName">Tên sản phẩm</option>
-              {/* <option value="manufactorName">Nhà sản xuất</option> */}
               <option value="requestScanDate">Ngày yêu cầu</option>
             </select>
           </div>
@@ -165,7 +198,6 @@ const ManagerRequestTranningImage = () => {
           <button onClick={handleSearch} className="btn btn-success text-white">Tìm kiếm</button>
         </div>
       </div>
-
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden mt-4">
         <thead className="bg-gray-200">
           <tr>
@@ -180,54 +212,66 @@ const ManagerRequestTranningImage = () => {
             <tr key={index} className="text-center border-b hover:bg-gray-100">
               <td className="py-2 px-4 text-left">{request.productName}</td>
               <td className="py-2 px-4 text-left">{request.manufactorName}</td>
-              <td className="py-2 px-4 text-left">{formatDate(request.requestDate)}</td>
-              <td className="py-2 px-4 space-x-2 flex justify-center">
+              <td className="py-2 px-4">{formatDate(request.requestDate)}</td>
+              <td className="py-2 px-4 flex justify-center space-x-2">
                 <button
                   onClick={() => handleViewFiles(request.filePath)}
-                  className="text-sky-500 hover:text-sky-700"
-                  title="Xem ảnh"
+                  className="btn btn-primary text-white btn-xs"
                 >
-                  <FaEye size={18} />
+                  <FaEye />
                 </button>
                 <button
                   onClick={() => handleDownloadFiles(request.filePath, request.productName, request.manufactorName)}
-                  className="text-sky-500 hover:text-sky-700"
-                  title="Tải xuống tất cả ảnh"
+                  className="btn btn-success text-white btn-xs"
                 >
-                  <FaDownload size={18} />
+                  <FaDownload />
+                </button>
+                <button
+                  onClick={() => handleApproval(request.productId)}
+                  className="btn btn-info text-white btn-xs"
+                >
+                  Phê Duyệt
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <div className="flex justify-between items-center mt-4">
+      <div className="mt-4 flex justify-between">
         <button
           onClick={handleDownloadAllFiles}
-          className="btn btn-success text-white"
+          className="btn btn-warning"
         >
-          Tải xuống tất cả ảnh
+          Tải Xuống Tất Cả
         </button>
         <Pagination
-          active={page}
-          totalPages={data?.totalPages || 1}
+          currentPage={page}
+          totalPages={data?.totalPages || 0}
           onPageChange={handlePageChange}
         />
       </div>
-
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Hình ảnh"
-        className="bg-white p-4 rounded-lg shadow-lg max-w-3xl mx-auto mt-10"
-        overlayClassName="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center"
+        contentLabel="Image Viewer"
+        style={{
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '80%',
+            maxHeight: '80%'
+          },
+        }}
       >
         <button
           onClick={() => setModalIsOpen(false)}
-          className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+          className="btn btn-danger absolute top-2 right-2"
         >
-          X
+          x
         </button>
         <Carousel slides={slides} />
       </Modal>

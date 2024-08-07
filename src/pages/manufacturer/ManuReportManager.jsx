@@ -21,7 +21,8 @@ import {
 } from 'react-icons/fa';
 import Pagination from "../../components/UI/Pagination";
 import InputTextModal from '../../components/UI/InputTextModal';
-import Select from 'react-select';
+import { useSelector } from "react-redux";
+import useToast from "../../hooks/use-toast";
 
 const statusOptions = [
   { value: 0, label: 'Mở', icon: <FaHourglassHalf className="text-yellow-500" /> },
@@ -63,7 +64,7 @@ function ManuReportManager() {
     emailReport: "",
     productId: ""
   });
-
+  const { getToast } = useToast();
   const [replyReport] = useReplyReportMutation();
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [showCauseDetail, setShowCauseDetail] = useState(true);
@@ -75,6 +76,18 @@ function ManuReportManager() {
   const [status, setStatus] = useState(-1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState('');
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+
+  useEffect(() => {
+    if (error?.status === 401) navigate("/portal/login");
+  }, [error]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      getToast("Phiên đăng nhập đã hết hạn");
+      navigate("/portal/login");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (data) {

@@ -148,6 +148,41 @@ const productApi = createApi({
           };
         },
       }),
+      requestScanImage: builder.mutation({
+        query: (data) => {
+          return {
+            url: "/requestScanImage",
+            method: "POST",
+            body: {
+              productId: data.productId,
+              image: data.image
+            },
+          };
+        },
+      }),
+      approvalImageRequest: builder.mutation({
+        query: (data) => {
+          return {
+            url: "/approvalImageRequest",
+            method: "POST",
+            body: {
+              type: data.type,
+              productId: data.productId
+            },
+          };
+        },
+      }),
+      getImageHadUpload: builder.query({
+        query: (data) => {
+          return {
+            url: "/getImageHadUpload",
+            method: "POST",
+            body: {
+              productId: data.productId
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -163,5 +198,7 @@ export const {
   useSaveFileAIMutation,
   useSaveModel3DMutation,
   useGetimageRequestQuery,
-  useRequestScanImageMutation
+  useRequestScanImageMutation,
+  useApprovalImageRequestMutation,
+  useGetImageHadUploadQuery,
 } = productApi;
