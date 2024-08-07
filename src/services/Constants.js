@@ -31,8 +31,8 @@ export const CONSTANTS = {
         {name: 'Xem yêu cầu traning hình ảnh', url: '/admin/managerRequestTranningImage', icon: FaInfo, role: '1'},
     ],
     openCage_API_KEY: '322f7bf039244925a233610a1e61360a',
-    domain: 'https://traceorigin.click/api',
-    //domain: 'http://localhost:8080/api',
+    //domain: 'https://traceorigin.click/api',
+    domain: 'http://localhost:8080/api',
     key_expire: 1,
     
 }

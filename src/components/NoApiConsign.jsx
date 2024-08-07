@@ -102,11 +102,13 @@ export default function NoApiConsign({ productRecognition }) {
   // const [pendingAction, setPendingAction] = useState('')
 
   const openModal = () => {
+    handleClose();
     setModalIsOpen(true);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
+    handleOpen();
   };
 
   function onEndSubmit() {
@@ -217,7 +219,7 @@ export default function NoApiConsign({ productRecognition }) {
   let reportBtn = (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-      onClick={() => setStep("report")}
+      onClick={openModal}
     >
       <p>Báo lỗi</p>
     </div>
@@ -1108,7 +1110,7 @@ export default function NoApiConsign({ productRecognition }) {
 
   return (
     <div className="flex justify-center">
-      {/* <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productRecognition}/> */}
+      <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productRecognition} in_email={guestEmail}/>
       <Tooltip content='Ghi nhật ký' position='top'>
         <Button
           // onClick={openModal}
