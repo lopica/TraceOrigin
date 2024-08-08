@@ -7,7 +7,7 @@ import Carousel from "../../components/UI/Carousel";
 import { useGetimageRequestQuery, useApprovalImageRequestMutation } from "../../store/apis/productApi";
 import Pagination from "../../components/UI/Pagination";
 import { useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useToast from "../../hooks/use-toast";
 
 const formatDate = (timestamp) => {
@@ -20,13 +20,7 @@ const ManagerRequestTranningImage = () => {
   const [slides, setSlides] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [page, setPage] = useState(0);
-  const navigate = useNavigate();
-  const [approvalImageRequest] = useApprovalImageRequestMutation();
-  const { getToast } = useToast();
-
-
-
-  const [filter, setFilter, error] = useState({
+  const [filter, setFilter] = useState({
     orderBy: "productId",
     productName: "",
     manufactorName: "",
@@ -34,11 +28,11 @@ const ManagerRequestTranningImage = () => {
     page: 0,
     size: 10,
   });
-
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const [approvalImageRequest] = useApprovalImageRequestMutation();
+  const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  useEffect(() => {
-    if (error?.status === 401) navigate("/portal/login");
-  }, [error]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -46,12 +40,17 @@ const ManagerRequestTranningImage = () => {
       navigate("/portal/login");
     }
   }, [isAuthenticated]);
-  
-  const { data, refetch } = useGetimageRequestQuery(filter);
 
-  // useEffect(() => {
-  //   refetch();
-  // }, [filter]);
+  const { data, refetch } = useGetimageRequestQuery(filter, {
+    skip: false,
+    refetchOnFocus: false,
+  });
+
+  useEffect(() => {
+    // Tự động tìm kiếm khi component mount
+    setIsLoading(true);
+    refetch().finally(() => setIsLoading(false));
+  }, [filter, refetch]);
 
   const handleViewFiles = (files) => {
     const images = files.map((file) => file);
@@ -62,59 +61,63 @@ const ManagerRequestTranningImage = () => {
   };
 
   const handleDownloadFiles = async (files, productName, manufactorName) => {
-    const zip = new JSZip();
-    const folder = zip.folder(`${productName}-${manufactorName}`);
+    try {
+      const zip = new JSZip();
+      const folder = zip.folder(`${productName}-${manufactorName}`);
 
-    for (let i = 0; i < files.length; i++) {
-      try {
+      for (let i = 0; i < files.length; i++) {
         const response = await fetch(files[i]);
         if (!response.ok) throw new Error(`Failed to fetch ${files[i]}`);
         const blob = await response.blob();
         folder.file(`file_${i + 1}.jpg`, blob);
-      } catch (error) {
-        console.error(error.message);
       }
-    }
 
-    zip.generateAsync({ type: "blob" }).then((content) => {
+      const content = await zip.generateAsync({ type: "blob" });
       saveAs(content, `${productName}-${manufactorName}.zip`);
-    });
+    } catch (error) {
+      getToast("Lỗi khi tải xuống tệp.");
+    }
   };
 
   const handleApproval = async (productId) => {
     try {
+      setIsLoading(true);
       await approvalImageRequest({
-        type: 2,
+        type: 3,
         productId: [productId]
       }).unwrap();
-      alert("Image request approved successfully.");
+      getToast("Yêu cầu hình ảnh đã được phê duyệt.");
       refetch();
     } catch (error) {
-      console.error("Error approving image request:", error);
+      getToast("Lỗi khi phê duyệt yêu cầu.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDownloadAllFiles = async () => {
-    const zip = new JSZip();
+    try {
+      setIsLoading(true);
+      const zip = new JSZip();
 
-    for (const request of data.content || []) {
-      const folder = zip.folder(`${request.productName}-${request.manufactorName}`);
-      
-      for (let i = 0; i < request.filePath.length; i++) {
-        try {
+      for (const request of data.content || []) {
+        const folder = zip.folder(`${request.productName}-${request.manufactorName}`);
+        
+        for (let i = 0; i < request.filePath.length; i++) {
           const response = await fetch(request.filePath[i]);
           if (!response.ok) throw new Error(`Failed to fetch ${request.filePath[i]}`);
           const blob = await response.blob();
           folder.file(`file_${i + 1}.jpg`, blob);
-        } catch (error) {
-          console.error(error.message);
         }
       }
-    }
 
-    zip.generateAsync({ type: "blob" }).then((content) => {
+      const content = await zip.generateAsync({ type: "blob" });
       saveAs(content, "all_products.zip");
-    });
+    } catch (error) {
+      getToast("Lỗi khi tải xuống tất cả các tệp.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleFilterChange = (e) => {
@@ -125,9 +128,10 @@ const ManagerRequestTranningImage = () => {
     });
   };
 
-  const handleSearch = () => {
-    setPage(0);
-    refetch();
+  const handleBlur = () => {
+    // Tự động tìm kiếm khi trường input bị blur
+    setIsLoading(true);
+    refetch().finally(() => setIsLoading(false));
   };
 
   const handlePageChange = (newPage) => {
@@ -136,7 +140,6 @@ const ManagerRequestTranningImage = () => {
       ...filter,
       page: newPage,
     });
-    refetch();
   };
 
   return (
@@ -152,6 +155,7 @@ const ManagerRequestTranningImage = () => {
               name="productName"
               value={filter.productName}
               onChange={handleFilterChange}
+              onBlur={handleBlur}
               className="input input-bordered w-full"
               placeholder="Tìm theo tên sản phẩm"
             />
@@ -164,6 +168,7 @@ const ManagerRequestTranningImage = () => {
               name="manufactorName"
               value={filter.manufactorName}
               onChange={handleFilterChange}
+              onBlur={handleBlur}
               className="input input-bordered w-full"
               placeholder="Tìm theo nhà sản xuất"
             />
@@ -175,6 +180,7 @@ const ManagerRequestTranningImage = () => {
               name="orderBy"
               value={filter.orderBy}
               onChange={handleFilterChange}
+              onBlur={handleBlur}
               className="select select-bordered w-full"
             >
               <option value="productId">Mã sản phẩm</option>
@@ -190,12 +196,10 @@ const ManagerRequestTranningImage = () => {
             name="isDesc"
             checked={filter.isDesc}
             onChange={handleFilterChange}
+            onBlur={handleBlur}
             className="checkbox"
           />
           <label htmlFor="isDesc" className="font-medium ml-2">Sắp xếp giảm dần</label>
-        </div>
-        <div className="mt-4 flex justify-end">
-          <button onClick={handleSearch} className="btn btn-success text-white">Tìm kiếm</button>
         </div>
       </div>
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden mt-4">
@@ -229,8 +233,9 @@ const ManagerRequestTranningImage = () => {
                 <button
                   onClick={() => handleApproval(request.productId)}
                   className="btn btn-info text-white btn-xs"
+                  disabled={isLoading}
                 >
-                  Phê Duyệt
+                  {isLoading ? <span className="loading loading-spinner loading-xs"></span> : "Phê Duyệt"}
                 </button>
               </td>
             </tr>
@@ -241,8 +246,9 @@ const ManagerRequestTranningImage = () => {
         <button
           onClick={handleDownloadAllFiles}
           className="btn btn-warning"
+          disabled={isLoading}
         >
-          Tải Xuống Tất Cả
+          {isLoading ? <span className="loading loading-spinner loading-xs"></span> : "Tải Xuống Tất Cả"}
         </button>
         <Pagination
           currentPage={page}

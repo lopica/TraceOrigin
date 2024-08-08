@@ -151,11 +151,11 @@ const ManuProductEdit = ({ productId, closeModal }) => {
             onStepSubmit={onStepSubmit}
             isLoading={results.isLoading}
             getValues={getValues}
-            reset={(e) => {
-              e.preventDefault();
-              dispatch(resetProductEditState());
-              window.location.reload();
-            }}
+            // reset={(e) => {
+            //   e.preventDefault();
+            //   dispatch(resetProductEditState());
+            //   window.location.reload();
+            // }}
           >
             <>
               <div className="grid grid-cols-3 gap-4">

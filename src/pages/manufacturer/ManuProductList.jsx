@@ -38,6 +38,7 @@ function ManuProductList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
+  const { form } = useSelector((state) => state.productEditForm);
   const {
     list: products,
     nameSearch,
@@ -54,7 +55,7 @@ function ManuProductList() {
     paginate,
     setCurrentPage,
   } = useProduct();
-  const { handleSubmit, register, control } = useForm({
+  const { handleSubmit, register, control, setValue } = useForm({
     mode: "onTouched",
     defaultValues: {
       nameSearch,
@@ -65,6 +66,14 @@ function ManuProductList() {
     header: "",
     body: "",
     onConfirm: null,
+  });
+  
+  const {
+    setValue: setValueEdit,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: { ...form },
   });
   const [isLoadingModal, setIsLoadingModal] = useState(false);
   const { updateImagesFromApi } = useUpdateImageFromApi();
@@ -124,11 +133,18 @@ function ManuProductList() {
         length: dimensionMatch[1],
         width: dimensionMatch[2],
         height: dimensionMatch[3],
+        category: productDetail.categoryId,
       };
 
       dispatch(updateProductEditForm(updatedProductDetail));
       updateImagesFromApi(productDetail.listImages, productDetail.avatar);
-      // updateProductEditCategories(productDetail.)
+      const categories = [
+        {
+            id: productDetail.categoryId,
+            name: productDetail.categoryName
+        }
+    ];
+    dispatch(updateProductEditCategories(categories));
       setEditModalOpen(true);
     }
   }, [

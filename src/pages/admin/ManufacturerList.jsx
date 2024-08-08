@@ -243,7 +243,7 @@ function ManufacturerList() {
     refetch();
   };
   
-  const cityOptions = [{ id: "", content: "" }, ...(citiesData?.map(city => ({ id: city, content: city })) || [])];
+  const cityOptions = [ ...(citiesData?.map(city => ({ id: city, content: city })) || [])];
 
   const statusData = [
     { id: "", content: " " },

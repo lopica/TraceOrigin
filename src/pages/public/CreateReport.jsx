@@ -24,7 +24,7 @@ function CreateReport() {
       >
         open
       </button>
-      <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} in_email={"dtm.it2002@gmail.com"} productCode="JhMDQzOQ==" />
+      <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} in_email={"dtm.it2002@gmail.com"} productCode="RjY2ViYjAw" />
     </div>
   );
 }
