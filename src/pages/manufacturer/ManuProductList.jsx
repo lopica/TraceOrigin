@@ -137,7 +137,6 @@ function ManuProductList() {
         height: dimensionMatch[3],
         category: productDetail.categoryId +','+productDetail.categoryName,
       };
-
       dispatch(updateProductEditForm(updatedProductDetail));
       updateImagesFromApi(productDetail.listImages, productDetail.avatar);
       setEditModalOpen(true);
