@@ -63,7 +63,7 @@ function UpdateFileAI() {
       await saveFileAI(formData).unwrap();
       getToast("Upload file thành công");
     } catch (error) {
-      console.error("Update failed:", error);
+      // console.error("Update failed:", error);
       getToast("Đã xảy ra lỗi");
     }
     refetch();

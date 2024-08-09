@@ -16,9 +16,16 @@ export default function useProductDetail(productId) {
     isFetching: isProductFetch,
     isSuccess,
     error,
+    refetch,
   } = useViewProductDetailQuery(productId, {
     skip: !isAuthenticated
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refetch(); 
+    }
+  }, [isAuthenticated, refetch]);
 
   useEffect(() => {
     if (!isProductError && !isProductFetch && isSuccess) {
@@ -47,5 +54,5 @@ export default function useProductDetail(productId) {
     }
   }, [isProductFetch, isProductError, productDetail]);
 
-  return { productData, name, images, isProductFetch, isProductError, error, model3D };
+  return { productData, name, images, isProductFetch, isProductError, error, model3D, refetch };
 }

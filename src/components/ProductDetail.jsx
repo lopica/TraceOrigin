@@ -38,8 +38,10 @@ export default function ProductDetail({ productId }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageReports, setImageReports] = useState([]);
   const { getToast } = useToast();
-  const { productData, name, images, isProductFetch, isProductError, error, model3D } =
-    useProductDetail(productId);
+  const { productData, name, images, isProductFetch, isProductError, error, model3D, refetch } =
+    useProductDetail(productId,{
+      skip: true,
+    });
   const [requestScanImage] = useRequestScanImageMutation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [saveModel3D] = useSaveModel3DMutation();
@@ -59,10 +61,11 @@ export default function ProductDetail({ productId }) {
     if (images.length > 0) {
       console.log(model3D);
       if (model3D) {
-        console.log("vod day " + model3D);
+        // console.log("vod day " + model3D);
         convertLinkToBase64(
+          model3D
           // "https://storage.googleapis.com/download/storage/v1/b/storagetraceorigin/o/model3D%2F70.stl?generation=1723209715576471&alt=media"
-          "/model3D_70.stl"
+          // "/model3D_70.stl"
         )
           .then((res) => {
             const imageSlides = images.map((image, idx) => (
@@ -109,7 +112,8 @@ export default function ProductDetail({ productId }) {
       console.error(error);
       getToast("Lỗi khi tải model 3D");
     }
-    console.log("Submitted Data:", formData);
+    // console.log("Submitted Data:", formData);
+    refetch();
   };
 
   let renderedProductDetail;
@@ -128,7 +132,7 @@ export default function ProductDetail({ productId }) {
             keyFn={(item) => item.label}
           />
           <p className="mt-4 text-center">
-            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn?{" "}
+            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn?
             <a
               onClick={handleModalOpen}
               className="text-blue-500 underline cursor-pointer"
