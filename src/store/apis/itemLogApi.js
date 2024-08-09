@@ -41,6 +41,7 @@ const itemLogApi = createApi({
     return {
       // get itemlog detail
       fetchEventByItemLogId: builder.query({
+        providesTags: ["consign"],
         query: (itemLogId) => {
           return {
             url: `/getItemLogDetail?itemLogId=${itemLogId}`,
@@ -69,11 +70,32 @@ const itemLogApi = createApi({
         },
       }),
       updateReceiveLocation: builder.mutation({
+        invalidatesTags: ['consign'],
         query: (request) => {
           return {
             url: "editItemLogByParty",
             method: "POST",
             body: request
+          }
+        }
+      }),
+      updateConsign: builder.mutation({
+        invalidatesTags: ['consign'],
+        query: (request) => {
+          return {
+            url: "editItemLog",
+            method: "POST",
+            body: request
+          }
+        }
+      }),
+      updateTransportEvent: builder.mutation({
+        invalidatesTags: ['consign'],
+        query: (request) => {
+          return {
+            url: "editTransport",
+            method: "POST",
+            body: request,
           }
         }
       })
@@ -87,4 +109,6 @@ export const {
   useCreateTransportEventMutation,
   useAddReceiveLocationMutation,
   useUpdateReceiveLocationMutation,
+  useUpdateConsignMutation,
+  useUpdateTransportEventMutation,
 } = itemLogApi;

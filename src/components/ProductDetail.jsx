@@ -14,6 +14,8 @@ import {
   useRequestScanImageMutation,
 } from "../store/apis/productApi";
 import { file } from "jszip";
+import { convertLinkToBase64 } from "../utils/convertLinkToBase64";
+
 
 const productConfig = [
   {
@@ -27,6 +29,8 @@ const productConfig = [
   },
 ];
 
+let renderedProductDetail;
+let thumb3D;
 export default function ProductDetail({ productId }) {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
@@ -34,7 +38,7 @@ export default function ProductDetail({ productId }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageReports, setImageReports] = useState([]);
   const { getToast } = useToast();
-  const { productData, name, images, isProductFetch, isProductError, error } =
+  const { productData, name, images, isProductFetch, isProductError, error, model3D } =
     useProductDetail(productId);
   const [requestScanImage] = useRequestScanImageMutation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -53,17 +57,38 @@ export default function ProductDetail({ productId }) {
 
   useEffect(() => {
     if (images.length > 0) {
-      const imageSlides = images.map((image, idx) => (
-        <img src={image} alt={`${name} ${idx}`} key={idx} />
-      ));
-      setSlides([
-        ...imageSlides,
-        <div className="sm:w-[32rem] aspect-video" key="canvas">
-          <Canvas3D full />
-        </div>,
-      ]);
+      console.log(model3D);
+      if (model3D) {
+        console.log("vod day " + model3D);
+        convertLinkToBase64(
+          // "https://storage.googleapis.com/download/storage/v1/b/storagetraceorigin/o/model3D%2F70.stl?generation=1723209715576471&alt=media"
+          "/model3D_70.stl"
+        )
+          .then((res) => {
+            const imageSlides = images.map((image, idx) => (
+              <img src={image} alt={`${name} ${idx}`} />
+            ));
+            setSlides([
+              ...imageSlides,
+              <div className="sm:w-[32rem] aspect-video">
+                <Canvas3D full modelBase64={res} />
+              </div>,
+            ]);
+            thumb3D = (
+              <div className="sm:w-[32rem] aspect-video">
+                <Canvas3D modelBase64={res} />
+              </div>
+            );
+          })
+          .catch((err) => console.log(err));
+      } else {
+        const imageSlides = images.map((image, idx) => (
+          <img src={image} alt={`${name} ${idx}`} />
+        ));
+        setSlides([...imageSlides]);
+      }
     }
-  }, [images]);
+  }, [images, model3D]);
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
@@ -118,14 +143,7 @@ export default function ProductDetail({ productId }) {
 
   return (
     <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-12">
-      <Carousel
-        slides={slides}
-        thumb3D={
-          <div className="sm:w-[32rem] aspect-video">
-            <Canvas3D />
-          </div>
-        }
-      />
+      <Carousel slides={slides} thumb3D={model3D ? thumb3D : undefined} />
       {renderedProductDetail}
       <button
         onClick={openModal}

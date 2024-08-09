@@ -9,6 +9,7 @@ export default function useProductDetail(productId) {
   const [productData, setProductData] = useState([]);
   const [name, setName] = useState("");
   const [images, setImages] = useState([])
+  const [model3D, setModel3D] = useState(undefined)
   const {
     data: productDetail,
     isError: isProductError,
@@ -30,6 +31,7 @@ export default function useProductDetail(productId) {
         { icon: FaCheckCircle, label: "Công dụng", value: productDetail.description },
         { icon: FaClock, label: "Bảo hành", value: `${productDetail.warranty} tháng` },
       ]);
+      if (productDetail.model3D) setModel3D(productDetail.model3D)
       dispatch(updateProductDetail(productDetail))
       setImages(productDetail.listImages)
       // setImages(prev => {
@@ -45,5 +47,5 @@ export default function useProductDetail(productId) {
     }
   }, [isProductFetch, isProductError, productDetail]);
 
-  return { productData, name, images, isProductFetch, isProductError, error };
+  return { productData, name, images, isProductFetch, isProductError, error, model3D };
 }
