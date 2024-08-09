@@ -1,20 +1,32 @@
 import { Fragment } from "react";
-import { FaRuler, FaDumbbell, FaHammer, FaCheckCircle, FaClock } from 'react-icons/fa';
+import {
+  FaRuler,
+  FaDumbbell,
+  FaHammer,
+  FaCheckCircle,
+  FaClock,
+} from "react-icons/fa";
 
-function Table({ data, config, keyFn }) {
+function Table({ data, config, keyFn, message }) {
   const renderedHeaders = config.map((column) => {
     if (column.header)
       return <Fragment key={column.label}>{column.header()}</Fragment>;
-    return <th key={column.label} className="text-xl">{column.label}</th>;
+    return (
+      <th key={column.label} className="text-xl">
+        {column.label}
+      </th>
+    );
   });
 
   const renderedRows = data.map((rowData) => {
-    const rowKey = keyFn(rowData) || 'none'; // Get a unique key for the row
+    const rowKey = keyFn(rowData) || "none"; // Get a unique key for the row
     const renderedCells = config.map((column) => {
       return (
-        <td className="px-4" key={`${rowKey}-${column.label || 'none'}`}>
-           <div className="flex items-center">
-            {column.icon ? <span className="mr-2">{column.icon(rowData)()}</span> : null}
+        <td className="px-4" key={`${rowKey}-${column.label || "none"}`}>
+          <div className="flex items-center">
+            {column.icon ? (
+              <span className="mr-2">{column.icon(rowData)()}</span>
+            ) : null}
             {column.render(rowData)}
           </div>
         </td>
@@ -29,11 +41,11 @@ function Table({ data, config, keyFn }) {
         <thead>
           <tr className="border-b-2">{renderedHeaders}</tr>
         </thead>
-        <tbody>
-          {renderedRows}
-        </tbody>
+        <tbody>{renderedRows}</tbody>
       </table>
-      {data.length === 0 && <p className="text-center">Chưa có item</p>}
+      {data.length === 0 && (
+        <p className="text-center">{message ? message : "Chưa có item"}</p>
+      )}
     </div>
   );
 }

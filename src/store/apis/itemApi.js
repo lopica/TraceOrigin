@@ -158,6 +158,7 @@ const itemApi = createApi({
         }
       }),
       getHistory: builder.query({
+        providesTags: ['consign'],
         query: (request) => {
           return {
             url: 'listPartyJoin',

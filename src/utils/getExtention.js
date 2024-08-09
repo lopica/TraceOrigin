@@ -26,6 +26,7 @@ export const getExtension = (base64String) => {
     "application/octet-stream": "3ds",
     "application/x-3ds": "3ds",
     "application/x-ply": "ply",
+    "model/stl": "stl",  // Add this line
     // Add more mappings as needed
   };
 
@@ -90,9 +91,7 @@ export const getExtension = (base64String) => {
   return fileExtension;
 };
 
-
-
 export const getMimeTypeFromBase64 = (base64String) => {
-    console.log(base64String.match(/data:([a-zA-Z0-9\/\-\+\.]+);base64,/)?.[1])
+  console.log(base64String.match(/data:([a-zA-Z0-9\/\-\+\.]+);base64,/)?.[1]);
   return base64String.match(/data:([a-zA-Z0-9\/\-\+\.]+);base64,/)?.[1];
 };
