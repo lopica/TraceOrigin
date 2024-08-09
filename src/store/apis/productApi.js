@@ -106,17 +106,20 @@ const productApi = createApi({
             url: "/saveFileAI",
             method: "POST",
             body: formData,
+            responseHandler: (res) => res.text(),
           };
         },
       }),
       saveModel3D: builder.mutation({
-        query: ({ id, file3D }) => {
+        query: ({ productId, file3D }) => {
+          console.log(productId);
           const formData = new FormData();
           formData.append("file3D", file3D); 
           return {
-            url: `/saveModel3D/${id}`, 
+            url: `/saveModel3D/${productId}`, 
             method: "POST",
             body: formData,
+            responseHandler: (res) => res.text(),
           };
         },
       }),

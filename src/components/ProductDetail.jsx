@@ -9,7 +9,11 @@ import Canvas3D from "./Canvas3D";
 import { FaPlus, FaUpload } from "react-icons/fa";
 import UploadModel3DModal from "../components/UI/UploadModel3DModal";
 import ImageUploadModal from "../components/UI/ImageUploadModal";
-import { useSaveModel3DMutation, useRequestScanImageMutation } from "../store/apis/productApi";
+import {
+  useSaveModel3DMutation,
+  useRequestScanImageMutation,
+} from "../store/apis/productApi";
+import { file } from "jszip";
 
 const productConfig = [
   {
@@ -30,7 +34,8 @@ export default function ProductDetail({ productId }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageReports, setImageReports] = useState([]);
   const { getToast } = useToast();
-  const { productData, name, images, isProductFetch, isProductError, error } = useProductDetail(productId);
+  const { productData, name, images, isProductFetch, isProductError, error } =
+    useProductDetail(productId);
   const [requestScanImage] = useRequestScanImageMutation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [saveModel3D] = useSaveModel3DMutation();
@@ -63,21 +68,21 @@ export default function ProductDetail({ productId }) {
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
 
-
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
   const handleUploadModel3D = async (file3D) => {
     getToast("Hệ thống đang xử lý");
-    const formData = new FormData();
-    formData.append('id', productId);
-    formData.append('file3D', file3D);
-
+   const formData = {
+    productId,
+    file3D,
+  };
     try {
       await saveModel3D(formData).unwrap();
-      getToast("Hệ thống đã tiếp nhận đơn của bạn");
+      getToast("Hệ thống đã tải model 3D thành công");
     } catch (error) {
       console.error(error);
+      getToast("Lỗi khi tải model 3D");
     }
     console.log("Submitted Data:", formData);
   };
@@ -92,10 +97,17 @@ export default function ProductDetail({ productId }) {
       renderedProductDetail = (
         <div>
           <h1 className="text-center text-4xl mb-4">{name || "no name"}</h1>
-          <Table data={productData} config={productConfig} keyFn={(item) => item.label} />
+          <Table
+            data={productData}
+            config={productConfig}
+            keyFn={(item) => item.label}
+          />
           <p className="mt-4 text-center">
             Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn?{" "}
-            <a onClick={handleModalOpen} className="text-blue-500 underline cursor-pointer">
+            <a
+              onClick={handleModalOpen}
+              className="text-blue-500 underline cursor-pointer"
+            >
               Đăng kí quét hình ảnh sản phẩm
             </a>
           </p>
@@ -106,13 +118,27 @@ export default function ProductDetail({ productId }) {
 
   return (
     <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-12">
-      <Carousel slides={slides} thumb3D={<div className="sm:w-[32rem] aspect-video"><Canvas3D /></div>} />
+      <Carousel
+        slides={slides}
+        thumb3D={
+          <div className="sm:w-[32rem] aspect-video">
+            <Canvas3D />
+          </div>
+        }
+      />
       {renderedProductDetail}
-      <button onClick={openModal} className="add-button w-fit flex items-center p-2 text-green-500 rounded-md hover:bg-green-500 hover:text-white border-2 border-dashed border-green-500">
+      <button
+        onClick={openModal}
+        className="add-button w-fit flex items-center p-2 text-green-500 rounded-md hover:bg-green-500 hover:text-white border-2 border-dashed border-green-500"
+      >
         <FaUpload className="mr-2" />
         Upload Model 3D
       </button>
-      <UploadModel3DModal isOpen={modalIsOpen} onClose={closeModal} onSubmit={handleUploadModel3D} />
+      <UploadModel3DModal
+        isOpen={modalIsOpen}
+        onClose={closeModal}
+        onSubmit={handleUploadModel3D}
+      />
       <ImageUploadModal
         isOpen={isModalOpen}
         onClose={handleModalClose}

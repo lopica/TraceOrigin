@@ -15,8 +15,13 @@ function UpdateFileAI() {
   const [dataHistory, setDataHistory] = useState([]);
 
   const { getToast } = useToast();
+  
   // ========================================== fetch history
-  const { data: apiData, error, isLoading } = useGetHistoryUploadAIQuery();
+  const { data: apiData, refetch } =
+  useGetHistoryUploadAIQuery( {
+    skip: true,
+  });
+
   useEffect(() => {
     if(apiData){
       setDataHistory(JSON.parse(apiData));
@@ -54,13 +59,14 @@ function UpdateFileAI() {
       model,
       description,
     };
-    try {
+   try {
       await saveFileAI(formData).unwrap();
       getToast("Upload file thành công");
     } catch (error) {
       console.error("Update failed:", error);
       getToast("Đã xảy ra lỗi");
     }
+    refetch();
   };
 
   // ============================ handle parse
@@ -97,7 +103,7 @@ function UpdateFileAI() {
       <div className="md:w-1/3 p-4">
         {/* =================================================================== form upload file  */}
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4">Update Files</h2>
+          <h2 className="text-2xl font-semibold mb-4">Tải tệp lên</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -132,7 +138,7 @@ function UpdateFileAI() {
             </div>
             <div className="flex flex-col space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Description:
+                Mô tả:
                 <input
                   type="text"
                   value={description}
@@ -146,7 +152,7 @@ function UpdateFileAI() {
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Submit
+              Gửi
             </button>
           </form>
         </div>
@@ -161,8 +167,8 @@ function UpdateFileAI() {
           <table className="min-w-full bg-white border border-gray-300">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">Timestamp</th>
-                <th className="py-2 px-4 border-b">Message</th>
+                <th className="py-2 px-4 border-b">Thời gian</th>
+                <th className="py-2 px-4 border-b">Mô tả</th>
               </tr>
             </thead>
             <tbody>
