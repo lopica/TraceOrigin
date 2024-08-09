@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
 import { FaPlus, FaSearch } from "react-icons/fa";
-
+import useCategoryEdit from "../../hooks/use-category-Edit";
 import useToast from "../../hooks/use-toast";
 import ManuProductEdit from "../manufacturer/ManuProductEdit";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
@@ -38,6 +38,7 @@ function ManuProductList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { categoriesData } = useCategory();
+  const { categoriesEditData } = useCategoryEdit();
   const { form } = useSelector((state) => state.productEditForm);
   const {
     list: products,
@@ -105,6 +106,7 @@ function ManuProductList() {
 
   const handleCloseModal = () => {
     setSelectedProductId(null);
+    dispatch(resetProductEditState());
     setEditModalOpen(false);
   };
 
@@ -133,18 +135,11 @@ function ManuProductList() {
         length: dimensionMatch[1],
         width: dimensionMatch[2],
         height: dimensionMatch[3],
-        category: productDetail.categoryId,
+        category: productDetail.categoryId +','+productDetail.categoryName,
       };
 
       dispatch(updateProductEditForm(updatedProductDetail));
       updateImagesFromApi(productDetail.listImages, productDetail.avatar);
-      const categories = [
-        {
-            id: productDetail.categoryId,
-            name: productDetail.categoryName
-        }
-    ];
-    dispatch(updateProductEditCategories(categories));
       setEditModalOpen(true);
     }
   }, [

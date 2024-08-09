@@ -12,9 +12,9 @@ export default function useCategoryEdit() {
     isError: isCategoryError,
     isFetching: isCategoryFetch,
   } = useGetAllCategoriesQuery(undefined, {
-    skip: categoriesData.length > 0 && categoriesData[0]?.id !== 'loading' && categoriesData[0]?.id !== 'error',
+    skip: (categoriesData && categoriesData.length > 0) && (categoriesData[0]?.id !== 'loading' && categoriesData[0]?.id !== 'error'),
   });
-
+  
   useEffect(() => {
     if (!isCategoryFetch && categories) {
       data = categories.map((cate) => {

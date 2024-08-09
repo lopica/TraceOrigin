@@ -15,7 +15,7 @@ import {
 import Input from "../../components/UI/Input";
 import ImageBox from "../../components/UI/ImageBox";
 import Wizzard from "../../components/Wizzard";
-import useCategory from "../../hooks/use-category";
+import useCategoryEdit from "../../hooks/use-category-Edit";
 import useToast from "../../hooks/use-toast";
 import Button from "../../components/UI/Button";
 import Canvas3D from "../../components/Canvas3D";
@@ -37,12 +37,10 @@ const ManuProductEdit = ({ productId, closeModal }) => {
 
   const navigate = useNavigate();
   const { images, form } = useSelector((state) => state.productEditForm);
-  const { categoriesData } = useCategory();
-  // const [addProduct, results] = useAddProductMutation();
+  const { categoriesData } = useCategoryEdit();
   const [addProduct, results] = useEditProductMutation();
   const { getToast } = useToast();
-  const fileInputRef = useRef(null);
-  const [progress, setProgress] = useState(0);
+
 
   const {
     register,
@@ -57,45 +55,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
     defaultValues: { ...form },
   });
 
-  const onDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      const reader = new FileReader();
 
-      reader.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const percentLoaded = Math.round((event.loaded / event.total) * 100);
-          setProgress(percentLoaded);
-        }
-      };
-
-      reader.onloadend = () => {
-        setValue("file3D", reader.result);
-        setProgress(100);
-      };
-
-      reader.readAsDataURL(file);
-    },
-    [setValue]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    noClick: true, // Prevent the dropzone from triggering file input click
-  });
-
-  const [DeleteProductById] = useDeleteProductByIdMutation();
-
-  const handleDeleteApi = async (id) => {
-    try {
-      await DeleteProductById(id.toString()).unwrap();
-
-    } catch (error) {
-      console.error("Lock/Unlock user error:", error);
-    } finally {
-     
-    }
-  };
 
   const onStepSubmit = (step) => {
     const data = validateStep[step].reduce((obj, field) => {
@@ -119,7 +79,6 @@ const ManuProductEdit = ({ productId, closeModal }) => {
     delete request.width;
     delete request.height;
     delete request.category;
-    // handleDeleteApi(productId);
     addProduct(request)
       .unwrap()
       .then(() => {
@@ -129,7 +88,6 @@ const ManuProductEdit = ({ productId, closeModal }) => {
       })
       .catch((err) => {
         getToast("Lỗi khi sửa sản phẩm");
-        console.log(err);
       });
   };
 
@@ -297,7 +255,6 @@ const ManuProductEdit = ({ productId, closeModal }) => {
             </>
             <>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4 justify-items-center">
-                {console.log(images)}
                 {images.map((image, i) => (
                   <div key={i}>
                     <ImageBox
@@ -321,54 +278,6 @@ const ManuProductEdit = ({ productId, closeModal }) => {
                 )}
               </div>
             </>
-            {/* <>
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text">Chọn file 3D của sản phẩm:</span>
-                </div>
-                {!getValues("file3D") && (
-                  <div
-                    {...getRootProps()}
-                    className={`flex flex-col items-center justify-center h-28 p-3 border-2 border-dashed border-sky-900 cursor-pointer text-sky-900 ${
-                      isDragActive ? "border-sky-700 bg-sky-100" : ""
-                    }`}
-                  >
-                    <input
-                      {...getInputProps()}
-                      type="file"
-                      ref={fileInputRef}
-                      className="hidden"
-                      accept=".obj, .stl, .fbx, .3ds, .ply"
-                    />
-                    <div>
-                      <p className="text-center">Chọn hoặc kéo thả tệp vào đây</p>
-                    </div>
-                  </div>
-                )}
-                {progress > 0 && progress < 100 && (
-                  <progress
-                    className="progress progress-info w-56"
-                    value={progress}
-                    max="100"
-                  ></progress>
-                )}
-                {getValues("file3D") && (
-                  <div>
-                    <Button
-                      primary
-                      outline
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setValue("file3D", undefined);
-                      }}
-                    >
-                      Chọn lại
-                    </Button>
-                    <Canvas3D modelBase64={getValues("file3D")} />
-                  </div>
-                )}
-              </label>
-            </> */}
           </Wizzard>
       </div>
     </dialog>
