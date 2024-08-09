@@ -9,7 +9,8 @@ import {
   updateProductEditForm,
   useAddProductMutation,
   useViewProductDetailQuery,
-  useDeleteProductByIdMutation
+  useDeleteProductByIdMutation,
+  useEditProductMutation
 } from "../../store";
 import Input from "../../components/UI/Input";
 import ImageBox from "../../components/UI/ImageBox";
@@ -23,7 +24,6 @@ const stepList = [
   "Thông tin cơ bản",
   "Thông số kĩ thuật",
   "Ảnh minh họa",
-  "Model 3D (tùy chọn)",
 ];
 
 const validateStep = [
@@ -38,7 +38,8 @@ const ManuProductEdit = ({ productId, closeModal }) => {
   const navigate = useNavigate();
   const { images, form } = useSelector((state) => state.productEditForm);
   const { categoriesData } = useCategory();
-  const [addProduct, results] = useAddProductMutation();
+  // const [addProduct, results] = useAddProductMutation();
+  const [addProduct, results] = useEditProductMutation();
   const { getToast } = useToast();
   const fileInputRef = useRef(null);
   const [progress, setProgress] = useState(0);
@@ -70,7 +71,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
 
       reader.onloadend = () => {
         setValue("file3D", reader.result);
-        setProgress(100); // Set to 100% when done
+        setProgress(100);
       };
 
       reader.readAsDataURL(file);
@@ -111,12 +112,14 @@ const ManuProductEdit = ({ productId, closeModal }) => {
       avatar: data.avatar.split(",")[1],
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
+      productId: data.productId,
+      file3D: '',
     };
     delete request.length;
     delete request.width;
     delete request.height;
     delete request.category;
-    handleDeleteApi(productId);
+    // handleDeleteApi(productId);
     addProduct(request)
       .unwrap()
       .then(() => {
@@ -158,6 +161,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
             // }}
           >
             <>
+
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2">
                   <Input
@@ -317,7 +321,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
                 )}
               </div>
             </>
-            <>
+            {/* <>
               <label className="form-control w-full">
                 <div className="label">
                   <span className="label-text">Chọn file 3D của sản phẩm:</span>
@@ -364,7 +368,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
                   </div>
                 )}
               </label>
-            </>
+            </> */}
           </Wizzard>
       </div>
     </dialog>

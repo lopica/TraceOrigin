@@ -46,11 +46,10 @@ const ManagerRequestTranningImage = () => {
     refetchOnFocus: false,
   });
 
-  useEffect(() => {
-    // Tự động tìm kiếm khi component mount
-    setIsLoading(true);
-    refetch().finally(() => setIsLoading(false));
-  }, [filter, refetch]);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   refetch().finally(() => setIsLoading(false));
+  // }, [refetch]);
 
   const handleViewFiles = (files) => {
     const images = files.map((file) => file);
@@ -129,9 +128,9 @@ const ManagerRequestTranningImage = () => {
   };
 
   const handleBlur = () => {
-    // Tự động tìm kiếm khi trường input bị blur
-    setIsLoading(true);
-    refetch().finally(() => setIsLoading(false));
+    // // Tự động tìm kiếm khi trường input bị blur
+    // setIsLoading(true);
+    // refetch().finally(() => setIsLoading(false));
   };
 
   const handlePageChange = (newPage) => {
