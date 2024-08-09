@@ -186,6 +186,21 @@ const productApi = createApi({
           };
         },
       }),
+      editProduct: builder.mutation({
+        invalidatesTags: ['Product'],
+        query: (newProduct) => {
+          return {
+            url: "/editProduct",
+            method: "POST",
+            body: {
+              ...newProduct,
+            },
+            responseHandler: (response) => {
+              return response.text();
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -204,4 +219,5 @@ export const {
   useRequestScanImageMutation,
   useApprovalImageRequestMutation,
   useGetImageHadUploadQuery,
+  useEditProductMutation
 } = productApi;
