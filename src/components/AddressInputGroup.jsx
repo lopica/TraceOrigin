@@ -42,8 +42,6 @@ export default function AddressInputGroup({
   const locationState = useSelector((state) => state.locationData);
   const { currentLocationId, coordinate, loadingNewAddress } = locationState;
 
-
-
   const handleInputChange = (identifier, event) => {
     const value = event.target.value.split(",");
     console.log(value);
@@ -59,7 +57,7 @@ export default function AddressInputGroup({
         districtId: value[0],
       });
     }
-    dispatch(updateVerifyAddress(false))
+    dispatch(updateVerifyAddress(false));
   };
 
   useEffect(() => {
@@ -83,7 +81,7 @@ export default function AddressInputGroup({
               dispatch(updateCoordinate([lat, lng]));
             }
             //update global state
-            dispatch(updateVerifyAddress(true))
+            dispatch(updateVerifyAddress(true));
           })
           .catch(() => getToast("Gặp lỗi trong quá trình xác thực"));
       } else {
@@ -93,9 +91,9 @@ export default function AddressInputGroup({
     }
   }, [controlCall]);
 
-  useEffect(()=>{
-    dispatch(updateVerifyAddress(false))
-  },[getValues('ward'), watch('address')])
+  useEffect(() => {
+    dispatch(updateVerifyAddress(false));
+  }, [getValues("ward"), watch("address")]);
 
   let map = null;
   if (results.isLoading) {
@@ -109,14 +107,13 @@ export default function AddressInputGroup({
   }
 
   return (
-    <>
-      <div className="w-full gap-2 h-fit grid grid-cols-1 sm:grid-cols-3 items-start">
+    <div>
+      {message ? message : <p className={required && 'after:content-["*"] after:ml-0.5 after:text-red-500'}>Địa chỉ</p>}
+      <div className="w-full gap-2 grid grid-cols-1 sm:grid-cols-3 items-start mb-2">
         <Input
-          label={message || "Địa chỉ"}
           type="select"
           control={control}
           data={provinces}
-          required={required}
           disabled={disabled}
           placeholder="Tỉnh, thành phố"
           {...register(
@@ -129,7 +126,7 @@ export default function AddressInputGroup({
           error={errors.province?.message}
         />
         <Input
-          label="&nbsp;"
+          // label="&nbsp;"
           type="select"
           control={control}
           data={districts}
@@ -144,7 +141,7 @@ export default function AddressInputGroup({
           error={errors.district?.message}
         />
         <Input
-          label="&nbsp;"
+          // label="&nbsp;"
           type="select"
           control={control}
           data={wards}
@@ -183,13 +180,12 @@ export default function AddressInputGroup({
             e.preventDefault();
             turnOn();
           }}
+          className='p-0 mt-2'
         >
           Xác thực địa chỉ
         </Button>
       </div>
-      {map && <div className="mt-4 w-full">
-
-      {map}</div>}
-    </>
+      {map && <div className="mt-4 w-full">{map}</div>}
+    </div>
   );
 }

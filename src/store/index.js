@@ -181,6 +181,8 @@ export {
   useCreateTransportEventMutation,
   useAddReceiveLocationMutation,
   useUpdateReceiveLocationMutation,
+  useUpdateConsignMutation,
+  useUpdateTransportEventMutation,
 } from "./apis/itemLogApi";
 export {
   useGetAllProvincesQuery,

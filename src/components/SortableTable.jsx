@@ -5,7 +5,7 @@ const upArrow = <div>⬆️</div>;
 const downArrow = <div>⬇️</div>
 
 function SortableTable(props) {
-  const { config, data } = props;
+  const { config, data, message } = props;
   const { sortOrder, sortBy, sortedData, setSortColumn } = useSort(data, config);
 
   //change column header
@@ -27,7 +27,7 @@ function SortableTable(props) {
     };
   });
   // console.log(sortedData)
-  return <Table {...props} data={sortedData} config={updatedConfig} />;
+  return <Table {...props} data={sortedData} config={updatedConfig} message={message} />;
 }
 
 function getIcons(label, sortBy, sortOrder) {

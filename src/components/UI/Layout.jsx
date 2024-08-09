@@ -51,7 +51,7 @@ export default function Layout() {
             <SideBar />
           </aside>
         )}
-        <main className={`pt-[4vh] flex-1 ${matchPaterm ? "" : ""}`}>
+        <main className={` flex-1 ${matchPaterm ? "" : ""}`}>
           {/* <Breadcrumps /> */}
           <Outlet />
         </main>

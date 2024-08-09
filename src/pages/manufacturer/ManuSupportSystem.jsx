@@ -67,8 +67,8 @@ function ManuSupportSystem() {
   };
     // =============================== handle add reply
     const [replyByUser] = useReplyByUserMutation();
-    getToast("Hệ thống đang xử lý");
     const handleSubmitReply = async (formData) => {
+      getToast("Hệ thống đang xử lý");
       try {
         const base64Prefix = 'data:image/png;base64,';
         const cleanedImages = formData?.images.map(image =>

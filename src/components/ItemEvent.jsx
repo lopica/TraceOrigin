@@ -55,7 +55,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 <p>Người gửi: {eventData?.sender}</p>
               </li> */}
               <li>
-                <p>Người nhận: {eventData?.partyFullname}</p>
+                <p>Người nhận: {eventData?.partyFullname || 'Không rõ'}</p>
               </li>
               <li>
                 <p>
@@ -63,10 +63,13 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                   {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
                 </p>
               </li>
+              <li>
+                <p>Ghi chú: {eventData?.descriptionItemLog || 'Không rõ'}</p>
+              </li>
               {/* <li>
                 <p>Mô tả sự kiện: {eventData?.descriptionItemLog || "không có"}</p>
               </li> */}
-              {/* <li>
+              <li>
                 <p className="mb-2">
                   Địa điểm diễn ra:{" "}
                   {`${eventData.addressInParty}`}
@@ -77,7 +80,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                     lng: eventData.coordinateY,
                   }}
                 />
-              </li> */}
+              </li>
             </ul>
           </>
         );
@@ -108,11 +111,11 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               </li>
               <li>
                 <p>
-                  Thời gian diễn ra:{" "}
+                  Thời gian ghi nhận:{" "}
                   {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
                 </p>
               </li>
-              <li>
+              {/* <li>
                 <p className="mb-2">
                   Địa điểm diễn ra: {`${eventData.addressInParty}`}
                 </p>
@@ -122,7 +125,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                     lng: eventData.coordinateY,
                   }}
                 />
-              </li>
+              </li> */}
             </ul>
           </>
         );
@@ -134,11 +137,11 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
             </h2>
             <ul className="space-y-2">
               {/* uy quyen, giao hang, nhan */}
-              <li>
+              {/* <li>
                 <p>Người gửi: {eventData?.sender}</p>
-              </li>
+              </li> */}
               <li>
-                <p>Người nhận: {eventData?.receiver}</p>
+                <p>Người nhận: {eventData?.receiverName}</p>
               </li>
               <li>
                 <p>
@@ -153,7 +156,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               </li>
               <li>
                 <p className="mb-2">
-                  Địa điểm diễn ra: {`${eventData.addressInParty}`}
+                  Nơi gửi: {`${eventData.addressInParty}`}
                 </p>
                 <Map
                   location={{

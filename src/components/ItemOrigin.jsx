@@ -29,7 +29,7 @@ export default function ItemOrigin({ goToItemLine }) {
           originData.image.map((image, idx) => (
             <img
               src={image}
-              alt={`${originData.productName || "không rõ"} ${idx}`}
+              alt={`${originData.productName || "không có"} ${idx}`}
             />
           ))
         );
@@ -92,7 +92,7 @@ export default function ItemOrigin({ goToItemLine }) {
             <FaInfoCircle className="mr-2 text-lg" />
               <p>
               <strong>Mô tả sản phẩm: </strong>
-                 {originData.descriptionOrigin || "không rõ"}
+                 {originData.descriptionOrigin || "không có"}
               </p>
             </li>
             <li className="flex items-center">
