@@ -3,6 +3,7 @@ import emptyProductImage from "/no_product.jpg";
 import dogBox from "/dog_box.jpg";
 import useToast from "../../hooks/use-toast";
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { BiTrash, BiEdit } from "react-icons/bi";
 
 
 function Card({ card, handleUpdate, handleDelete}) {
@@ -38,10 +39,10 @@ function Card({ card, handleUpdate, handleDelete}) {
    <div className="relative max-w-md mx-auto bg-white shadow-md rounded-box overflow-hidden">
    <div className="md:flex">
      <div className="md:flex-shrink-0">
-       <img className="h-48 w-full object-cover md:w-48" src={card.image || emptyProductImage} alt="product" />
+       <img className="h-48 w-full object-cover md:w-48 lg:w-36 lg:h-36" src={card.image || emptyProductImage} alt="product" />
      </div>
-     <div className="p-4 h-48 overflow-y-auto">
-  <p className="block mt-1 text-lg leading-tight font-medium text-black">{card.name}</p>
+     <div className="p-4 h-48  md:w-48 lg:w-36 lg:h-36 overflow-y-auto">
+  <p className="block mt-1 text-lg lg:text-xs leading-tight font-medium text-black">{card.name}</p>
   <p className="mt-2 text-xs text-gray-500">{card.description}</p>
 </div>
     </div>
@@ -54,7 +55,7 @@ function Card({ card, handleUpdate, handleDelete}) {
         }}
         className="text-blue-500 hover:text-blue-700"
       >
-        <FaEdit size={20} />
+        <BiEdit size={20} />
       </button>
       <button
         onClick={(e) => {
@@ -63,7 +64,7 @@ function Card({ card, handleUpdate, handleDelete}) {
         }}
         className="text-red-500 hover:text-red-700"
       >
-        <FaTrash size={20} />
+        <BiTrash size={20} />
       </button>
     </div>
   )}

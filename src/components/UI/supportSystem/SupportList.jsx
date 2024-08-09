@@ -135,15 +135,16 @@ const SupportList = ({ items = [], onSubmit }) => {
                             {support.supportContent ? (
                               <>
                                 <div className="mt-4 border-t border-gray-300 pt-4" />
-                                <p className="flex items-center text-green-500">
-                                  <FaUserShield className="mr-2" />
-                                  <strong>Trả lời: </strong>
-                                  {support.supportContent}
-                                </p>
                                 <p className="text-gray-600">
-                                  Thời gian:{" "}
                                   {formatTimestamp(support.supportTimestamp)}
                                 </p>
+                                <p className="flex items-center text-green-500">
+                                  <FaUserShield className="mr-2" />
+                                  <strong>
+                                  {support.supportContent}
+                                  </strong>
+                                </p>
+                         
                                 {support?.supportImage?.length > 0 && (
                                   <div className="flex space-x-2 mt-2">
                                     {support?.supportImage?.map((image, imgIndex) => (
