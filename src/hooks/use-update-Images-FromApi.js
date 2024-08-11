@@ -3,10 +3,11 @@ import {
   updateProductEditImages,
   updateProductEditImagesData,
   updateProductEditAvatar,
-} from "../store"; // Adjust the import path according to your file structure
+} from "../store";
 
 const urlToBase64 = (url) => {
   return new Promise((resolve, reject) => {
+    const secureUrl = url.replace("http://", "https://");
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
       const reader = new FileReader();
@@ -15,8 +16,8 @@ const urlToBase64 = (url) => {
       };
       reader.readAsDataURL(xhr.response);
     };
-    xhr.onerror = reject; // Handle errors
-    xhr.open("GET", url);
+    xhr.onerror = reject;
+    xhr.open("GET", secureUrl);
     xhr.responseType = "blob";
     xhr.send();
   });

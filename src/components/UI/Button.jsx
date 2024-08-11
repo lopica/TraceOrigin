@@ -25,9 +25,9 @@ function Button({
   const dynamicClasses = classNames('flex items-center justify-center px-3 py-1.5', {
     'border-blue-500 bg-sky-500 text-white hover:bg-sky-600': primary,
     'bg-slate-300 hover:bg-slate-400': secondary,
-    // 'border-green-500 bg-green-500 text-white': success,
-    // 'border-yellow-400 bg-yellow-400 text-white': warning,
-    // 'border-red-500 bg-red-500 text-white': danger,
+    'border-green-500 bg-green-500 text-white': success,
+    'border-yellow-400 bg-yellow-400 text-white': warning,
+    'border-red-500 bg-red-500 text-white': danger,
     'rounded-md': rounded,
     'bg-white': outline,
     'text-blue-500 hover:text-blue-800 hover:bg-white': outline && primary,

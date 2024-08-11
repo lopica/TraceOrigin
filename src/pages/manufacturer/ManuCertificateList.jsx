@@ -9,7 +9,7 @@ import { useGetListCertificateByManuIdQuery, useSendRequestVerifyCertMutation, u
 import Pagination from '../../components/UI/Pagination';
 import useToast from "../../hooks/use-toast";
 import CarouselModal from '../../components/UI/CarouselModal';
-import { useGetUserDetailQuery } from "../../store/apis/userApi";
+import { useGetUserDetailQuery, useUpdateStatusMutation } from "../../store/apis/userApi";
 import { FiPlus} from "react-icons/fi";
 import useUser from "../../hooks/use-user";
 
@@ -25,6 +25,7 @@ function ManuCertificateList() {
   const [isModalOpenImage, setModalOpenImage] = useState(false);
   const [page, setPage] = useState(0);
   const [sendRequestVerifyCert, { isLoading: isSendingRequest }] = useSendRequestVerifyCertMutation();
+  const [sendAbortVerifyCert, { isLoading: isSendingRequestAbort }] = useUpdateStatusMutation();
   const [deleteCertCertId] = useDeleteCertCertIdMutation();
   const { isFetching, isError, refetch } = useUser();
 
@@ -68,6 +69,13 @@ function ManuCertificateList() {
     } catch (err) {
       console.error('Có lỗi xảy ra:', err);
     }
+  };
+
+  const handleAbortVerifyCert = async () => {
+      await sendAbortVerifyCert({id: userIdList, status: 7}).unwrap();
+      refetch();
+      refetchUserDetail();
+      getToast('Hủy yêu cầu gửi xác thực chứng chỉ!');
   };
 
   const handlePageChange = (newPage) => {
@@ -125,6 +133,14 @@ function ManuCertificateList() {
     </div>
   );
 
+  const abortButton = userStatus === 8 && (
+    <div onClick={handleAbortVerifyCert}>
+      <Button danger rounded isLoading={isSendingRequest}>
+        Hủy bỏ xác thực
+      </Button>
+    </div>
+  );
+
   const addNewButton = (userStatus === 7 || userStatus === 0) && (
       <Link to="add">
           <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
@@ -157,6 +173,7 @@ function ManuCertificateList() {
       <div className="flex justify-between mr-4 px-8">
         <div>
           {sendRequestButton}
+          {abortButton}
         </div>
         <div>
           <Pagination active={page} totalPages={certificateData?.totalPages || 0} onPageChange={handlePageChange} />
