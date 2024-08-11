@@ -49,9 +49,22 @@ const CreateReportModal = ({ isOpen, onRequestClose, productCode, in_email }) =>
 
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
-    const base64Files = await Promise.all(files.map(file => convertFileToBase64(file)));
-    setImageReports((prevImages) => [...prevImages, ...base64Files]);
+    const maxSize = 10 * 1024 * 1024;
+    const validFiles = files.filter((file) => {
+      if (file.size > maxSize) {
+        alert(`File ${file.name} có kích thước vượt quá 10MB, vui lòng chọn file khác.`);
+        return false;
+      }
+      return true;
+    });
+    if (validFiles.length > 0) {
+      const base64Files = await Promise.all(
+        validFiles.map((file) => convertFileToBase64(file))
+      );
+      setImageReports((prevImages) => [...prevImages, ...base64Files]);
+    }
   };
+  
 
   const triggerFileInput = () => {
     fileInputRef.current.click();
