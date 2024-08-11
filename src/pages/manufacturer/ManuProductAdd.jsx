@@ -409,7 +409,7 @@ function ManuProductAdd() {
             )}
           </div>
         </>
-        {/* <>
+        <>
           <label className="form-control w-full ">
             <div
               className="label"
@@ -476,7 +476,7 @@ function ManuProductAdd() {
               </div>
             )}
           </label>
-        </> */}
+        </>
       </Wizzard>
     </div>
   );
