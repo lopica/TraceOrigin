@@ -25,7 +25,7 @@ const stepList = [
   "Thông tin cơ bản",
   "Thông số kĩ thuật",
   "Ảnh minh họa",
-  // "Model 3D (tùy chọn)",
+  "Model 3D (tùy chọn)",
 ];
 
 const validateStep = [
