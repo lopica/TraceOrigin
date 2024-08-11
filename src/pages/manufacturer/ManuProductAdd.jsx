@@ -25,7 +25,7 @@ const stepList = [
   "Thông tin cơ bản",
   "Thông số kĩ thuật",
   "Ảnh minh họa",
-  "Model 3D (tùy chọn)",
+  // "Model 3D (tùy chọn)",
 ];
 
 const validateStep = [
@@ -409,7 +409,7 @@ function ManuProductAdd() {
             )}
           </div>
         </>
-        <>
+        {/* <>
           <label className="form-control w-full ">
             <div
               className="label"
@@ -476,7 +476,7 @@ function ManuProductAdd() {
               </div>
             )}
           </label>
-        </>
+        </> */}
       </Wizzard>
     </div>
   );
