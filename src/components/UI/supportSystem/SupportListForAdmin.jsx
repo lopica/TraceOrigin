@@ -141,9 +141,10 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
                               <>
                                 <div className="mt-4 border-t border-gray-300 pt-4" />
                                 <p className="flex items-center text-green-500">
-                                  <FaUserShield className="mr-2" />
-                                  <strong>Trả lời: </strong>
+                                <FaUserShield className="mr-2" />
+                                  <strong>
                                   {support.supportContent}
+                                  </strong>
                                 </p>
                                 <p className="text-gray-600">
                                   Thời gian:{" "}
