@@ -14,8 +14,9 @@ export default function ImageUploadModal({
   const fileInputRef = useRef(null);
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [requestScanImage] = useRequestScanImageMutation();
-  const { data: uploadedImages, isLoading } = useGetImageHadUploadQuery({ productId });
+  const { data: uploadedImages, isLoading, refetch} = useGetImageHadUploadQuery({ productId });
 
   useEffect(() => {
     setImages(imageReports);
@@ -29,12 +30,22 @@ export default function ImageUploadModal({
 
   const handleFileChange = (event) => {
     const files = event.target.files;
-    if (files) {
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
-      setImages(prevImages => [...prevImages, ...newImages]); // Add new images to the left
-      onImageReportsChange && onImageReportsChange(newImages.map(file => file.split(',')[1]));
+    const maxSize = 10 * 1024 * 1024;
+    const validFiles = Array.from(files).filter(file => {
+        if (file.size > maxSize) {
+            alert(`File ${file.name} có kích thước vượt quá 10MB, vui lòng chọn file khác.`);
+            return false;
+        }
+        return true;
+    });
+
+    if (validFiles.length > 0) {
+        const newImages = validFiles.map(file => URL.createObjectURL(file));
+        setImages(prevImages => [...prevImages, ...newImages]);
+        onImageReportsChange && onImageReportsChange(validFiles.map(file => file.split(',')[1]));
     }
-  };
+};
+
 
   const handleDelete = (idx) => {
     const updatedImages = images.filter((_, index) => index !== idx);
@@ -68,8 +79,8 @@ export default function ImageUploadModal({
   const handleSubmitImages = async () => {
     const newImages = images.filter(image => !uploadedImages.includes(image));
 
-    if (newImages.length < 2) {
-      alert('Bạn cần tải lên ít nhất 2 ảnh.');
+    if (images.length < 25) {
+      alert('Bạn cần tải lên ít nhất 25 ảnh.');
       return;
     }
 
@@ -88,11 +99,16 @@ export default function ImageUploadModal({
     };
 
     try {
+      setIsLoadingButton(true)
       await requestScanImage(data).unwrap();
       alert('Hình ảnh đã được gửi thành công!');
-      onClose(); // Close modal after successful submission
+      setIsLoadingButton(false);
+      setImages([]);
+      refetch();
+      onClose();
     } catch (error) {
       alert('Gửi hình ảnh thất bại');
+      setIsLoadingButton(false)
       console.error(error);
     }
   };
@@ -104,7 +120,7 @@ export default function ImageUploadModal({
       <Modal onClose={onClose}>
         <div className="py-4 max-w-lg mx-auto">
           <h2 className="text-xl font-semibold mb-2">Tải lên hình ảnh nhận diện</h2>
-          <p className="text-gray-600 mb-4">Vui lòng tải lên tối thiểu 2 ảnh. Ảnh nên được chụp ở nơi sáng và rõ nét để đảm bảo chất lượng tốt nhất.</p>
+          <p className="text-gray-600 mb-4">Vui lòng tải lên tối thiểu 25 ảnh. Ảnh nên được chụp ở nơi sáng và rõ nét để đảm bảo chất lượng tốt nhất.</p>
           {isLoading ? (
             <span className="loading loading-spinner loading-lg"></span>
           ) : (
@@ -149,12 +165,16 @@ export default function ImageUploadModal({
             </div>
           )}
           <div className="flex justify-end mt-4">
-            <button
+            {isLoadingButton ? (
+              <span className="loading loading-spinner loading-lg"></span>
+            ):(
+              <button
               onClick={handleSubmitImages}
               className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
             >
               Gửi hình ảnh
             </button>
+            )}
           </div>
         </div>
       </Modal>

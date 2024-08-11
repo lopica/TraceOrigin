@@ -30,6 +30,11 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert("Vui lòng chọn ảnh nhỏ hơn 10mb");
+        return;
+      }
       reader.onloadend = async () => {
         const base64String = reader.result.split(',')[1];
         setAvatar(`data:image/png;base64,${base64String}`);
@@ -45,6 +50,11 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert("Vui lòng chọn ảnh nhỏ hơn 10mb");
+        return;
+      }
       reader.onloadend = async () => {
         const base64String = reader.result.split(',')[1];
         setCoverImage(`data:image/png;base64,${base64String}`);
