@@ -48,11 +48,12 @@ function ManuReportManager() {
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
+  const userIdList = useSelector(state => state.userSlice.userId);
 
   const { data, error, isLoading, refetch} = useGetListReportsQuery({
     code: "",
     title: "",
-    reportTo: 22,
+    reportTo: userIdList,
     type: 0,
     dateFrom: 0,
     dateTo: 0,

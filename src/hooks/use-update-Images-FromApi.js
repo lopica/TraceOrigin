@@ -3,10 +3,11 @@ import {
   updateProductEditImages,
   updateProductEditImagesData,
   updateProductEditAvatar,
-} from "../store"; // Adjust the import path according to your file structure
+} from "../store";
 
 const urlToBase64 = (url) => {
   return new Promise((resolve, reject) => {
+    const secureUrl = url.replace("http://", "https://");
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
       const reader = new FileReader();
@@ -15,8 +16,8 @@ const urlToBase64 = (url) => {
       };
       reader.readAsDataURL(xhr.response);
     };
-    xhr.onerror = reject; // Handle errors
-    xhr.open("GET", url);
+    xhr.onerror = reject;
+    xhr.open("GET", secureUrl);
     xhr.responseType = "blob";
     xhr.send();
   });
@@ -30,25 +31,13 @@ export default function useUpdateImageFromApi() {
     let imagesShow = [];
 
     try {
-      // Convert listImages from URLs to base64
-      const base64Images = await Promise.all(listImages.map(urlToBase64));
-      
-      // Convert avatar from URL to base64
       const avatarBase64 = await urlToBase64(avatar);
-
-      // Process the list of images
       base64Images.forEach((base64) => {
         imageUrls.push(base64);
         imagesShow.push(`data:image/png;base64,${base64}`);
       });
-
-      // Dispatch actions to update the list of images
       dispatch(updateProductEditImages([...imagesShow]));
-
-      // Dispatch actions to update image data
       dispatch(updateProductEditImagesData([...imageUrls]));
-
-      // Update the avatar separately
       dispatch(updateProductEditAvatar(`data:image/png;base64,${avatarBase64}`));
       
     } catch (error) {
