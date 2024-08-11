@@ -98,6 +98,12 @@ const itemLogApi = createApi({
             body: request,
           }
         }
+      }),
+      getItemLogHistory: builder.query({
+        invalidatesTags: ['consign'],
+        query: (request) => {
+          return `getItemLogDetailHistory?itemLogId=${request}`
+        }
       })
     };
   },
@@ -111,4 +117,5 @@ export const {
   useUpdateReceiveLocationMutation,
   useUpdateConsignMutation,
   useUpdateTransportEventMutation,
+  useGetItemLogHistoryQuery,
 } = itemLogApi;

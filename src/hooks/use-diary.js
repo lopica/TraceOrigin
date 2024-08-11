@@ -13,9 +13,11 @@ import {
   useCreateTransportEventMutation,
   useEndItemLineMutation,
   useFetchEventByItemLogIdQuery,
+  useFetchItemLogsByProductRecognitionQuery,
   useGetAllTransportsQuery,
   useGetCertificateMutation,
   useGetHistoryQuery,
+  useGetItemLogHistoryQuery,
   useIsPendingConsignQuery,
   useSendItemOtpMutation,
   useUpdateConsignMutation,
@@ -25,6 +27,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import useToast from "./use-toast";
 import { findLastConsignAndTransportEvents } from "../utils/getConsignAndTransportEventId";
+import { checkCancelValid } from "../utils/isCancelValid";
 
 export default function useDiary(
   productRecognition,
@@ -66,7 +69,10 @@ export default function useDiary(
   const [lastStep, setLastStep] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isCancelValid, setIsCancelValid] = useState(false);
+  const [currentItemLogId, setCurrentItemLogId] = useState("");
 
+  const { refetch: itemLineRefetch } =
+    useFetchItemLogsByProductRecognitionQuery(productRecognition);
   const {
     data: roleCode,
     isFetching: isCheckRoleFetch,
@@ -145,6 +151,10 @@ export default function useDiary(
       refetchOnMountOrArgChange: true,
     }
   );
+  const { data: itemLogHistory, refetch: itemLogHistoryRefetch } = useGetItemLogHistoryQuery(currentItemLogId, {
+    skip: !currentItemLogId,
+    refetchOnMountOrArgChange: true,
+  });
 
   const [getCertificate] = useGetCertificateMutation();
   const [abort] = useEndItemLineMutation();
@@ -180,10 +190,11 @@ export default function useDiary(
 
   //api call
   useEffect(() => {
-    if (itemLine?.itemLogDTOs) {
-      if (itemLine.itemLogDTOs.length > 0) {
-        const createdAt = itemLine.itemLogDTOs[0].createdAt;
-        const isValid = isCancelValid(createdAt);
+    if (itemLine) {
+      if (itemLine.length > 0) {
+        const createdAt = itemLine[0].createdAt;
+        console.log(createdAt)
+        const isValid = checkCancelValid(createdAt);
         setIsCancelValid(isValid);
       }
     }
@@ -205,7 +216,7 @@ export default function useDiary(
         consignSetValue("authorizedEmail", updateConsignData.receiver);
         consignSetValue("authorizedName", updateConsignData.receiverName);
         consignSetValue("description", updateConsignData.descriptionItemLog);
-        consignSetValue("phoneNumber", updateConsignData.partyPhoneNumber);
+        consignSetValue("phoneNumber", updateConsignData.phoneNumber);
         //update transport data if it has
         console.log(updateTransportId);
       }
@@ -222,14 +233,18 @@ export default function useDiary(
         const transport = transports.find(
           (value) => value.transportEmail === updateTransportData.partyFullname
         );
-        consignSetValue(
-          "transport",
-          `${transport.transportId},${transport.transportName}`
-        );
-        consignSetValue(
-          "descriptionTransport",
-          updateTransportData.descriptionItemLog
-        );
+        console.log(transport);
+        if (transport) {
+          setIsChecked(true);
+          consignSetValue(
+            "transport",
+            `${transport.transportId},${transport.transportName}`
+          );
+          consignSetValue(
+            "descriptionTransport",
+            updateTransportData.descriptionItemLog
+          );
+        } else setIsChecked(false);
       }
     }
   }, [isUpdateTransportDataFetch, isUpdateTransportDataSuccess]);
@@ -266,7 +281,7 @@ export default function useDiary(
     if (isUpdateTransportDataSuccess && !isUpdateTransportDataFetch) {
       //set data or send it immediately
       if (updateTransportData) {
-        setIsChecked(true);
+        // setIsChecked(true);
       }
     }
   }, [isUpdateTransportDataSuccess, isUpdateTransportDataFetch]);
@@ -559,25 +574,25 @@ export default function useDiary(
             .map((word) => word.trim());
         console.log(oldAddress);
         ward =
-          roleDiary === "pending-old" && editAddress
+          roleDiary === "pending-old" && !editAddress
             ? oldAddress[1]
             : consignForm.ward
             ? consignForm.ward.split(",")[1]
             : "";
         district =
-          roleDiary === "pending-old" && editAddress
+          roleDiary === "pending-old" && !editAddress
             ? oldAddress[2]
             : consignForm.district
             ? consignForm.district.split(",")[1]
             : "";
         province =
-          roleDiary === "pending-old" && editAddress
+          roleDiary === "pending-old" && !editAddress
             ? oldAddress[3]
             : consignForm.province
             ? consignForm.province.split(",")[1]
             : "";
         address =
-          roleDiary === "pending-old" && editAddress
+          roleDiary === "pending-old" && !editAddress
             ? updateConsignData.addressInParty
             : consignForm.province
             ? `${consignForm.address}, ${ward}, ${district}, ${province}`
@@ -591,7 +606,7 @@ export default function useDiary(
             address,
             city: province,
             country:
-              roleDiary === "pending-old" && editAddress
+              roleDiary === "pending-old" && !editAddress
                 ? "Việt Nam"
                 : consignForm.province
                 ? "Việt Nam"
@@ -599,11 +614,11 @@ export default function useDiary(
             district,
             ward,
             coordinateX:
-              roleDiary === "pending-old" && editAddress
+              roleDiary === "pending-old" && !editAddress
                 ? updateConsignData.coordinateX
                 : coordinate[0],
             coordinateY:
-              roleDiary === "pending-old" && editAddress
+              roleDiary === "pending-old" && !editAddress
                 ? updateConsignData.coordinateY
                 : coordinate[1],
           },
@@ -635,6 +650,7 @@ export default function useDiary(
                     dispatch(updateCoordinate([]));
                     dispatch(updateConsignForm({}));
                     historyRefetch();
+                    itemLineRefetch();
                     roleCodeRefetch();
                     pendingRefetch();
                     console.log(res);
@@ -647,6 +663,7 @@ export default function useDiary(
                 historyRefetch();
                 roleCodeRefetch();
                 pendingRefetch();
+                itemLineRefetch();
                 console.log(res);
                 setLastStep("success");
                 setStep(nextStep);
@@ -671,7 +688,7 @@ export default function useDiary(
                 request = {
                   transportId: consignForm.transport
                     ? consignForm.transport.split(",")[0]
-                    : "",
+                    : 0,
                   descriptionItemLog: consignForm.descriptionTransport,
                   emailParty: guestEmail,
                   productRecognition,
@@ -679,6 +696,11 @@ export default function useDiary(
                 };
                 console.log(request);
                 if (updateTransportId) {
+                  console.log("vo day");
+                  console.log({
+                    ...request,
+                    itemLogId: updateTransportId,
+                  });
                   updateTransport({
                     ...request,
                     itemLogId: updateTransportId,
@@ -686,9 +708,11 @@ export default function useDiary(
                     .unwrap()
                     .then((res) => {
                       console.log(res);
+                      setLastStep("success");
                       dispatch(updateCoordinate([]));
                       dispatch(updateConsignForm({}));
-                      setLastStep("success");
+                      historyRefetch();
+                      itemLineRefetch();
                       setStep(nextStep);
                     });
                 } else {
@@ -696,20 +720,52 @@ export default function useDiary(
                     .unwrap()
                     .then((res) => {
                       console.log(res);
+                      setLastStep("success");
+                      historyRefetch();
+                      itemLineRefetch();
                       dispatch(updateCoordinate([]));
                       dispatch(updateConsignForm({}));
-                      setLastStep("success");
                       setStep(nextStep);
                     });
                 }
               } else {
-                dispatch(updateCoordinate([]));
-                dispatch(updateConsignForm({}));
-                setLastStep("success");
-                setStep(nextStep);
+                if (packReceiveId.transportId) {
+                  request = {
+                    transportId: 0,
+                    descriptionItemLog: "",
+                    emailParty: guestEmail,
+                    productRecognition,
+                    otp: fixOtp,
+                  };
+                  updateTransport({
+                    ...request,
+                    itemLogId: updateTransportId,
+                  })
+                    .unwrap()
+                    .then((res) => {
+                      console.log(res);
+                      setLastStep("success");
+                      dispatch(updateCoordinate([]));
+                      dispatch(updateConsignForm({}));
+                      historyRefetch();
+                      itemLineRefetch();
+                      setStep(nextStep);
+                    });
+                } else {
+                  setLastStep("success");
+                  historyRefetch();
+                  itemLineRefetch();
+                  dispatch(updateCoordinate([]));
+                  dispatch(updateConsignForm({}));
+                  console.log(nextStep);
+                  setStep(nextStep);
+                }
               }
             })
-            .catch(() => getToast("Mã otp của bạn không chính xác"));
+            .catch((err) => {
+              console.log(err);
+              getToast("Mã otp của bạn không chính xác");
+            });
         }
         break;
       case "receive":
@@ -726,7 +782,10 @@ export default function useDiary(
             roleCodeRefetch();
             pendingRefetch();
           })
-          .then(() => setStep(nextStep))
+          .then(() => {
+            setLastStep("option");
+            setStep(nextStep);
+          })
           .catch(() => getToast("Mã otp của bạn không chính xác"));
         break;
       case "receive-location":
@@ -784,6 +843,8 @@ export default function useDiary(
               .unwrap()
               .then(() => {
                 dispatch(updateCoordinate([]));
+                historyRefetch();
+                itemLogHistoryRefetch()
                 setStep(nextStep);
               })
               .catch(() => getToast("Mã otp của bạn không chính xác"))
@@ -791,6 +852,8 @@ export default function useDiary(
               .unwrap()
               .then(() => {
                 dispatch(updateCoordinate([]));
+                historyRefetch();
+                itemLogHistoryRefetch()
                 setStep(nextStep);
               })
               .catch(() => getToast("Mã otp của bạn không chính xác"));
@@ -840,6 +903,7 @@ export default function useDiary(
 
   function historyChooseHandle(item) {
     // console.log(item);
+    setCurrentItemLogId(item.itemLogId)
     if (item.eventType == "NHẬN HÀNG") {
       setUpdateReceiveId(item.itemLogId);
       // dispatch()
@@ -892,5 +956,6 @@ export default function useDiary(
     updateConsignData,
     updateTransportData,
     isCancelValid,
+    itemLogHistory,
   };
 }

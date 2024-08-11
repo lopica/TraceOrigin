@@ -98,6 +98,7 @@ export default function NoApiConsign({ productRecognition }) {
     updateConsignData,
     updateTransportData,
     isCancelValid,
+    itemLogHistory,
   } = useDiary(
     productRecognition,
     consignWatch,
@@ -107,6 +108,7 @@ export default function NoApiConsign({ productRecognition }) {
     receiveSetValue,
     receiveSetValue,
     editAddress,
+    handleFlip
   );
   const [inputsDisabled, setInputsDisabled] = useState(false);
 
@@ -305,7 +307,7 @@ export default function NoApiConsign({ productRecognition }) {
           <div className="grow flex flex-col items-center justify-center">
             <Otp
               onSubmit={(otp) => onOtpSubmit(otp, nextStep, identifier)}
-              sendOtp={sendOtp}
+              sendOtp={() => sendOtp(guestEmail)}
               inputsDisabled={inputsDisabled}
               setInputsDisabled={() => setInputsDisabled(false)}
               isOtpLoading={isSendOtpLoading}
@@ -511,37 +513,40 @@ export default function NoApiConsign({ productRecognition }) {
                       {consignFormErrors.description?.message}
                     </span>
                     <div className="flex justify-end">
-                      <Button primary outline onClick={(e)=>{
-                        e.preventDefault()
-                        handleFlip()
-                      }}>
+                      <Button
+                        primary
+                        outline
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleFlip();
+                        }}
+                      >
                         Sửa địa chỉ
                       </Button>
                     </div>
                   </div>
                 )}
-                {console.log(roleDiary === "pending-old" && editAddress)}
                 {(roleDiary === "pending-old" && editAddress) ||
-                  (roleDiary !== "pending-old") ? (
-                    <AddressInputGroup
-                      register={registerConsignForm}
-                      getValues={consignGetValues}
-                      setValue={consignSetValue}
-                      control={consignControl}
-                      errors={consignFormErrors}
-                      noValidate
-                      message={
-                        roleDiary === "current-owner" ? (
-                          <p>Địa chỉ gửi</p>
-                        ) : (
-                          <p className="text-sky-600 text-sm">
-                            Cập nhật địa chỉ gửi đi mới
-                          </p>
-                        )
-                      }
-                      watch={consignWatch}
-                    />
-                  ) : undefined}
+                roleDiary !== "pending-old" ? (
+                  <AddressInputGroup
+                    register={registerConsignForm}
+                    getValues={consignGetValues}
+                    setValue={consignSetValue}
+                    control={consignControl}
+                    errors={consignFormErrors}
+                    noValidate
+                    message={
+                      roleDiary === "current-owner" ? (
+                        <p>Địa chỉ gửi</p>
+                      ) : (
+                        <p className="text-sky-600 text-sm">
+                          Cập nhật địa chỉ gửi đi mới
+                        </p>
+                      )
+                    }
+                    watch={consignWatch}
+                  />
+                ) : undefined}
               </div>
               <div className="flex justify-start items-start gap-2 my-4">
                 <input
@@ -647,19 +652,6 @@ export default function NoApiConsign({ productRecognition }) {
         <div className="h-full">
           <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
           <BackBtn step="option" />
-          <div className="flex justify-end">
-            <Button
-              primary
-              outline
-              className="py-0"
-              onClick={(e) => {
-                e.preventDefault();
-                setStep("history");
-              }}
-            >
-              Lịch sử chỉnh sửa
-            </Button>
-          </div>
           <form
             className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
             onKeyDown={handleKeyDown}
@@ -683,6 +675,21 @@ export default function NoApiConsign({ productRecognition }) {
                     className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none  peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm "
                   >
                     Email người nhận
+                  </label>
+                </div>
+                <div className="relative w-full min-h-10 mt-4 ">
+                  <input
+                    type="text"
+                    value={consignData.receiverName}
+                    disabled
+                    id="authorizedName"
+                    className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                  />
+                  <label
+                    htmlFor="authorizedName"
+                    className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                  >
+                    Tên người nhận
                   </label>
                 </div>
                 <div className="relative w-full min-h-10 mt-4 ">
@@ -718,7 +725,7 @@ export default function NoApiConsign({ productRecognition }) {
                 <div className="relative w-full min-h-10 mt-4">
                   <input
                     type="text"
-                    value={consignData.addressInParty}
+                    value={consignData.addressInParty || "Không có"}
                     disabled
                     id="address"
                     className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -730,16 +737,22 @@ export default function NoApiConsign({ productRecognition }) {
                     Địa điểm gửi
                   </label>
                 </div>
-                <Map
-                  location={[consignData.coordinateX, consignData.coordinateY]}
-                />
+                {consignData.addressInParty && (
+                  <Map
+                    location={[
+                      consignData.coordinateX,
+                      consignData.coordinateY,
+                    ]}
+                  />
+                )}
               </div>
+              {console.log(transportData)}
               {transportData && transportData.length !== 0 && (
                 <div className="w-full space-y-6 mt-4">
                   <div className="relative w-full min-h-10 mt-4">
                     <input
                       type="text"
-                      value={transportData.partyFullname}
+                      value={transportData.partyFullname || "Không có"}
                       disabled
                       id="transport"
                       className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -754,7 +767,7 @@ export default function NoApiConsign({ productRecognition }) {
                   <div className="relative w-full min-h-10 mt-4">
                     <input
                       type="text"
-                      value={transportData.descriptionItemLog}
+                      value={transportData.descriptionItemLog || "Không có"}
                       disabled
                       id="description-transport"
                       className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -777,123 +790,6 @@ export default function NoApiConsign({ productRecognition }) {
         </div>
       );
       break;
-    // case "history":
-    //   form = (
-    //     <div className="h-full">
-    //       <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
-    //       <BackBtn step="receive" />
-    //       <form
-    //         className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
-    //         onKeyDown={handleKeyDown}
-    //         onSubmit={(e) => {
-    //           e.preventDefault();
-    //           setStep("receive-confirm");
-    //         }}
-    //       >
-    //         <div className="w-full h-auto mx-auto grow flex flex-col items-start justify-start">
-    //           <div className="relative h-auto w-full space-y-8">
-    //             <div className="relative w-full min-h-10 mt-4">
-    //               <input
-    //                 type="email"
-    //                 value="ducanhedison@gmail.com"
-    //                 disabled
-    //                 id="authorizedEmail"
-    //                 className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
-    //               />
-    //               <label
-    //                 htmlFor="authorizedEmail"
-    //                 className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none  peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm "
-    //               >
-    //                 Email người nhận
-    //               </label>
-    //             </div>
-    //             <div className="relative w-full min-h-10 mt-4 ">
-    //               <input
-    //                 type="text"
-    //                 value="anhvdhe160063@fpt.edu.vn"
-    //                 disabled
-    //                 id="authorizedName"
-    //                 className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
-    //               />
-    //               <label
-    //                 htmlFor="authorizedName"
-    //                 className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
-    //               >
-    //                 Tên người nhận
-    //               </label>
-    //             </div>
-    //             <div className="relative w-full min-h-10 mt-4">
-    //               <input
-    //                 type="text"
-    //                 value="Không có"
-    //                 disabled
-    //                 id="description"
-    //                 className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
-    //               />
-    //               <label
-    //                 htmlFor="description"
-    //                 className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
-    //               >
-    //                 Miêu tả hoạt động
-    //               </label>
-    //             </div>
-    //             <div className="relative w-full min-h-10 mt-4">
-    //               <input
-    //                 type="text"
-    //                 value="Đại học FPT, xã Thạch Hòa, huyện Thạch Thất, TP Hà Nội"
-    //                 disabled
-    //                 id="address"
-    //                 className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
-    //               />
-    //               <label
-    //                 htmlFor="address"
-    //                 className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
-    //               >
-    //                 Miêu tả hoạt động
-    //               </label>
-    //             </div>
-    //           </div>
-    //           <div className="w-full space-y-6">
-    //             <div className="relative w-full min-h-10 mt-4">
-    //               <input
-    //                 type="text"
-    //                 value="Viettel Post"
-    //                 disabled
-    //                 id="transport"
-    //                 className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
-    //               />
-    //               <label
-    //                 htmlFor="transport"
-    //                 className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
-    //               >
-    //                 Đơn vị vận chuyển
-    //               </label>
-    //             </div>
-    //             <div className="relative w-full min-h-10 mt-4">
-    //               <input
-    //                 type="text"
-    //                 value="Không có"
-    //                 disabled
-    //                 id="description-transport"
-    //                 className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
-    //               />
-    //               <label
-    //                 htmlFor="description-transport"
-    //                 className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
-    //               >
-    //                 Mã vận chuyển
-    //               </label>
-    //             </div>
-    //           </div>
-    //         </div>
-
-    //         <div className="flex justify-end w-full min-h-15">
-    //           <NextBtn />
-    //         </div>
-    //       </form>
-    //     </div>
-    //   );
-    //   break;
     case "receive-form":
       form = (
         <div>
@@ -954,16 +850,19 @@ export default function NoApiConsign({ productRecognition }) {
                 thể tạo chứng chỉ chứng minh sự minh bạch toàn bộ quá trình
               </p>
             )}
-            <AddressInputGroup
-              register={registerReceiveForm}
-              getValues={receiveGetValues}
-              setValue={receiveSetValue}
-              control={receiveControl}
-              errors={receiveFormErrors}
-              noValidate
-              message="Địa chỉ nhận hàng"
-              watch={receiveWatch}
-            />
+            <div className="w-full">
+              <AddressInputGroup
+                register={registerReceiveForm}
+                getValues={receiveGetValues}
+                setValue={receiveSetValue}
+                control={receiveControl}
+                errors={receiveFormErrors}
+                noValidate
+                message="Địa chỉ nhận hàng"
+                watch={receiveWatch}
+              />
+            </div>
+
             <div className="relative w-full min-h-10 mt-4">
               <input
                 type="text"
@@ -1008,7 +907,11 @@ export default function NoApiConsign({ productRecognition }) {
             <Button
               primary
               outline
-              onClick={() => setStep("receive-form")}
+              onClick={() =>
+                setStep(
+                  roleDiary === "pending-receiver" ? "receive" : "receive-form"
+                )
+              }
               // disabled={isConsignLoading}
             >
               Quay lại
@@ -1041,7 +944,8 @@ export default function NoApiConsign({ productRecognition }) {
               primary
               outline
               onClick={() => {
-                setStep("option")}}
+                setStep("option");
+              }}
               // disabled={isConsignLoading}
             >
               Quay lại
@@ -1220,8 +1124,13 @@ export default function NoApiConsign({ productRecognition }) {
 
   return (
     <div className="flex justify-center">
-      <CreateReportModal isOpen={modalIsOpen} onRequestClose={closeModal} productCode={productRecognition} in_email={guestEmail}/>
-      <Tooltip content='Ghi nhật ký' position='top'>
+      <CreateReportModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        productCode={productRecognition}
+        in_email={guestEmail}
+      />
+      <Tooltip content="Ghi nhật ký" position="top">
         <Button
           // onClick={openModal}
           onClick={handleOpen}
