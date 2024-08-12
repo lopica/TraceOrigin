@@ -94,7 +94,16 @@ function ManuCertificateAdd() {
                 label="Tên chứng chỉ"
                 type="text"
                 placeholder="Chứng nhận an toàn vệ sinh"
-                {...register("name", { required: "Bạn cần nhập tên chứng chỉ", maxLength: { value: 100, message: "" } })}
+                {...register("issuanceAuthority", {
+                  required: "Bạn cần điền tên chứng chỉ",
+                  minLength: {
+                      value: 3,
+                      message: "Tên chứng chỉ phải có ít nhất 3 kí tựu"
+                  },
+                  maxLength: {
+                      value: 100,
+                      message: "Chứng chỉ không được vượt quá 100 ký tự"
+                  }})}
                 tooltip="Tối đa 100 ký tự"
                 error={errors.productName?.message}
               />
@@ -116,8 +125,17 @@ function ManuCertificateAdd() {
             label="Cơ quan cấp"
             type="text"
             placeholder="Bộ y tế"
-            {...register("issuanceAuthority", { required: "Bạn cần điền công dụng sản phẩm" })}
-            tooltip="Liệt kê, cách nhau dấu phẩy"
+            {...register("issuanceAuthority", {
+              required: "Bạn cần điền công dụng sản phẩm",
+              minLength: {
+                  value: 3,
+                  message: "Cơ quan cấp phải có ít nhất 3 ký tự"
+              },
+              maxLength: {
+                  value: 100,
+                  message: "Cơ quan cấp không được vượt quá 100 ký tự"
+              }})}
+            tooltip="Cơ quan cấp"
             error={errors.description?.message}
           />
         </>
