@@ -94,7 +94,7 @@ function ManuCertificateAdd() {
                 label="Tên chứng chỉ"
                 type="text"
                 placeholder="Chứng nhận an toàn vệ sinh"
-                {...register("issuanceAuthority", {
+                {...register("name", {
                   required: "Bạn cần điền tên chứng chỉ",
                   minLength: {
                       value: 3,
