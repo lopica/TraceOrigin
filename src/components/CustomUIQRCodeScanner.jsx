@@ -40,6 +40,7 @@ const QRCodeScanner = () => {
   const [isCameraLoading, setIsCameraLoading] = useState(false);
 
   const handleFileUpload = (event) => {
+    console.log("AAA")
     const file = event.target.files[0];
     if (file && file.type.startsWith("image/")) {
       const imageSrc = URL.createObjectURL(file);
