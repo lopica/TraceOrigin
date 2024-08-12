@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import useShow from "../../../hooks/use-show";
 import { usePredictMutation } from "../../../store";
 import Modal from "../Modal";
-import ImageClassification from "../../ImageClassification";
+import ImageClassificationDemo from "../../ImageClassificationDemo";
 import QRCodeScanner from "../../QRCodeScanner";
 import CustomUIQRCodeScanner from "../../CustomUIQRCodeScanner";
 import { useSearchAllManufacturerQuery } from "../../../store/apis/userApi";
@@ -73,7 +73,7 @@ const ActionButtonHomePage = () => {
 
   const modal = (
     <Modal onClose={handleClose}>
-      <ImageClassification />
+      <ImageClassificationDemo />
     </Modal>
   );
   // className="w-full h-16 bg-white text-black text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-color1 hover:text-white hover:border-color1"
