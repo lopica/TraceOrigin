@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import Consign from "../../components/Consign";
 import useToast from "../../hooks/use-toast";
 import ItemEvent from "../../components/ItemEvent";
+import NoApiConsign from "../../components/NoApiConsign";
 
 export default function ItemDetail() {
   const location = useLocation();
@@ -61,7 +62,8 @@ export default function ItemDetail() {
 
   return (
     <section className="relative">
-      <Consign productRecognition={productRecognition} />
+      {/* <Consign productRecognition={productRecognition} /> */}
+      <NoApiConsign productRecognition={productRecognition} />
       <div className="block lg:hidden">
         <Swiper
           autoHeight
