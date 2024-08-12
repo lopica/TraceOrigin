@@ -40,13 +40,13 @@ export default function ItemLine({
     itemLine = <div className="skeleton w-full h-32">&#8203;</div>;
   } else if (isItemLogsError) {
     itemLine = (
-      <p className="text-center">Gặp lỗi khi lấy dữ liệu con đường sản phẩm</p>
+      <p className="mt-8 text-center">Gặp lỗi khi lấy dữ liệu con đường sản phẩm</p>
     );
   } else {
     if (itemLogsData) {
       const logLength = itemLogsData.itemLogDTOs.length;
       itemLine = (
-        <ul className="timeline timeline-vertical max-w-lg mx-auto overflow-y-auto max-h-[65svh]">
+        <ul className={`timeline timeline-vertical max-w-lg mx-auto overflow-y-auto ${showQr ? 'max-h-[52svh]' : 'max-h-[80svh]' }`}>
           {itemLogsData.itemLogDTOs.map((log, index) => (
             <li key={index} className="h-20 gap-x-4">
               {index !== 0 && <hr className="bg-base-content" />}

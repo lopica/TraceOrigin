@@ -50,7 +50,7 @@ function Item() {
   };
 
   return (
-    <section>
+    <section className="mt-8">
       {/* <Consign productRecognition={productRecognition} /> */}
       <NoApiConsign productRecognition={productRecognition} />
       <div className="block lg:hidden">

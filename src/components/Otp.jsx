@@ -14,7 +14,7 @@ export default function Otp({
 }) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(120);
+  const [timeLeft, setTimeLeft] = useState(180);
   const { email } = useSelector((state) => state.registerForm);
   const [lastSubmittedOtp, setLastSubmittedOtp] = useState("");
   const timerRef = useRef(null); // Use ref to track the timer
@@ -80,7 +80,7 @@ export default function Otp({
 
   useEffect(() => {
     if (!isOtpLoading) {
-      setTimeLeft(120);
+      setTimeLeft(180);
     } // Reset timeLeft when isOtpLoading changes
     const startTimer = () => {
       if (timerRef.current) clearInterval(timerRef.current); // Clear any existing timer
