@@ -22,6 +22,7 @@ import Map from "./Map";
 import SortableTable from "./SortableTable";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { ImCross } from "react-icons/im";
+import CreateReportBlock from "./UI/CreateReportBlock";
 let form;
 export default function NoApiConsign({ productRecognition }) {
   const {
@@ -63,7 +64,6 @@ export default function NoApiConsign({ productRecognition }) {
   } = useForm({ mode: "onTouched" });
   const {} = useForm({ mode: "onTouched" });
   const { show, handleOpen, handleClose } = useShow();
-  const { show: editAddress, handleFlip } = useShow();
   const {
     step,
     roleDiary,
@@ -99,6 +99,9 @@ export default function NoApiConsign({ productRecognition }) {
     updateTransportData,
     isCancelValid,
     itemLogHistory,
+    editAddress,
+    laterBtnHandler,
+    handleFlip,
   } = useDiary(
     productRecognition,
     consignWatch,
@@ -106,9 +109,7 @@ export default function NoApiConsign({ productRecognition }) {
     consignSetValue,
     cancelWatch,
     receiveSetValue,
-    receiveSetValue,
-    editAddress,
-    handleFlip
+    receiveSetValue
   );
   const [inputsDisabled, setInputsDisabled] = useState(false);
 
@@ -247,7 +248,8 @@ export default function NoApiConsign({ productRecognition }) {
   let reportBtn = (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-      onClick={openModal}
+      // onClick={openModal}
+      onClick={() => setStep("report")}
     >
       <p>Báo lỗi</p>
     </div>
@@ -353,7 +355,7 @@ export default function NoApiConsign({ productRecognition }) {
                   <p>Tiếp nhận ủy quyền</p>
                 </div>
               )}
-              {reportBtn}
+              {/* {reportBtn} */}
             </div>
           );
           break;
@@ -710,7 +712,7 @@ export default function NoApiConsign({ productRecognition }) {
                 <div className="relative w-full min-h-10 mt-4">
                   <input
                     type="text"
-                    value={consignData.descriptionItemLog}
+                    value={consignData.descriptionItemLog || "Không có"}
                     disabled
                     id="description"
                     className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -884,7 +886,7 @@ export default function NoApiConsign({ productRecognition }) {
                   outline
                   onClick={(e) => {
                     e.preventDefault();
-                    setStep("success");
+                    laterBtnHandler()
                   }}
                 >
                   Để sau
@@ -1095,9 +1097,14 @@ export default function NoApiConsign({ productRecognition }) {
       break;
     case "report":
       form = (
-        <div>
+        <div className="p-4">
+        <h2 className="text-center text-2xl">Tạo Báo Cáo Mới</h2>
           <BackBtn step="option" />
-          hello report
+          <CreateReportBlock
+          productCode={productRecognition}
+          in_email={guestEmail}
+          backBtn={() => setStep("option")}
+          ></CreateReportBlock>
         </div>
       );
       break;

@@ -73,7 +73,7 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
   const certificates = data || [];
 
   const formatDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
+    const date = new Date(timestamp);
     return date.toLocaleDateString();
   };
 
@@ -148,13 +148,15 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
                   )}
                 </div>
               ) : (
-                <button
-                type="button"
-                className="btn btn-error mt-2 w-full"
-                onClick={handleDelete}
-              >
-                Xóa
-              </button>
+                <>
+                </>
+              //   <button
+              //   type="button"
+              //   className="btn btn-error mt-2 w-full"
+              //   onClick={handleDelete}
+              // >
+              //   Xóa
+              // </button>
               )}
             </div>
             <div className="relative bg-transparent w-2/3 flex items-center justify-center p-6">
