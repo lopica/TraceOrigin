@@ -64,7 +64,7 @@ export default function ImageClassification() {
       formData.append('image', file);
 
       try {
-        const response = await axios.post("http://34.150.7.40:3001/upload", formData, {
+        const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -111,7 +111,7 @@ export default function ImageClassification() {
           formData.append('image', blob, 'image.png');
 
           try {
-            const response = await axios.post("http://34.150.7.40:3001/upload", formData, {
+            const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
