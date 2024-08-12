@@ -148,13 +148,15 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
                   )}
                 </div>
               ) : (
-                <button
-                type="button"
-                className="btn btn-error mt-2 w-full"
-                onClick={handleDelete}
-              >
-                Xóa
-              </button>
+                <>
+                </>
+              //   <button
+              //   type="button"
+              //   className="btn btn-error mt-2 w-full"
+              //   onClick={handleDelete}
+              // >
+              //   Xóa
+              // </button>
               )}
             </div>
             <div className="relative bg-transparent w-2/3 flex items-center justify-center p-6">
