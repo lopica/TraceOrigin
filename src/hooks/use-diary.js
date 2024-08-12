@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useToast from "./use-toast";
 import { findLastConsignAndTransportEvents } from "../utils/getConsignAndTransportEventId";
 import { checkCancelValid } from "../utils/isCancelValid";
+import useShow from "./use-show";
 
 export default function useDiary(
   productRecognition,
@@ -35,8 +36,7 @@ export default function useDiary(
   receiveWatch,
   consignSetValue,
   cancelWatch,
-  receiveSetValue,
-  editAddress
+  receiveSetValue
 ) {
   const { getToast } = useToast();
   const dispatch = useDispatch();
@@ -49,6 +49,12 @@ export default function useDiary(
   const { coordinate, verifyAddress } = useSelector(
     (state) => state.locationData
   );
+  const {
+    show: editAddress,
+    handleFlip,
+    handleOpen,
+    handleClose,
+  } = useShow(false);
   const { itemLine } = useSelector((state) => state.itemSlice);
   const [guestEmail, setGuestEmail] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
@@ -151,10 +157,11 @@ export default function useDiary(
       refetchOnMountOrArgChange: true,
     }
   );
-  const { data: itemLogHistory, refetch: itemLogHistoryRefetch } = useGetItemLogHistoryQuery(currentItemLogId, {
-    skip: !currentItemLogId,
-    refetchOnMountOrArgChange: true,
-  });
+  const { data: itemLogHistory, refetch: itemLogHistoryRefetch } =
+    useGetItemLogHistoryQuery(currentItemLogId, {
+      skip: !currentItemLogId,
+      refetchOnMountOrArgChange: true,
+    });
 
   const [getCertificate] = useGetCertificateMutation();
   const [abort] = useEndItemLineMutation();
@@ -193,7 +200,7 @@ export default function useDiary(
     if (itemLine) {
       if (itemLine.length > 0) {
         const createdAt = itemLine[0].createdAt;
-        console.log(createdAt)
+        console.log(createdAt);
         const isValid = checkCancelValid(createdAt);
         setIsCancelValid(isValid);
       }
@@ -213,10 +220,13 @@ export default function useDiary(
       if (updateConsignData) {
         //set value
         console.log(updateConsignData);
+        handleClose();
         consignSetValue("authorizedEmail", updateConsignData.receiver);
         consignSetValue("authorizedName", updateConsignData.receiverName);
         consignSetValue("description", updateConsignData.descriptionItemLog);
         consignSetValue("phoneNumber", updateConsignData.phoneNumber);
+        if (updateConsignData.addressInParty)
+          dispatch(updateVerifyAddress(true));
         //update transport data if it has
         console.log(updateTransportId);
       }
@@ -485,6 +495,7 @@ export default function useDiary(
   ]);
 
   useEffect(() => {
+    if (step === 'email') setLastStep('')
     if (step === "otp")
       sendOtp(guestEmail)
         .unwrap()
@@ -561,7 +572,11 @@ export default function useDiary(
         abort(request)
           .unwrap()
           .then((res) => {
-            console.log(res);
+            historyRefetch();
+            itemLineRefetch();
+            roleCodeRefetch();
+            pendingRefetch();
+            setLastStep("success");
             setStep(nextStep);
           })
           .catch(() => getToast("Mã otp của bạn không chính xác"));
@@ -711,6 +726,8 @@ export default function useDiary(
                       setLastStep("success");
                       dispatch(updateCoordinate([]));
                       dispatch(updateConsignForm({}));
+                      itemLogHistoryRefetch();
+                      handleClose();
                       historyRefetch();
                       itemLineRefetch();
                       setStep(nextStep);
@@ -723,6 +740,8 @@ export default function useDiary(
                       setLastStep("success");
                       historyRefetch();
                       itemLineRefetch();
+                      handleClose();
+                      itemLogHistoryRefetch();
                       dispatch(updateCoordinate([]));
                       dispatch(updateConsignForm({}));
                       setStep(nextStep);
@@ -747,6 +766,7 @@ export default function useDiary(
                       setLastStep("success");
                       dispatch(updateCoordinate([]));
                       dispatch(updateConsignForm({}));
+                      itemLogHistoryRefetch();
                       historyRefetch();
                       itemLineRefetch();
                       setStep(nextStep);
@@ -755,6 +775,7 @@ export default function useDiary(
                   setLastStep("success");
                   historyRefetch();
                   itemLineRefetch();
+                  handleClose();
                   dispatch(updateCoordinate([]));
                   dispatch(updateConsignForm({}));
                   console.log(nextStep);
@@ -778,12 +799,6 @@ export default function useDiary(
           .unwrap()
           .then(() => {
             dispatch(updateCoordinate([]));
-            historyRefetch();
-            roleCodeRefetch();
-            pendingRefetch();
-          })
-          .then(() => {
-            setLastStep("option");
             setStep(nextStep);
           })
           .catch(() => getToast("Mã otp của bạn không chính xác"));
@@ -843,8 +858,13 @@ export default function useDiary(
               .unwrap()
               .then(() => {
                 dispatch(updateCoordinate([]));
+                setLastStep("success");
                 historyRefetch();
-                itemLogHistoryRefetch()
+                itemLogHistoryRefetch();
+                itemLineRefetch();
+
+                roleCodeRefetch();
+                pendingRefetch();
                 setStep(nextStep);
               })
               .catch(() => getToast("Mã otp của bạn không chính xác"))
@@ -852,9 +872,12 @@ export default function useDiary(
               .unwrap()
               .then(() => {
                 dispatch(updateCoordinate([]));
+                setLastStep("success");
                 historyRefetch();
-                itemLogHistoryRefetch()
+                itemLineRefetch();
                 setStep(nextStep);
+                roleCodeRefetch();
+                pendingRefetch();
               })
               .catch(() => getToast("Mã otp của bạn không chính xác"));
 
@@ -903,7 +926,7 @@ export default function useDiary(
 
   function historyChooseHandle(item) {
     // console.log(item);
-    setCurrentItemLogId(item.itemLogId)
+    setCurrentItemLogId(item.itemLogId);
     if (item.eventType == "NHẬN HÀNG") {
       setUpdateReceiveId(item.itemLogId);
       // dispatch()
@@ -919,6 +942,15 @@ export default function useDiary(
     } else {
       getToast("Bạn không thể thay đổi sự kiện này");
     }
+  }
+
+  function laterBtnHandler() {
+    setLastStep("success");
+    historyRefetch();
+    roleCodeRefetch();
+    itemLineRefetch();
+    pendingRefetch();
+    setStep("success");
   }
 
   return {
@@ -957,5 +989,8 @@ export default function useDiary(
     updateTransportData,
     isCancelValid,
     itemLogHistory,
+    editAddress,
+    handleFlip,
+    laterBtnHandler
   };
 }

@@ -325,14 +325,14 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               </li> */}
               <li>
                 <p className="mb-2">
-                  Địa điểm diễn ra: {`${eventData.addressInParty}`}
+                  Địa điểm diễn ra: {`${eventData.addressInParty || 'Không ghi'}`}
                 </p>
-                <Map
+                {eventData.addressInParty && <Map
                   location={{
                     lat: eventData.coordinateX,
                     lng: eventData.coordinateY,
                   }}
-                />
+                />}
               </li>
             </ul>
           </>
@@ -402,13 +402,13 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 </p>
               </li>
               <li>
-                <p className="mb-2">Nơi gửi: {`${eventData.addressInParty}`}</p>
-                <Map
+                <p className="mb-2">Nơi gửi: {`${eventData.addressInParty || 'Không ghi'}`}</p>
+                {eventData.addressInParty && <Map
                   location={{
                     lat: eventData.coordinateX,
                     lng: eventData.coordinateY,
                   }}
-                />
+                />}
               </li>
             </ul>
           </>
