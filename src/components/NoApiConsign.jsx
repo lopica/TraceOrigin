@@ -22,6 +22,7 @@ import Map from "./Map";
 import SortableTable from "./SortableTable";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { ImCross } from "react-icons/im";
+import CreateReportBlock from "./UI/CreateReportBlock";
 let form;
 export default function NoApiConsign({ productRecognition }) {
   const {
@@ -247,7 +248,8 @@ export default function NoApiConsign({ productRecognition }) {
   let reportBtn = (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-      onClick={openModal}
+      // onClick={openModal}
+      onClick={() => setStep("report")}
     >
       <p>Báo lỗi</p>
     </div>
@@ -353,7 +355,7 @@ export default function NoApiConsign({ productRecognition }) {
                   <p>Tiếp nhận ủy quyền</p>
                 </div>
               )}
-              {reportBtn}
+              {/* {reportBtn} */}
             </div>
           );
           break;
@@ -1095,9 +1097,14 @@ export default function NoApiConsign({ productRecognition }) {
       break;
     case "report":
       form = (
-        <div>
+        <div className="p-4">
+        <h2 className="text-center text-2xl">Tạo Báo Cáo Mới</h2>
           <BackBtn step="option" />
-          hello report
+          <CreateReportBlock
+          productCode={productRecognition}
+          in_email={guestEmail}
+          backBtn={() => setStep("option")}
+          ></CreateReportBlock>
         </div>
       );
       break;

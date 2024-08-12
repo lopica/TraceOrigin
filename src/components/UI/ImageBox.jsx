@@ -79,15 +79,15 @@ function ImageBox({
             Bỏ chọn
           </Button>
         )}
-          {!isCer ? (
-            <Button rounded primary onClick={handleAvatar}>
-              Đặt làm ảnh chính
-            </Button>
-          ) : (
-            <div>
-
-            </div>
-          )}
+        {isCer ? (
+          <div></div>
+        ) : isReport ? (
+          <div></div>
+        ) : (
+          <Button rounded primary onClick={handleAvatar}>
+            Đặt làm ảnh chính
+          </Button>
+        )}
         </div>
       </div>
     </Modal>
