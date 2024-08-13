@@ -34,7 +34,7 @@ import CategoryTable from "./pages/admin/CategoryTable";
 import UpdateFileAI from "./pages/admin/UpdateFileAI";
 import ManagerRequestTranningImage from "./pages/admin/ManagerRequestTranningImage";
 import CustomerSupportList from "./pages/admin/CustomerSupportList";
-
+import DetailMaufactor from "./components/UI/homepage/DetailMaufactor"
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -62,6 +62,8 @@ function AppRouter() {
             { path: "change-password", element: <ForgotPassword /> },
             { path: "register", element: <Register /> },
             { path: "newReport", element: <CreateReport /> },
+            { path: "detail/:id", element: <DetailMaufactor/> } // Thêm route cho ViewPageDetail
+
           ],
         },
         {
@@ -79,7 +81,6 @@ function AppRouter() {
             { path: "reportManager/:id", element: <ManuReportManager />},
             { path: "createReport", element: <ManuReportManager />},
             { path: "support", element: <ManuSupportSystem /> },
-            
           ],
         },
         {
