@@ -469,8 +469,12 @@ const ImageClassificationDemo = () => {
                     <strong>Manufacturer Name:</strong>{" "}
                     {product.nameManufacturer}
                   </p>
-                  <Link to={`/portal/detail/${product.userId}`}>
-                    Detail Manufacturer
+                  <Link
+                    to={`/portal/detail/${product?.userId}`}
+                    className="flex items-center text-blue-500 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <FaInfoCircle className="mr-2" size={20} />
+                    Chi tiết nhà sản xuất
                   </Link>
                 </div>
               </>

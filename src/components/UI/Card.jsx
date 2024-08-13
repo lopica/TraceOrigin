@@ -17,7 +17,7 @@ function Card({ card, handleUpdate, handleDelete }) {
   }
 
   return (
-    <div className="relative max-w-md mx-auto bg-white shadow-md rounded-box overflow-hidden">
+    <div className="relative max-w-md mx-auto bg-white shadow-md h-full rounded-box overflow-hidden">
       <div className="flex flex-col items-center p-4">
         <img
           className="w-full h-48 object-cover"
