@@ -1,5 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
@@ -8,12 +8,13 @@ import DropzoneDemo from "./DropzoneDemo";
 import { Camera } from "react-camera-pro";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import ViewPageDetail from "./UI/homepage/DetailMaufactor";
 
 const MOBILE_NET_INPUT_HEIGHT = 224;
 const MOBILE_NET_INPUT_WIDTH = 224;
 
-export default function ImageClassification() {
+const ImageClassificationDemo = () => {
   const [step, setStep] = useState("choose");
   const [predictionResult, setPredictionResult] = useState("");
   const [confidence, setConfidence] = useState(0);
@@ -30,7 +31,25 @@ export default function ImageClassification() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const animationFrameId = useRef(null);
   const { aiList } = useSelector((state) => state.historySearchSlice);
+  const { idProduct } = useParams()
+  const [product, setProduct] = useState(null);
+  const [productId, setProductId] = useState(null);
 
+  useEffect(() => {
+    console.log("test", productId)
+    if (productId && !isNaN(productId)) {
+      axios //.post(`http://localhost:8080/api/product/getInfoByProductId?productId=37`)    
+        .get(`http://localhost:8080/api/product/getInfoByProductId?productId=${productId}`)
+        .then((res) => {
+          console.log("data", res.data, productId)
+          setProduct(res.data);
+
+        })
+        .catch((err) => {
+          console.error("Error fetching product information:", err);
+        });
+    }
+  }, [productId]);
   // Check for camera availability
   const checkCameraAvailability = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -48,6 +67,8 @@ export default function ImageClassification() {
     setCamerasAvailable({ user: hasUser, environment: hasEnvironment });
   };
 
+  console.log('product', product);
+
   // Handle camera change
   const handleCameraChange = (event) => {
     setCameraType(event.target.value);
@@ -64,12 +85,14 @@ export default function ImageClassification() {
       formData.append('image', file);
 
       try {
-        const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
+        const response = await axios.post("http://localhost:3001/upload", formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
+        const productId = response.data.productName;
         setPredictionResult(response.data.productName);
+        setProductId(productId);
         setConfidence(response.data.confidence);
         setImageLoaded(true);
       } catch (error) {
@@ -111,13 +134,20 @@ export default function ImageClassification() {
           formData.append('image', blob, 'image.png');
 
           try {
-            const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
+            const response = await axios.post("http://localhost:3001/upload", formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
             });
+            setProductId(response.data.productName);
+
             setPredictionResult(response.data.productName);
+            // idProduct =   setPredictionResult(response.data.productName);
+            // setProduct(true);
+            const productId = response.data.productName; // Extract the productId
+            // setPredictionResult(response.data.productName);
             setConfidence(response.data.confidence);
+            //  setProductId(productId); // Set the productId to state
           } catch (error) {
             console.error("Error predicting video frame:", error);
           }
@@ -247,7 +277,9 @@ export default function ImageClassification() {
               <DropzoneDemo
                 className="max-w-4xl lg:mx-auto h-[20svh] mx-2"
                 setImageUrl={setImageUrl}
-                setPredictionResult={setPredictionResult}
+                // setPredictionResult={setPredictionResult}
+                setProductId={setProductId}
+                //setProduct={setProduct}
                 setConfidence={setConfidence}
                 setImageLoaded={setImageLoaded}
               />
@@ -287,7 +319,10 @@ export default function ImageClassification() {
                 />
                 <p
                   className="text-center underline text-slate-500 w-full py-2 hover:cursor-pointer"
-                  onClick={() => document.getElementById("fileInput").click()}
+                  onClick={() => {
+                    document.getElementById("fileInput").click();
+                    setProduct(null)
+                  }}
                 >
                   Chọn ảnh khác
                 </p>
@@ -297,18 +332,35 @@ export default function ImageClassification() {
                   <p>Loading prediction...</p>
                 ) : (
                   <>
-                    <h3 className="text-center text-3xl mb-6">
+                    {/* <h3 className="text-center text-3xl mb-6">
                       {predictionResult}
+                    </h3> */}
+                    <h3 className="text-center text-3xl mb-6">
+                      {product?.productName}
                     </h3>
-                    <div className="flex justify-between max-w-md mx-auto">
-                      <div className="flex">
-                        <div className="flex flex-col">
-                          <div className="stat-title">Độ chính xác</div>
-                          <div className="font-medium">{confidence}%</div>
+
+
+                    {
+                      product?.productName ? <>
+                        <div className="flex justify-between max-w-md mx-auto">
+                          <div className="flex">
+                            <div className="flex flex-col">
+                              <div className="stat-title">Độ chính xác</div>
+                              <div className="font-medium">{confidence}%</div>
+                            </div>
+                          </div>
+                          {/* <p className="underline cursor-pointer">Manufacturer</p> */}
                         </div>
-                      </div>
-                      <p className="underline cursor-pointer">Manufacturer</p>
-                    </div>
+                        <div className="flex flex-col ">
+                          {/* <p><strong>Product ID:</strong> {product.productId}</p> */}
+                          <p><strong>Product Name:</strong> {product?.productName}</p>
+                          <p><strong>Category:</strong> {product?.categoryName}</p>
+                          <p><strong>Manufacturer Name:</strong> {product?.nameManufacturer}</p>
+                          <Link to={`/portal/detail/${product?.userId}`}>Detail Manufacturer</Link>
+                        </div>
+                      </> : <>Ko tìm thấy</>
+                    }
+
                   </>
                 )}
               </div>
@@ -355,19 +407,34 @@ export default function ImageClassification() {
               <IoIosArrowBack />
               Quay lại
             </Button>
-            <h3 className="text-center text-3xl mb-6">{predictionResult}</h3>
-            <div className="flex justify-between gap-2 mx-2">
-              <div className="flex ">
-                <div className="flex flex-col">
-                  <div className="stat-title">Độ chính xác</div>
-                  <div className="font-medium">{confidence}%</div>
+            {
+              product !== null && product.productName ? <>
+                <h3 className="text-center text-3xl mb-6">{product.productName}</h3>
+                <div className="flex justify-between gap-2 mx-2">
+                  <div className="flex ">
+                    <div className="flex flex-col">
+                      <div className="stat-title">Độ chính xác</div>
+                      <div className="font-medium">{confidence}%</div>
+                    </div>
+                  </div>
+                  <p className="underline cursor-pointer">Manufacturer</p>
                 </div>
-              </div>
-              <p className="underline cursor-pointer">Manufacturer</p>
-            </div>
+
+                <div className="flex flex-col ml-[10px]">
+                  {/* <p><strong>Product ID:</strong> {product.productId}</p> */}
+                  <p><strong>Product Name:</strong> {product.productName}</p>
+                  <p><strong>Category:</strong> {product.categoryName}</p>
+                  <p><strong>Manufacturer Name:</strong> {product.nameManufacturer}</p>
+                  <Link to={`/portal/detail/${product.userId}`}>Detail Manufacturer</Link>
+                </div>
+              </> : <>Ko tim thấy</>
+            }
+
           </div>
         </div>
       )}
     </section>
   );
 }
+
+export default memo(ImageClassificationDemo)

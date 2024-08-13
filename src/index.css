@@ -186,4 +186,6 @@ html {
   height: 0px;
   background: transparent; 
 }
-
+.DetaiMaufactor{
+  display: ruby-text;
+}
