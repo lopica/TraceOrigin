@@ -34,8 +34,8 @@ const productEditFormSlice = createSlice({
     updateProductEditForm(state, action) {
       state.form = { ...state.form, ...action.payload };
     },
-    resetProductEditState() {
-      return initialState; // Correctly returns the defined initialState
+    resetProductEditState(state) {
+      Object.assign(state, initialState);
     },
   },
 });

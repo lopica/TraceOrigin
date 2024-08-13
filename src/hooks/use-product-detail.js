@@ -41,10 +41,6 @@ export default function useProductDetail(productId) {
       if (productDetail.model3D) setModel3D(productDetail.model3D)
       dispatch(updateProductDetail(productDetail))
       setImages(productDetail.listImages)
-      // setImages(prev => {
-      //   return [...prev, productDetail.avatar]
-      // })
-      // dispatch(updateAvatar(productDetail.avatar))
       console.log(productDetail.listImages)
       console.log(productDetail.avatar)
     }

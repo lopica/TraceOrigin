@@ -67,12 +67,21 @@ const ManuProductEdit = ({ productId, closeModal }) => {
   };
 
   const onSubmit = (data) => {
+
     const request = {
-      ...data,
       avatar: data.avatar.split(",")[1],
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
       productId: data.productId,
+      productName: data.productName,
+      images: data.images,
+      material: data.material,
+      weight: data.weight,
+      length: data.length,
+      width: data.width,
+      height: data.height,
+      description: data.description,
+      warranty: data.warranty,
       file3D: '',
     };
     delete request.length;

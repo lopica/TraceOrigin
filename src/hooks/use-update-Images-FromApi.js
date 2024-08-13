@@ -31,10 +31,7 @@ export default function useUpdateImageFromApi() {
     let imagesShow = [];
 
     try {
-      // Convert listImages from URLs to base64
       const base64Images = await Promise.all(listImages.map(urlToBase64));
-      
-      // Convert avatar from URL to base64
       const avatarBase64 = await urlToBase64(avatar);
 
       // Process the list of images

@@ -110,44 +110,53 @@ function ManuProductList() {
     setEditModalOpen(false);
   };
 
-  const handleUpdate = (productId) => {
-    setSelectedProductId(productId);
-  };
-
+  
   const [length, setLength] = useState(0);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
+  const handleUpdate = async (productId) => {
+    dispatch(resetProductEditState());
+    setSelectedProductId(productId);
+  };
+  
+  // useEffect để theo dõi sự thay đổi của selectedProductId
   useEffect(() => {
-    if (selectedProductId !== null && productDetail) {
-      refetchDetail();
-      const dimensionMatch = productDetail.dimensions.match(
-        /(\d+)cm x (\d+)cm x (\d+)cm/
-      );
-      if (dimensionMatch) {
-        setLength(dimensionMatch[1]);
-        setWidth(dimensionMatch[2]);
-        setHeight(dimensionMatch[3]);
-      }
-
-      const updatedProductDetail = {
-        ...productDetail,
-        length: dimensionMatch[1],
-        width: dimensionMatch[2],
-        height: dimensionMatch[3],
-        category: productDetail.categoryId +','+productDetail.categoryName,
+    if (selectedProductId !== null) {
+      const fetchProductDetail = async () => {
+        const result = await refetchDetail();
+        console.log(`productId: ${selectedProductId}, result.data: ${JSON.stringify(result.data)}`);
+        
+        if (result.data) {
+          const productDetail = result.data;
+          const dimensionMatch = productDetail.dimensions.match(
+            /(\d+)cm x (\d+)cm x (\d+)cm/
+          );
+          if (dimensionMatch) {
+            setLength(dimensionMatch[1]);
+            setWidth(dimensionMatch[2]);
+            setHeight(dimensionMatch[3]);
+          }
+      
+          const updatedProductDetail = {
+            ...productDetail,
+            length: dimensionMatch[1],
+            width: dimensionMatch[2],
+            height: dimensionMatch[3],
+            category: productDetail.categoryId + ',' + productDetail.categoryName,
+          };
+      
+          dispatch(updateProductEditForm(updatedProductDetail));
+      
+          updateImagesFromApi(productDetail.listImages, productDetail.avatar);
+          setEditModalOpen(true);
+        }
       };
-      dispatch(updateProductEditForm(updatedProductDetail));
-      updateImagesFromApi(productDetail.listImages, productDetail.avatar);
-      setEditModalOpen(true);
+      
+      fetchProductDetail();
     }
-  }, [
-    productDetail,
-    dispatch,
-    refetchDetail,
-    setEditModalOpen,
-    selectedProductId,
-  ]);
+  }, [selectedProductId, refetchDetail]);
+  
 
   const handleDeleteApi = async (id) => {
     setIsLoadingModal(true);
