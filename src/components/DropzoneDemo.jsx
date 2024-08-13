@@ -20,7 +20,7 @@ function DropzoneDemo({ className, setImageUrl, scanQr,setProductId,setConfidenc
       formData.append('image', file);
 
       try {
-        const response = await axios.post("http://localhost:3001/upload", formData, {
+        const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

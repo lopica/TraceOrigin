@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { CONSTANTS } from "../../../services/Constants";
 
 function DetailManufacturer() {
   const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ function DetailManufacturer() {
   useEffect(() => {
     if (id) {
       // Call API to get user details
-      axios.post('http://localhost:8080/api/user/getDetailUser', {
+      axios.post(`${CONSTANTS.domain}/user/getDetailUser`, {
         id: parseInt(id)
       })
       .then(res => {
@@ -23,7 +24,7 @@ function DetailManufacturer() {
       });
 
       // Call API to get product details
-      axios.post('http://localhost:8080/api/product/ViewProductByManufacturerId', {
+      axios.post(`${CONSTANTS.domain}/product/ViewProductByManufacturerId`, {
         id: parseInt(id),
         categoryId: 1
       })
@@ -35,7 +36,7 @@ function DetailManufacturer() {
       });
 
       // Call API to get top organizations
-      axios.get('http://localhost:8080/api/user/top5OrgNames')
+      axios.get(`${CONSTANTS.domain}/user/top5OrgNames`)
         .then(res => {
           setTopOrgs(res.data);
         })
@@ -51,7 +52,7 @@ function DetailManufacturer() {
     setSelectedUserId(userId);
 
     // Gọi API để lấy sản phẩm của tổ chức đã chọn
-    axios.post('http://localhost:8080/api/product/ViewProductByManufacturerId', {
+    axios.post(`${CONSTANTS.domain}/product/ViewProductByManufacturerId`, {
       id: userId,
       categoryId: 1
     })

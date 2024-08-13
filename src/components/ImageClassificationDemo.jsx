@@ -10,6 +10,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import ViewPageDetail from "./UI/homepage/DetailMaufactor";
+import { CONSTANTS } from "../services/Constants";
 
 const MOBILE_NET_INPUT_HEIGHT = 224;
 const MOBILE_NET_INPUT_WIDTH = 224;
@@ -39,7 +40,7 @@ const ImageClassificationDemo = () => {
     console.log("test", productId)
     if (productId && !isNaN(productId)) {
       axios //.post(`http://localhost:8080/api/product/getInfoByProductId?productId=37`)    
-        .get(`http://localhost:8080/api/product/getInfoByProductId?productId=${productId}`)
+        .get(`${CONSTANTS.domain}/product/getInfoByProductId?productId=${productId}`)
         .then((res) => {
           console.log("data", res.data, productId)
           setProduct(res.data);
@@ -85,7 +86,7 @@ const ImageClassificationDemo = () => {
       formData.append('image', file);
 
       try {
-        const response = await axios.post("http://localhost:3001/upload", formData, {
+        const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -134,7 +135,7 @@ const ImageClassificationDemo = () => {
           formData.append('image', blob, 'image.png');
 
           try {
-            const response = await axios.post("http://localhost:3001/upload", formData, {
+            const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
