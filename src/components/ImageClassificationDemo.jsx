@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
 import { memo, useEffect, useRef, useState } from "react";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaInfoCircle } from "react-icons/fa";
 import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
@@ -32,19 +32,20 @@ const ImageClassificationDemo = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const animationFrameId = useRef(null);
   const { aiList } = useSelector((state) => state.historySearchSlice);
-  const { idProduct } = useParams()
+  const { idProduct } = useParams();
   const [product, setProduct] = useState(null);
   const [productId, setProductId] = useState(null);
 
   useEffect(() => {
-    console.log("test", productId)
+    console.log("test", productId);
     if (productId && !isNaN(productId)) {
-      axios //.post(`http://localhost:8080/api/product/getInfoByProductId?productId=37`)    
-        .get(`${CONSTANTS.domain}/product/getInfoByProductId?productId=${productId}`)
+      axios //.post(`http://localhost:8080/api/product/getInfoByProductId?productId=37`)
+        .get(
+          `${CONSTANTS.domain}/product/getInfoByProductId?productId=${productId}`
+        )
         .then((res) => {
-          console.log("data", res.data, productId)
+          console.log("data", res.data, productId);
           setProduct(res.data);
-
         })
         .catch((err) => {
           console.error("Error fetching product information:", err);
@@ -68,7 +69,7 @@ const ImageClassificationDemo = () => {
     setCamerasAvailable({ user: hasUser, environment: hasEnvironment });
   };
 
-  console.log('product', product);
+  console.log("product", product);
 
   // Handle camera change
   const handleCameraChange = (event) => {
@@ -83,14 +84,18 @@ const ImageClassificationDemo = () => {
       setImageLoaded(false);
 
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append("image", file);
 
       try {
-        const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await axios.post(
+          "https://traceorigin-ai.click/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         const productId = response.data.productName;
         setPredictionResult(response.data.productName);
         setProductId(productId);
@@ -128,18 +133,32 @@ const ImageClassificationDemo = () => {
         const cropY = (video.videoHeight - cropHeight) / 2;
 
         // Draw image from center of the video to canvas
-        ctx.drawImage(video, cropX, cropY, cropWidth, cropHeight, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+          video,
+          cropX,
+          cropY,
+          cropWidth,
+          cropHeight,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
 
         canvas.toBlob(async (blob) => {
           const formData = new FormData();
-          formData.append('image', blob, 'image.png');
+          formData.append("image", blob, "image.png");
 
           try {
-            const response = await axios.post("https://traceorigin-ai.click/upload", formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            });
+            const response = await axios.post(
+              "https://traceorigin-ai.click/upload",
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            );
             setProductId(response.data.productName);
 
             setPredictionResult(response.data.productName);
@@ -152,7 +171,7 @@ const ImageClassificationDemo = () => {
           } catch (error) {
             console.error("Error predicting video frame:", error);
           }
-        }, 'image/png');
+        }, "image/png");
       } catch (error) {
         console.error("Error capturing video frame:", error);
       }
@@ -160,7 +179,7 @@ const ImageClassificationDemo = () => {
       // Delay to reduce lag
       setTimeout(() => {
         animationFrameId.current = requestAnimationFrame(predictVideoFrame);
-      }, 1000);
+      }, 2000);
     }
   };
 
@@ -202,7 +221,8 @@ const ImageClassificationDemo = () => {
   useEffect(() => {
     async function loadCustomModel() {
       try {
-        const url = "https://storage.googleapis.com/storagetraceorigin/model.json";
+        const url =
+          "https://storage.googleapis.com/storagetraceorigin/model.json";
         const model = await tf.loadLayersModel(url);
         console.log("Custom model loaded successfully!");
         customModelRef.current = model;
@@ -322,7 +342,7 @@ const ImageClassificationDemo = () => {
                   className="text-center underline text-slate-500 w-full py-2 hover:cursor-pointer"
                   onClick={() => {
                     document.getElementById("fileInput").click();
-                    setProduct(null)
+                    setProduct(null);
                   }}
                 >
                   Chọn ảnh khác
@@ -340,9 +360,8 @@ const ImageClassificationDemo = () => {
                       {product?.productName}
                     </h3>
 
-
-                    {
-                      product?.productName ? <>
+                    {product?.productName ? (
+                      <>
                         <div className="flex justify-between max-w-md mx-auto">
                           <div className="flex">
                             <div className="flex flex-col">
@@ -354,14 +373,29 @@ const ImageClassificationDemo = () => {
                         </div>
                         <div className="flex flex-col ">
                           {/* <p><strong>Product ID:</strong> {product.productId}</p> */}
-                          <p><strong>Product Name:</strong> {product?.productName}</p>
-                          <p><strong>Category:</strong> {product?.categoryName}</p>
-                          <p><strong>Manufacturer Name:</strong> {product?.nameManufacturer}</p>
-                          <Link to={`/portal/detail/${product?.userId}`}>Detail Manufacturer</Link>
+                          <p>
+                            <strong>Product Name:</strong>{" "}
+                            {product?.productName}
+                          </p>
+                          <p>
+                            <strong>Category:</strong> {product?.categoryName}
+                          </p>
+                          <p>
+                            <strong>Manufacturer Name:</strong>{" "}
+                            {product?.nameManufacturer}
+                          </p>
+                          <Link
+                            to={`/portal/detail/${product?.userId}`}
+                            className="flex items-center text-blue-500 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <FaInfoCircle className="mr-2" size={20} />
+                            Chi tiết nhà sản xuất
+                          </Link>
                         </div>
-                      </> : <>Ko tìm thấy</>
-                    }
-
+                      </>
+                    ) : (
+                      <>Ko tìm thấy</>
+                    )}
                   </>
                 )}
               </div>
@@ -408,9 +442,11 @@ const ImageClassificationDemo = () => {
               <IoIosArrowBack />
               Quay lại
             </Button>
-            {
-              product !== null && product.productName ? <>
-                <h3 className="text-center text-3xl mb-6">{product.productName}</h3>
+            {product !== null && product.productName ? (
+              <>
+                <h3 className="text-center text-3xl mb-6">
+                  {product.productName}
+                </h3>
                 <div className="flex justify-between gap-2 mx-2">
                   <div className="flex ">
                     <div className="flex flex-col">
@@ -418,24 +454,43 @@ const ImageClassificationDemo = () => {
                       <div className="font-medium">{confidence}%</div>
                     </div>
                   </div>
-                  <p className="underline cursor-pointer">Manufacturer</p>
+                  {/* <p className="underline cursor-pointer">Manufacturer</p> */}
                 </div>
 
                 <div className="flex flex-col ml-[10px]">
                   {/* <p><strong>Product ID:</strong> {product.productId}</p> */}
-                  <p><strong>Product Name:</strong> {product.productName}</p>
-                  <p><strong>Category:</strong> {product.categoryName}</p>
-                  <p><strong>Manufacturer Name:</strong> {product.nameManufacturer}</p>
-                  <Link to={`/portal/detail/${product.userId}`}>Detail Manufacturer</Link>
+                  <p>
+                    <strong>Product Name:</strong> {product.productName}
+                  </p>
+                  <p>
+                    <strong>Category:</strong> {product.categoryName}
+                  </p>
+                  <p>
+                    <strong>Manufacturer Name:</strong>{" "}
+                    {product.nameManufacturer}
+                  </p>
+                  <Link to={`/portal/detail/${product.userId}`}>
+                    Detail Manufacturer
+                  </Link>
                 </div>
-              </> : <>Ko tim thấy</>
-            }
-
+              </>
+            ) : (
+              <div className="bg-white text-center">
+                <FaCamera className="text-blue-500 text-4xl mb-4 mx-auto" />
+                <h2 className="text-xl font-bold mb-4">
+                  Hãy đưa sản phẩm vào camera
+                </h2>
+                <p className="text-gray-600">
+                  Để tiếp tục, vui lòng chắc chắn rằng sản phẩm của bạn nằm
+                  trong khung hình của camera.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}
     </section>
   );
-}
+};
 
-export default memo(ImageClassificationDemo)
+export default memo(ImageClassificationDemo);
