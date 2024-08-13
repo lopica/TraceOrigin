@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
 import { RiFolderUploadFill } from "react-icons/ri";
 import axios from "axios";
 
-function DropzoneDemo({ className, setImageUrl, scanQr,setPredictionResult,setConfidence,setImageLoaded }) {
+function DropzoneDemo({ className, setImageUrl, scanQr,setProductId,setConfidence,setImageLoaded }) {
   // const [predictionResult, setPredictionResult] = useState("");
   // const [confidence, setConfidence] = useState(0);
   // const [imageLoaded, setImageLoaded] = useState(false);
@@ -25,8 +25,8 @@ function DropzoneDemo({ className, setImageUrl, scanQr,setPredictionResult,setCo
             'Content-Type': 'multipart/form-data',
           },
         });
-
-        setPredictionResult(response.data.productName);
+        const productId = response.data.productName;
+        setProductId(productId);
         setConfidence(response.data.confidence);
         setImageLoaded(true);
       } catch (error) {
@@ -68,4 +68,4 @@ function DropzoneDemo({ className, setImageUrl, scanQr,setPredictionResult,setCo
   );
 }
 
-export default DropzoneDemo;
+export default memo(DropzoneDemo);
