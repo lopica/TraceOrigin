@@ -73,7 +73,7 @@ function Item() {
           </SwiperSlide>
           <SwiperSlide>
             {eventType === "origin" && (
-              <ItemOrigin goToItemLine={goToItemLine} />
+              <ItemOrigin goToItemLine={goToItemLine} productRecognition={productRecognition} />
             )}
             {eventType === "event" && (
               <ItemEvent goToItemLine={goToItemLine} eventId={currentEventId} />
@@ -90,7 +90,7 @@ function Item() {
           />
         </div>
         <div className="col-span-4 mt-2">
-          {eventType === "origin" && <ItemOrigin goToItemLine={goToItemLine} />}
+          {eventType === "origin" && <ItemOrigin goToItemLine={goToItemLine}  productRecognition={productRecognition} />}
           {eventType === "event" && (
             <ItemEvent goToItemLine={goToItemLine} eventId={currentEventId} />
           )}

@@ -8,10 +8,11 @@ import { getWarrantyDate } from "../utils/getWarrantyDate";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaCalendarAlt, FaImages, FaInfoCircle, FaMapMarkerAlt, FaShieldAlt } from "react-icons/fa";
+import QR from "./QR";
 
 let origin;
 
-export default function ItemOrigin({ goToItemLine }) {
+export default function ItemOrigin({ goToItemLine, productRecognition }) {
   const { itemLine } = useSelector((state) => state.itemSlice);
   const [slides, setSlides] = useState([]);
   const {
@@ -65,7 +66,9 @@ export default function ItemOrigin({ goToItemLine }) {
       origin = (
         <section className="text-xl">
           <h2 className="mb-4 text-center font-bold text-2xl">Nguồn gốc</h2>
-          <ul className="space-y-2 lg:pb-12 ">
+          {productRecognition && <QR core productRecognition={productRecognition} />}
+          <ul className="space-y-2 lg:pb-12 mt-2">
+          
             <li>
             <p><strong>Tên sản phẩm:</strong> {originData.productName || "không rõ"}</p>
             </li>

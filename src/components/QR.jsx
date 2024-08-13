@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import Button from "./UI/Button";
 import { useRef } from "react";
 
-export default function QR({productRecognition}) {
+export default function QR({productRecognition, core}) {
   const qrContainerRef = useRef(null);
 
   const downloadQR = () => {
@@ -40,9 +40,9 @@ export default function QR({productRecognition}) {
           className="mx-auto"
         />
       </div>
-      <Button primary className="w-fit" onClick={downloadQR}>
+      {!core && <Button primary className="w-fit" onClick={downloadQR}>
         Xuất ảnh QR
-      </Button>
+      </Button>}
     </div>
   );
 }
