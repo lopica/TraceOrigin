@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { FaEye, FaDownload } from "react-icons/fa";
-import { saveAs } from "file-saver";
-import JSZip from "jszip";
-import Carousel from "../../components/UI/Carousel";
 import { useGetimageRequestQuery, useApprovalImageRequestMutation } from "../../store/apis/productApi";
 import Pagination from "../../components/UI/Pagination";
 import { useSelector } from "react-redux";
@@ -20,8 +16,6 @@ const formatDate = (timestamp) => {
 };
 
 const ManagerRequestTranningImage = () => {
-  const [slides, setSlides] = useState([]);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -72,33 +66,6 @@ const ManagerRequestTranningImage = () => {
     }
   }, [isFetching, isAuthenticated, getToast, navigate]);
 
-  const handleViewFiles = (files) => {
-    const images = files.map((file) => file);
-    setSlides(images.map((image, idx) => (
-      <img src={image} alt={`slide_${idx}`} className="" key={idx} />
-    )));
-    setModalIsOpen(true);
-  };
-
-  const handleDownloadFiles = async (files, productName, manufactorName) => {
-    try {
-      const zip = new JSZip();
-      const folder = zip.folder(`${productName}-${manufactorName}`);
-
-      for (let i = 0; i < files.length; i++) {
-        const response = await fetch(files[i]);
-        if (!response.ok) throw new Error(`Failed to fetch ${files[i]}`);
-        const blob = await response.blob();
-        folder.file(`file_${i + 1}.jpg`, blob);
-      }
-
-      const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, `${productName}-${manufactorName}.zip`);
-    } catch (error) {
-      getToast("Lỗi khi tải xuống tệp.");
-    }
-  };
-
   const handleApproval = async (productId) => {
     try {
       setIsLoading(true);
@@ -110,31 +77,6 @@ const ManagerRequestTranningImage = () => {
       refetch();
     } catch (error) {
       getToast("Lỗi khi phê duyệt yêu cầu.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDownloadAllFiles = async () => {
-    try {
-      setIsLoading(true);
-      const zip = new JSZip();
-
-      for (const request of data.content || []) {
-        const folder = zip.folder(`${request.productName}-${request.manufactorName}`);
-        
-        for (let i = 0; i < request.filePath.length; i++) {
-          const response = await fetch(request.filePath[i]);
-          if (!response.ok) throw new Error(`Failed to fetch ${request.filePath[i]}`);
-          const blob = await response.blob();
-          folder.file(`file_${i + 1}.jpg`, blob);
-        }
-      }
-
-      const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, "all_products.zip");
-    } catch (error) {
-      getToast("Lỗi khi tải xuống tất cả các tệp.");
     } finally {
       setIsLoading(false);
     }
@@ -212,19 +154,14 @@ const ManagerRequestTranningImage = () => {
             <td>{request.productName}</td>
             <td>{request.manufactorName}</td>
             <td>{formatDate(request.requestDate)}</td>
+            <td>
+              <ul>
+                {request.filePath.map((file, idx) => (
+                  <li key={idx}>{file}</li>
+                ))}
+              </ul>
+            </td>
             <td className="flex justify-center space-x-2">
-              <button
-                onClick={() => handleViewFiles(request.filePath)}
-                className="btn btn-primary text-white btn-xs"
-              >
-                <FaEye />
-              </button>
-              <button
-                onClick={() => handleDownloadFiles(request.filePath, request.productName, request.manufactorName)}
-                className="btn btn-success text-white btn-xs"
-              >
-                <FaDownload />
-              </button>
               <button
                 onClick={() => handleApproval(request.productId)}
                 className="btn btn-info text-white btn-xs"
@@ -298,23 +235,24 @@ const ManagerRequestTranningImage = () => {
           </select>
         </div>
         <div className="flex items-end gap-2">
-          <Button  primary rounded  type="submit">
+          <Button primary rounded type="submit">
             Tìm kiếm
           </Button>
-          <Button type="button" onClick={resetHandler} secondary  rounded>
+          <Button type="button" onClick={resetHandler} secondary rounded>
             Đặt lại
           </Button>
         </div>
       </form>
 
       <div className="overflow-x-auto mt-8">
-      <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100 text-xs">
+        <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100 text-xs">
           <thead className="text-black">
             <tr>
               <th>#</th>
               <th>Tên sản phẩm</th>
               <th>Nhà sản xuất</th>
               <th>Ngày yêu cầu</th>
+              <th>Danh sách file</th>
               <th className="text-center">Hành động</th>
             </tr>
           </thead>
@@ -323,36 +261,12 @@ const ManagerRequestTranningImage = () => {
       </div>
 
       <div className="flex justify-between mt-4">
-      <Button onClick={handleDownloadAllFiles} className="btn btn-success text-white">
-          Tải xuống tất cả
-        </Button>
-      <Pagination
-        active={page}
-        totalPage={data?.totalPages || 0}
-        onPageChange={handlePageChange}
-      />
+        <Pagination
+          currentPage={data?.pageable?.pageNumber || 0}
+          totalPages={data?.totalPages || 0}
+          onPageChange={handlePageChange}
+        />
       </div>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Image Carousel"
-        ariaHideApp={false}
-        className="fixed inset-0 flex items-center justify-center z-50"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-      >
-        <div className="bg-white rounded-lg p-6">
-          <Carousel slides={slides} />
-          <div className="flex justify-end mt-4">
-            <Button
-              onClick={() => setModalIsOpen(false)}
-              danger
-            >
-              Đóng
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };

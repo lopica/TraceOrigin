@@ -34,19 +34,13 @@ export default function useUpdateImageFromApi() {
       const base64Images = await Promise.all(listImages.map(urlToBase64));
       const avatarBase64 = await urlToBase64(avatar);
 
-      // Process the list of images
       base64Images.forEach((base64) => {
         imageUrls.push(base64);
         imagesShow.push(`data:image/png;base64,${base64}`);
       });
 
-      // Dispatch actions to update the list of images
       dispatch(updateProductEditImages([...imagesShow]));
-
-      // Dispatch actions to update image data
       dispatch(updateProductEditImagesData([...imageUrls]));
-
-      // Update the avatar separately
       dispatch(updateProductEditAvatar(`data:image/png;base64,${avatarBase64}`));
       
     } catch (error) {
