@@ -45,17 +45,17 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
 
   return (
     <div className="overflow-x-auto w-full">
-      <table className="min-w-full bg-white border border-gray-200 text-xs">
+      <table className="table table-zebra min-w-full bg-white border border-gray-100 text-xs">
         <thead>
-          <tr>
-            <th className="p-4 border-b">#</th>
-            <th className="p-4 border-b">Chủ đề</th>
-            <th className="p-4 border-b">Email người dùng</th>
-            <th className="p-4 border-b">số điện thoại</th>
+          <tr className="text-black">
+            <th>#</th>
+            <th>Chủ đề</th>
+            <th>Email người dùng</th>
+            <th>số điện thoại</th>
 
-            <th className="p-4 border-b">Ngày gửi</th>
-            <th className="p-4 border-b">Tên người hỗ trợ</th>
-            <th className="p-4 border-b">Trạng thái</th>
+            <th>Ngày gửi</th>
+            <th>Tên người hỗ trợ</th>
+            <th>Trạng thái</th>
 
 
             <th className="p-4 border-b">Chi Tiết</th>
@@ -65,13 +65,13 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
           {items?.map((item, index) => (
             <React.Fragment key={index}>
               <tr className="border-b">
-                <td className="p-4">{index + 1}</td>
-                <td className="p-4">{item.title}</td>
+                <td>{index + 1}</td>
+                <td>{item.title}</td>
 
-                <td className="p-4">{item.email}</td>
-                <td className="p-4">{item.phoneNumber}</td>
-                <td className="p-4">{formatTimestamp(item.timestamp)}</td>
-                <td className="p-4">{item.supporterName}</td>
+                <td>{item.email}</td>
+                <td>{item.phoneNumber}</td>
+                <td>{formatTimestamp(item.timestamp)}</td>
+                <td>{item.supporterName}</td>
                 <td
                   className={`p-4 ${
                     item.status === "1" ? "text-green-500" : "text-yellow-500"
@@ -90,7 +90,7 @@ const SupportListForAdmin = ({ items = [], onSubmit }) => {
               </tr>
               {openIndex === index && (
                 <tr>
-                  <td colSpan="6" className="p-4">
+                  <td colSpan="6" className="p-4 bg-white">
                     <div className="mt-4">
                       {item?.subSupport?.map((support, supportIndex) => {
                         const isLastItem =

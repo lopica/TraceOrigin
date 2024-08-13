@@ -6,7 +6,7 @@ const CustomerCareInfo = ({
   waiting
 }) => {
   return (
-<div className="flex flex-col justify-center items-center  border p-2 bg-white rounded-box mb-2 w-fit">
+<div className="flex flex-col justify-center items-center  border p-2 bg-white rounded-box w-fit">
 {cancel ? (
   <div className="flex">
     <div className="w-1/3 border-r px-2 flex flex-col justify-between">

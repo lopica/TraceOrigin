@@ -154,8 +154,8 @@ function VerifyManufacturer() {
 
   return (
     <div className="table-responsive p-5">
-      <table className="table table-zebra">
-        <thead>
+      <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100 text-xs">
+        <thead className="text-black">
           <tr>
             <th>Tên</th>
             <th>Email</th>

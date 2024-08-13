@@ -317,14 +317,14 @@ function ManufacturerList() {
           </Button>
         </div>
       </form>
-      <table className="table table-zebra mt-4">
+      <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100">
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Tên</th>
-            <th>Email</th>
-            <th>Thành Phố</th>
-            <th>Trạng Thái</th>
+          <tr className="text-black">
+            <th className="p-4 border-b">#</th>
+            <th className="p-4 border-b">Tên</th>
+            <th className="p-4 border-b">Email</th>
+            <th className="p-4 border-b">Thành Phố</th>
+            <th className="p-4 border-b">Trạng Thái</th>
           </tr>
         </thead>
         {renderTableBody()}

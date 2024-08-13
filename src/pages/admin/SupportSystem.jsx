@@ -19,6 +19,7 @@ import {
   FaTimesCircle,
   FaSearch,
   FaHourglassHalf,
+  FaRedo,
 } from "react-icons/fa";
 import CustomerCareInfo from "../../components/UI/monitoring/CustomerCareInfo";
 
@@ -106,11 +107,14 @@ function SupportSystem() {
     refetchDataCount();
   };
   // ============================ count status
-  const { data: dataCount, refetch: refetchDataCount } =
-  useCountStatusQuery({
+  const { data: dataCount, refetch: refetchDataCount } = useCountStatusQuery({
     skip: !shouldFetch,
   });
-
+  const onReload = () => {
+    setShouldFetch(true);
+    refetch();
+    refetchDataCount();
+  };
   return (
     <div className="flex flex-col md:flex-row p-4">
       <div className="md:w-1/4 p-4">
@@ -202,12 +206,23 @@ function SupportSystem() {
           </div>
         </form>
       </div>
-      <div className="md:w-3/4 p-4">
-      {/* ====================================== list  */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">Danh sách khách hàng</h2>
-        <CustomerCareInfo done={dataCount?.done}  waiting={dataCount?.waiting} />
-      </div>
+      <div className="md:w-3/4">
+        {/* ====================================== list  */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Danh sách khách hàng</h2>
+          <div className="flex items-center justify-center mb-2">
+            <button
+              onClick={onReload}
+              className="p-2 mr-4 text-blue-500 hover:bg-blue-500 hover:text-white focus:outline-none rounded-full"
+            >
+              <FaRedo />
+            </button>
+            <CustomerCareInfo
+              done={dataCount?.done}
+              waiting={dataCount?.waiting}
+            />
+          </div>
+        </div>
         <SupportListForAdmin items={data?.content} onSubmit={handleSubmit} />
         <div className="flex justify-end mt-4">
           <Pagination
@@ -217,7 +232,6 @@ function SupportSystem() {
           />
         </div>
       </div>
-
     </div>
   );
 }

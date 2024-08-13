@@ -159,26 +159,26 @@ function CustomerSupportList() {
             onSubmit={handleSubmit}
           />
         </div>
-        <table className="min-w-full bg-white border border-gray-200 text-xs text-center">
-          <thead>
+        <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100 text-xs">
+          <thead className="text-black">
             <tr>
-              <th className="p-2 border-b">ID</th>
-              <th className="p-6 border-b">Họ tên</th>
-              <th className="p-4 border-b">Email</th>
-              <th className="p-4 border-b">Số điện thoại</th>
+              <th>ID</th>
+              <th>Họ tên</th>
+              <th>Email</th>
+              <th>Số điện thoại</th>
             </tr>
           </thead>
           <tbody>
             {data?.content.map((item, index) => (
               <tr className="border-b" key={item.userId}>
-                <td className="p-2">{item.userId}</td>
-                <td className="p-2">
+                <td>{item.userId}</td>
+                <td>
                   {item.lastName} {item.firstName}
                 </td>
-                <td className="p-2">{item.email}</td>
-                <td className="p-2">{item.phone}</td>
+                <td>{item.email}</td>
+                <td>{item.phone}</td>
 
-                <td className="p-2">
+                <td>
                   <div className="flex items-center justify-center gap-1">
                     <button onClick={() => handleDelete(item.userId)} className="p-0 whitespace-nowrap rounded-full text-red-500 hover:text-red-400">
                       <FaTrashAlt size={24} />

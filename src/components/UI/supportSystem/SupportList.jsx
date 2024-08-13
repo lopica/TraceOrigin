@@ -46,7 +46,7 @@ const SupportList = ({ items = [], onSubmit }) => {
 
   return (
     <div className="overflow-x-auto w-full">
-      <table className="min-w-full bg-white border border-gray-200">
+      <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100">
         <thead>
           <tr>
             <th className="p-4 border-b">#</th>
@@ -85,7 +85,7 @@ const SupportList = ({ items = [], onSubmit }) => {
               </tr>
               {openIndex === index && (
                 <tr>
-                  <td colSpan="6" className="p-4">
+                  <td colSpan="6" className="p-4 bg-white">
                     <div className="mt-4">
                       {item?.subSupport?.map((support, supportIndex) => {
                         const isLastItem = supportIndex === item.subSupport.length - 1;

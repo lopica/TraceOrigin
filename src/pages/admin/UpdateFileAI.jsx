@@ -164,18 +164,18 @@ function UpdateFileAI() {
           <h2 className="text-lg font-semibold">Lịch sử cập nhật</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300">
-            <thead>
+      <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100">
+            <thead className="text-black">
               <tr>
-                <th className="py-2 px-4 border-b">Thời gian</th>
-                <th className="py-2 px-4 border-b">Mô tả</th>
+                <th>Thời gian</th>
+                <th>Mô tả</th>
               </tr>
             </thead>
             <tbody>
               {dataHistory.map((item, index) => (
                 <tr key={index}>
-                  <td className="py-2 px-4 border-b">{formatTimestamp(item.timestamp)}</td>
-                  <td className="py-2 px-4 border-b">
+                  <td>{formatTimestamp(item.timestamp)}</td>
+                  <td>
                     {parseMessage(item.message)}
                   </td>
                 </tr>

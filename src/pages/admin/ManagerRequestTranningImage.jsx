@@ -308,8 +308,8 @@ const ManagerRequestTranningImage = () => {
       </form>
 
       <div className="overflow-x-auto mt-8">
-        <table className="table w-full">
-          <thead>
+      <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100 text-xs">
+          <thead className="text-black">
             <tr>
               <th>#</th>
               <th>Tên sản phẩm</th>
