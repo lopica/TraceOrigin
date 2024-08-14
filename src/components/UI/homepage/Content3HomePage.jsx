@@ -1,5 +1,5 @@
-import { FaBrain } from "react-icons/fa";
-import { SiBlockchaindotcom } from "react-icons/si";
+import { FaBrain, FaVrCardboard } from "react-icons/fa";
+import ThreeDModelViewer from "../ThreeDModelViewer";
 
 const Content3HomePage = () => {
   return (
@@ -12,6 +12,8 @@ const Content3HomePage = () => {
             src="/phone_homepage.png"
             alt="Data Analysis Graph"
           />
+          
+           {/* <ThreeDModelViewer/> */}
         </div>
         {/* Nửa phải: Nội dung */}
         <div className="md:w-2/3 flex flex-col items-center justify-center text-justify text-lg">
@@ -44,12 +46,11 @@ const Content3HomePage = () => {
 
               <div className="bg-white p-4 rounded-box shadow-md">
                 <h3 className="flex items-center text-xl font-semibold">
-                  <SiBlockchaindotcom className="mr-2 text-color1" />
-                  Áp dụng công nghệ Blockchain
+                  <FaVrCardboard className="mr-2 text-color1" />
+                  Áp dụng WebXR
                 </h3>
                 <p className="text-md">
-                  Trên nền tảng mã hóa làm tăng độ công khai minh bạch của sản
-                  phẩm.
+                  Tạo ra môi trường ảo hoàn toàn, nơi người dùng có thể tương tác như trong thế giới thực.
                 </p>
               </div>
             </div>

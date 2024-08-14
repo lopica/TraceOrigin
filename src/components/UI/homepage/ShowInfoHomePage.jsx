@@ -60,7 +60,7 @@ const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
                 : "./default_avatar.png"
             }
             alt="avatar"
-            className="w-24 h-24 rounded-full mr-4"
+            className="w-24 h-24 rounded-box mr-4"
           />
           <h2 className="text-xl font-bold">{dataUser?.org_name}</h2>
         </div>
@@ -85,34 +85,39 @@ const ShowInfoHomePage = ({ id, isOpen, onClose }) => {
               "max-h-screen opacity-100 overflow-visible": showUser,
             })}
           >
-           <img
-            src={
-              dataUser?.profileImage != undefined
-                ? dataUser?.profileImage
-                : "./default_avatar.png"
-            }
-            alt="avatar"
-            className="w-24 h-24 rounded-full mr-4"
-          />
-          <p>
-            <strong>Họ và tên:</strong> {dataUser?.lastName}{" "}
-            {dataUser?.firstName}
-          </p>
-          <p>
-            <strong>Số điện thoại:</strong> {dataUser?.phone}
-          </p>
-          <p>
-            <strong>Email:</strong> {dataUser?.email}
-          </p>
-          <p>
-            <strong>Địa chỉ:</strong> {dataUser?.location.address}
-          </p>
+<div className="flex items-start">
+  <div className="flex-shrink-0">
+    <img
+      src={
+        dataUser?.profileImage != undefined
+          ? dataUser?.profileImage
+          : "./default_avatar.png"
+      }
+      alt="avatar"
+      className="w-24 h-24 rounded-box object-cover"
+    />
+  </div>
+  <div className="ml-4">
+    <p>
+      <strong>Họ và tên:</strong> {dataUser?.lastName} {dataUser?.firstName}
+    </p>
+    <p>
+      <strong>Số điện thoại:</strong> {dataUser?.phone}
+    </p>
+    <p>
+      <strong>Email:</strong> {dataUser?.email}
+    </p>
+    <p>
+      <strong>Địa chỉ:</strong> {dataUser?.location.address}
+    </p>
 
-          {dataUser?.description != null ? (
-            <p>
-              <strong>Mô tả:</strong> {dataUser?.description}
-            </p>
-          ) : null}
+    {dataUser?.description != null ? (
+      <p>
+        <strong>Mô tả:</strong> {dataUser?.description}
+      </p>
+    ) : null}
+  </div>
+</div>
         </div>
 
         {/* Product Info */}

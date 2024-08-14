@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 import FileUploadModel3D from "./FileUploadModel3D";
-import ModelViewer from "./ModelViewer";
 
 const UploadModel3DModal = ({ isOpen, onClose, onSubmit }) => {
 
