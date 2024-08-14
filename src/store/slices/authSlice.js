@@ -15,10 +15,10 @@ export const requireLoginAfterTimeout = createAsyncThunk(
       const lastActivityTime = state.authSlice.lastActivityTime;
       const currentTime = Date.now();
       const elapsed = currentTime - lastActivityTime;
-      // console.log("da set clock");
-      // console.log(lastActivityTime)
-      // console.log(elapsed);
-      // console.log(TIMEOUT_DURATION);
+      console.log("da set clock");
+      console.log(lastActivityTime)
+      console.log(elapsed);
+      console.log(TIMEOUT_DURATION);
       if (elapsed >= TIMEOUT_DURATION) {
         console.log("logout ngay");
         dispatch(requireLogin());
@@ -27,7 +27,7 @@ export const requireLoginAfterTimeout = createAsyncThunk(
       } else {
         setTimeout(() => {
           console.log("vo timeout");
-          // console.log(TIMEOUT_DURATION - elapsed);
+          console.log(TIMEOUT_DURATION - elapsed);
           dispatch(requireLogin());
           dispatch(updateUser({}));
           dispatch(updateImages([]))
