@@ -20,12 +20,13 @@ import Button from "../../components/UI/Button";
 import { useDropzone } from "react-dropzone";
 import Canvas3D from "../../components/Canvas3D";
 import localforage from "localforage";
+import { IoIosWarning } from "react-icons/io";
 
 const stepList = [
   "Thông tin cơ bản",
   "Thông số kĩ thuật",
   "Ảnh minh họa",
-  "Model 3D (tùy chọn)",
+  "Xác nhận sản phẩm",
 ];
 
 const validateStep = [
@@ -410,7 +411,14 @@ function ManuProductAdd() {
           </div>
         </>
         <>
-          <label className="form-control w-full ">
+        <div className="p-6 pt-0 h-full flex flex-col justify-center items-center">
+          <IoIosWarning className=" fill-red-300 h-20 w-20" />
+          <p className="text-center text-2xl font-light text-slate-600">
+            Bạn chắc chắn thông tin về sản phẩm bạn đã điền?
+          </p>
+         
+        </div>
+          {/* <label className="form-control w-full ">
             <div
               className="label"
               onClick={(e) => {
@@ -475,7 +483,8 @@ function ManuProductAdd() {
                 </div>
               </div>
             )}
-          </label>
+          </label> */}
+          
         </>
       </Wizzard>
     </div>

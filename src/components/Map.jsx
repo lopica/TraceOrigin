@@ -63,18 +63,20 @@ const LocationMarker = ({ location, setValue }) => {
       dispatch(updateCoordinate([e.latlng.lat, e.latlng.lng]));
       dispatch(updateVerifyAddress(false))
       // Update address based on new mark
+      console.log(setValue)
       setValue &&
         getAddress({ lat: e.latlng.lat, lng: e.latlng.lng })
           .unwrap()
           .then((res) => {
-            const newAddress = res[0].formatted.split(",");
-            setValue("address", newAddress[0]);
-            dispatch(updateNewAddress(results.isLoading));
-            console.log(res[0].formatted);
+            console.log('vo 1')
+            // const newAddress = res[0].formatted.split(",");
+            // setValue("address", newAddress[0]);
             dispatch(updateVerifyAddress(true))
+            // console.log(res[0].formatted);
           })
           .catch((err) => {
-            dispatch(updateNewAddress(results.isLoading));
+            console.log('vo 2')
+            // dispatch(updateVerifyAddress(true))
             console.log(err);
           });
     },

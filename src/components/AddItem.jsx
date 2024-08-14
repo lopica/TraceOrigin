@@ -7,7 +7,7 @@ import AddressInputGroup from "./AddressInputGroup";
 import handleKeyDown from "../utils/handleKeyDown";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useAddItemMutation } from "../store";
+import { updateCoordinate, useAddItemMutation } from "../store";
 import useToast from "../hooks/use-toast";
 
 let modal;
@@ -15,6 +15,7 @@ let province, district, ward;
 let request;
 export default function AddItem() {
   const { productDetail } = useSelector((state) => state.productSlice);
+  const dispatch = useDispatch();
   const {
     register,
     getValues,
@@ -74,7 +75,15 @@ export default function AddItem() {
 
     addItem(request)
       .unwrap()
-      .then(() => {
+      .then((res) => {
+        console.log('vo day')
+        dispatch(updateCoordinate([]));
+        setValue("province", "");
+        setValue("district", "");
+        setValue("ward", "");
+        setValue("address", "");
+        setValue("quantity", "");
+        setValue("descriptionOrigin", "");
         handleClose();
         getToast("Tạo nhật ký thành công");
       })

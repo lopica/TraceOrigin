@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { CONSTANTS } from "../services/Constants";
-import Bell from "./Bell";
+// import Bell from "./Bell";
 import Avatar from "./Avatar";
 import ThemeBtn from "./ThemeBtn";
 import Hamburger from "./UI/Hamburger";
@@ -69,7 +69,7 @@ function Header() {
   } else {
     userContent = (
       <>
-        <Bell />
+        {/* <Bell /> */}
         <Avatar />
       </>
     );

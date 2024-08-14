@@ -70,7 +70,7 @@ function Model({ modelUrl, extension }) {
   //     modelRef.current.position.sub(center);
   //   }
   // }, [modelUrl, extension]);
-  
+
   let model;
   if (extension) {
     console.log(extension);
@@ -143,8 +143,9 @@ function Canvas3D({ modelBase64, full }) {
 
       // Clean up URL object when component unmounts
       return () => {
-        console.log('vo day')
-        URL.revokeObjectURL(url);}
+        console.log("vo day");
+        URL.revokeObjectURL(url);
+      };
     }
   }, [modelBase64]);
 
@@ -156,11 +157,7 @@ function Canvas3D({ modelBase64, full }) {
             className="rounded-full absolute bottom-2 right-2 z-30 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
             onClick={handleZoomModal}
           >
-            {!show ? (
-              <MdOutlineZoomOutMap color="white" className="h-10 w-10" />
-            ) : (
-              <MdOutlineZoomInMap color="white" className="h-10 w-10" />
-            )}
+            <MdOutlineZoomInMap color="white" className="h-10 w-10" />
           </Button>
           <Button
             className="rounded-full absolute bottom-2 left-2 z-30 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
@@ -175,76 +172,45 @@ function Canvas3D({ modelBase64, full }) {
               <IoMdImage color="white" className="h-10 w-10" />
             )}
           </Button>
-          <Canvas
-            style={{ touchAction: "none" }}
-            dpr={[1, 2]}
-            camera={{ fov: 45 }}
-            onClick={stopPropagation}
-            onMouseDown={stopPropagation}
-            onMouseMove={stopPropagation}
-            onTouchStart={stopPropagation}
-            onTouchMove={stopPropagation}
-            onTouchEnd={stopPropagation}
-          >
-            <OrbitControls />
-            <Stage environment={"city"}>
-              {modelUrl && (
-                
-                  <Model modelUrl={modelUrl} extension={extension} />
-              )}
-            </Stage>
-            {background ? (
-              <VideoBackground />
-            ) : (
-              <Environment background files={"/modern_buildings_2_4k.hdr"} />
-            )}
-          </Canvas>
         </Modal>
       )}
-      {full && (
-        <Button
-          className="rounded-full absolute bottom-2 right-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-          onClick={handleZoomModal}
-        >
-          {!show ? (
+      {!show && full && (
+        <>
+          <Button
+            className="rounded-full absolute bottom-2 right-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
+            onClick={handleZoomModal}
+          >
             <MdOutlineZoomOutMap color="white" className="h-10 w-10" />
-          ) : (
-            <MdOutlineZoomInMap color="white" className="h-10 w-10" />
-          )}
-        </Button>
-      )}
-      {full && (
-        <Button
-          className="rounded-full absolute bottom-2 left-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-          onClick={(e) => {
-            e.preventDefault();
-            flipBackground();
-          }}
-        >
-          {!background ? (
-            <FaVideo color="white" className="h-10 w-10" />
-          ) : (
-            <IoMdImage color="white" className="h-10 w-10" />
-          )}
-        </Button>
+          </Button>
+          <Button
+            className="rounded-full absolute bottom-2 left-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
+            onClick={(e) => {
+              e.preventDefault();
+              flipBackground();
+            }}
+          >
+            {!background ? (
+              <FaVideo color="white" className="h-10 w-10" />
+            ) : (
+              <IoMdImage color="white" className="h-10 w-10" />
+            )}
+          </Button>
+        </>
       )}
       <Canvas
         style={{ touchAction: "none" }}
         dpr={[1, 2]}
         camera={{ fov: 45 }}
-        onClick={stopPropagation}
-        onMouseDown={stopPropagation}
-        onMouseMove={stopPropagation}
-        onTouchStart={stopPropagation}
-        onTouchMove={stopPropagation}
-        onTouchEnd={stopPropagation}
+        onClick={full ? stopPropagation : undefined}
+        onMouseDown={full ? stopPropagation : undefined}
+        onMouseMove={full ? stopPropagation : undefined}
+        onTouchStart={full ? stopPropagation : undefined}
+        onTouchMove={full ? stopPropagation : undefined}
+        onTouchEnd={full ? stopPropagation : undefined}
       >
         <OrbitControls />
         <Stage environment={"city"}>
-          {modelUrl && (
-            
-              <Model modelUrl={modelUrl} extension={extension} />
-          )}
+          {modelUrl && <Model modelUrl={modelUrl} extension={extension} />}
         </Stage>
         {background ? (
           <VideoBackground />

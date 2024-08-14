@@ -93,7 +93,7 @@ export default function AddressInputGroup({
 
   useEffect(() => {
     dispatch(updateVerifyAddress(false));
-  }, [getValues("ward"), watch("address")]);
+  }, [getValues("ward")]);
 
   let map = null;
   if (results.isLoading) {
@@ -108,7 +108,19 @@ export default function AddressInputGroup({
 
   return (
     <div>
-      {message ? message : <p className={required && 'after:content-["*"] after:ml-0.5 after:text-red-500'}>Địa chỉ</p>}
+      <div className="flex mt-2">
+        {message ? (
+          message
+        ) : (
+          <p
+            className={
+              required && 'after:content-["*"] after:ml-0.5 after:text-red-500'
+            }
+          >
+            Địa chỉ
+          </p>
+        )}
+      </div>
       <div className="w-full gap-2 grid grid-cols-1 sm:grid-cols-3 items-start mb-2">
         <Input
           type="select"
@@ -180,7 +192,7 @@ export default function AddressInputGroup({
             e.preventDefault();
             turnOn();
           }}
-          className='p-0 mt-2'
+          className="p-0 mt-2"
         >
           Xác thực địa chỉ
         </Button>

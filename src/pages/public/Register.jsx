@@ -42,7 +42,7 @@ const validateStep = [
   ["password", "cfPassword"],
 ];
 
-let province, district, ward;
+let province, district, ward, address;
 let alert;
 
 function Register() {
@@ -97,18 +97,20 @@ function Register() {
   };
 
   const onSubmit = (data) => {
-    province = getValues("province").split(",");
-    district = getValues("district").split(",");
-    ward = getValues("ward").split(",");
+    province = getValues("province").split(",")[1];
+    district = getValues("district").split(",")[1];
+    ward = getValues("ward").split(",")[1];
+    address = `${getValues("address")}, ${ward}, ${district}, ${province}`
 
     let request = {
       ...data,
-      city: province[1],
-      district: district[1],
-      ward: ward[1],
+      city: province,
+      district: district,
+      ward: ward,
       country: "Vietnam",
       coordinateX: coordinate[0],
       coordinateY: coordinate[1],
+      address
     };
     delete request.province;
     delete request.cfPassword;
@@ -320,7 +322,7 @@ function Register() {
         </Wizzard>
         {showOtp && (
           <Modal onClose={handleClose}>
-            <div className="grow flex flex-col items-center justify-center">
+            <div className="grow flex flex-col items-center justify-center py-8">
               <Otp
                 onSubmit={handleRegister}
                 isLoading={isRegisterLoading}

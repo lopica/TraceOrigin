@@ -42,7 +42,7 @@ const persistConfig = {
   whitelist: [
     "authSlice",
     "userSlice",
-    "certiForm",
+    // "certiForm",
     "productEditForm",
     // 'historySearchSlice',
   ],
