@@ -101,7 +101,7 @@ export default function ItemLine({
     }
   }
   return (
-    <div className="flex flex-col justify-between h-[90svh]">
+    <div className="flex flex-col justify-between h-[90svh] mt-1">
       <div className="grow">{itemLine}</div>
       {showQr && <QR productRecognition={productRecognition} />}
     </div>

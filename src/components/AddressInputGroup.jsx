@@ -69,10 +69,11 @@ export default function AddressInputGroup({
         getValues("address")
       ) {
         //call api
+        let province = getValues("province").split(',')[1]
+        let district = getValues("district").split(',')[1]
+        let ward = getValues("ward").split(',')[1]
         getCoordinate({
-          address: `${getValues("address")}, ${getValues("ward")}, ${getValues(
-            "district"
-          )}, ${getValues("province")}`,
+          address: `${getValues("address")}, ${ward}, ${district}, ${province}, Việt Nam`,
         })
           .unwrap()
           .then((res) => {
@@ -101,7 +102,10 @@ export default function AddressInputGroup({
   } else if (results.isError) {
     map = <p>Không thể tải được bản đồ</p>;
   } else if (coordinate?.length > 0) {
-    map = <Map location={coordinate} setValue={setValue} />;
+    map = <div className="flex flex-col justify-center">
+      {setValue && <small className="text-center">(Bạn có thể click vào bản đồ để chọn lại vị trí chính xác)</small>}
+      <Map location={coordinate} setValue={setValue} />
+    </div>;
   } else {
     map = null;
   }

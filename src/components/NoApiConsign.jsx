@@ -225,7 +225,9 @@ export default function NoApiConsign({ productRecognition }) {
     <Tooltip
       content={
         <p>
-          Sản phẩm này hiện không đủ <br /> điều kiện có chứng chỉ
+          Sản phẩm này hiện không đủ <br /> điều kiện có chứng chỉ <br />
+          <span className=''>(Bạn có thể nhấn vào nút<br /> "các sự kiện đã tham gia" <br />  để bổ
+          sung thông tin)</span>
         </p>
       }
       position="top"
@@ -886,7 +888,7 @@ export default function NoApiConsign({ productRecognition }) {
                   outline
                   onClick={(e) => {
                     e.preventDefault();
-                    laterBtnHandler()
+                    laterBtnHandler();
                   }}
                 >
                   Để sau
@@ -1098,12 +1100,12 @@ export default function NoApiConsign({ productRecognition }) {
     case "report":
       form = (
         <div className="p-4">
-        <h2 className="text-center text-2xl">Tạo Báo Cáo Mới</h2>
+          <h2 className="text-center text-2xl">Tạo Báo Cáo Mới</h2>
           <BackBtn step="option" />
           <CreateReportBlock
-          productCode={productRecognition}
-          in_email={guestEmail}
-          backBtn={() => setStep("option")}
+            productCode={productRecognition}
+            in_email={guestEmail}
+            backBtn={() => setStep("option")}
           ></CreateReportBlock>
         </div>
       );

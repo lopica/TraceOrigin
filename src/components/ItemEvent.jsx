@@ -101,6 +101,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
             data={historyData}
             config={historyConfig}
             keyFn={(item) => item.itemLogId}
+            message="Bạn chưa tham gia sự kiện nào"
           />
           </div>
         );
@@ -109,6 +110,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
             data={historyData}
             config={historyConfig}
             keyFn={(item) => item.itemLogId}
+            message="Bạn chưa tham gia sự kiện nào"
           />
         );
         break;
@@ -266,8 +268,10 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
 
   let historyModal = (
     <Modal onClose={handleClose}>
+      <div className='pt-4 pb-8'>
       <h2 className="text-center text-2xl my-4">Lịch sử chỉnh sửa</h2>
       {renderedHistory}
+      </div>
     </Modal>
   );
 
