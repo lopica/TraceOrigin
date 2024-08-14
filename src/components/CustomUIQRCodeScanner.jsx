@@ -216,7 +216,7 @@ const QRCodeScanner = () => {
           {!imageUrl && (
             <>
               <Dropzone
-                className="max-w-4xl lg:mx-auto h-[20svh] mx-2"
+                className="max-w-4xl mx-8 rounded-box h-[20svh]"
                 setImageUrl={setImageUrl}
                 scanQr={scanQRCode}
               />

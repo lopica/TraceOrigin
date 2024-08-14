@@ -12,7 +12,7 @@ import TimeSelect from "../../components/UI/monitoring/TimeSelect";
 import PieCertChart from "../../components/UI/monitoring/PieCertChart";
 
 function AdminMonitoring() {
-  const [selectedTime, setSelectedTime] = useState('1d');
+  const [selectedTime, setSelectedTime] = useState('now/d');
   const handleChange = (event) => {
     setSelectedTime(event.target.value);
   };

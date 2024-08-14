@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
 import { memo, useEffect, useRef, useState } from "react";
-import { FaCamera, FaInfoCircle } from "react-icons/fa";
+import { FaCamera, FaInfoCircle, FaSpinner,FaExclamationTriangle, FaImage } from "react-icons/fa";
 import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
@@ -296,7 +296,7 @@ const ImageClassificationDemo = () => {
           {!imageUrl && (
             <>
               <DropzoneDemo
-                className="max-w-4xl lg:mx-auto h-[20svh] mx-2"
+                className="max-w-4xl rounded-box h-[20svh] mx-8"
                 setImageUrl={setImageUrl}
                 // setPredictionResult={setPredictionResult}
                 setProductId={setProductId}
@@ -329,7 +329,7 @@ const ImageClassificationDemo = () => {
                   ref={imageRef}
                   onLoad={() => setImageLoaded(true)}
                   alt="upload image"
-                  className=" h-[40svh] object-contain"
+                  className="w-64 h-64 object-cover  border-dashed border-gray border rounded-box"
                 />
                 <input
                   type="file"
@@ -339,18 +339,24 @@ const ImageClassificationDemo = () => {
                   onChange={handleImageChange}
                 />
                 <p
-                  className="text-center underline text-slate-500 w-full py-2 hover:cursor-pointer"
+                  className="flex items-center justify-center text-center underline text-slate-500 w-full py-2 hover:cursor-pointer"
                   onClick={() => {
                     document.getElementById("fileInput").click();
                     setProduct(null);
                   }}
                 >
-                  Chọn ảnh khác
+                  <FaImage className="mr-2" /> Chọn ảnh khác
                 </p>
               </div>
               <div className="flex-1 w-1/2 p-4">
                 {!imageLoaded ? (
-                  <p>Loading prediction...</p>
+                  <div className="flex flex-col justify-center items-center">
+                    <img
+                      src="/logo_full.png"
+                      alt="full logo"
+                      className="w-32 h-auto animate-scale-fade"
+                    />
+                  </div>
                 ) : (
                   <>
                     {/* <h3 className="text-center text-3xl mb-6">
@@ -394,7 +400,15 @@ const ImageClassificationDemo = () => {
                         </div>
                       </>
                     ) : (
-                      <>Ko tìm thấy</>
+                      <div className="bg-white text-center">
+                        <FaExclamationTriangle className="text-red-500 text-4xl mb-4 mx-auto" />
+                        <h2 className="text-xl font-bold mb-4">
+                          Không tìm thấy sản phẩm
+                        </h2>
+                        <p className="text-gray-600">
+                          Hãy chắc chắn rằng sản phẩm được cung cấp tính năng quét bằng AI.
+                        </p>
+                      </div>
                     )}
                   </>
                 )}

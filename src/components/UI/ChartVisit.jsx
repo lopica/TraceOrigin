@@ -11,15 +11,26 @@ import TimeSelect from './monitoring/TimeSelect';
 const ChartVisit = ({selectedTime}) => {
 
   const { data: apiData, error, isLoading } = useGetNumberVisitsDiagramQuery(selectedTime);
-  
+
+  const getDateFromTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    return `${day}/${month}`;
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
   const jsonData = apiData ? JSON.parse(apiData) : [];
 
-  const labels = jsonData.map(data => data.formatted_date);
-  const dataValues = jsonData.map(data => data.doc_count);
+  const labels = jsonData.map(data => {
+    if (data.formatted_date === "00:00") {
+      return getDateFromTimestamp(data.key);
+    }
+    return data.formatted_date;
+  });
+    const dataValues = jsonData.map(data => data.doc_count);
 
   const data = {
     labels: labels,
