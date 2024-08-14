@@ -173,6 +173,17 @@ const userApi = createApi({
           };
         },
       }),
+      updateOrgName: builder.mutation({
+        query: (options) => {
+          return {
+            url: "/updateOrgName",
+            method: "POST",
+            body: {
+              orgName: options.orgName || "",
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -192,5 +203,6 @@ export const {
   useUpdateAvatarMutation,
   useUpdateDescriptionMutation,
   useDeleteSupporterMutation,
-  useListAllCustomerSupportQuery
+  useListAllCustomerSupportQuery,
+  useUpdateOrgNameMutation,
 } = userApi;

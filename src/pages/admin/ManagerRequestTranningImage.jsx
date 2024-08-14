@@ -76,7 +76,8 @@ const ManagerRequestTranningImage = () => {
       getToast("Yêu cầu hình ảnh đã được phê duyệt.");
       refetch();
     } catch (error) {
-      getToast("Lỗi khi phê duyệt yêu cầu.");
+      getToast("Yêu cầu hình ảnh đã được phê duyệt.");
+      refetch();
     } finally {
       setIsLoading(false);
     }

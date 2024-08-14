@@ -101,11 +101,10 @@ function ManuCertificateAdd() {
                       message: "Tên chứng chỉ phải có ít nhất 3 kí tựu"
                   },
                   maxLength: {
-                      value: 100,
-                      message: "Chứng chỉ không được vượt quá 100 ký tự"
+                      value: 500,
+                      message: "Chứng chỉ không được vượt quá 500 ký tự"
                   }})}
-                tooltip="Tối đa 100 ký tự"
-                error={errors.productName?.message}
+                error={errors.name?.message}
               />
             </div>
             <Input
@@ -132,11 +131,11 @@ function ManuCertificateAdd() {
                   message: "Cơ quan cấp phải có ít nhất 3 ký tự"
               },
               maxLength: {
-                  value: 100,
-                  message: "Cơ quan cấp không được vượt quá 100 ký tự"
+                  value: 500,
+                  message: "Cơ quan cấp không được vượt quá 500 ký tự"
               }})}
             tooltip="Cơ quan cấp"
-            error={errors.description?.message}
+            error={errors.issuanceAuthority?.message}
           />
         </>
         <>
