@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
-import { memo, useEffect, useRef, useState } from "react";
-import { FaCamera, FaInfoCircle, FaSpinner,FaExclamationTriangle, FaImage } from "react-icons/fa";
+import { memo, useEffect, useRef, useState,useCallback  } from "react";
+import { FaCamera, FaInfoCircle, FaSpinner, FaExclamationTriangle, FaImage } from "react-icons/fa";
 import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
@@ -9,7 +9,6 @@ import { Camera } from "react-camera-pro";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import ViewPageDetail from "./UI/homepage/DetailMaufactor";
 import { CONSTANTS } from "../services/Constants";
 
 const MOBILE_NET_INPUT_HEIGHT = 224;
@@ -35,23 +34,27 @@ const ImageClassificationDemo = () => {
   const { idProduct } = useParams();
   const [product, setProduct] = useState(null);
   const [productId, setProductId] = useState(null);
+  const [fetchTrigger, setFetchTrigger] = useState(0); // Trigger to force refetch
 
-  useEffect(() => {
-    console.log("test", productId);
+  // Fetch product information
+  const fetchProductInfo = useCallback(async () => {
     if (productId && !isNaN(productId)) {
-      axios //.post(`http://localhost:8080/api/product/getInfoByProductId?productId=37`)
-        .get(
-          `${CONSTANTS.domain}/product/getInfoByProductId?productId=${productId}`
-        )
-        .then((res) => {
-          console.log("data", res.data, productId);
-          setProduct(res.data);
-        })
-        .catch((err) => {
-          console.error("Error fetching product information:", err);
-        });
+      try {
+        const response = await axios.get(
+          `${CONSTANTS.domain}/product/getInfoByProductId?productId=${productId}&timestamp=${Date.now()}`
+        );
+        setProduct(response.data);
+      } catch (error) {
+        console.error("Error fetching product information:", error);
+      }
     }
   }, [productId]);
+  useEffect(() => {
+    fetchProductInfo();
+  }, [fetchTrigger, fetchProductInfo]);
+  const triggerRefetch = () => {
+    setFetchTrigger(prev => prev + 1); // Increment the trigger to refetch
+  };
   // Check for camera availability
   const checkCameraAvailability = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -69,8 +72,6 @@ const ImageClassificationDemo = () => {
     setCamerasAvailable({ user: hasUser, environment: hasEnvironment });
   };
 
-  console.log("product", product);
-
   // Handle camera change
   const handleCameraChange = (event) => {
     setCameraType(event.target.value);
@@ -79,16 +80,20 @@ const ImageClassificationDemo = () => {
   // Handle image file change
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
+    
     if (file && file.type.startsWith("image/")) {
+      // Create a new URL object for the image
       setImageUrl(URL.createObjectURL(file));
       setImageLoaded(false);
-
+  
+      // Prepare FormData for the request
       const formData = new FormData();
       formData.append("image", file);
-
+  
       try {
+        // Add cache-busting parameter to the URL
         const response = await axios.post(
-          "https://traceorigin-ai.click/upload",
+          "https://traceorigin-ai.click/upload?_=" + new Date().getTime(),
           formData,
           {
             headers: {
@@ -96,9 +101,13 @@ const ImageClassificationDemo = () => {
             },
           }
         );
-        const productId = response.data.productName;
+        // Check response data
+        console.log('Upload response:', response.data);
+  
+        const newProductId = response.data.productName;
         setPredictionResult(response.data.productName);
-        setProductId(productId);
+        setProductId(newProductId); // Update productId
+        triggerRefetch(); // Refetch product info with the new productId        setConfidence(response.data.confidence);
         setConfidence(response.data.confidence);
         setImageLoaded(true);
       } catch (error) {
@@ -107,7 +116,10 @@ const ImageClassificationDemo = () => {
     } else {
       alert("Please select a valid image file.");
     }
+    event.target.value = null;
+
   };
+  
 
   // Predict video frame
   const predictVideoFrame = async () => {
@@ -159,15 +171,10 @@ const ImageClassificationDemo = () => {
                 },
               }
             );
-            setProductId(response.data.productName);
-
+            const productId = response.data.productName;
             setPredictionResult(response.data.productName);
-            // idProduct =   setPredictionResult(response.data.productName);
-            // setProduct(true);
-            const productId = response.data.productName; // Extract the productId
-            // setPredictionResult(response.data.productName);
+            setProductId(productId);
             setConfidence(response.data.confidence);
-            //  setProductId(productId); // Set the productId to state
           } catch (error) {
             console.error("Error predicting video frame:", error);
           }
@@ -298,11 +305,10 @@ const ImageClassificationDemo = () => {
               <DropzoneDemo
                 className="max-w-4xl rounded-box h-[20svh] mx-8"
                 setImageUrl={setImageUrl}
-                // setPredictionResult={setPredictionResult}
                 setProductId={setProductId}
-                //setProduct={setProduct}
                 setConfidence={setConfidence}
                 setImageLoaded={setImageLoaded}
+                
               />
               <div className="mt-8 pl-4">
                 <h3 className="">Lịch sử tìm kiếm</h3>
@@ -359,9 +365,6 @@ const ImageClassificationDemo = () => {
                   </div>
                 ) : (
                   <>
-                    {/* <h3 className="text-center text-3xl mb-6">
-                      {predictionResult}
-                    </h3> */}
                     <h3 className="text-center text-3xl mb-6">
                       {product?.productName}
                     </h3>
@@ -375,10 +378,8 @@ const ImageClassificationDemo = () => {
                               <div className="font-medium">{confidence}%</div>
                             </div>
                           </div>
-                          {/* <p className="underline cursor-pointer">Manufacturer</p> */}
                         </div>
                         <div className="flex flex-col ">
-                          {/* <p><strong>Product ID:</strong> {product.productId}</p> */}
                           <p>
                             <strong>Product Name:</strong>{" "}
                             {product?.productName}
@@ -468,11 +469,9 @@ const ImageClassificationDemo = () => {
                       <div className="font-medium">{confidence}%</div>
                     </div>
                   </div>
-                  {/* <p className="underline cursor-pointer">Manufacturer</p> */}
                 </div>
 
                 <div className="flex flex-col ml-[10px]">
-                  {/* <p><strong>Product ID:</strong> {product.productId}</p> */}
                   <p>
                     <strong>Product Name:</strong> {product.productName}
                   </p>
