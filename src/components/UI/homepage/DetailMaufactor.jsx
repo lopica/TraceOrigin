@@ -5,6 +5,8 @@ import { CONSTANTS } from "../../../services/Constants";
 
 function DetailManufacturer() {
   const [products, setProducts] = useState([]);
+  const [cert, setCert] = useState([]);
+
   const [user, setUser] = useState({});
   const [topOrgs, setTopOrgs] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null); // Lưu userId đã chọn
@@ -26,10 +28,20 @@ function DetailManufacturer() {
       // Call API to get product details
       axios.post(`${CONSTANTS.domain}/product/ViewProductByManufacturerId`, {
         id: parseInt(id),
-        categoryId: 1
+        categoryId: 0
       })
       .then(res => {
         setProducts(res.data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+
+      axios.post(`${CONSTANTS.domain}/api/certificate/getListCertificateByManuId`, {
+        id: parseInt(id),
+      })
+      .then(res => {
+        setCert(res.data);
       })
       .catch(err => {
         console.error(err);

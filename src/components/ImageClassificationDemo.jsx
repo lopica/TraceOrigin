@@ -327,9 +327,9 @@ const ImageClassificationDemo = () => {
                 <img
                   src={imageUrl}
                   ref={imageRef}
-                  onLoad={() => setImageLoaded(true)}
+                  // onLoad={() => setImageLoaded(true)}
                   alt="upload image"
-                  className="w-64 h-64 object-cover  border-dashed border-gray border rounded-box"
+                  className="w-full h-64 object-cover  border-dashed border-gray border rounded-box"
                 />
                 <input
                   type="file"
@@ -351,11 +351,9 @@ const ImageClassificationDemo = () => {
               <div className="flex-1 w-1/2 p-4">
                 {!imageLoaded ? (
                   <div className="flex flex-col justify-center items-center">
-                    <img
-                      src="/logo_full.png"
-                      alt="full logo"
-                      className="w-32 h-auto animate-scale-fade"
-                    />
+                  <h2 className="text-xl font-bold mt-16 animate-scale-fade">
+                          Đang tìm kiếm sản phẩm...
+                        </h2>
                   </div>
                 ) : (
                   <>
