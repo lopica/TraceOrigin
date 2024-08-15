@@ -48,8 +48,8 @@ export default function ItemList({ productId }) {
     mode: "onTouched",
   });
   const { show: showExport, handleFlip } = useShow(false);
-  const { show: chooseAll, handleFlip: handleChooseFlip } = useShow(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
+  const [listChooseAll, setListChooseAll] = useState([]);
   const { getToast } = useToast();
 
   const handleCheckboxChange = (item) => {
@@ -94,8 +94,24 @@ export default function ItemList({ productId }) {
     }
   };
 
+  function handleChooseFlip() {
+    setListChooseAll((prev) => {
+      const newList = [...prev];
+      newList[paginate.currentPage] = !prev[paginate.currentPage];
+      return newList;
+    });
+  }
+
   useEffect(() => {
-    if (chooseAll) {
+    if (paginate.totalPages && listChooseAll.length === 0)
+      setListChooseAll(
+        Array.from({ length: paginate.totalPages }).map(() => false)
+      );
+  }, [paginate]);
+
+  useEffect(() => {
+    console.log(paginate.currentPage);
+    if (listChooseAll[paginate.currentPage]) {
       const itemsOnPage = new Set(
         itemsData.map((item) => item.productRecognition)
       );
@@ -105,9 +121,26 @@ export default function ItemList({ productId }) {
         return newCheckedItems;
       });
     } else {
-      setCheckedItems(new Set());
+      // if (!isEdit) {
+        const itemsOnPage = new Set(
+          itemsData.map((item) => item.productRecognition)
+        );
+        setCheckedItems((prevCheckedItems) => {
+          const newCheckedItems = new Set(prevCheckedItems);
+          itemsOnPage.forEach((item) => {
+            newCheckedItems.delete(item);
+          });
+          return newCheckedItems;
+        });
+        // setIsEdit(true)
+      // }
     }
-  }, [chooseAll, itemsData]);
+  }, [listChooseAll]);
+
+  useEffect(() => {
+    console.log(checkedItems);
+    console.log(listChooseAll);
+  }, [checkedItems, listChooseAll]);
 
   useEffect(() => {
     if (!isEventtypeError && !isEventtypeFetch) {
@@ -230,7 +263,7 @@ export default function ItemList({ productId }) {
         </div>
       );
     } else {
-      renderedListItem = <p className="text-center">Bạn chưa có nhật ký nào</p>
+      renderedListItem = <p className="text-center">Bạn chưa có nhật ký nào</p>;
     }
   }
 
@@ -261,7 +294,9 @@ export default function ItemList({ productId }) {
         )}
         {showExport && (
           <Button onClick={handleChooseFlip} primary rounded>
-            {chooseAll ? "Bỏ chọn tất cả" : "Chọn tất cả"}
+            {listChooseAll[paginate.currentPage]
+              ? "Bỏ chọn tất cả"
+              : "Chọn tất cả"}
           </Button>
         )}
         <Button onClick={handleFlip} primary rounded>

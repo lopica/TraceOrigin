@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForgotPasswordMutation } from "../../store/apis/authApi";
+import Button from "../../components/UI/Button";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [forgotPassword, { isLoading, isSuccess, isError, error }] = useForgotPasswordMutation();
+  const [forgotPassword, { isLoading, isSuccess, isError, error }] =
+    useForgotPasswordMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const result = await forgotPassword({ email }).unwrap();
-      console.log('Success:', result);
+      console.log("Success:", result);
     } catch (err) {
-      console.error('Failed:', err);
+      console.error("Failed:", err);
     }
   };
 
@@ -49,28 +51,29 @@ function ForgotPassword() {
           </div>
 
           <div>
-            <button 
-              type="submit" 
-              disabled={isLoading}
-              className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              {isLoading && <span className="loading loading-spinner text-info mr-3"></span>}
-              {isLoading ? 'Loading...' : 'Gửi mật khẩu tạm thời'}
-            </button>
+            <Button login rounded disabled={isLoading}>
+              {isLoading && (
+                <span className="loading loading-spinner text-info mr-3"></span>
+              )}
+              {isLoading ? "Loading..." : "Gửi mật khẩu tạm thời"}
+            </Button>
           </div>
         </form>
 
-        {isSuccess && <p className="text-green-500 text-center mt-4">Đã gửi mật khẩu tạm đến email của bạn!</p>}
+        {isSuccess && (
+          <p className="text-green-500 text-center mt-4">
+            Đã gửi mật khẩu tạm đến email của bạn!
+          </p>
+        )}
 
-        <p className="mt-10 text-center text-sm text-gray-500">
-          Đã có tài khoản?{" "}
-          <Link
-            to="/portal/login"
-            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-          >
-            Đăng nhập ngay
+        <div className="mt-10 text-center text-gray-500 text-sm flex justify-center items-center">
+          <p>Đã có tài khoản?</p>
+          <Link to="/portal/login">
+            <Button link className="p-2">
+              Đăng nhập ngay
+            </Button>
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
