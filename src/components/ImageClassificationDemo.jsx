@@ -357,6 +357,7 @@ const ImageClassificationDemo = () => {
               <div className="flex-1 w-1/2 p-4">
                 {!imageLoaded ? (
                   <div className="flex flex-col justify-center items-center">
+
                   <h2 className="text-xl font-bold mt-16 animate-scale-fade">
                           Đang tìm kiếm sản phẩm...
                         </h2>

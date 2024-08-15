@@ -1,7 +1,8 @@
 import { support } from "jszip";
 import React, { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown,FaExclamationTriangle, FaChevronUp } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa"; // Import icon bạn muốn sử dụng
+import { itemSliceReducer } from "../../../store/slices/itemSlice";
 
 const SupportList = ({ items = [], onSubmit }) => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -46,7 +47,16 @@ const SupportList = ({ items = [], onSubmit }) => {
 
   return (
     <div className="overflow-x-auto w-full">
-      <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100">
+    {!items ? 
+      (<div className="flex flex-col items-center justify-center h-[73vh]">
+      <FaExclamationTriangle className="text-yellow-500 text-4xl mb-4" />
+        <h2 className="text-xl font-bold mb-4">Không có phản hồi</h2>
+        <p className="text-gray-600">
+        Bạn chưa có phản hồi nào về các sản phẩm mà bạn đã đăng ký từ người dùng.
+        </p>
+      </div>)
+    :
+    (<table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100">
         <thead>
           <tr>
             <th className="p-4 border-b">#</th>
@@ -226,7 +236,10 @@ const SupportList = ({ items = [], onSubmit }) => {
             </React.Fragment>
           ))}
         </tbody>
-      </table>
+      </table>)
+    }
+          
+
     </div>
   );
 };

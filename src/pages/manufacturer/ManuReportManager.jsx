@@ -194,11 +194,9 @@ function ManuReportManager() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen font-sans bg-gray-100">
-        <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
-          <span className="loading loading-spinner loading-lg text-center"></span>
-          ;
-        </div>
+      <div className="flex flex-col items-center justify-center h-[92vh]">
+               <span className="loading loading-spinner loading-lg text-center"></span>
+
       </div>
     );
   }
