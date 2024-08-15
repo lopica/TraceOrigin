@@ -85,7 +85,8 @@ const itemLogApi = createApi({
           return {
             url: "editItemLog",
             method: "POST",
-            body: request
+            body: request,
+            responseHandler: res => res.text()
           }
         }
       }),

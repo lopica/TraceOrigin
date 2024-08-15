@@ -73,7 +73,7 @@ export default function AddressInputGroup({
         let district = getValues("district").split(',')[1]
         let ward = getValues("ward").split(',')[1]
         getCoordinate({
-          address: `${getValues("address")}, ${ward}, ${district}, ${province}, Việt Nam`,
+          address: `${getValues("address")}, ${ward}, ${district}, ${province}`,
         })
           .unwrap()
           .then((res) => {

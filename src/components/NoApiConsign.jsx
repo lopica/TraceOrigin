@@ -1,8 +1,7 @@
-import { MdOutlineTransferWithinAStation } from "react-icons/md";
 import useShow from "../hooks/use-show";
 import Button from "./UI/Button";
 import Modal from "./UI/Modal";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import handleKeyDown from "../utils/handleKeyDown";
 import { emailRegex, phoneRegex } from "../services/Validation";
@@ -14,7 +13,6 @@ import Input from "./UI/Input";
 import ShowPDF from "./ShowPDF";
 import { FaBook } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
-import ItemEvent from "./ItemEvent";
 import CreateReportModal from "../components/UI/CreateReportModal";
 import useDiary from "../hooks/use-diary";
 import Tooltip from "./UI/Tooltip";
@@ -226,8 +224,10 @@ export default function NoApiConsign({ productRecognition }) {
       content={
         <p>
           Sản phẩm này hiện không đủ <br /> điều kiện có chứng chỉ <br />
-          <span className=''>(Bạn có thể nhấn vào nút<br /> "các sự kiện đã tham gia" <br />  để bổ
-          sung thông tin)</span>
+          <span className="">
+            (Bạn có thể nhấn vào nút
+            <br /> "các sự kiện đã tham gia" <br /> để bổ sung thông tin)
+          </span>
         </p>
       }
       position="top"
@@ -247,10 +247,9 @@ export default function NoApiConsign({ productRecognition }) {
     </div>
   );
 
-  let reportBtn = (
+  let reportBtn = roleDiary === 'current-owner' && (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
-      // onClick={openModal}
       onClick={() => setStep("report")}
     >
       <p>Báo lỗi</p>
@@ -656,6 +655,24 @@ export default function NoApiConsign({ productRecognition }) {
         <div className="h-full">
           <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
           <BackBtn step="option" />
+          {roleDiary === "pending-receiver" ? (
+            <>
+            {console.log(consignData)}
+              {consignData?.checkPoint ? (
+                <div className="flex justify-end items-center gap-2">
+                  <FaCheck />
+                  <p>Đủ Thông tin</p>
+                </div>
+              ) : (
+                <div className="flex justify-end items-center gap-2">
+                  <ImCross />
+                  <p>Không đủ Thông tin</p>
+                </div>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
           <form
             className="flex flex-col items-start gap-4 h-auto overflow-y-visible pr-4"
             onKeyDown={handleKeyDown}
@@ -707,6 +724,21 @@ export default function NoApiConsign({ productRecognition }) {
                   <label
                     htmlFor="authorizedName"
                     className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                  >
+                    Email người gửi
+                  </label>
+                </div>
+                <div className="relative w-full min-h-10 mt-4 ">
+                  <input
+                    type="text"
+                    value={consignData?.phoneNumber || 'Không có'}
+                    disabled
+                    id="phone"
+                    className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                  />
+                  <label
+                    htmlFor="phone"
+                    className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
                   >
                     Email người gửi
                   </label>
@@ -1091,7 +1123,7 @@ export default function NoApiConsign({ productRecognition }) {
               data={historyData || []}
               config={historyConfig}
               keyFn={(item) => item.itemLogId}
-              message="Bạn chưa tham gia sự kiện nào"
+              message="Bạn chưa chỉnh sửa sự kiện nào"
             />
           </div>
         </div>
@@ -1133,12 +1165,12 @@ export default function NoApiConsign({ productRecognition }) {
 
   return (
     <div className="flex justify-center">
-      <CreateReportModal
+      {/* <CreateReportModal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         productCode={productRecognition}
         in_email={guestEmail}
-      />
+      /> */}
       <Tooltip content="Ghi nhật ký" position="top">
         <Button
           // onClick={openModal}
@@ -1170,7 +1202,8 @@ export default function NoApiConsign({ productRecognition }) {
                   step !== "receive-form" &&
                   step !== "confirm-receive" &&
                   step !== "history" &&
-                  step !== "history-list" && (
+                  step !== "history-list" &&
+                  step !== "report" && (
                     <h2 className="text-2xl text-center ">Nhật ký</h2>
                   )}
                 <div className="flex flex-col grow h-auto overflow-y-auto">

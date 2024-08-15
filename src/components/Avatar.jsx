@@ -100,7 +100,7 @@ function Avatar() {
               handleUserClick(user.userId);
             }}
           >
-            Profile
+            Thông tin tài khoản
           </a>
         </li>
         <li>
@@ -111,11 +111,11 @@ function Avatar() {
               handleOpenChangePassword();
             }}
           >
-            Change Password
+            Đổi mật khẩu
           </a>
         </li>
         <li>
-          <a onClick={handleLogout}>Logout</a>
+          <a onClick={handleLogout}>Đăng xuất</a>
         </li>
       </ul>
       {selectedUserId && (

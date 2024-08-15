@@ -300,6 +300,10 @@ export default function useDiary(
   //   dispatch(updateVerifyAddress(true));
   // }, []);
 
+  useEffect(()=>{
+    if (step === 'option') setCurrentItemLogId('')
+  },[step])
+
   useEffect(() => {
     if (isMainConsignLoad || isConsignTransLoad) setConsignLoading(true);
     else setConsignLoading(false);
@@ -495,7 +499,7 @@ export default function useDiary(
   ]);
 
   useEffect(() => {
-    if (step === 'email') setLastStep('')
+    if (step === "email") setLastStep("");
     if (step === "otp")
       sendOtp(guestEmail)
         .unwrap()
@@ -506,6 +510,11 @@ export default function useDiary(
   useEffect(() => {
     console.log(identifier);
   }, [identifier]);
+
+  useEffect(() => {
+    console.log(updateReceiveId);
+    console.log(packReceiveId.receiveId);
+  }, [updateReceiveId, packReceiveId]);
 
   function onEmailSubmit(data) {
     const email = data.email;
@@ -799,6 +808,11 @@ export default function useDiary(
           .unwrap()
           .then(() => {
             dispatch(updateCoordinate([]));
+            setLastStep("success");
+            historyRefetch();
+            itemLineRefetch();
+            roleCodeRefetch();
+            pendingRefetch();
             setStep(nextStep);
           })
           .catch(() => getToast("Mã otp của bạn không chính xác"));
@@ -815,9 +829,14 @@ export default function useDiary(
         address = receiveForm.province
           ? `${receiveForm.address}, ${ward}, ${district}, ${province}`
           : "";
-        roleDiary === "current-owner"
-          ? // updateReceiveId === packReceiveId.receiveId
-            (request = {
+        console.log(updateReceiveId);
+        console.log(packReceiveId.receiveId);
+        const condition = !currentItemLogId || updateReceiveId === packReceiveId.receiveId
+        // updateReceiveId && updateReceiveId === packReceiveId.receiveId
+        // updateReceiveId !== packReceiveId.receiveId
+        // roleDiary === "pending-receiver"
+        condition
+          ? (request = {
               location: {
                 address,
                 city: province,
@@ -852,34 +871,35 @@ export default function useDiary(
               otp: fixOtp,
             });
         console.log(request);
-        // updateReceiveId === packReceiveId.receiveId
-        roleDiary === "current-owner"
-          ? receiveLocation(request)
+        condition //khác id hoặc ko có id
+          ? // roleDiary === "pending-receiver"
+            receiveLocation(request)
               .unwrap()
               .then(() => {
                 dispatch(updateCoordinate([]));
                 setLastStep("success");
-                historyRefetch();
-                itemLogHistoryRefetch();
+                if (history) historyRefetch();
                 itemLineRefetch();
-
-                roleCodeRefetch();
-                pendingRefetch();
                 setStep(nextStep);
               })
-              .catch(() => getToast("Mã otp của bạn không chính xác"))
+              .catch((err) => {
+                console.log(err);
+                getToast("Mã otp của bạn không chính xác");
+              })
           : updateReceiveLocation(request)
               .unwrap()
               .then(() => {
                 dispatch(updateCoordinate([]));
                 setLastStep("success");
-                historyRefetch();
+                if (history) historyRefetch();
+                if (itemLogHistory) itemLogHistoryRefetch();
                 itemLineRefetch();
                 setStep(nextStep);
-                roleCodeRefetch();
-                pendingRefetch();
               })
-              .catch(() => getToast("Mã otp của bạn không chính xác"));
+              .catch((err) => {
+                console.log(err);
+                getToast("Mã otp của bạn không chính xác");
+              });
 
         break;
       default:
@@ -911,7 +931,6 @@ export default function useDiary(
 
   function onReceiveSubmit(data) {
     console.log(data);
-    console.log(updateReceiveId === packReceiveId.receiveId);
     dispatch(updateReceiveForm(data));
     if (verifyAddress) {
       setStep("otp");
@@ -991,6 +1010,6 @@ export default function useDiary(
     itemLogHistory,
     editAddress,
     handleFlip,
-    laterBtnHandler
+    laterBtnHandler,
   };
 }
