@@ -112,9 +112,9 @@ function ManuCertificateList() {
 
   let renderedCertificate;
   if (isCertificateFetching) {
-    renderedCertificate = Array.from({ length: 5 }).map((_, index) => (
-      <div key={index} className="skeleton w-44 h-52"></div>
-    ));
+    // renderedCertificate = Array.from({ length: 5 }).map((_, index) => (
+    //   <div key={index} className="skeleton w-44 h-52"></div>
+    // ));
   } else if (isCertificateError) {
     renderedCertificate = <p></p>;
   } else if (certificateData) {

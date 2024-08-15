@@ -25,7 +25,7 @@ export default function SideBar() {
 
   return (
     <>
-      <ul className="menu mt-1 bg-color1 min-h-full shadow-md">
+      <ul className="menu mt-1 bg-color1 min-h-full shadow-md font-bold">
         {filteredMenu.map((item, index) => {
           const Icon = item.icon;
           const hasChildren =

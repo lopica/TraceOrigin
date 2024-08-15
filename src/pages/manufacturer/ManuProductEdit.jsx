@@ -165,7 +165,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
                 {...register("description", {
                   required: "Bạn cần điền công dụng sản phẩm",
                 })}
-                tooltip="Liệt kê, cánh nhau dấu phẩy"
+                tooltip="Liệt kê, cách nhau dấu phẩy"
                 error={errors.description?.message}
               />
               <Input
