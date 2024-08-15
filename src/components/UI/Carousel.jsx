@@ -44,9 +44,21 @@ const Carousel = ({ slides, options, thumb3D }) => {
             >
               <div
                 className="max-h-[60svh] overflow-y-auto"
-                onClick={(index === slides.length - 1 && thumb3D) ? stopPropagation : undefined}
-                onMouseDown={(index === slides.length - 1 && thumb3D) ? stopPropagation : undefined}
-                onMouseMove={(index === slides.length - 1 && thumb3D) ? stopPropagation : undefined}
+                onClick={
+                  index === slides.length - 1 && thumb3D
+                    ? stopPropagation
+                    : undefined
+                }
+                onMouseDown={
+                  index === slides.length - 1 && thumb3D
+                    ? stopPropagation
+                    : undefined
+                }
+                onMouseMove={
+                  index === slides.length - 1 && thumb3D
+                    ? stopPropagation
+                    : undefined
+                }
               >
                 {slide}
               </div>

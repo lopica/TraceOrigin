@@ -7,14 +7,23 @@ import { useEffect, useState } from "react";
 import { getWarrantyDate } from "../utils/getWarrantyDate";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
-import { FaCalendarAlt, FaImages, FaInfoCircle, FaMapMarkerAlt, FaShieldAlt } from "react-icons/fa";
+import {
+  FaCalendarAlt,
+  FaImages,
+  FaInfoCircle,
+  FaMapMarkerAlt,
+  FaShieldAlt,
+} from "react-icons/fa";
 import QR from "./QR";
+import { convertLinkToBase64 } from "../utils/convertLinkToBase64";
+import Canvas3D from "./Canvas3D";
 
 let origin;
-
+let thumb3D
 export default function ItemOrigin({ goToItemLine, productRecognition }) {
   const { itemLine } = useSelector((state) => state.itemSlice);
   const [slides, setSlides] = useState([]);
+  // const [thumb3D, setThumb3D] = useState();
   const {
     data: originData,
     isError: isOriginError,
@@ -24,16 +33,34 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
   });
 
   useEffect(() => {
-    if (originData?.image) {
-      if (originData.image.length > 0) {
-        setSlides(
-          originData.image.map((image, idx) => (
-            <img
-              src={image}
-              alt={`${originData.productName || "không có"} ${idx}`}
-            />
-          ))
-        );
+    if (originData) {
+      if (originData?.model3D) {
+        // console.log("vod day " + model3D);
+        convertLinkToBase64(
+          originData.model3D
+        )
+          .then((res) => {
+            const imageSlides = originData?.image.map((image, idx) => (
+              <img src={image} alt={`${originData?.productName} ${idx}`} />
+            ));
+            setSlides([
+              ...imageSlides,
+              <div className="sm:w-[32rem] aspect-video">
+                <Canvas3D full modelBase64={res} />
+              </div>,
+            ]);
+            thumb3D = (
+              <div className="sm:w-[32rem] aspect-video">
+                <Canvas3D modelBase64={res} />
+              </div>
+            );
+          })
+          .catch((err) => console.log(err));
+      } else {
+        const imageSlides = originData?.image.map((image, idx) => (
+          <img src={image} alt={`${originData?.productName} ${idx}`} />
+        ));
+        setSlides([...imageSlides]);
       }
     }
   }, [originData]);
@@ -66,57 +93,66 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
       origin = (
         <section className="text-xl">
           <h2 className="mb-4 text-center font-bold text-2xl">Nguồn gốc</h2>
-          {productRecognition && <QR core productRecognition={productRecognition} />}
+          {productRecognition && (
+            <QR core productRecognition={productRecognition} />
+          )}
           <ul className="space-y-2 lg:pb-12 mt-2">
-          
             <li>
-            <p><strong>Tên sản phẩm:</strong> {originData.productName || "không rõ"}</p>
+              <p>
+                <strong>Tên sản phẩm:</strong>{" "}
+                {originData.productName || "không rõ"}
+              </p>
             </li>
             <li>
               {/* <p>Mã sản phẩm: {productRecognition || "không rõ"}</p> */}
             </li>
             <li>
-              <p><strong>Đơn vị sản xuất: </strong> {originData.orgName.trim() || "không rõ"}</p>
+              <p>
+                <strong>Đơn vị sản xuất: </strong>{" "}
+                {originData.orgName.trim() || "không rõ"}
+              </p>
             </li>
             <li>
-              <p className="mb-4"><strong>Hình ảnh của sản phẩm:</strong> </p>
-              <Carousel slides={slides} />
+              <p className="mb-4">
+                <strong>Hình ảnh của sản phẩm:</strong>{" "}
+              </p>
+              <Carousel
+                slides={slides}
+                thumb3D={originData?.model3D ? thumb3D : undefined}
+              />
             </li>
 
             <li className="flex items-center">
-            <FaCalendarAlt className="mr-2 text-lg" />
+              <FaCalendarAlt className="mr-2 text-lg" />
               <p>
-              <strong>Thời gian tạo: </strong>
-                {" "}
+                <strong>Thời gian tạo: </strong>{" "}
                 {getDateFromEpochTime(originData.createAt) || "không rõ"}
               </p>
             </li>
             <li className="flex items-center">
-            <FaInfoCircle className="mr-2 text-lg" />
+              <FaInfoCircle className="mr-2 text-lg" />
               <p>
-              <strong>Mô tả sản phẩm: </strong>
-                 {originData.descriptionOrigin || "không có"}
+                <strong>Mô tả sản phẩm: </strong>
+                {originData.descriptionOrigin || "không có"}
               </p>
             </li>
             <li className="flex items-center">
-            <FaShieldAlt className="mr-2 text-lg" />
+              <FaShieldAlt className="mr-2 text-lg" />
               <p>
-              <strong>Hạn bảo hành:</strong>
-              {" "}
+                <strong>Hạn bảo hành:</strong>{" "}
                 {getWarrantyDate(originData.createAt, originData.warranty) ||
                   "không rõ"}
               </p>
             </li>
-            <li >
-            <div className="flex items-center">
-            <FaMapMarkerAlt className="mr-2 text-lg" />
-            <p className="mb-2">
-              <strong> Địa điểm sản xuất: </strong>
-               {" "}
-                {`${originData.locationDTO.address}, ${originData.locationDTO.ward}, ${originData.locationDTO.district}, ${originData.locationDTO.city} `}
-              </p>
-            </div>
-             
+            <li>
+              <div className="flex items-center">
+                <FaMapMarkerAlt className="mr-2 text-lg" />
+                <p className="mb-2">
+                  <strong> Địa điểm sản xuất: </strong>{" "}
+                  {`${originData.locationDTO.address}, ${originData.locationDTO.ward}, ${originData.locationDTO.district}, ${originData.locationDTO.city} `}
+                </p>
+              </div>
+
               <Map
                 location={{
                   lat: originData.locationDTO.coordinateX,
