@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useGetListReportsQuery, useReplyReportMutation } from '../../store/index';
+import Button from "../../components/UI/Button";
 import {
   FaUser,
   FaCalendarAlt,
@@ -47,8 +48,11 @@ function ManuReportManager() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(6);
   const userIdList = useSelector(state => state.userSlice.userId);
+  const {
+    list: products
+  } = useSelector((state) => state.productSlice);
 
   const { data, error, isLoading, refetch} = useGetListReportsQuery({
     code: "",
@@ -59,7 +63,7 @@ function ManuReportManager() {
     dateTo: 0,
     status: 0,
     orderBy: "reportId",
-    isAsc: true,
+    isAsc: false,
     page,
     size,
     emailReport: "",
@@ -157,11 +161,22 @@ function ManuReportManager() {
   };
 
   if (isLoading) {
-    return <span className="loading loading-spinner loading-lg"></span>;
+    return (
+      <div className="flex h-screen font-sans bg-gray-100">
+        <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
+            <span className="loading loading-spinner loading-lg text-center"></span>;
+        </div>
+      </div>
+    );
   }
 
   if (error) {
     return <div>Error: {error.message}</div>;
+  }
+
+  if(data.content.length < 1)
+  {
+    return <span className='p-4'>Bạn chưa có phản hồi nào về các sản phẩm</span>;
   }
 
   const closeConfirmModal = () => {
@@ -199,8 +214,39 @@ function ManuReportManager() {
         setTextAreaValue={setTextAreaValue}
       />
       <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
-        <div className="p-4">
+        {/* <form  className="p-2">
+          <input
+            type="text"
+            placeholder="Mã báo cáo"
+            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+          />
+          <select
+            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+          >
+            <option value="">Trạng thái</option>
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <select
+            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+          >
+            <option value="">Trạng thái</option>
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <Button primary rounded className="whitespace-nowrap w-full">
+            Tìm kiếm
+          </Button>
+        </form> */}
+        <div className="p-0">
           <ul className="list-none p-0 m-0">
+            
             {data.content.map((issue) => (
               <li
                 key={issue.id}
@@ -222,8 +268,11 @@ function ManuReportManager() {
               </li>
             ))}
           </ul>
-          <div>
-            <Pagination active={page} totalPages={data.totalPages || 0} onPageChange={handlePageChange} />
+          <div className='p-2 text-right'>
+            { data.totalPages > 1 &&
+            (
+              <Pagination active={page} totalPages={data.totalPages || 0} onPageChange={handlePageChange} />
+            )}
           </div>
         </div>
       </div>

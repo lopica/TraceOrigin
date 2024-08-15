@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useGetUserDetailQuery, useUpdateOrgImageMutation, useUpdateAvatarMutation, useUpdateDescriptionMutation } from "../../store/apis/userApi.js";
+import { useGetUserDetailQuery, useUpdateOrgImageMutation, useUpdateAvatarMutation, useUpdateDescriptionMutation, useUpdateOrgNameMutation} from "../../store/apis/userApi.js";
 import { FaEdit, FaTimes } from "react-icons/fa";
 import useUser from "../../hooks/use-user";
 import InputTextModal from '../../components/UI/InputTextModal';
@@ -9,12 +9,15 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
   const [isEditingCover, setIsEditingCover] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [isEditingOrgName, setIsEditingOrgName] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
   const [description, setDescription] = useState("");
+  const [orgName, setOrgName] = useState("");
   const [updateOrgImage, { isLoading: isLoadingCover }] = useUpdateOrgImageMutation();
   const [updateAvatar, { isLoading: isLoadingAvatar }] = useUpdateAvatarMutation();
   const [updateDescription, { isLoading: isLoadingDescription }] = useUpdateDescriptionMutation();
+  const [updateOrgName, { isLoading: isLoadingOrgName }] = useUpdateOrgNameMutation();
   const { refetch: refetchUser } = useUser();
 
   useEffect(() => {
@@ -22,6 +25,7 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
       setAvatar(data.profileIMG || null);
       setCoverImage(data.orgIMG || null);
       setDescription(data.description || "");
+      setOrgName(data.orgName || "");
     }
     refetch();
   }, [userId, data, refetch]);
@@ -69,6 +73,13 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
   const handleDescriptionChange = async () => {
     setIsEditingDescription(false);
     await updateDescription({ description });
+    refetchUser();
+  };
+
+  
+  const handleOrgNameChange = async () => {
+    setIsEditingOrgName(false);
+    await updateOrgName({ orgName });
     refetchUser();
   };
 
@@ -165,9 +176,20 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
           </div>
         </div>
         <h2 className="font-bold text-xl mt-8">
-          {userDetails.firstName} {userDetails.lastName}
+          {orgName}
+          {isEditable && (
+              <button
+                className="ml-2 btn btn-xs btn-ghost"
+                onClick={() => setIsEditingOrgName(true)}
+              >
+                <FaEdit />
+              </button>
+            )}
         </h2>
         <div className="mt-2 text-left">
+        <p className="mt-2">
+            <strong>Người đại diện:</strong> {userDetails.firstName} {userDetails.lastName}
+          </p>
           <p className="mt-2">
             <strong>Email:</strong> {userDetails.email}
           </p>
@@ -224,6 +246,15 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
           isLoading={isLoadingDescription}
           textAreaValue={description}
           setTextAreaValue={setDescription}
+        />
+        <InputTextModal
+          isOpen={isEditingOrgName}
+          onClose={() => setIsEditingOrgName(false)}
+          onConfirm={handleOrgNameChange}
+          headerContent="Chỉnh sửa tên nhà máy"
+          isLoading={isLoadingOrgName}
+          textAreaValue={orgName}
+          setTextAreaValue={setOrgName}
         />
       </div>
     </dialog>

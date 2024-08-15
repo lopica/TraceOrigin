@@ -41,7 +41,7 @@ const Map = ({ location, setValue }) => {
     <MapContainer
       center={location || [0, 0]}
       zoom={20}
-      style={{ height: "40svh", width: "100%", marginTop: "2rem", zIndex: "0" }}
+      style={{ height: "40svh", width: "100%", marginTop: "1rem", zIndex: "0" }}
     >
       <AddNoSwipingClass />
       <TileLayer

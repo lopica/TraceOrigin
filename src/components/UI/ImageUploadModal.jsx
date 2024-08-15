@@ -3,6 +3,7 @@ import { FaPlus, FaTimes } from 'react-icons/fa';
 import Modal from './Modal';
 import Button from './Button';
 import { useRequestScanImageMutation, useGetImageHadUploadQuery } from '../../store/apis/productApi';
+import useToast from "../../hooks/use-toast";
 
 export default function TextUploadModal({
   isOpen,
@@ -16,7 +17,7 @@ export default function TextUploadModal({
   const [inputText, setInputText] = useState('');
   const [requestScanImage] = useRequestScanImageMutation();
   const { data: uploadedTexts, isLoading, refetch } = useGetImageHadUploadQuery({ productId });
-
+  const { getToast } = useToast();
   useEffect(() => {
     setTexts(textReports || []);
   }, [textReports]);
@@ -49,26 +50,20 @@ export default function TextUploadModal({
   const handleSubmitTexts = async () => {
     const newTexts = texts.filter(text => !uploadedTexts.includes(text));
 
-    if (texts.length < 25) {
-      alert('Bạn cần nhập ít nhất 25 đoạn văn bản.');
-      return;
-    }
-
     const data = {
       productId,
-      text: newTexts,
+      image: newTexts,
     };
 
     try {
       setIsLoadingButton(true);
       await requestScanImage(data).unwrap();
-      alert('Đoạn văn bản đã được gửi thành công!');
       setIsLoadingButton(false);
       setTexts([]);
+      getToast("Quản trị viên đã nhận được yêu cầu, quản trị viên sẽ nhắn tin lại cho bạn sớm nhất")
       refetch();
       onClose();
     } catch (error) {
-      alert('Gửi đoạn văn bản thất bại');
       setIsLoadingButton(false);
       console.error(error);
     }
@@ -80,7 +75,7 @@ export default function TextUploadModal({
     <Modal onClose={onClose}>
       <div className="py-4 max-w-lg mx-auto">
         <h2 className="text-xl font-semibold mb-2">Tải lên đường link nhận diện</h2>
-        <p className="text-gray-600 mb-4">Vui lòng tải lên tối thiểu 25 ảnh, ảnh nên được chụp rõ ràng, đủ ánh sáng và nền sạch</p>
+        <p className="text-gray-600 mb-4">Vui lòng đính kèm tối thiểu 25 ảnh, ảnh nên được chụp rõ ràng, đủ ánh sáng và nền sạch</p>
         {isLoading ? (
           <span className="loading loading-spinner loading-lg"></span>
         ) : (
@@ -109,7 +104,7 @@ export default function TextUploadModal({
               <textarea
                 value={inputText}
                 onChange={handleInputChange}
-                placeholder="Nhập đoạn văn bản vào đây"
+                placeholder="Dán link ở đây !!!"
                 className="p-2 w-full border rounded resize-none"
                 rows="3"
               />
@@ -117,7 +112,7 @@ export default function TextUploadModal({
                 onClick={handleAddText}
                 className="mt-2 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
               >
-                Thêm đoạn văn bản
+                Thêm link
               </button>
             </div>
           </div>
@@ -130,7 +125,7 @@ export default function TextUploadModal({
               onClick={handleSubmitTexts}
               className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
             >
-              Gửi đoạn văn bản
+              Gửi yêu cầu
             </button>
           )}
         </div>

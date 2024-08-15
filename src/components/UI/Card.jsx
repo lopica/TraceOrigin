@@ -52,6 +52,19 @@ function Card({ card, handleUpdate, handleDelete }) {
             </button>
           </div>
         )}
+        {card.status === 3 && (
+          <div className="mt-4 flex space-x-2">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                handleDelete(card.id);
+              }}
+              className="text-red-500 hover:text-red-700"
+            >
+              <BiTrash size={20} />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

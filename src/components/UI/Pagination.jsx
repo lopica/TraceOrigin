@@ -11,6 +11,11 @@ function Pagination({ active, totalPages, onPageChange }) {
     const delta = 2; // Number of buttons to show around the current page
 
     // Add "Previous" arrow button
+    if(totalPages < 2)
+    {
+      return(<></>)
+    }
+
     if (active > 0) {
       buttons.push(
         <button

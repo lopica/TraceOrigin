@@ -29,7 +29,7 @@ export default function Tooltip({ children, content, position }) {
           style={{ ...floatingStyles, zIndex: 9999 }}
           {...getFloatingProps()}
         >
-          <div className=" bg-white p-2 rounded ml-2 border shadow-xl">{content}</div>
+          <div className=" bg-gray-100 p-2 rounded ml-2 border shadow-lg">{content}</div>
         </div>
       )}
     </>
