@@ -127,8 +127,8 @@ function ManufacturerList() {
         );
       case 2:
         return (
-          <span className="text-info">
-            &#8226; <Link to="#" className="text-info">Đang xử lý</Link>
+          <span className="text-info" onClick={handleClick}>
+            &#8226; <Link to="#" className="text-info">Tài khoản tạm khóa</Link>
           </span>
         );
       default:

@@ -247,7 +247,7 @@ export default function NoApiConsign({ productRecognition }) {
     </div>
   );
 
-  let reportBtn = roleDiary === 'current-owner' && (
+  let reportBtn = (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
       onClick={() => setStep("report")}
@@ -364,8 +364,8 @@ export default function NoApiConsign({ productRecognition }) {
           choices = (
             <div className=" w-full grid grid-cols-1 sm:grid-cols-2 gap-4 pr-2">
               {historyBtn}
-              {certificateBtn}
-              {reportBtn}
+              {/* {certificateBtn}
+              {reportBtn} */}
             </div>
           );
           break;
