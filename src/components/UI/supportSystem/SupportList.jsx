@@ -48,7 +48,7 @@ const SupportList = ({ items = [], onSubmit }) => {
   return (
     <div className="overflow-x-auto w-full">
     {!items ? 
-      (<div className="flex flex-col items-center justify-center h-[73vh]">
+      (<div className="flex flex-col items-center text-center justify-center h-[73vh]">
       <FaExclamationTriangle className="text-yellow-500 text-4xl mb-4" />
         <h2 className="text-xl font-bold mb-4">Không có phản hồi</h2>
         <p className="text-gray-600">

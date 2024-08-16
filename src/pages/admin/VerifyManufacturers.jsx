@@ -7,6 +7,7 @@ import { useUpdateStatusMutation } from "../../store/apis/userApi";
 import {  useNavigate } from "react-router-dom";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
+import { FaExclamationTriangle, } from "react-icons/fa";
 
 function VerifyManufacturer() {
   const navigate = useNavigate();
@@ -154,6 +155,15 @@ function VerifyManufacturer() {
 
   return (
     <div className="table-responsive p-5">
+        {data?.content.length === 0 ? 
+      (<div className="flex flex-col items-center text-center justify-center h-[73vh]">
+      <FaExclamationTriangle className="text-yellow-500 text-4xl mb-4" />
+        <h2 className="text-xl font-bold mb-4">Không có yêu cầu xác minh</h2>
+        <p className="text-gray-600">
+        Hiện tại hệ thống không nhận được bất kì thông báo nào cho việt xác minh nhà sản xuất.
+        </p>
+      </div>)
+    :(
       <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100 text-xs">
         <thead className="text-black">
           <tr>
@@ -165,6 +175,7 @@ function VerifyManufacturer() {
         </thead>
         {renderTableBody()}
       </table>
+    )}
       <div className="flex justify-end mt-4">
         <Pagination
           active={page}

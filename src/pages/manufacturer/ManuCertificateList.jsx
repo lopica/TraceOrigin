@@ -1,35 +1,51 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link, useNavigate } from "react-router-dom";
-import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
-import handleKeyDown from "../../utils/handleKeyDown";
 import { useSelector } from "react-redux";
-import { useGetListCertificateByManuIdQuery, useSendRequestVerifyCertMutation, useDeleteCertCertIdMutation } from '../../store/apis/certificateApi';
-import Pagination from '../../components/UI/Pagination';
+import {
+  useGetListCertificateByManuIdQuery,
+  useSendRequestVerifyCertMutation,
+  useDeleteCertCertIdMutation,
+} from "../../store/apis/certificateApi";
+import Pagination from "../../components/UI/Pagination";
 import useToast from "../../hooks/use-toast";
-import CarouselModal from '../../components/UI/CarouselModal';
-import { useGetUserDetailQuery, useUpdateStatusMutation } from "../../store/apis/userApi";
-import { FiPlus} from "react-icons/fi";
+import CarouselModal from "../../components/UI/CarouselModal";
+import {
+  useGetUserDetailQuery,
+  useUpdateStatusMutation,
+} from "../../store/apis/userApi";
 import useUser from "../../hooks/use-user";
-
+import {
+  FaExclamationTriangle,
+  FaCertificate,
+} from "react-icons/fa";
+import { AiOutlinePlus } from 'react-icons/ai'; 
 function ManuCertificateList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
-  const userIdList = useSelector(state => state.userSlice.userId);
+  const userIdList = useSelector((state) => state.userSlice.userId);
   const certificateSlice = useSelector((state) => state.certificateSlice);
-  const { data: userId, refetch: refetchUserDetail } = useGetUserDetailQuery(userIdList);
+  const { data: userId, refetch: refetchUserDetail } =
+    useGetUserDetailQuery(userIdList);
   const [userStatus, setUserStatus] = useState(null);
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [selectedCertId, setSelectedCertId] = useState(null);
   const [isModalOpenImage, setModalOpenImage] = useState(false);
   const [page, setPage] = useState(0);
-  const [sendRequestVerifyCert, { isLoading: isSendingRequest }] = useSendRequestVerifyCertMutation();
-  const [sendAbortVerifyCert, { isLoading: isSendingRequestAbort }] = useUpdateStatusMutation();
+  const [sendRequestVerifyCert, { isLoading: isSendingRequest }] =
+    useSendRequestVerifyCertMutation();
+  const [sendAbortVerifyCert, { isLoading: isSendingRequestAbort }] =
+    useUpdateStatusMutation();
   const [deleteCertCertId] = useDeleteCertCertIdMutation();
   const { isFetching, isError, refetch } = useUser();
 
-  const { isFetching: isCertificateFetching, isError: isCertificateError, data: certificateData, refetch: refetchCertificates } = useGetListCertificateByManuIdQuery(userIdList, { skip: !userIdList });
+  const {
+    isFetching: isCertificateFetching,
+    isError: isCertificateError,
+    data: certificateData,
+    refetch: refetchCertificates,
+  } = useGetListCertificateByManuIdQuery(userIdList, { skip: !userIdList });
 
   useEffect(() => {
     refetchUserDetail();
@@ -55,7 +71,7 @@ function ManuCertificateList() {
 
   useEffect(() => {
     if (!isCertificateFetching && !isAuthenticated) {
-      getToast('Phiên đăng nhập đã hết hạn');
+      getToast("Phiên đăng nhập đã hết hạn");
       navigate("/portal/login");
     }
   }, [isCertificateFetching, isAuthenticated, getToast, navigate]);
@@ -65,17 +81,17 @@ function ManuCertificateList() {
       await sendRequestVerifyCert().unwrap();
       refetch();
       refetchUserDetail();
-      getToast('Yêu cầu xác thực thành công!');
+      getToast("Yêu cầu xác thực thành công!");
     } catch (err) {
-      console.error('Có lỗi xảy ra:', err);
+      console.error("Có lỗi xảy ra:", err);
     }
   };
 
   const handleAbortVerifyCert = async () => {
-      await sendAbortVerifyCert({id: userIdList, status: 7}).unwrap();
-      refetch();
-      refetchUserDetail();
-      getToast('Hủy yêu cầu gửi xác thực chứng chỉ!');
+    await sendAbortVerifyCert({ id: userIdList, status: 7 }).unwrap();
+    refetch();
+    refetchUserDetail();
+    getToast("Hủy yêu cầu gửi xác thực chứng chỉ!");
   };
 
   const handlePageChange = (newPage) => {
@@ -120,8 +136,15 @@ function ManuCertificateList() {
   } else if (certificateData) {
     renderedCertificate = certificateData.map((certi, idx) => (
       <div key={idx} onClick={() => handleOpenModalImage(certi.certId)}>
-        <Card card={{ image: certi.images[0], name: certi.certificateName, description: getDescription(), status: (userStatus === 7 || userStatus === 0) ? 3 : 1 }} 
-              handleDelete={() => handleDelete(certi.certId)}/>
+        <Card
+          card={{
+            image: certi.images[0],
+            name: certi.certificateName,
+            description: getDescription(),
+            status: userStatus === 7 || userStatus === 0 ? 3 : 1,
+          }}
+          handleDelete={() => handleDelete(certi.certId)}
+        />
       </div>
     ));
   }
@@ -143,12 +166,31 @@ function ManuCertificateList() {
   );
 
   const addNewButton = (userStatus === 7 || userStatus === 0) && (
+   !certificateData ? (
+      <div className="flex flex-col items-center text-center justify-center h-[73vh]">
+      <FaCertificate className="text-blue-500 text-4xl mb-4" />
+
+      <h2 className="text-xl font-bold mb-2">Thêm Chứng chỉ</h2>
+      <p  className="text-gray-600 mb-2">
+        Bạn cần thêm những chứng chỉ liên quan để đảm bảo về chất lượng  <br /> và xác
+        minh nguồn gốc sản phẩm của mình.
+      </p>
       <Link to="add">
-          <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
-            <FiPlus size={20} className="mr-2" />
-            Thêm mới chứng chỉ
-          </button>
+        <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+          <AiOutlinePlus size={24} className="mr-2"/>{" "}
+          <span >Thêm mới chứng chỉ</span>
+        </button>
       </Link>
+      </div>
+    ) :
+    (
+      <Link to="add" className="w-full">
+        <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
+          <AiOutlinePlus size={24} className="mr-2"/>{" "}
+          <span >Thêm mới chứng chỉ</span>
+        </button>
+      </Link>
+    )
   );
 
   return (
@@ -160,16 +202,17 @@ function ManuCertificateList() {
         </Button>
       </form> */}
       <div
-       className="flex items-end flex-col justify-between gap-2 mx-auto 
-       md:flex-row md:justify-start md:gap-2 md:items-end">
+        className="flex items-end flex-col justify-between gap-2 mx-auto 
+       md:flex-row md:justify-start md:gap-2 md:items-end"
+      >
         <div className="flex justify-center md:justify-start px-8">
-        {addNewButton}
-      </div>
+          {addNewButton}
+        </div>
       </div>
       <div className="flex justify-center">
-      <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
-        {renderedCertificate}
-      </div>
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
+          {renderedCertificate}
+        </div>
       </div>
       <div className="flex justify-between mr-4 px-8">
         <div>
@@ -177,7 +220,11 @@ function ManuCertificateList() {
           {abortButton}
         </div>
         <div>
-          <Pagination active={page} totalPages={certificateData?.totalPages || 0} onPageChange={handlePageChange} />
+          <Pagination
+            active={page}
+            totalPages={certificateData?.totalPages || 0}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
       {isModalOpenImage && (

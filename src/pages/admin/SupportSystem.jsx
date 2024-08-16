@@ -115,6 +115,11 @@ function SupportSystem() {
     refetch();
     refetchDataCount();
   };
+  const formatDateForInput = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toISOString().split("T")[0];
+  };
   return (
     <div className="flex flex-col md:flex-row p-4">
       <div className="md:w-1/4 p-4">
@@ -149,7 +154,7 @@ function SupportSystem() {
                 id="startDate"
                 name="startDate"
                 type="date"
-                value={body.startDate}
+                value={formatDateForInput(body.startDate)}
                 onChange={handleChange}
                 className="border border-gray-300 rounded-md p-2 w-1/2"
               />
@@ -157,7 +162,7 @@ function SupportSystem() {
                 id="endDate"
                 name="endDate"
                 type="date"
-                value={body.endDate}
+                value={formatDateForInput(body.endDate)}
                 onChange={handleChange}
                 className="border border-gray-300 rounded-md p-2 w-1/2"
               />
