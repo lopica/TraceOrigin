@@ -15,7 +15,7 @@ import useCategoryEdit from "../../hooks/use-category-Edit";
 import useToast from "../../hooks/use-toast";
 import ManuProductEdit from "../manufacturer/ManuProductEdit";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
-import { useDeleteProductByIdMutation } from "../../store/apis/productApi";
+import { productApi, useDeleteProductByIdMutation } from "../../store/apis/productApi";
 import {
   updateProductEditForm,
   resetProductEditState,
@@ -96,11 +96,12 @@ function ManuProductList() {
     }
   }, [isProductsFetch, isAuthenticated]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      refetch();
-    }
-  }, [isAuthenticated, refetch]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     dispatch(productApi.util.resetApiState());
+  //     refetch();
+  //   }
+  // }, [isAuthenticated, refetch]);
 
   const [DeleteProductById] = useDeleteProductByIdMutation();
 
@@ -252,7 +253,6 @@ function ManuProductList() {
   return (
     <div className="flex flex-col md:flex-row p-4">
       <div className="md:w-1/4 p-4">
-        {/* form search  */}
         <h2 className="text-lg font-semibold mb-4">Bộ lọc</h2>
 
         <form onKeyDown={handleKeyDown} onSubmit={handleSubmit(searchHandler)}>
@@ -293,7 +293,6 @@ function ManuProductList() {
           </button>
         </form>
       </div>
-      {/* list product (right side) */}
       <div className="md:w-3/4 p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Danh sách sản phẩm</h2>
@@ -304,7 +303,6 @@ function ManuProductList() {
             {renderedProducts}
           </div>
         </div>
-        {/* phần paging  */}
         <div className="mt-4 flex justify-center w-full">
           <div className="flex">
             {Array.from({ length: paginate.totalPages }).map((_, idx) => (

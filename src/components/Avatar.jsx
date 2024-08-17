@@ -1,16 +1,26 @@
-import { useSelector } from "react-redux";
-import useUser from "../hooks/use-user";
+import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../hooks/use-auth";
 import useToast from "../hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { requireLogin, updateUser, useFetchUserQuery } from "../store";
+import { userApi } from "../store/apis/userApi";
 import ProfileModal from "../components/UI/userProfile";
 import ChangePassword from "../components/UI/ChangePassword";
-import React, { useEffect, useState } from "react";
+import { matchPath, useLocation } from "react-router-dom";
 
 let avatar;
 function Avatar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const { isFetching, isError, refetch } = useUser();
+  const hasRefetched = useRef(false);
+  // const isFirstRun = useRef(true);
+  const dispatch = useDispatch();
+  const { data, isError, isFetching, error, isSuccess, refetch } =
+    useFetchUserQuery(undefined, {
+      skip: !isAuthenticated,
+    });
+
   const user = useSelector((state) => state.userSlice);
   const { handleLogout: logout } = useAuth();
   const { getToast } = useToast();
@@ -18,6 +28,7 @@ function Avatar() {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   async function handleLogout() {
+    localStorage.setItem("lastUserId", data.userId);
     await logout().then(() => {
       getToast("Đăng xuất thành công");
     });
@@ -39,9 +50,44 @@ function Avatar() {
     setIsChangePasswordOpen(false);
   };
 
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     dispatch(userApi.util.resetApiState());
+  //     console.log("voday");
+  //     refetch();
+  //   }
+  // }, [isAuthenticated, refetch, dispatch]);
+
   useEffect(() => {
-    if (isAuthenticated) refetch();
-  }, [isAuthenticated]);
+    if (user?.userId) {
+      // if (isFirstRun.current) {
+      //   isFirstRun.current = false;
+      //   return;
+      // }
+      const lastUserId = localStorage.getItem("lastUserId");
+      if (lastUserId !== user.userId && !hasRefetched.current) {
+        // console.log('vo day')
+        refetch();
+        hasRefetched.current = true; // Set the ref to prevent further refetches
+      }
+    }
+  }, [user, refetch]);
+
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      dispatch(updateUser(data));
+    }
+  }, [isSuccess, isFetching, dispatch]);
+
+  useEffect(() => {
+    if (isError && error.status === 401 && !isFetching) {
+      console.log("vo day");
+      dispatch(userApi.util.resetApiState());
+      hasRefetched.current = true;
+      // dispatch(requireLogin());
+      if (matchPath("manufacturer/products/:productId/:itemId", currentPath)) dispatch(requireLogin());
+    }
+  }, [isError, error, dispatch]);
 
   const renderAvatar = (profileIMG, firstName) => {
     if (profileIMG) {
@@ -57,9 +103,7 @@ function Avatar() {
     const initial = firstName ? firstName.charAt(0).toUpperCase() : "U";
     return (
       <div className=" w-10 h-10 rounded-full bg-neutral text-neutral-content flex items-center justify-center">
-        <span className="text-2xl">
-          {initial}
-        </span>
+        <span className="text-2xl">{initial}</span>
       </div>
     );
   };
@@ -75,7 +119,7 @@ function Avatar() {
       />
     );
   } else {
-    avatar = renderAvatar(user.profileImage, user.firstName);
+    if (data) avatar = renderAvatar(user.profileImage, user.firstName);
   }
 
   return (
@@ -119,10 +163,17 @@ function Avatar() {
         </li>
       </ul>
       {selectedUserId && (
-        <ProfileModal userId={selectedUserId} closeModal={handleCloseModal} isEditable={true} />
+        <ProfileModal
+          userId={selectedUserId}
+          closeModal={handleCloseModal}
+          isEditable={true}
+        />
       )}
       {isChangePasswordOpen && (
-        <ChangePassword isOpen={isChangePasswordOpen} onClose={handleCloseChangePassword} />
+        <ChangePassword
+          isOpen={isChangePasswordOpen}
+          onClose={handleCloseChangePassword}
+        />
       )}
     </div>
   );

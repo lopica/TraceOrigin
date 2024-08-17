@@ -7,6 +7,7 @@ import {
 } from "../store";
 import useToast from "./use-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { itemApi } from "../store/apis/itemApi";
 
 export default function useItem(productId, inputSearch) {
   const dispatch = useDispatch();
@@ -54,6 +55,7 @@ export default function useItem(productId, inputSearch) {
     if (isItemError && isSuccess) {
       getToast("Gặp lỗi khi tải dữ liệu item");
       if (error.status === 401) {
+        dispatch(itemApi.util.resetApiState())
         dispatch(updateUser({}));
         dispatch(requireLogin());
       }

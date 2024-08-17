@@ -1,6 +1,7 @@
 import { useFetchUserQuery, updateUser, requireLogin } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import {userApi} from "../store/apis/userApi"
 
 export default function useUser() {
   const dispatch = useDispatch();
@@ -12,19 +13,21 @@ export default function useUser() {
 
     useEffect(() => {
     if (isAuthenticated) {
+      dispatch(userApi.util.resetApiState())
       refetch(); 
     }
   }, [isAuthenticated, refetch]);
 
   useEffect(() => {
     if (isSuccess && !isFetching) dispatch(updateUser(data));
-  }, [isSuccess, isFetching]);
+  }, [isSuccess, isFetching, dispatch]);
 
   useEffect(() => {
-    if (isError && error.status === 401) {
+    if (isError && error.status === 401 && !isFetching) {
+      dispatch(userApi.util.resetApiState())
       dispatch(requireLogin());
     }
-  }, [isError]);
+  }, [isError, dispatch]);
 
   return { isError, isFetching, refetch };
 }

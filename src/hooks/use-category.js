@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { updateCategories, useGetAllCategoriesQuery } from "../store";
 import { useEffect } from "react";
+import { categoryApi } from "../store/apis/categoryApi";
 
 let data = [];
 export default function useCategory() {
@@ -11,6 +12,7 @@ export default function useCategory() {
     data: categories,
     isError: isCategoryError,
     isFetching: isCategoryFetch,
+    error
   } = useGetAllCategoriesQuery(undefined, {
     skip: categoriesData.length > 0 && categoriesData[0]?.id !== 'loading' && categoriesData[0]?.id !== 'error',
   });
@@ -32,6 +34,9 @@ export default function useCategory() {
       dispatch(
         updateCategories([{ id: "error", content: "Không thể tải dữ liệu" }])
       );
+      if(error.status === 401){
+        dispatch(categoryApi.util.resetApiState())
+      }
     }
   }, [categories, dispatch, isCategoryFetch, isCategoryError]);
 

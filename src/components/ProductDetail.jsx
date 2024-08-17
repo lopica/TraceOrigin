@@ -39,9 +39,7 @@ export default function ProductDetail({ productId }) {
   const [imageReports, setImageReports] = useState([]);
   const { getToast } = useToast();
   const { productData, name, images, isProductFetch, isProductError, error, model3D, refetch } =
-    useProductDetail(productId,{
-      skip: true,
-    });
+    useProductDetail(productId);
   const [requestScanImage] = useRequestScanImageMutation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [saveModel3D] = useSaveModel3DMutation();

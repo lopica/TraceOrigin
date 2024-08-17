@@ -13,11 +13,22 @@ const categoryApi = createApi({
   reducerPath: "category",
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/category`,
-    credentials: "include",
-    fetchFn: async (...args) => {
+    // credentials: "include",
+    fetchFn: async (input, init, ...args) => {
       // REMOVE FOR PRODUCTION
-      await pause(3000);
-      return fetch(...args);
+      // await pause(3000);
+
+      // Determine the endpoint based on the URL or some other method
+      const url = typeof input === "string" ? input : input.url;
+      if (url.includes("/addListCategory") || url.includes("/findCategoryByManufacturer") ) {
+        // Customize fetch options for this specific endpoint
+        init = {
+          ...init,
+          credentials: "include", // Include credentials specifically for this endpoint
+        };
+      }
+
+      return fetch(input, init, ...args);
     },
   }),
   endpoints(builder) {

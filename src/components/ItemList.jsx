@@ -16,10 +16,12 @@ import ReactDOMServer from "react-dom/server";
 import { saveAs } from "file-saver";
 import useToast from "../hooks/use-toast";
 import { useGetAllEventTypeQuery } from "../store";
+import { itemApi } from "../store/apis/itemApi";
 
 let renderedListItem;
 let eventTypeData;
 export default function ItemList({ productId }) {
+  const user = useSelector((state) => state.userSlice);
   const [inputSearch, setInputSearch] = useState({
     eventId: "",
     startData: 0,
@@ -122,17 +124,17 @@ export default function ItemList({ productId }) {
       });
     } else {
       // if (!isEdit) {
-        const itemsOnPage = new Set(
-          itemsData.map((item) => item.productRecognition)
-        );
-        setCheckedItems((prevCheckedItems) => {
-          const newCheckedItems = new Set(prevCheckedItems);
-          itemsOnPage.forEach((item) => {
-            newCheckedItems.delete(item);
-          });
-          return newCheckedItems;
+      const itemsOnPage = new Set(
+        itemsData.map((item) => item.productRecognition)
+      );
+      setCheckedItems((prevCheckedItems) => {
+        const newCheckedItems = new Set(prevCheckedItems);
+        itemsOnPage.forEach((item) => {
+          newCheckedItems.delete(item);
         });
-        // setIsEdit(true)
+        return newCheckedItems;
+      });
+      // setIsEdit(true)
       // }
     }
   }, [listChooseAll]);
@@ -192,15 +194,20 @@ export default function ItemList({ productId }) {
   // },[inputSearch])
 
   useEffect(() => {
-    if (error?.status === 401) navigate("/portal/login");
-  }, [isItemFetch]);
+    if (error?.status === 401) {
+      localStorage.setItem("lastUserId", user.userId);
+      dispatch(itemApi.util.resetApiState());
+      dispatch(updateUser({}));
+      dispatch(requireLogin());
+    }
+  }, [isItemFetch, isItemError]);
 
-  useEffect(() => {
-    if (!isItemFetch && !isAuthenticated) {
+  useEffect(()=>{
+    if (!isAuthenticated) {
       getToast("Phiên dăng nhập đã hết hạn");
       navigate("/portal/login");
     }
-  }, [isItemFetch, isAuthenticated]);
+  },[isAuthenticated])
 
   const itemConfig = [
     ...(showExport
