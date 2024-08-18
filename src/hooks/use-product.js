@@ -9,6 +9,7 @@ import {
 } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { productApi } from "../store/apis/productApi";
+import { getEpochFromDate } from "../utils/getEpochFromDate";
 
 export default function useProduct() {
   const user = useSelector((state) => state.userSlice);
@@ -17,6 +18,10 @@ export default function useProduct() {
   const { nameSearch, categorySearch } = useSelector(
     (state) => state.productSlice
   );
+  const [inputDate, setInputDate] = useState({
+    startDate: 0,
+    endDate: 0
+  })
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [paginate, setPaginate] = useState({
     totalPages: 0,
@@ -28,8 +33,8 @@ export default function useProduct() {
         pageNumber: paginate.currentPage,
         pageSize: 6,
         type: "asc",
-        startDate: 0,
-        endDate: 0,
+        startDate: inputDate.startDate,
+        endDate: inputDate.endDate,
         name: nameSearch,
         categoryName: categorySearch,
       },
@@ -50,6 +55,11 @@ export default function useProduct() {
   function searchProduct(data) {
     dispatch(updateNameSearch(data.nameSearch));
     dispatch(updateCategorySearch(data.categorySearch.split(",")[1] || ""));
+    //convert date to epoch
+    setInputDate({
+      startDate: getEpochFromDate(data.startDate),
+      endDate: getEpochFromDate(data.endDate)
+    })
   }
 
   useEffect(() => {

@@ -10,19 +10,23 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { FaPlus, FaSearch, FaUndoAlt } from "react-icons/fa";
 import useCategoryEdit from "../../hooks/use-category-Edit";
 import useToast from "../../hooks/use-toast";
 import ManuProductEdit from "../manufacturer/ManuProductEdit";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
-import { productApi, useDeleteProductByIdMutation } from "../../store/apis/productApi";
+import {
+  productApi,
+  useDeleteProductByIdMutation,
+} from "../../store/apis/productApi";
 import {
   updateProductEditForm,
   resetProductEditState,
   useViewProductDetailQuery,
-  updateProductEditCategories
+  updateProductEditCategories,
 } from "../../store";
 import useUpdateImageFromApi from "../../hooks/use-update-Images-FromApi";
+import { GrPowerReset } from "react-icons/gr";
 
 let renderedProducts;
 function ManuProductList() {
@@ -56,11 +60,13 @@ function ManuProductList() {
     paginate,
     setCurrentPage,
   } = useProduct();
-  const { handleSubmit, register, control, setValue } = useForm({
+  const { handleSubmit, register, control, setValue, reset } = useForm({
     mode: "onTouched",
     defaultValues: {
-      nameSearch,
-      categorySearch,
+      nameSearch: "",
+      categorySearch: null,
+      startDate: "",
+      endDate: "",
     },
   });
   const [modalContent, setModalContent] = useState({
@@ -68,19 +74,13 @@ function ManuProductList() {
     body: "",
     onConfirm: null,
   });
-  
-  const {
-    setValue: setValueEdit,
-    formState: { errors },
-  } = useForm({
-    mode: "onTouched",
-    defaultValues: { ...form },
-  });
+
   const [isLoadingModal, setIsLoadingModal] = useState(false);
   const { updateImagesFromApi } = useUpdateImageFromApi();
   const user = useSelector((state) => state.userSlice);
 
   const searchHandler = (data) => {
+    console.log(data);
     searchProduct(data);
   };
 
@@ -111,7 +111,6 @@ function ManuProductList() {
     setEditModalOpen(false);
   };
 
-  
   const [length, setLength] = useState(0);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -120,14 +119,18 @@ function ManuProductList() {
     dispatch(resetProductEditState());
     setSelectedProductId(productId);
   };
-  
+
   // useEffect để theo dõi sự thay đổi của selectedProductId
   useEffect(() => {
     if (selectedProductId !== null) {
       const fetchProductDetail = async () => {
         const result = await refetchDetail();
-        console.log(`productId: ${selectedProductId}, result.data: ${JSON.stringify(result.data)}`);
-        
+        console.log(
+          `productId: ${selectedProductId}, result.data: ${JSON.stringify(
+            result.data
+          )}`
+        );
+
         if (result.data) {
           const productDetail = result.data;
           const dimensionMatch = productDetail.dimensions.match(
@@ -138,26 +141,26 @@ function ManuProductList() {
             setWidth(dimensionMatch[2]);
             setHeight(dimensionMatch[3]);
           }
-      
+
           const updatedProductDetail = {
             ...productDetail,
             length: dimensionMatch[1],
             width: dimensionMatch[2],
             height: dimensionMatch[3],
-            category: productDetail.categoryId + ',' + productDetail.categoryName,
+            category:
+              productDetail.categoryId + "," + productDetail.categoryName,
           };
-      
+
           dispatch(updateProductEditForm(updatedProductDetail));
-      
+
           updateImagesFromApi(productDetail.listImages, productDetail.avatar);
           setEditModalOpen(true);
         }
       };
-      
+
       fetchProductDetail();
     }
   }, [selectedProductId, refetchDetail]);
-  
 
   const handleDeleteApi = async (id) => {
     setIsLoadingModal(true);
@@ -188,6 +191,16 @@ function ManuProductList() {
 
   const closeModalConfirm = () => {
     setIsConfirmationModalOpen(false);
+  };
+
+  const handleReset = (e) => {
+    // e.preventDefault();
+    // console.log('vo day')
+    reset();
+    // setValueEdit('nameSearch', '')
+    // setValueEdit('categorySearch', '')
+    // setValueEdit('startDate', '')
+    // setValueEdit('endDate', '')
   };
 
   if (isProductsFetch) {
@@ -287,10 +300,20 @@ function ManuProductList() {
               className="flex-1"
             />
           </div>
-          <button className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark">
-            <FaSearch size={20} className="mr-2" />
-            Tìm kiếm
-          </button>
+          <div className="flex gap-4">
+            <button
+            type="button"
+              className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark"
+              onClick={handleReset}
+            >
+              <FaUndoAlt size={20} className="mr-2" />
+              Đặt lại
+            </button>
+            <button className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark">
+              <FaSearch size={20} className="mr-2" />
+              Tìm kiếm
+            </button>
+          </div>
         </form>
       </div>
       <div className="md:w-3/4 p-4">

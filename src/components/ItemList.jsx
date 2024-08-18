@@ -8,7 +8,7 @@ import Button from "./UI/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaList } from "react-icons/fa";
+import { FaList, FaSearch, FaUndoAlt } from "react-icons/fa";
 import useShow from "../hooks/use-show";
 import JSZip from "jszip";
 import { QRCodeSVG } from "qrcode.react";
@@ -17,11 +17,12 @@ import { saveAs } from "file-saver";
 import useToast from "../hooks/use-toast";
 import { requireLogin, updateUser, useGetAllEventTypeQuery } from "../store";
 import { itemApi } from "../store/apis/itemApi";
+import { getEpochFromDate } from "../utils/getEpochFromDate.js";
 
 let renderedListItem;
 let eventTypeData;
 export default function ItemList({ productId }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.userSlice);
   const [inputSearch, setInputSearch] = useState({
     eventId: "",
@@ -47,9 +48,10 @@ export default function ItemList({ productId }) {
     productDetail: { productName },
   } = useSelector((state) => state.productSlice);
   const navigate = useNavigate();
-  const { control, register, watch, getValues, setValue } = useForm({
-    mode: "onTouched",
-  });
+  const { control, register, watch, getValues, setValue, reset, handleSubmit } =
+    useForm({
+      mode: "onTouched",
+    });
   const { show: showExport, handleFlip } = useShow(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
   const [listChooseAll, setListChooseAll] = useState([]);
@@ -105,6 +107,20 @@ export default function ItemList({ productId }) {
     });
   }
 
+  const handleReset = (e) => {
+    reset();
+  };
+
+  function onSearch(data) {
+    console.log(data);
+    const eventId = data?.status && data?.status.split(",")[0];
+    setInputSearch({
+      eventId,
+      startDate: getEpochFromDate(data.startDate),
+      endDate: getEpochFromDate(data.endDate),
+    });
+  }
+
   useEffect(() => {
     if (paginate.totalPages && listChooseAll.length === 0)
       setListChooseAll(
@@ -154,41 +170,41 @@ export default function ItemList({ productId }) {
     }
   }, [isEventtypeFetch, isEventtypeError]);
 
-  useEffect(() => {
-    const status = watch("status");
-    if (status) {
-      setInputSearch((prev) => ({
-        ...prev,
-        eventId: status.split(",")[0],
-      }));
-    }
-  }, [watch("status")]);
+  // useEffect(() => {
+  //   const status = watch("status");
+  //   if (status) {
+  //     setInputSearch((prev) => ({
+  //       ...prev,
+  //       eventId: status.split(",")[0],
+  //     }));
+  //   }
+  // }, [watch("status")]);
 
-  useEffect(() => {
-    const startDate = watch("startDate");
-    if (startDate) {
-      console.log(startDate);
-      const dateObject = new Date(startDate);
-      const epochTime = dateObject.getTime() / 1000;
-      setInputSearch((prev) => ({
-        ...prev,
-        startDate: epochTime,
-      }));
-    }
-  }, [watch("startDate")]);
+  // useEffect(() => {
+  //   const startDate = watch("startDate");
+  //   if (startDate) {
+  //     console.log(startDate);
+  //     const dateObject = new Date(startDate);
+  //     const epochTime = dateObject.getTime() / 1000;
+  //     setInputSearch((prev) => ({
+  //       ...prev,
+  //       startDate: epochTime,
+  //     }));
+  //   }
+  // }, [watch("startDate")]);
 
-  useEffect(() => {
-    const endDate = watch("endDate");
-    if (endDate) {
-      console.log(endDate);
-      const dateObject = new Date(endDate);
-      const epochTime = dateObject.getTime() / 1000;
-      setInputSearch((prev) => ({
-        ...prev,
-        endDate: epochTime,
-      }));
-    }
-  }, [watch("endDate")]);
+  // useEffect(() => {
+  //   const endDate = watch("endDate");
+  //   if (endDate) {
+  //     console.log(endDate);
+  //     const dateObject = new Date(endDate);
+  //     const epochTime = dateObject.getTime() / 1000;
+  //     setInputSearch((prev) => ({
+  //       ...prev,
+  //       endDate: epochTime,
+  //     }));
+  //   }
+  // }, [watch("endDate")]);
 
   // useEffect(()=>{
   //   if(inputSearch.eventId) refetch()
@@ -203,12 +219,12 @@ export default function ItemList({ productId }) {
     }
   }, [isItemFetch, isItemError]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!isAuthenticated) {
       getToast("Phiên dăng nhập đã hết hạn");
       navigate("/portal/login");
     }
-  },[isAuthenticated])
+  }, [isAuthenticated]);
 
   const itemConfig = [
     ...(showExport
@@ -281,9 +297,14 @@ export default function ItemList({ productId }) {
         <FaList className="text-2xl mr-2" />
         <h2 className="text-xl font-bold">Danh sách nhật ký</h2>
       </div>
-      <form className="grid grid-cols-2 gap-2 lg:grid-cols-3 mb-4">
-        <Input label="Từ" type="date" {...register("startDate")} />
-        <Input label="Đến" type="date" {...register("endDate")} />
+      <form
+        className="flex flex-col justify-center gap-2 mb-4"
+        onSubmit={handleSubmit(onSearch)}
+      >
+        <div className="flex gap-2">
+          <Input label="Từ" type="date" {...register("startDate")} />
+          <Input label="Đến" type="date" {...register("endDate")} />
+        </div>
         <Input
           label="Trạng thái"
           type="select"
@@ -292,6 +313,20 @@ export default function ItemList({ productId }) {
           data={eventTypeData}
           placeholder="Lựa chọn trạng thái"
         />
+        <div className="flex gap-4">
+          <button
+            type="button"
+            className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark"
+            onClick={handleReset}
+          >
+            <FaUndoAlt size={20} className="mr-2" />
+            Đặt lại
+          </button>
+          <button className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark">
+            <FaSearch size={20} className="mr-2" />
+            Tìm kiếm
+          </button>
+        </div>
       </form>
       <div className="flex justify-end mt-4 p-4 gap-4">
         {/* xuat qr */}

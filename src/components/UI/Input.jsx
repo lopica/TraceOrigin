@@ -56,16 +56,16 @@ const Input = React.forwardRef(
           <Controller
             name={name}
             control={props.control}
-            render={({ field: { onChange, ref, value } }) => (
+            render={({ field: { onChange, onBlur, value, ref } }) => (
               <Select
                 ref={ref}
                 options={options}
                 aria-errormessage={error}
                 onChange={(val) => {
-                  onChange(val.value);
+                  onChange(val ? val.value : null);
                   handleSelect(val);
                 }}
-                value={options?.find((option) => option.value === value)}
+                value={options && options.find((option) => option.value === value) || null}
                 placeholder={placeholder}
                 isDisabled={disabled}
                 styles={{
@@ -132,7 +132,7 @@ const Input = React.forwardRef(
                 {...props}
                 onChange={handleInputChange}
                 onBlur={onBlur}
-                className="invalid:input-bordered"
+                className="invalid:input-bordered h-12"
               />
               <span className="badge">{unit}</span>
             </label>
@@ -158,7 +158,7 @@ const Input = React.forwardRef(
               {...props}
               onChange={handleInputChange}
               onBlur={onBlur}
-              className="input input-bordered w-full "
+              className="input input-bordered w-full h-12"
             />
             {error && (
               <div className="label">
