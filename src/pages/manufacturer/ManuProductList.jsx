@@ -288,6 +288,7 @@ function ManuProductList() {
             <Input
               label="Từ ngày"
               type="date"
+              control={control}
               {...register("startDate")}
               placeholder="Chọn ngày bắt đầu"
               className="flex-1"
@@ -295,6 +296,7 @@ function ManuProductList() {
             <Input
               label="Đến ngày"
               type="date"
+              control={control}
               {...register("endDate")}
               placeholder="Chọn ngày kết thúc"
               className="flex-1"

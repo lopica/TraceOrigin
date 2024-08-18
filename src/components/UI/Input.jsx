@@ -1,9 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
+import DatePicker from "react-datepicker";
 import { Controller } from "react-hook-form";
 import Select from "react-select";
+import "react-datepicker/dist/react-datepicker.css";
 let options;
 const Input = React.forwardRef(
-  ({ label, tooltip, unit, error, data, addOnChange, required, ...props }, ref) => {
+  (
+    { label, tooltip, unit, error, data, addOnChange, required, ...props },
+    ref
+  ) => {
     const { type, placeholder, onBlur, name, className, disabled } = props;
     const inputRef = ref || useRef();
     const [selectedOption, setSelectedOption] = useState(null);
@@ -41,6 +46,19 @@ const Input = React.forwardRef(
       }
     };
 
+    const formatDate = (date) => {
+      if (!date) return "";
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}/${month}/${day}`;
+    };
+
+    const parseDate = (dateString) => {
+      const [year, month, day] = dateString.split("/");
+      return new Date(year, month - 1, day); // Month is zero-based
+    };
+
     // useEffect(() => {
     //   console.log(selectedOption);
     // }, [selectedOption]);
@@ -50,7 +68,15 @@ const Input = React.forwardRef(
         <label className={`form-control w-full ${className}`}>
           <div className="label">
             <div className="tooltip" data-tip={tooltip}>
-              <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
+              <span
+                className={`label-text text-base ${
+                  required
+                    ? 'after:content-["*"] after:ml-0.5 after:text-red-500'
+                    : ""
+                }`}
+              >
+                {label}
+              </span>
             </div>
           </div>
           <Controller
@@ -65,7 +91,11 @@ const Input = React.forwardRef(
                   onChange(val ? val.value : null);
                   handleSelect(val);
                 }}
-                value={options && options.find((option) => option.value === value) || null}
+                value={
+                  (options &&
+                    options.find((option) => option.value === value)) ||
+                  null
+                }
                 placeholder={placeholder}
                 isDisabled={disabled}
                 styles={{
@@ -93,7 +123,15 @@ const Input = React.forwardRef(
           <label className="form-control w-full max-w-sm">
             <div className="label">
               <div className="tooltip" data-tip={tooltip}>
-                <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
+                <span
+                  className={`label-text text-base ${
+                    required
+                      ? 'after:content-["*"] after:ml-0.5 after:text-red-500'
+                      : ""
+                  }`}
+                >
+                  {label}
+                </span>
               </div>
             </div>
             <textarea
@@ -115,6 +153,50 @@ const Input = React.forwardRef(
       );
     }
 
+    if (type === "date") {
+      return (
+        <label className="form-control w-full">
+          {label && (
+            <div className="label">
+              <div className="tooltip" data-tip={tooltip}>
+                <span
+                  className={`label-text text-base ${
+                    required
+                      ? 'after:content-["*"] after:ml-0.5 after:text-red-500'
+                      : ""
+                  }`}
+                >
+                  {label}
+                </span>
+              </div>
+            </div>
+          )}
+          <Controller
+            name={name}
+            control={props.control}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <DatePicker
+                ref={ref}
+                selected={value ? parseDate(value) : null}
+                onChange={(date) => onChange(date ? formatDate(date) : "")}
+                onBlur={onBlur}
+                placeholderText={placeholder}
+                dateFormat="dd/MM/yyyy"
+                className="input input-bordered w-full h-12"
+              />
+            )}
+          />
+          {error && (
+            <div className="label">
+              <span className="label-text-alt text-left text-error text-sm">
+                {error}
+              </span>
+            </div>
+          )}
+        </label>
+      );
+    }
+
     return (
       <>
         {unit ? (
@@ -122,7 +204,15 @@ const Input = React.forwardRef(
             {label && (
               <div className="label">
                 <div className="tooltip" data-tip={tooltip}>
-                  <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
+                  <span
+                    className={`label-text text-base ${
+                      required
+                        ? 'after:content-["*"] after:ml-0.5 after:text-red-500'
+                        : ""
+                    }`}
+                  >
+                    {label}
+                  </span>
                 </div>
               </div>
             )}
@@ -149,7 +239,15 @@ const Input = React.forwardRef(
             {label && (
               <div className="label">
                 <div className="tooltip" data-tip={tooltip}>
-                  <span className={`label-text text-base ${required ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''}`}>{label}</span>
+                  <span
+                    className={`label-text text-base ${
+                      required
+                        ? 'after:content-["*"] after:ml-0.5 after:text-red-500'
+                        : ""
+                    }`}
+                  >
+                    {label}
+                  </span>
                 </div>
               </div>
             )}

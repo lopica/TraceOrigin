@@ -302,8 +302,8 @@ export default function ItemList({ productId }) {
         onSubmit={handleSubmit(onSearch)}
       >
         <div className="flex gap-2">
-          <Input label="Từ" type="date" {...register("startDate")} />
-          <Input label="Đến" type="date" {...register("endDate")} />
+          <Input label="Từ" type="date" {...register("startDate")} control={control} />
+          <Input label="Đến" type="date" {...register("endDate")} control={control} />
         </div>
         <Input
           label="Trạng thái"

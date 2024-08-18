@@ -54,7 +54,7 @@ export default function useProduct() {
 
   function searchProduct(data) {
     dispatch(updateNameSearch(data.nameSearch));
-    dispatch(updateCategorySearch(data.categorySearch.split(",")[1] || ""));
+    dispatch(updateCategorySearch(data.categorySearch && data.categorySearch.split(",")[1] || ""));
     //convert date to epoch
     setInputDate({
       startDate: getEpochFromDate(data.startDate),
