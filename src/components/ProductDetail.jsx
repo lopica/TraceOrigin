@@ -16,7 +16,6 @@ import {
 import { file } from "jszip";
 import { convertLinkToBase64 } from "../utils/convertLinkToBase64";
 
-
 const productConfig = [
   {
     label: "Thông số kĩ thuật",
@@ -38,8 +37,16 @@ export default function ProductDetail({ productId }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageReports, setImageReports] = useState([]);
   const { getToast } = useToast();
-  const { productData, name, images, isProductFetch, isProductError, error, model3D, refetch } =
-    useProductDetail(productId);
+  const {
+    productData,
+    name,
+    images,
+    isProductFetch,
+    isProductError,
+    error,
+    model3D,
+    refetch,
+  } = useProductDetail(productId);
   const [requestScanImage] = useRequestScanImageMutation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [saveModel3D] = useSaveModel3DMutation();
@@ -58,6 +65,10 @@ export default function ProductDetail({ productId }) {
   useEffect(() => {
     if (images.length > 0) {
       console.log(model3D);
+      const imageSlides = images.map((image, idx) => (
+        <img src={image} alt={`${name} ${idx}`} />
+      ));
+      setSlides([...imageSlides]);
       if (model3D) {
         // console.log("vod day " + model3D);
         convertLinkToBase64(
@@ -66,9 +77,6 @@ export default function ProductDetail({ productId }) {
           // "/model3D_70.stl"
         )
           .then((res) => {
-            const imageSlides = images.map((image, idx) => (
-              <img src={image} alt={`${name} ${idx}`} />
-            ));
             setSlides([
               ...imageSlides,
               <div className="sm:w-[32rem] aspect-video">
@@ -99,10 +107,10 @@ export default function ProductDetail({ productId }) {
 
   const handleUploadModel3D = async (file3D) => {
     getToast("Hệ thống đang xử lý");
-   const formData = {
-    productId,
-    file3D,
-  };
+    const formData = {
+      productId,
+      file3D,
+    };
     try {
       await saveModel3D(formData).unwrap();
       getToast("Hệ thống đã tải model 3D thành công");

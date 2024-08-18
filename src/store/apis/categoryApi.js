@@ -20,7 +20,11 @@ const categoryApi = createApi({
 
       // Determine the endpoint based on the URL or some other method
       const url = typeof input === "string" ? input : input.url;
-      if (url.includes("/addListCategory") || url.includes("/findCategoryByManufacturer") ) {
+      if (
+        url.includes("/addListCategory") ||
+        url.includes("/findCategoryByManufacturer") ||
+        url.includes("/getCategoryForAdmin")
+      ) {
         // Customize fetch options for this specific endpoint
         init = {
           ...init,
@@ -68,9 +72,8 @@ const categoryApi = createApi({
         query: (id) => ({
           url: "/findCategoryByManufacturer",
           method: "POST",
-          body: 
-          {
-            id: id
+          body: {
+            id: id,
           },
         }),
       }),
@@ -79,4 +82,10 @@ const categoryApi = createApi({
 });
 
 export { categoryApi };
-export const { useGetAllCategoriesQuery, useGetCategoryForAdminQuery, useAddListCategoryMutation, useGetNextIdQuery, useFindCategoryByManufacturerQuery } = categoryApi;
+export const {
+  useGetAllCategoriesQuery,
+  useGetCategoryForAdminQuery,
+  useAddListCategoryMutation,
+  useGetNextIdQuery,
+  useFindCategoryByManufacturerQuery,
+} = categoryApi;

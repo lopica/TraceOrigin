@@ -126,13 +126,15 @@ export default function Otp({
           </Fragment>
         ))}
       </div>
-      <div className="flex justify-center">
+      <div className="flex flex-col gap-2 justify-center">
         {timeLeft !== 0 && !isLoading ? (
           <p className="text-center">
             Mã xác thực còn có hiệu lực trong {timeLeft} giây
           </p>
         ) : (
-          timeLeft === 0 && (
+          undefined
+        )}
+        {timeLeft < 150 && (
             <Button
               primary
               rounded
@@ -141,8 +143,7 @@ export default function Otp({
             >
               Gửi lại
             </Button>
-          )
-        )}
+          )}
         {isLoading && (
           <span className="loading loading-spinner loading-lg"></span>
         )}

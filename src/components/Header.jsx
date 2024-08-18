@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 
 function Header() {
   // const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const user = useSelector((state) => state.userSlice);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   let location = useLocation();
@@ -92,12 +93,15 @@ function Header() {
             <li key="brand">
               <Link to="/">{CONSTANTS.brand}</Link>
             </li>
-            {CONSTANTS.menu.map((item) => {
-              return (
-                <li key={item.name}>
-                  <Link to={item.url}>{item.name}</Link>
-                </li>
-              );
+            {CONSTANTS.menu.map((item, idx) => {
+              const role = user.role.roleId;
+              if (role == item.role) {
+                return (
+                  <li key={idx}>
+                    <Link to={item.url}>{item.name}</Link>
+                  </li>
+                );
+              }
             })}
           </ul>
         )}

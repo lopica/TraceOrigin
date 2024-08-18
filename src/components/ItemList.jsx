@@ -5,7 +5,7 @@ import AddItem from "./AddItem";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./UI/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaList } from "react-icons/fa";
@@ -15,12 +15,13 @@ import { QRCodeSVG } from "qrcode.react";
 import ReactDOMServer from "react-dom/server";
 import { saveAs } from "file-saver";
 import useToast from "../hooks/use-toast";
-import { useGetAllEventTypeQuery } from "../store";
+import { requireLogin, updateUser, useGetAllEventTypeQuery } from "../store";
 import { itemApi } from "../store/apis/itemApi";
 
 let renderedListItem;
 let eventTypeData;
 export default function ItemList({ productId }) {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.userSlice);
   const [inputSearch, setInputSearch] = useState({
     eventId: "",

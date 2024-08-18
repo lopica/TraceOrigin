@@ -60,6 +60,16 @@ export default function NoApiConsign({ productRecognition }) {
     setValue: cancelSetValue,
     watch: cancelWatch,
   } = useForm({ mode: "onTouched" });
+  const {
+    handleSubmit: handleSubmitUpdateConsignForm,
+    register: registerUpdateConsignForm,
+    formState: { errors: updateConsignErrors },
+    control: updateConsignControl,
+    getValues: updateConsignGetValues,
+    setValue: updateConsignSetValue,
+    watch: updateConsignWatch,
+  } = useForm({ mode: "onTouched" });
+
   const {} = useForm({ mode: "onTouched" });
   const { show, handleOpen, handleClose } = useShow();
   const {
@@ -100,6 +110,7 @@ export default function NoApiConsign({ productRecognition }) {
     editAddress,
     laterBtnHandler,
     handleFlip,
+    onUpdateConsignHandler,
   } = useDiary(
     productRecognition,
     consignWatch,
@@ -650,6 +661,37 @@ export default function NoApiConsign({ productRecognition }) {
         </div>
       );
       break;
+    case "update-consign-confirm":
+      form = (
+        <div className="p-6 pt-0 h-full flex flex-col justify-center items-center">
+          <IoIosWarning className=" fill-red-300 h-20 w-20" />
+          <p className="text-center text-2xl font-light text-slate-600">
+            Bạn chắc chắn muốn cập nhật thông tin địa chỉ của sự kiện này?
+          </p>
+          <div className="flex justify-center gap-8 mt-8">
+            <Button
+              primary
+              outline
+              onClick={() => setStep("consign-update")}
+              // disabled={isConsignLoading}
+            >
+              Xem lại
+            </Button>
+            <Button
+              primary
+              rounded
+              onClick={() => {
+                setStep("otp");
+                setLastStep("update-consign-confirm");
+                setNextStep("success");
+              }}
+            >
+              Cập nhật
+            </Button>
+          </div>
+        </div>
+      );
+    break
     case "receive":
       form = (
         <div className="h-full">
@@ -657,7 +699,7 @@ export default function NoApiConsign({ productRecognition }) {
           <BackBtn step="option" />
           {roleDiary === "pending-receiver" ? (
             <>
-            {console.log(consignData)}
+              {console.log(consignData)}
               {consignData?.checkPoint ? (
                 <div className="flex justify-end items-center gap-2">
                   <FaCheck />
@@ -731,7 +773,7 @@ export default function NoApiConsign({ productRecognition }) {
                 <div className="relative w-full min-h-10 mt-4 ">
                   <input
                     type="text"
-                    value={consignData?.phoneNumber || 'Không có'}
+                    value={consignData?.phoneNumber || "Không có"}
                     disabled
                     id="phone"
                     className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -740,7 +782,7 @@ export default function NoApiConsign({ productRecognition }) {
                     htmlFor="phone"
                     className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
                   >
-                    Email người gửi
+                    Số điện thoại 
                   </label>
                 </div>
                 <div className="relative w-full min-h-10 mt-4">
@@ -824,6 +866,134 @@ export default function NoApiConsign({ productRecognition }) {
             </div>
           </form>
         </div>
+      );
+      break;
+    case "consign-update":
+      form = (
+        <form
+          className="h-full"
+          onKeyDown={handleKeyDown}
+          onSubmit={handleSubmitUpdateConsignForm(onUpdateConsignHandler)}
+        >
+          <h2 className="text-center text-2xl">Thông tin ủy quyền</h2>
+          <BackBtn step="history-list" />
+          <div className="w-full h-auto mx-auto grow flex flex-col items-start justify-start">
+            <div className="relative h-auto w-full space-y-8">
+              <div className="relative w-full min-h-10 mt-4">
+                <input
+                  type="email"
+                  value={updateConsignData?.receiver}
+                  disabled
+                  id="authorizedEmail"
+                  className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                />
+                <label
+                  htmlFor="authorizedEmail"
+                  className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none  peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm "
+                >
+                  Email người nhận
+                </label>
+              </div>
+              <div className="relative w-full min-h-10 mt-4 ">
+                <input
+                  type="text"
+                  value={updateConsignData?.receiverName}
+                  disabled
+                  id="authorizedName"
+                  className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                />
+                <label
+                  htmlFor="authorizedName"
+                  className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                >
+                  Tên người nhận
+                </label>
+              </div>
+              <div className="relative w-full min-h-10 mt-4 ">
+                <input
+                  type="text"
+                  value={updateConsignData?.sender}
+                  disabled
+                  id="authorizedName"
+                  className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                />
+                <label
+                  htmlFor="authorizedName"
+                  className="after:content-['*'] after:ml-0.5 after:text-red-500 absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                >
+                  Email người gửi
+                </label>
+              </div>
+              <div className="relative w-full min-h-10 mt-4 ">
+                <input
+                  type="text"
+                  value={updateConsignData?.phoneNumber || "Không có"}
+                  disabled
+                  id="phone"
+                  className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                />
+                <label
+                  htmlFor="phone"
+                  className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                >
+                  Số điện thoại
+                </label>
+              </div>
+              <div className="relative w-full min-h-10 mt-4">
+                <input
+                  type="text"
+                  value={updateConsignData?.descriptionItemLog || "Không có"}
+                  disabled
+                  id="description"
+                  className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                />
+                <label
+                  htmlFor="description"
+                  className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                >
+                  Miêu tả hoạt động
+                </label>
+              </div>
+              <div className="relative w-full min-h-10 mt-4">
+                <input
+                  type="text"
+                  value={updateConsignData?.addressInParty || "Không có"}
+                  disabled
+                  id="address"
+                  className="peer disabled:bg-white h-10 w-full border-b-2 border-gray-300 text-slate-600 placeholder-transparent focus:outline-none focus:border-sky-600"
+                />
+                <label
+                  htmlFor="address"
+                  className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
+                >
+                  Địa điểm gửi
+                </label>
+              </div>
+              {updateConsignData?.addressInParty && (
+                <Map
+                  location={[updateConsignData?.coordinateX, updateConsignData?.coordinateY]}
+                />
+              )}
+              <p>
+                Bạn có thể cập nhập lại địa chỉ bạn đã ủy quyền khi sự kiện đã
+                được xác nhận ở dưới đây.
+              </p>
+              <AddressInputGroup
+                register={registerUpdateConsignForm}
+                getValues={updateConsignGetValues}
+                setValue={updateConsignSetValue}
+                control={updateConsignControl}
+                errors={updateConsignErrors}
+                noValidate
+                message="Địa chỉ nhận hàng"
+                watch={updateConsignWatch}
+              />
+            </div>
+            <div className="flex justify-end w-full min-h-15 mt-8">
+              <NextBtn />
+            </div>
+          </div>
+        </form>
       );
       break;
     case "receive-form":
@@ -1203,7 +1373,8 @@ export default function NoApiConsign({ productRecognition }) {
                   step !== "confirm-receive" &&
                   step !== "history" &&
                   step !== "history-list" &&
-                  step !== "report" && (
+                  step !== "report" &&
+                  step !== "consign-update" && (
                     <h2 className="text-2xl text-center ">Nhật ký</h2>
                   )}
                 <div className="flex flex-col grow h-auto overflow-y-auto">

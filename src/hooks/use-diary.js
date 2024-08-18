@@ -4,6 +4,7 @@ import {
   updateConsignForm,
   updateCoordinate,
   updateReceiveForm,
+  updateUpdateConsignForm,
   updateVerifyAddress,
   useAddReceiveLocationMutation,
   useCheckConsignRoleQuery,
@@ -43,9 +44,13 @@ export default function useDiary(
   const [step, setStep] = useState("email");
   const [roleDiary, setRoleDiary] = useState("");
   const { email } = useSelector((state) => state.userSlice);
-  const { hasCertificate, cancelForm, consignForm, receiveForm } = useSelector(
-    (state) => state.itemSlice
-  );
+  const {
+    hasCertificate,
+    cancelForm,
+    consignForm,
+    receiveForm,
+    updateConsignForm,
+  } = useSelector((state) => state.itemSlice);
   const { coordinate, verifyAddress } = useSelector(
     (state) => state.locationData
   );
@@ -300,9 +305,9 @@ export default function useDiary(
   //   dispatch(updateVerifyAddress(true));
   // }, []);
 
-  useEffect(()=>{
-    if (step === 'option') setCurrentItemLogId('')
-  },[step])
+  useEffect(() => {
+    if (step === "option") setCurrentItemLogId("");
+  }, [step]);
 
   useEffect(() => {
     if (isMainConsignLoad || isConsignTransLoad) setConsignLoading(true);
@@ -831,7 +836,8 @@ export default function useDiary(
           : "";
         console.log(updateReceiveId);
         console.log(packReceiveId.receiveId);
-        const condition = !currentItemLogId || updateReceiveId === packReceiveId.receiveId
+        const condition =
+          !currentItemLogId || updateReceiveId === packReceiveId.receiveId;
         // updateReceiveId && updateReceiveId === packReceiveId.receiveId
         // updateReceiveId !== packReceiveId.receiveId
         // roleDiary === "pending-receiver"
@@ -902,6 +908,55 @@ export default function useDiary(
               });
 
         break;
+      case "update-consign":
+        //get data from state
+        const updateConsignLocation = updateConsignForm;
+        ward = updateConsignForm.ward
+          ? updateConsignForm.ward.split(",")[1]
+          : "";
+        district = updateConsignForm.district
+          ? updateConsignForm.district.split(",")[1]
+          : "";
+        province = updateConsignForm.province
+          ? updateConsignForm.province.split(",")[1]
+          : "";
+        address = updateConsignForm.province
+          ? `${updateConsignForm.address}, ${ward}, ${district}, ${province}`
+          : "";
+        //create request
+        request = {
+          location: {
+            address,
+            city: province,
+            country: "Việt Nam",
+            district,
+            ward,
+            coordinateX: coordinate[0],
+            coordinateY: coordinate[1],
+          },
+          description: updateConsignData?.descriptionItemLog,
+          email: guestEmail,
+          itemLogId: currentItemLogId,
+          otp: fixOtp,
+        };
+        console.log(request);
+        //make api call
+        //handle res
+        updateReceiveLocation(request)
+          .unwrap()
+          .then(() => {
+            dispatch(updateCoordinate([]));
+            setLastStep("success");
+            if (history) historyRefetch();
+            if (itemLogHistory) itemLogHistoryRefetch();
+            itemLineRefetch();
+            setStep(nextStep);
+          })
+          .catch((err) => {
+            console.log(err);
+            getToast("Mã otp của bạn không chính xác");
+          });
+        break;
       default:
         console.log(identifier);
         console.log("loi roi leu leu");
@@ -955,9 +1010,13 @@ export default function useDiary(
       roleDiary === "pending-old" &&
       item.itemLogId === packReceiveId.consignId
     ) {
+      console.log("vo day");
       setUpdateConsignId(item.itemLogId);
       setUpdateTransportId(packReceiveId.transportId);
       setStep("consign");
+    } else if (item.eventType === "ỦY QUYỀN") {
+      setUpdateConsignId(item.itemLogId);
+      setStep("consign-update");
     } else {
       getToast("Bạn không thể thay đổi sự kiện này");
     }
@@ -970,6 +1029,17 @@ export default function useDiary(
     itemLineRefetch();
     pendingRefetch();
     setStep("success");
+  }
+
+  function onUpdateConsignHandler(data) {
+    //update data to state at
+    dispatch(updateUpdateConsignForm(data));
+    //set step to confirm screen (update consign)
+    if (verifyAddress) {
+      setIdentifier("update-consign");
+      setStep("update-consign-confirm");
+    } else getToast("Bạn cần xác thực nếu điền thông tin địa chỉ");
+    //handle request in switch case above
   }
 
   return {
@@ -1011,5 +1081,6 @@ export default function useDiary(
     editAddress,
     handleFlip,
     laterBtnHandler,
+    onUpdateConsignHandler,
   };
 }

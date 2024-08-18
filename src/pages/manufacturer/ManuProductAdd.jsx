@@ -50,7 +50,7 @@ function ManuProductAdd() {
   const { getToast } = useToast();
   const fileInputRef = useRef(null);
   const [progress, setProgress] = useState(0);
-  const file3DRef = useRef()
+  const file3DRef = useRef();
   const {
     register,
     handleSubmit,
@@ -191,7 +191,7 @@ function ManuProductAdd() {
   };
 
   const onSubmit = (data) => {
-    let imagesFormat = data.images.map(image=>(image.split(',')[1]))
+    let imagesFormat = data.images.map((image) => image.split(",")[1]);
 
     request = {
       ...data,
@@ -199,8 +199,8 @@ function ManuProductAdd() {
       categoryId: data.category.split(",")[0],
       dimensions: `${data.length}cm x ${data.width}cm x ${data.height}cm`,
       // file3D: getValues("file3D") ? getValues("file3D").split(",")[1] : "",
-      avatar: data.avatar.split(',')[1],
-      images: imagesFormat
+      avatar: data.avatar.split(",")[1],
+      images: imagesFormat,
     };
     delete request.length;
     delete request.width;
@@ -212,7 +212,7 @@ function ManuProductAdd() {
       .unwrap()
       .then(() => {
         dispatch(resetState());
-        localforage.removeItem(`formData_${user.userId}`)
+        localforage.removeItem(`formData_${user.userId}`);
         getToast("Tạo mới thành công sản phẩm");
         navigate("/manufacturer/products");
       })
@@ -220,7 +220,6 @@ function ManuProductAdd() {
         getToast("Gặp lỗi khi tạo mới sản phẩm");
         console.log(err);
       });
-    
   };
 
   useEffect(() => {
@@ -301,6 +300,9 @@ function ManuProductAdd() {
                 value: 0,
                 message: "Thời gian bảo hành không thể âm",
               },
+              validate: (value) =>
+                Number.isInteger(parseFloat(value)) ||
+                "Thời gian bảo hành phải là số nguyên",
             })}
             unit="tháng"
             tooltip="Bé hơn 999 và lớn hơn 0"
@@ -316,7 +318,7 @@ function ManuProductAdd() {
                 {...register("length", {
                   required: "Bạn cần điền chiều dài sản phẩm",
                   min: {
-                    value: 1,
+                    value: 0.000000000001,
                     message: "Chiều dài sản phẩm phải là 1 số dương",
                   },
                 })}
@@ -331,7 +333,7 @@ function ManuProductAdd() {
                 {...register("width", {
                   required: "Bạn cần điền chiều rộng sản phẩm",
                   min: {
-                    value: 1,
+                    value: 0.000000000001,
                     message: "Chiều rộng sản phẩm phải là 1 số dương",
                   },
                 })}
@@ -345,7 +347,7 @@ function ManuProductAdd() {
                 {...register("height", {
                   required: "Bạn cần điền chiều cao sản phẩm",
                   min: {
-                    value: 1,
+                    value: 0.000000000001,
                     message: "Chiều cao sản phẩm phải là 1 số dương",
                   },
                 })}
@@ -376,7 +378,7 @@ function ManuProductAdd() {
             {...register("weight", {
               required: "Bạn cần điền cân nặng sản phẩm",
               min: {
-                value: 0.1,
+                value: 0.001,
                 message: "Cân nặng sản phẩm phải là 1 số dương",
               },
             })}
@@ -411,13 +413,12 @@ function ManuProductAdd() {
           </div>
         </>
         <>
-        <div className="p-6 pt-0 h-full flex flex-col justify-center items-center">
-          <IoIosWarning className=" fill-red-300 h-20 w-20" />
-          <p className="text-center text-2xl font-light text-slate-600">
-            Bạn chắc chắn thông tin về sản phẩm bạn đã điền?
-          </p>
-         
-        </div>
+          <div className="p-6 pt-0 h-full flex flex-col justify-center items-center">
+            <IoIosWarning className=" fill-red-300 h-20 w-20" />
+            <p className="text-center text-2xl font-light text-slate-600">
+              Bạn chắc chắn thông tin về sản phẩm bạn đã điền?
+            </p>
+          </div>
           {/* <label className="form-control w-full ">
             <div
               className="label"
@@ -484,7 +485,6 @@ function ManuProductAdd() {
               </div>
             )}
           </label> */}
-          
         </>
       </Wizzard>
     </div>

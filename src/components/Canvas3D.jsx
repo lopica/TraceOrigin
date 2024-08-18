@@ -18,6 +18,7 @@ import { IoMdImage } from "react-icons/io";
 import useShow from "../hooks/use-show";
 import Modal from "./UI/Modal";
 import { getExtension, getMimeTypeFromBase64 } from "../utils/getExtention";
+import useToast from "../hooks/use-toast";
 
 function VideoBackground() {
   const { scene } = useThree();
@@ -62,15 +63,6 @@ function VideoBackground() {
 function Model({ modelUrl, extension }) {
   const modelRef = useRef();
 
-  // useEffect(() => {
-  //   if (modelRef.current) {
-  //     // Center the model
-  //     const box = new Box3().setFromObject(modelRef.current);
-  //     const center = box.getCenter(new Vector3());
-  //     modelRef.current.position.sub(center);
-  //   }
-  // }, [modelUrl, extension]);
-
   let model;
   if (extension) {
     console.log(extension);
@@ -101,7 +93,7 @@ function Model({ modelUrl, extension }) {
       case "gltf":
       case "glb":
         model = useLoader(GLTFLoader, modelUrl);
-        console.log(model);
+        // console.log(model);
         return <primitive ref={modelRef} object={model.scene} />;
       default:
         console.error(`Unsupported file extension: ${extension}`);
@@ -115,6 +107,8 @@ function Canvas3D({ modelBase64, full }) {
   const { show: background, handleFlip: flipBackground } = useShow(false);
   const [modelUrl, setModelUrl] = useState(null);
   const [extension, setExtension] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { getToast } = useToast();
 
   const handleZoomModal = (e) => {
     e.preventDefault();
@@ -129,6 +123,7 @@ function Canvas3D({ modelBase64, full }) {
 
   useEffect(() => {
     if (modelBase64) {
+      setIsLoading(true);
       const byteCharacters = atob(modelBase64.split(",")[1]);
       const byteNumbers = new Array(byteCharacters.length);
       const mimeType = getMimeTypeFromBase64(modelBase64);
@@ -140,6 +135,7 @@ function Canvas3D({ modelBase64, full }) {
       const url = URL.createObjectURL(newBlob);
       setExtension(getExtension(modelBase64));
       setModelUrl(url);
+      setIsLoading(false);
 
       // Clean up URL object when component unmounts
       return () => {
@@ -151,74 +147,104 @@ function Canvas3D({ modelBase64, full }) {
 
   return (
     <div className="h-full w-full relative">
-      {show && (
-        <Modal onClose={handleClose} full>
-          <Button
-            className="rounded-full absolute bottom-2 right-2 z-30 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-            onClick={handleZoomModal}
-          >
-            <MdOutlineZoomInMap color="white" className="h-10 w-10" />
-          </Button>
-          <Button
-            className="rounded-full absolute bottom-2 left-2 z-30 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-            onClick={(e) => {
-              e.preventDefault();
-              flipBackground();
-            }}
-          >
-            {!background ? (
-              <FaVideo color="white" className="h-10 w-10" />
-            ) : (
-              <IoMdImage color="white" className="h-10 w-10" />
-            )}
-          </Button>
-        </Modal>
-      )}
-      {!show && full && (
-        <>
-          <Button
-            className="rounded-full absolute bottom-2 right-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-            onClick={handleZoomModal}
-          >
-            <MdOutlineZoomOutMap color="white" className="h-10 w-10" />
-          </Button>
-          <Button
-            className="rounded-full absolute bottom-2 left-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
-            onClick={(e) => {
-              e.preventDefault();
-              flipBackground();
-            }}
-          >
-            {!background ? (
-              <FaVideo color="white" className="h-10 w-10" />
-            ) : (
-              <IoMdImage color="white" className="h-10 w-10" />
-            )}
-          </Button>
-        </>
-      )}
-      <Canvas
-        style={{ touchAction: "none" }}
-        dpr={[1, 2]}
-        camera={{ fov: 45 }}
-        onClick={full ? stopPropagation : undefined}
-        onMouseDown={full ? stopPropagation : undefined}
-        onMouseMove={full ? stopPropagation : undefined}
-        onTouchStart={full ? stopPropagation : undefined}
-        onTouchMove={full ? stopPropagation : undefined}
-        onTouchEnd={full ? stopPropagation : undefined}
-      >
-        <OrbitControls />
-        <Stage environment={"city"}>
-          {modelUrl && <Model modelUrl={modelUrl} extension={extension} />}
-        </Stage>
-        {background ? (
-          <VideoBackground />
-        ) : (
-          <Environment background files={"/modern_buildings_2_4k.hdr"} />
-        )}
-      </Canvas>
-    </div>
+    {show && (
+      <Modal onClose={handleClose} full>
+        <Button
+          className="rounded-full absolute bottom-2 right-2 z-30 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
+          onClick={handleZoomModal}
+        >
+          <MdOutlineZoomInMap color="white" className="h-10 w-10" />
+        </Button>
+        <Button
+          className="rounded-full absolute bottom-2 left-2 z-30 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
+          onClick={(e) => {
+            e.preventDefault();
+            flipBackground();
+          }}
+        >
+          {!background ? (
+            <FaVideo color="white" className="h-10 w-10" />
+          ) : (
+            <IoMdImage color="white" className="h-10 w-10" />
+          )}
+        </Button>
+
+        {/* Render Canvas when modal is shown */}
+        <Canvas
+          style={{ touchAction: "none" }}
+          dpr={[1, 2]}
+          camera={{ fov: 45 }}
+          onClick={stopPropagation}
+          onMouseDown={stopPropagation}
+          onMouseMove={stopPropagation}
+          onTouchStart={stopPropagation}
+          onTouchMove={stopPropagation}
+          onTouchEnd={stopPropagation}
+        >
+          <OrbitControls />
+          <Stage environment={"city"}>
+            <Suspense fallback={null}>
+              {modelUrl && <Model modelUrl={modelUrl} extension={extension} />}
+            </Suspense>
+          </Stage>
+          {background ? (
+            <VideoBackground />
+          ) : (
+            <Environment background files={"/modern_buildings_2_4k.hdr"} />
+          )}
+        </Canvas>
+      </Modal>
+    )}
+
+    {/* Render smaller version when modal is not shown */}
+    {!show && full && (
+      <>
+        <Button
+          className="rounded-full absolute bottom-2 right-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
+          onClick={handleZoomModal}
+        >
+          <MdOutlineZoomOutMap color="white" className="h-10 w-10" />
+        </Button>
+        <Button
+          className="rounded-full absolute bottom-2 left-2 z-10 opacity-70 h-12 w-12 bg-slate-500 hover:bg-slate-400"
+          onClick={(e) => {
+            e.preventDefault();
+            flipBackground();
+          }}
+        >
+          {!background ? (
+            <FaVideo color="white" className="h-10 w-10" />
+          ) : (
+            <IoMdImage color="white" className="h-10 w-10" />
+          )}
+        </Button>
+
+        <Canvas
+          style={{ touchAction: "none" }}
+          dpr={[1, 2]}
+          camera={{ fov: 45 }}
+          onClick={stopPropagation}
+          onMouseDown={stopPropagation}
+          onMouseMove={stopPropagation}
+          onTouchStart={stopPropagation}
+          onTouchMove={stopPropagation}
+          onTouchEnd={stopPropagation}
+        >
+          <OrbitControls />
+          <Stage environment={"city"}>
+            <Suspense fallback={null}>
+              {modelUrl && <Model modelUrl={modelUrl} extension={extension} />}
+            </Suspense>
+          </Stage>
+          {background ? (
+            <VideoBackground />
+          ) : (
+            <Environment background files={"/modern_buildings_2_4k.hdr"} />
+          )}
+        </Canvas>
+      </>
+    )}
+  </div>
   );
 }
 

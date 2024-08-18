@@ -98,7 +98,7 @@ const Thumb = ({ selected, index, onClick, slide }) => {
       <button
         onClick={onClick}
         type="button"
-        className="embla-thumbs__slide__number"
+        className="embla-thumbs__slide__number max-h-16"
       >
         {slide}
       </button>
