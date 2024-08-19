@@ -504,7 +504,7 @@ export default function useDiary(
   ]);
 
   useEffect(() => {
-    if (step === "email") setLastStep("");
+    if (step === "email" || lastStep === 'option') setLastStep("");
     if (step === "otp")
       sendOtp(guestEmail)
         .unwrap()
@@ -819,7 +819,6 @@ export default function useDiary(
             roleCodeRefetch();
             pendingRefetch();
             setStep(nextStep);
-            setLastStep('receive')
           })
           .catch(() => getToast("Mã otp của bạn không chính xác"));
         break;

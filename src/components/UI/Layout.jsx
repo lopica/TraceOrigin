@@ -10,8 +10,8 @@ export default function Layout() {
   const location = useLocation();
   const currentPath = location.pathname;
   const matchPaterm =
-    // currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
-    currentPath.startsWith("/admin");
+    currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
+    // currentPath.startsWith("/admin");
   const { show, content } = useSelector((state) => state.toast);
 
   return (
@@ -30,7 +30,7 @@ export default function Layout() {
           {/* <Breadcrumps /> */}
           <Outlet />
         </main>
-        {!matchPaterm && !currentPath.startsWith("/portal") && (
+        {!currentPath.startsWith("/admin") && !currentPath.startsWith("/portal") && (
           <df-messenger
             intent="WELCOME"
             chat-title="TraceOrigin"

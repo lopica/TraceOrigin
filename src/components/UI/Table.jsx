@@ -12,7 +12,7 @@ function Table({ data, config, keyFn, message }) {
     if (column.header)
       return <Fragment key={column.label}>{column.header()}</Fragment>;
     return (
-      <th key={column.label} className="text-xl">
+      <th key={column.label} className="text-xl text-center">
         {column.label}
       </th>
     );
@@ -23,7 +23,7 @@ function Table({ data, config, keyFn, message }) {
     const renderedCells = config.map((column) => {
       return (
         <td className="px-4" key={`${rowKey}-${column.label || "none"}`}>
-          <div className="flex items-center">
+          <div className={`flex items-center ${column?.center && 'justify-center'}`}>
             {column.icon ? (
               <span className="mr-2">{column.icon(rowData)()}</span>
             ) : null}
@@ -37,14 +37,14 @@ function Table({ data, config, keyFn, message }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="table  text-xl bg-white rounded-box">
+      <table className="table text-xl bg-white rounded-box">
         <thead>
           <tr className="border-b-2">{renderedHeaders}</tr>
         </thead>
         <tbody>{renderedRows}</tbody>
       </table>
       {data.length === 0 && (
-        <p className="text-center">{message ? message : "Chưa có item"}</p>
+        <p className="text-center mt-4">{message ? message : "Chưa có item"}</p>
       )}
     </div>
   );

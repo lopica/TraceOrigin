@@ -5,7 +5,7 @@ import {
   useFetchItemLogsByProductRecognitionQuery,
 } from "../store";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Tooltip from "./UI/Tooltip";
 import QR from "./QR";
 
@@ -18,6 +18,7 @@ export default function ItemLine({
   showQr,
 }) {
   const dispatch = useDispatch();
+  const [lastEvent, setLastEvent] = useState('') 
   const {
     data: itemLogsData,
     isError: isItemLogsError,
@@ -53,7 +54,7 @@ export default function ItemLine({
               <div className="timeline-start">
                 {getDateFromEpochTime(log.createdAt)}
               </div>
-              <div className="timeline-middle w-8 h-8">
+              <div className="timeline-middle w-8 h-8" onClick={()=>setLastEvent(log?.itemLogId)}>
                 <Tooltip
                   content={
                     <div className="flex flex-col items-start">
@@ -65,7 +66,7 @@ export default function ItemLine({
                 >
                   <button
                     className={`w-8 h-8 rounded-full ${
-                      index === logLength - 1
+                      lastEvent === log?.itemLogId ? 'bg-orange-400 hover:bg-orange-500' : index === logLength - 1
                         ? "bg-cyan-400 animate-pulse"
                         : "bg-green-400 hover:bg-green-500"
                     }`}

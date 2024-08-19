@@ -164,15 +164,19 @@ export default function NoApiConsign({ productRecognition }) {
         </Button>
       ),
       sortValue: (item) => item?.createdAt,
+      center: true,
     },
     {
       label: "Loại sự kiện",
       render: (item) => item?.eventType,
+      center: true,
     },
     {
       label: "Đủ thông tin",
-      render: (item) => (item.checkPoint ? <FaCheck /> : <ImCross />),
+      render: (item) =>
+        item.checkPoint ? <FaCheck color="green" /> : <ImCross color="red" />,
       sortValue: (item) => item?.checkPoint,
+      center: true,
     },
   ];
 
@@ -398,12 +402,12 @@ export default function NoApiConsign({ productRecognition }) {
             <>
               {updateConsignData?.checkPoint ? (
                 <div className="flex justify-end items-center gap-2">
-                  <FaCheck />
+                  <FaCheck color="green" />
                   <p>Đủ Thông tin</p>
                 </div>
               ) : (
                 <div className="flex justify-end items-center gap-2">
-                  <ImCross />
+                  <ImCross color="red" />
                   <p>Không đủ Thông tin</p>
                 </div>
               )}
@@ -691,23 +695,23 @@ export default function NoApiConsign({ productRecognition }) {
           </div>
         </div>
       );
-    break
+      break;
     case "receive":
       form = (
         <div className="h-full">
           <h2 className="text-center text-2xl">Thông tin nhận hàng</h2>
           <BackBtn step="option" />
-          {roleDiary === "pending-receiver" ? (
+          {lastStep === "pending-receiver" ? (
             <>
               {console.log(consignData)}
               {consignData?.checkPoint ? (
                 <div className="flex justify-end items-center gap-2">
-                  <FaCheck />
+                  <FaCheck color="green" />
                   <p>Đủ Thông tin</p>
                 </div>
               ) : (
                 <div className="flex justify-end items-center gap-2">
-                  <ImCross />
+                  <ImCross color="red" />
                   <p>Không đủ Thông tin</p>
                 </div>
               )}
@@ -782,7 +786,7 @@ export default function NoApiConsign({ productRecognition }) {
                     htmlFor="phone"
                     className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
                   >
-                    Số điện thoại 
+                    Số điện thoại
                   </label>
                 </div>
                 <div className="relative w-full min-h-10 mt-4">
@@ -971,7 +975,10 @@ export default function NoApiConsign({ productRecognition }) {
               </div>
               {updateConsignData?.addressInParty && (
                 <Map
-                  location={[updateConsignData?.coordinateX, updateConsignData?.coordinateY]}
+                  location={[
+                    updateConsignData?.coordinateX,
+                    updateConsignData?.coordinateY,
+                  ]}
                 />
               )}
               <p>
@@ -1004,19 +1011,17 @@ export default function NoApiConsign({ productRecognition }) {
               ? "Thông tin nhận hàng"
               : "Cập nhật thông tin nhận hàng"}
           </h2>
-          <BackBtn
-            step={lastStep === "receiver" ? "receive" : "history-list"}
-          />
+          {lastStep === "success" && <BackBtn step={"history-list"} />}
           {roleDiary !== "pending-receiver" ? (
             <>
               {updateReceiveData?.checkPoint ? (
                 <div className="flex justify-end items-center gap-2">
-                  <FaCheck />
+                  <FaCheck color="green" />
                   <p>Đủ Thông tin</p>
                 </div>
               ) : (
                 <div className="flex justify-end items-center gap-2">
-                  <ImCross />
+                  <ImCross color="red" />
                   <p>Không đủ Thông tin</p>
                 </div>
               )}
@@ -1045,7 +1050,7 @@ export default function NoApiConsign({ productRecognition }) {
                 Địa chỉ đã ghi nhận
               </label>
             </div>
-            {roleDiary === "pending-receiver" ? (
+            {lastStep === "success" ? (
               <p>
                 (Tùy chọn) Bạn có thể nhập địa chỉ nhận hàng của bạn để hệ thống
                 có thể tạo chứng chỉ chứng minh sự minh bạch toàn bộ quá trình
@@ -1084,7 +1089,7 @@ export default function NoApiConsign({ productRecognition }) {
               </label>
             </div>
             <div className="flex justify-end w-full min-h-15 gap-4">
-              {lastStep === "receiver" && (
+              {lastStep === "success" && (
                 <Button
                   primary
                   outline

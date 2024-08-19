@@ -57,11 +57,13 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
         </Button>
       ),
       sortValue: (item) => item?.timeReceive,
+      center: true
     },
     {
       label: "Đủ thông tin",
-      render: (item) => (item.checkPoint ? <FaCheck /> : <ImCross />),
+      render: (item) => (item.checkPoint ? <FaCheck color='green' /> : <ImCross color="red" />),
       sortValue: (item) => item?.checkPoint,
+      center: true
     },
   ];
 
@@ -95,22 +97,12 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
     switch (step) {
       case "history":
         console.log("vo day 1");
-        history = (
-          <div className="px-4">
-            <SortableTable
-              data={historyData}
-              config={historyConfig}
-              keyFn={(item) => item.itemLogId}
-              message="Bạn chưa tham gia sự kiện nào"
-            />
-          </div>
-        );
         setRenderedHistory(
           <SortableTable
             data={historyData}
             config={historyConfig}
             keyFn={(item) => item.itemLogId}
-            message="Bạn chưa tham gia sự kiện nào"
+            message="Hệ thống chưa ghi nhận lần chỉnh sửa nào cho sự kiện này"
           />
         );
         break;
@@ -121,7 +113,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
         if (eventType == "ỦY QUYỀN") {
           setRenderedHistory(
             <div className="px-6 overflow-auto pb-4">
-              {/* <h2 className="mb-4 text-center font-bold">
+              {/* <h2 className="text-xl mb-4 text-center font-bold">
                 {eventData?.eventType}
               </h2> */}
               {backBtn}
@@ -131,7 +123,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 <p>Người gửi: {eventData?.sender}</p>
               </li> */}
                 <li>
-                  <p>Người nhận: {historyDetail?.receiverName}</p>
+                  <p>Người nhận: {historyDetail?.receiverName || 'Không có'}</p>
                 </li>
                 <li>
                   <p>
@@ -165,7 +157,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
         } else if (eventType == "VẬN CHUYỂN") {
           setRenderedHistory(
             <div className="px-6 overflow-auto pb-4">
-              <h2 className="mb-4 text-center font-bold">
+              <h2 className="text-xl mb-4 text-center font-bold">
                 {historyDetail?.eventType}
               </h2>
               {backBtn}
@@ -206,7 +198,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
         } else if (eventType == "NHẬN HÀNG") {
           setRenderedHistory(
             <div className="px-6 overflow-auto pb-4">
-              {/* <h2 className="mb-4 text-center font-bold">
+              {/* <h2 className="text-xl mb-4 text-center font-bold">
                 {historyDetail?.eventType}
               </h2> */}
               {backBtn}
@@ -259,7 +251,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
   }, [step, eventType, historyData]);
 
   let historyBtn = (
-    <div className="flex justify-end">
+    <div className="flex justify-center mb-4">
       <Button
         primary
         outline
@@ -277,22 +269,26 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
   let historyModal = (
     <Modal onClose={handleClose}>
       <div className="pt-4 pb-8">
-        <h2 className="text-center text-2xl my-4">Lịch sử chỉnh sửa</h2>
+        <h2 className="text-center text-2xl my-4 text-bold">Lịch sử chỉnh sửa</h2>
         {renderedHistory}
       </div>
     </Modal>
   );
 
+  let header = (
+    <h2 className="text-2xl text-center font-bold">{eventData?.eventType}</h2>
+  );
+
   let renderedCheckPoint = (
-    <div className="flex justify-end">
+    <div className="flex justify-end mr-4">
       {eventData?.checkPoint ? (
         <div className="flex justify-end items-center gap-2">
-          <FaCheck />
+          <FaCheck color="green" />
           <p>Đủ Thông tin</p>
         </div>
       ) : (
         <div className="flex justify-end items-center gap-2">
-          <ImCross />
+          <ImCross color="red" />
           <p>Không đủ Thông tin</p>
         </div>
       )}
@@ -327,10 +323,8 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       if (eventData.eventType === "NHẬN HÀNG") {
         event = (
           <>
-            {renderedCheckPoint}
-            <h2 className="mb-4 text-center font-bold">
-              {eventData?.eventType}
-            </h2>
+            {/* {renderedCheckPoint} */}
+            {header}
             {historyBtn}
             <ul className="space-y-2">
               {/* uy quyen, giao hang, nhan */}
@@ -372,10 +366,8 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       } else if (eventData.eventType === "VẬN CHUYỂN") {
         event = (
           <>
-            {renderedCheckPoint}
-            <h2 className="mb-4 text-center font-bold">
-              {eventData?.eventType}
-            </h2>
+            {/* {renderedCheckPoint} */}
+            {header}
             {historyBtn}
             <ul className="space-y-2">
               <li>
@@ -411,10 +403,8 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       } else {
         event = (
           <>
-            {renderedCheckPoint}
-            <h2 className="mb-4 text-center font-bold">
-              {eventData?.eventType}
-            </h2>
+            {/* {renderedCheckPoint} */}
+            {header}
             {historyBtn}
             <ul className="space-y-2">
               {/* uy quyen, giao hang, nhan */}
@@ -461,11 +451,14 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
     <div className="card w-[95svw] sm:w-[640px] sm:mx-auto bg-white mb-8 mx-2 mt-2 lg:max-h-[88svh] overflow-y-auto lg:mb-0">
       {modalControl && historyModal}
       {goToItemLine && (
-        <div className="mt-5 ml-4 lg:hidden">
-          <Button primary outline onClick={goToItemLine}>
-            <IoIosArrowBack /> Quay lại
-          </Button>
-        </div>
+        <>
+          <div className="mt-5 mx-4 lg:hidden flex justify-between items-center">
+            <Button primary outline onClick={goToItemLine}>
+              <IoIosArrowBack /> Quay lại
+            </Button>
+          </div>
+          {renderedCheckPoint}
+        </>
       )}
       <div className="card-body">{event}</div>
     </div>
