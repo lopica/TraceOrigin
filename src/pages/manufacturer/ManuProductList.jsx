@@ -338,7 +338,7 @@ function ManuProductList() {
           <div className="flex gap-1">
             <button
               type="button"
-              className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark"
+              className="flex items-center justify-center w-fit bg-gray-500 text-white font-bold px-3 rounded-lg hover:bg-gray-400"
               onClick={handleReset}
             >
               <FaUndoAlt size={20} />

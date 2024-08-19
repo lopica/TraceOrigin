@@ -1005,7 +1005,7 @@ export default function NoApiConsign({ productRecognition }) {
               : "Cập nhật thông tin nhận hàng"}
           </h2>
           <BackBtn
-            step={roleDiary === "pending-receiver" ? "receive" : "history-list"}
+            step={lastStep === "receiver" ? "receive" : "history-list"}
           />
           {roleDiary !== "pending-receiver" ? (
             <>
@@ -1084,7 +1084,7 @@ export default function NoApiConsign({ productRecognition }) {
               </label>
             </div>
             <div className="flex justify-end w-full min-h-15 gap-4">
-              {roleDiary === "pending-receiver" && (
+              {lastStep === "receiver" && (
                 <Button
                   primary
                   outline

@@ -819,6 +819,7 @@ export default function useDiary(
             roleCodeRefetch();
             pendingRefetch();
             setStep(nextStep);
+            setLastStep('receive')
           })
           .catch(() => getToast("Mã otp của bạn không chính xác"));
         break;
