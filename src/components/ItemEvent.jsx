@@ -98,11 +98,11 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
         history = (
           <div className="px-4">
             <SortableTable
-            data={historyData}
-            config={historyConfig}
-            keyFn={(item) => item.itemLogId}
-            message="Bạn chưa tham gia sự kiện nào"
-          />
+              data={historyData}
+              config={historyConfig}
+              keyFn={(item) => item.itemLogId}
+              message="Bạn chưa tham gia sự kiện nào"
+            />
           </div>
         );
         setRenderedHistory(
@@ -172,18 +172,21 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               <ul className="space-y-2">
                 <li>
                   <p>
-                    Đơn vị vận chuyển: {historyDetail?.partyFullname || "không có"}
+                    Đơn vị vận chuyển:{" "}
+                    {historyDetail?.partyFullname || "không có"}
                   </p>
                 </li>
                 <li>
                   <p>
-                    Mã vận chuyển: {historyDetail?.descriptionItemLog || "không có"}
+                    Mã vận chuyển:{" "}
+                    {historyDetail?.descriptionItemLog || "không có"}
                   </p>
                 </li>
                 <li>
                   <p>
                     Thời gian ghi nhận:{" "}
-                    {getDateFromEpochTime(historyDetail?.timeReceive) || "không có"}
+                    {getDateFromEpochTime(historyDetail?.timeReceive) ||
+                      "không có"}
                   </p>
                 </li>
                 {/* <li>
@@ -213,16 +216,21 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       <p>Người gửi: {historyDetail?.sender}</p>
     </li> */}
                 <li>
-                  <p>Người nhận: {historyDetail?.partyFullname || "Không rõ"}</p>
+                  <p>
+                    Người nhận: {historyDetail?.partyFullname || "Không rõ"}
+                  </p>
                 </li>
                 <li>
                   <p>
                     Thời gian diễn ra:{" "}
-                    {getDateFromEpochTime(historyDetail?.timeReceive) || "không có"}
+                    {getDateFromEpochTime(historyDetail?.timeReceive) ||
+                      "không có"}
                   </p>
                 </li>
                 <li>
-                  <p>Ghi chú: {historyDetail?.descriptionItemLog || "Không rõ"}</p>
+                  <p>
+                    Ghi chú: {historyDetail?.descriptionItemLog || "Không rõ"}
+                  </p>
                 </li>
                 {/* <li>
       <p>Mô tả sự kiện: {historyDetail?.descriptionItemLog || "không có"}</p>
@@ -268,11 +276,27 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
 
   let historyModal = (
     <Modal onClose={handleClose}>
-      <div className='pt-4 pb-8'>
-      <h2 className="text-center text-2xl my-4">Lịch sử chỉnh sửa</h2>
-      {renderedHistory}
+      <div className="pt-4 pb-8">
+        <h2 className="text-center text-2xl my-4">Lịch sử chỉnh sửa</h2>
+        {renderedHistory}
       </div>
     </Modal>
+  );
+
+  let renderedCheckPoint = (
+    <div className="flex justify-end">
+      {eventData?.checkPoint ? (
+        <div className="flex justify-end items-center gap-2">
+          <FaCheck />
+          <p>Đủ Thông tin</p>
+        </div>
+      ) : (
+        <div className="flex justify-end items-center gap-2">
+          <ImCross />
+          <p>Không đủ Thông tin</p>
+        </div>
+      )}
+    </div>
   );
 
   if (isFetching) {
@@ -303,6 +327,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       if (eventData.eventType === "NHẬN HÀNG") {
         event = (
           <>
+            {renderedCheckPoint}
             <h2 className="mb-4 text-center font-bold">
               {eventData?.eventType}
             </h2>
@@ -329,14 +354,17 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               </li> */}
               <li>
                 <p className="mb-2">
-                  Địa điểm diễn ra: {`${eventData.addressInParty || 'Không ghi'}`}
+                  Địa điểm diễn ra:{" "}
+                  {`${eventData.addressInParty || "Không ghi"}`}
                 </p>
-                {eventData.addressInParty && <Map
-                  location={{
-                    lat: eventData.coordinateX,
-                    lng: eventData.coordinateY,
-                  }}
-                />}
+                {eventData.addressInParty && (
+                  <Map
+                    location={{
+                      lat: eventData.coordinateX,
+                      lng: eventData.coordinateY,
+                    }}
+                  />
+                )}
               </li>
             </ul>
           </>
@@ -344,6 +372,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       } else if (eventData.eventType === "VẬN CHUYỂN") {
         event = (
           <>
+            {renderedCheckPoint}
             <h2 className="mb-4 text-center font-bold">
               {eventData?.eventType}
             </h2>
@@ -382,6 +411,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       } else {
         event = (
           <>
+            {renderedCheckPoint}
             <h2 className="mb-4 text-center font-bold">
               {eventData?.eventType}
             </h2>
@@ -406,13 +436,17 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 </p>
               </li>
               <li>
-                <p className="mb-2">Nơi gửi: {`${eventData.addressInParty || 'Không ghi'}`}</p>
-                {eventData.addressInParty && <Map
-                  location={{
-                    lat: eventData.coordinateX,
-                    lng: eventData.coordinateY,
-                  }}
-                />}
+                <p className="mb-2">
+                  Nơi gửi: {`${eventData.addressInParty || "Không ghi"}`}
+                </p>
+                {eventData.addressInParty && (
+                  <Map
+                    location={{
+                      lat: eventData.coordinateX,
+                      lng: eventData.coordinateY,
+                    }}
+                  />
+                )}
               </li>
             </ul>
           </>

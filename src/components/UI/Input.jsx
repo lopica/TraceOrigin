@@ -7,12 +7,13 @@ import { vi } from 'date-fns/locale';
 let options;
 const Input = React.forwardRef(
   (
-    { label, tooltip, unit, error, data, addOnChange, required, ...props },
+    { label, tooltip, unit, error, data, addOnChange, required, now, ...props },
     ref
   ) => {
     const { type, placeholder, onBlur, name, className, disabled } = props;
     const inputRef = ref || useRef();
     const [selectedOption, setSelectedOption] = useState(null);
+    const currentDate = new Date();
 
     if (data && data?.length > 0) {
       options = data.map((option) => ({
@@ -177,12 +178,13 @@ const Input = React.forwardRef(
             control={props.control}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <DatePicker
-                ref={ref}
-                selected={value ? parseDate(value) : null}
+                // ref={ref}
+                selected={value ? parseDate(value) : now ? currentDate : null} 
                 onChange={(date) => onChange(date ? formatDate(date) : "")}
                 onBlur={onBlur}
                 placeholderText={placeholder}
                 dateFormat="dd/MM/yyyy"
+                maxDate={currentDate}
                 locale={vi} 
                 className="input input-bordered w-full h-12"
               />

@@ -10,7 +10,8 @@ export default function Layout() {
   const location = useLocation();
   const currentPath = location.pathname;
   const matchPaterm =
-    currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
+    // currentPath.startsWith("/manufacturer") || currentPath.startsWith("/admin");
+    currentPath.startsWith("/admin");
   const { show, content } = useSelector((state) => state.toast);
 
   return (

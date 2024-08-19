@@ -18,6 +18,7 @@ import useToast from "../hooks/use-toast";
 import { requireLogin, updateUser, useGetAllEventTypeQuery } from "../store";
 import { itemApi } from "../store/apis/itemApi";
 import { getEpochFromDate } from "../utils/getEpochFromDate.js";
+import { formatDate } from "../utils/formatDate.js";
 
 let renderedListItem;
 let eventTypeData;
@@ -48,7 +49,7 @@ export default function ItemList({ productId }) {
     productDetail: { productName },
   } = useSelector((state) => state.productSlice);
   const navigate = useNavigate();
-  const { control, register, watch, getValues, setValue, reset, handleSubmit } =
+  const { control, register, watch, getValues, setValue, reset, handleSubmit, formState: {errors} } =
     useForm({
       mode: "onTouched",
     });
@@ -210,6 +211,10 @@ export default function ItemList({ productId }) {
   //   if(inputSearch.eventId) refetch()
   // },[inputSearch])
 
+  useEffect(()=>{
+    if (watch('startDate') && !watch('endDate')) setValue("endDate", formatDate(new Date()))
+  },[watch('startDate'), watch('endDate')])
+
   useEffect(() => {
     if (error?.status === 401) {
       localStorage.setItem("lastUserId", user.userId);
@@ -302,8 +307,33 @@ export default function ItemList({ productId }) {
         onSubmit={handleSubmit(onSearch)}
       >
         <div className="flex gap-2">
-          <Input label="Từ" type="date" {...register("startDate")} control={control} />
-          <Input label="Đến" type="date" {...register("endDate")} control={control} />
+          <Input
+            label="Từ"
+            type="date"
+            {...register("startDate", {
+              validate: (value) => {
+                if (!value) return true;
+                const startDate = getEpochFromDate(value);
+                const endDate = getValues("endDate")
+                  ? getEpochFromDate(new Date(getValues("endDate")))
+                  : getEpochFromDate(new Date());
+                return (
+                  endDate >= startDate || "Ngày kết thúc phải sau ngày bắt đầu"
+                );
+              },
+            })}
+            control={control}
+            placeholder="Chọn ngày bắt đầu"
+            error={errors.startDate?.message}
+          />
+          <Input
+            label="Đến"
+            type="date"
+            {...register("endDate")}
+            control={control}
+            now
+            placeholder="Chọn ngày kết thúc"
+          />
         </div>
         <Input
           label="Trạng thái"

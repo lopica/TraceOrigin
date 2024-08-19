@@ -112,6 +112,7 @@ function ManuCertificateAdd() {
               label="Ngày cấp"
               type="date"
               control={control}
+              placeholder='Ngày cấp'
               {...register("issuanceDate", { 
                 required: "Bạn cần chọn ngày cấp",
                 validate: value => {

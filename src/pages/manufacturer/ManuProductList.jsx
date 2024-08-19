@@ -27,6 +27,8 @@ import {
 } from "../../store";
 import useUpdateImageFromApi from "../../hooks/use-update-Images-FromApi";
 import { GrPowerReset } from "react-icons/gr";
+import { getEpochFromDate } from "../../utils/getEpochFromDate";
+import { formatDate } from "../../utils/formatDate";
 
 let renderedProducts;
 function ManuProductList() {
@@ -60,7 +62,16 @@ function ManuProductList() {
     paginate,
     setCurrentPage,
   } = useProduct();
-  const { handleSubmit, register, control, setValue, reset } = useForm({
+  const {
+    handleSubmit,
+    register,
+    control,
+    getValues,
+    setValue,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm({
     mode: "onTouched",
     defaultValues: {
       nameSearch: "",
@@ -240,6 +251,12 @@ function ManuProductList() {
     }
   };
 
+  useEffect(()=>{
+    if (watch('startDate') && !watch('endDate')) setValue("endDate", formatDate(new Date()))
+    // console.log(new Date())
+    //update end date to current date
+  },[watch('startDate'), watch('endDate')])
+
   const addNewButton = (
     <div className="flex justify-center md:justify-start px-8">
       {user.status === 1 ? (
@@ -289,24 +306,39 @@ function ManuProductList() {
               label="Từ ngày"
               type="date"
               control={control}
-              {...register("startDate")}
+              {...register("startDate", {
+                validate: (value) => {
+                  if (!value) return true
+                  const startDate = getEpochFromDate(value);
+                  const endDate = getValues("endDate")
+                    ? getEpochFromDate(new Date(getValues("endDate")))
+                    : getEpochFromDate(new Date());
+                  return (
+                    endDate >= startDate ||
+                    "Ngày kết thúc phải sau ngày bắt đầu"
+                  );
+                },
+              })}
               placeholder="Chọn ngày bắt đầu"
               className="flex-1"
+              error={errors.startDate?.message}
             />
             <Input
               label="Đến ngày"
               type="date"
               control={control}
+              now
               {...register("endDate")}
               placeholder="Chọn ngày kết thúc"
               className="flex-1"
+              error={errors.endDate?.message}
             />
           </div>
           {/* sdsd  */}
           <div className="flex gap-1">
             <button
-            type="button"
-              className="flex items-center justify-center w-fit bg-gray-500 text-white font-bold px-3 rounded-lg hover:bg-gray-400"
+              type="button"
+              className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark"
               onClick={handleReset}
             >
               <FaUndoAlt size={20} />

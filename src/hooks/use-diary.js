@@ -834,8 +834,8 @@ export default function useDiary(
         address = receiveForm.province
           ? `${receiveForm.address}, ${ward}, ${district}, ${province}`
           : "";
-        console.log(updateReceiveId);
-        console.log(packReceiveId.receiveId);
+        console.log(address);
+        // console.log(packReceiveId.receiveId);
         const condition =
           !currentItemLogId || updateReceiveId === packReceiveId.receiveId;
         // updateReceiveId && updateReceiveId === packReceiveId.receiveId
@@ -859,15 +859,11 @@ export default function useDiary(
             })
           : (request = {
               location: {
-                address: receiveForm.address,
-                city: receiveForm.province
-                  ? receiveForm.province.split(",")[1]
-                  : "",
+                address,
+                city: province,
                 country: receiveForm.province ? "Việt Nam" : "",
-                district: receiveForm.district
-                  ? receiveForm.district.split(",")[1]
-                  : "",
-                ward: receiveForm.ward ? receiveForm.ward.split(",")[1] : "",
+                district,
+                ward,
                 coordinateX: coordinate[0],
                 coordinateY: coordinate[1],
               },
