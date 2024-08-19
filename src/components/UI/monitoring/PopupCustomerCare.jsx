@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useUpdateStatusMutation } from "../../../store/apis/customercareApi";
 import useToast from "../../../hooks/use-toast";
-import { FaTimesCircle, FaCheckCircle, FaTimes, FaExclamationTriangle } from "react-icons/fa";
+import {
+  FaTimesCircle,
+  FaCheckCircle,
+  FaTimes,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 
 const PopupCustomerCare = ({ isOpen, onClose, refetch, item }) => {
   if (!isOpen || !item) return null;
@@ -48,10 +53,18 @@ const PopupCustomerCare = ({ isOpen, onClose, refetch, item }) => {
         </button>
         <h2 className="text-lg font-bold mb-2">Chi tiết ghi chú</h2>
         <div className="mb-4">
-          <p><strong>Khách hàng: </strong>{item.customerName}</p>
-          <p><strong>Nội dung: </strong>{item.content}</p>
+          <p>
+            <strong>Khách hàng: </strong>
+            {item.customerName}
+          </p>
+          <p>
+            <strong>Nội dung: </strong>
+            {item.content}
+          </p>
           <p className="mb-2"></p>
-          <p className="text-gray-500">Thời gian: {new Date(item.timestamp).toLocaleString()}</p>
+          <p className="text-gray-500">
+            Thời gian: {new Date(item.timestamp).toLocaleString()}
+          </p>
         </div>
         {item.note ? (
           <div className="mt-4">
@@ -60,7 +73,9 @@ const PopupCustomerCare = ({ isOpen, onClose, refetch, item }) => {
           </div>
         ) : (
           <>
-            <div className="mt-4"><strong>Trả lời: </strong></div>
+            <div className="mt-4">
+              <strong>Trả lời: </strong>
+            </div>
             <textarea
               value={note}
               onChange={(e) => onNoteChange(e.target.value)}
@@ -75,15 +90,17 @@ const PopupCustomerCare = ({ isOpen, onClose, refetch, item }) => {
             <div className="mt-4 flex justify-end space-x-2">
               <button
                 onClick={() => onConfirm(item.careId, 1)}
-                className="p-0.5 rounded-full bg-green-500 hover:bg-green-400 text-white"
+                className="flex items-center p-1 rounded-full bg-green-500 hover:bg-green-400 text-white space-x-2"
               >
                 <FaCheckCircle size={24} />
+                <span>Xử lý thành công</span>
               </button>
               <button
                 onClick={() => onConfirm(item.careId, 2)}
-                className="p-0.5 rounded-full bg-red-500 hover:bg-red-400 text-white"
+                className="flex items-center p-1 rounded-full bg-red-500 hover:bg-red-400 text-white space-x-2"
               >
-                <FaTimesCircle size={24} />
+                <FaCheckCircle size={24} />
+                <span>Xử lý thất bại</span>
               </button>
             </div>
           </>

@@ -302,16 +302,15 @@ function ManuProductList() {
               className="flex-1"
             />
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-1">
             <button
             type="button"
-              className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark"
+              className="flex items-center justify-center w-fit bg-gray-500 text-white font-bold px-3 rounded-lg hover:bg-gray-400"
               onClick={handleReset}
             >
-              <FaUndoAlt size={20} className="mr-2" />
-              Đặt lại
+              <FaUndoAlt size={20} />
             </button>
-            <button className="flex items-center justify-center w-full mt-4 bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark">
+            <button className="flex items-center justify-center w-full  bg-color1 text-white font-bold py-2 px-4 rounded-lg hover:bg-color1Dark">
               <FaSearch size={20} className="mr-2" />
               Tìm kiếm
             </button>
