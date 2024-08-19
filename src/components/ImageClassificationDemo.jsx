@@ -1,5 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
-import { memo, useEffect, useRef, useState,useCallback  } from "react";
+import { memo, useEffect, useRef, useState, useCallback } from "react";
 import { FaCamera, FaInfoCircle, FaSpinner, FaExclamationTriangle, FaImage } from "react-icons/fa";
 import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
@@ -80,16 +80,16 @@ const ImageClassificationDemo = () => {
   // Handle image file change
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
-    
+
     if (file && file.type.startsWith("image/")) {
       // Create a new URL object for the image
       setImageUrl(URL.createObjectURL(file));
       setImageLoaded(false);
-  
+
       // Prepare FormData for the request
       const formData = new FormData();
       formData.append("image", file);
-  
+
       try {
         // Add cache-busting parameter to the URL
         const response = await axios.post(
@@ -103,7 +103,7 @@ const ImageClassificationDemo = () => {
         );
         // Check response data
         console.log('Upload response:', response.data);
-  
+
         const newProductId = response.data.productName;
         setPredictionResult(response.data.productName);
         setProductId(newProductId); // Update productId
@@ -119,7 +119,7 @@ const ImageClassificationDemo = () => {
     event.target.value = null;
 
   };
-  
+
 
   // Predict video frame
   const predictVideoFrame = async () => {
@@ -308,7 +308,7 @@ const ImageClassificationDemo = () => {
                 setProductId={setProductId}
                 setConfidence={setConfidence}
                 setImageLoaded={setImageLoaded}
-                
+
               />
               <div className="mt-8 pl-4">
                 <h3 className="">Lịch sử tìm kiếm</h3>
@@ -358,23 +358,23 @@ const ImageClassificationDemo = () => {
                 {!imageLoaded ? (
                   <div className="flex flex-col justify-center items-center">
 
-                  <h2 className="text-xl font-bold mt-16 animate-scale-fade">
-                          Đang tìm kiếm sản phẩm...
-                        </h2>
+                    <h2 className="text-xl font-bold mt-16 animate-scale-fade">
+                      Đang tìm kiếm sản phẩm...
+                    </h2>
                   </div>
                 ) : (
                   <>
-                    <h3 className="text-center text-3xl mb-6">
-                      {product?.productName}
-                    </h3>
 
-                    {product?.productName ? (
+                    {confidence > 70 && product?.productName ? (
                       <>
+                        <h3 className="text-center text-3xl mb-6">
+                          {product?.productName}
+                        </h3>
                         <div className="flex justify-between max-w-md mx-auto">
                           <div className="flex">
                             <div className="flex flex-col">
                               <div className="stat-title">Độ chính xác</div>
-                              <div className="font-medium">{confidence}%</div>
+                              <div className="font-medium">{confidence.toFixed(2)}%</div>
                             </div>
                           </div>
                         </div>
