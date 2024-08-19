@@ -26,7 +26,7 @@ const itemSlice = createSlice({
     cancelForm: {},
     consignForm: {},
     receiveForm: {},
-    updateConsignForm: {},
+    updatedConsignForm: {},
   },
   reducers: {
     updateItemDetail(state, action) {
@@ -52,7 +52,7 @@ const itemSlice = createSlice({
       state.receiveForm = { ...action.payload };
     },
     updateUpdateConsignForm(state, action) {
-      state.updateConsignForm = { ...action.payload };
+      state.updatedConsignForm = { ...action.payload };
     },
   },
 });

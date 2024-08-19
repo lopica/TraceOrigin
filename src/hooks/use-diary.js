@@ -9,7 +9,7 @@ import {
   useAddReceiveLocationMutation,
   useCheckConsignRoleQuery,
   useCheckOTPMutation,
-  useCheckPartyFirstQuery,
+  // useCheckPartyFirstQuery,
   useConsignMutation,
   useCreateTransportEventMutation,
   useEndItemLineMutation,
@@ -49,7 +49,7 @@ export default function useDiary(
     cancelForm,
     consignForm,
     receiveForm,
-    updateConsignForm,
+    updatedConsignForm,
   } = useSelector((state) => state.itemSlice);
   const { coordinate, verifyAddress } = useSelector(
     (state) => state.locationData
@@ -910,18 +910,17 @@ export default function useDiary(
         break;
       case "update-consign":
         //get data from state
-        const updateConsignLocation = updateConsignForm;
-        ward = updateConsignForm.ward
-          ? updateConsignForm.ward.split(",")[1]
+        ward = updatedConsignForm.ward
+          ? updatedConsignForm.ward.split(",")[1]
           : "";
-        district = updateConsignForm.district
-          ? updateConsignForm.district.split(",")[1]
+        district = updatedConsignForm.district
+          ? updatedConsignForm.district.split(",")[1]
           : "";
-        province = updateConsignForm.province
-          ? updateConsignForm.province.split(",")[1]
+        province = updatedConsignForm.province
+          ? updatedConsignForm.province.split(",")[1]
           : "";
-        address = updateConsignForm.province
-          ? `${updateConsignForm.address}, ${ward}, ${district}, ${province}`
+        address = updatedConsignForm.province
+          ? `${updatedConsignForm.address}, ${ward}, ${district}, ${province}`
           : "";
         //create request
         request = {
