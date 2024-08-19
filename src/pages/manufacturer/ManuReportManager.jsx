@@ -28,6 +28,7 @@ import Pagination from "../../components/UI/Pagination";
 import InputTextModal from "../../components/UI/InputTextModal";
 import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
+import { ImFilesEmpty } from "react-icons/im";
 
 
 const statusOptions = [
@@ -208,7 +209,7 @@ function ManuReportManager() {
   if (data.content.length < 1) {
     return (
       <div className="flex flex-col items-center justify-center h-[92vh]">
-      <FaExclamationTriangle className="text-yellow-500 text-4xl mb-4" />
+      <ImFilesEmpty className="text-4xl mb-4" />
         <h2 className="text-xl font-bold mb-4">Không có phản hồi</h2>
         <p className="text-gray-600">
         Bạn chưa có phản hồi nào về các sản phẩm mà bạn đã đăng ký từ người dùng.
@@ -439,7 +440,7 @@ function ManuReportManager() {
               className="text-xl font-semibold mb-2 flex justify-between items-center cursor-pointer"
               onClick={toggleInfo}
             >
-              Thông tin{" "}
+              Thông tin
               <span>{showInfo ? <FaChevronUp /> : <FaChevronDown />}</span>
             </h3>
             {showInfo && (

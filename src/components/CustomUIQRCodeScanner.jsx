@@ -4,7 +4,7 @@ import { FaCamera } from "react-icons/fa";
 import { IoVideocam } from "react-icons/io5";
 import Button from "./UI/Button";
 import { IoIosArrowBack } from "react-icons/io";
-import { FaPowerOff } from "react-icons/fa";
+import { FaPowerOff, FaQrcode } from "react-icons/fa";
 import Dropzone from "./Dropzone";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +30,7 @@ const QRCodeScanner = () => {
   const { qrList } = useSelector((state) => state.historySearchSlice);
   const dispatch = useDispatch();
   const { show, handleFlip, handleClose: turnOff } = useShow(false);
-  const {show: cameraOn, handleOpen, handleClose} = useShow()
+  const { show: cameraOn, handleOpen, handleClose } = useShow();
   const {
     show: permission,
     handleOpen: accept,
@@ -40,7 +40,7 @@ const QRCodeScanner = () => {
   const [isCameraLoading, setIsCameraLoading] = useState(false);
 
   const handleFileUpload = (event) => {
-    console.log("AAA")
+    console.log("AAA");
     const file = event.target.files[0];
     if (file && file.type.startsWith("image/")) {
       const imageSrc = URL.createObjectURL(file);
@@ -159,8 +159,9 @@ const QRCodeScanner = () => {
                 handleSuccess(decodedText);
               }
             )
-            .then(() => {setIsCameraLoading(false)
-              handleOpen()
+            .then(() => {
+              setIsCameraLoading(false);
+              handleOpen();
             });
         } else {
           console.log("phai vo day");
@@ -183,18 +184,21 @@ const QRCodeScanner = () => {
 
   return (
     <section>
-      <h2 className="text-center text-3xl mb-8">QR Code Scanner</h2>
+      <h2 className="text-center text-3xl mb-8 flex items-center justify-center">
+        <FaQrcode className="mr-2" /> 
+        Tìm kiếm sản phẩm bằng QR code
+      </h2>
       {step === "choose" && (
         <div className="flex justify-around mt-4 mx-auto max-w-2xl">
           <div
-            className="bg-slate-200 border h-40 w-40 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
+            className="bg-slate-200 border h-40 w-40 md:w-60 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
             onClick={() => setStep("image")}
           >
             <FaCamera className="w-14 h-14" />
             <p className="text-center">Chọn ảnh</p>
           </div>
           <div
-            className="bg-slate-200 border h-40 w-40 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
+            className="bg-slate-200 border h-40 w-40 md:w-60 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
             onClick={() => setStep("video")}
           >
             <IoVideocam className="w-14 h-14" />

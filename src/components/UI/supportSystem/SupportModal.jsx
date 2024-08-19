@@ -40,7 +40,7 @@ const SupportModal = ({ isOpen, onClose, onSubmit }) => {
         >
           &times;
         </button>
-        <h2 className="text-xl mb-4">Thêm Hỗ Trợ</h2>
+        <h2 className="text-xl mb-4">Thêm hỗ trợ</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="title" className="block mb-1">Title:</label>
@@ -86,9 +86,9 @@ const SupportModal = ({ isOpen, onClose, onSubmit }) => {
           </div>
           <button
             type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="bg-green-500 w-full text-white px-4 py-2 rounded"
           >
-            Gửi
+            Thêm yêu cầu
           </button>
         </form>
       </div>

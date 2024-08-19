@@ -90,7 +90,7 @@ function ManuSupportSystem() {
     };
   return (
 <div className="flex flex-col p-4">
-  <div className="flex justify-end mb-4">
+  <div className="flex justify-end pt-2">
     <button
       onClick={openModal}
       className="bg-blue-500 text-white px-4 py-2 rounded"

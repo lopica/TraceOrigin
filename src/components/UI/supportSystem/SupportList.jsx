@@ -1,8 +1,9 @@
 import { support } from "jszip";
 import React, { useState } from "react";
-import { FaChevronDown,FaExclamationTriangle, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa"; // Import icon bạn muốn sử dụng
 import { itemSliceReducer } from "../../../store/slices/itemSlice";
+import { ImFilesEmpty } from "react-icons/im";
 
 const SupportList = ({ items = [], onSubmit }) => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -49,10 +50,10 @@ const SupportList = ({ items = [], onSubmit }) => {
     <div className="overflow-x-auto w-full">
     {!items ? 
       (<div className="flex flex-col items-center text-center justify-center h-[73vh]">
-      <FaExclamationTriangle className="text-yellow-500 text-4xl mb-4" />
-        <h2 className="text-xl font-bold mb-4">Không có phản hồi</h2>
+      <ImFilesEmpty className="text-4xl mb-4" />
+        <h2 className="text-xl font-bold mb-4">Không có yêu cầu</h2>
         <p className="text-gray-600">
-        Bạn chưa có phản hồi nào về các sản phẩm mà bạn đã đăng ký từ người dùng.
+        Hãy thêm yêu cầu hỗ trợ hệ thống để chúng tôi có thể giúp bạn.
         </p>
       </div>)
     :

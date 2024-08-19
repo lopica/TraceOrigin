@@ -16,11 +16,10 @@ import {
   useUpdateStatusMutation,
 } from "../../store/apis/userApi";
 import useUser from "../../hooks/use-user";
-import {
-  FaExclamationTriangle,
-  FaCertificate,
-} from "react-icons/fa";
-import { AiOutlinePlus } from 'react-icons/ai'; 
+import { FaCertificate, } from "react-icons/fa";
+import { ImFilesEmpty } from "react-icons/im";
+
+import { AiOutlinePlus } from "react-icons/ai";
 function ManuCertificateList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
@@ -165,33 +164,17 @@ function ManuCertificateList() {
     </div>
   );
 
-  const addNewButton = (userStatus === 7 || userStatus === 0) && (
-   !certificateData ? (
-      <div className="flex flex-col items-center text-center justify-center h-[73vh]">
-      <FaCertificate className="text-blue-500 text-4xl mb-4" />
-
-      <h2 className="text-xl font-bold mb-2">Thêm Chứng chỉ</h2>
-      <p  className="text-gray-600 mb-2">
-        Bạn cần thêm những chứng chỉ liên quan để đảm bảo về chất lượng  <br /> và xác
-        minh nguồn gốc sản phẩm của mình.
-      </p>
-      <Link to="add">
-        <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
-          <AiOutlinePlus size={24} className="mr-2"/>{" "}
-          <span >Thêm mới chứng chỉ</span>
+  const addNewButton =
+    (userStatus === 7 || userStatus === 0) &&
+(
+      <Link to="add" className="w-fit">
+        <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-1.5 rounded-md flex items-center text-white">
+          <AiOutlinePlus size={25} className="mr-2" />
+          <span>Thêm mới chứng chỉ</span>
         </button>
       </Link>
-      </div>
-    ) :
-    (
-      <Link to="add" className="w-full">
-        <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-2 rounded-md flex items-center text-white">
-          <AiOutlinePlus size={24} className="mr-2"/>{" "}
-          <span >Thêm mới chứng chỉ</span>
-        </button>
-      </Link>
-    )
-  );
+    
+    );
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
@@ -205,17 +188,29 @@ function ManuCertificateList() {
         className="flex items-end flex-col justify-between gap-2 mx-auto 
        md:flex-row md:justify-start md:gap-2 md:items-end"
       >
-        <div className="flex justify-center md:justify-start px-8">
+        {/* <div className="flex justify-center md:justify-start px-8">
           {addNewButton}
-        </div>
+        </div> */}
       </div>
-      <div className="flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
-          {renderedCertificate}
-        </div>
+      <div className="flex bg-white p-4 mx-4 rounded-box justify-center">
+        {isCertificateError ? (
+          <div className="flex flex-col items-center text-center justify-center">
+            <ImFilesEmpty className=" text-4xl mb-4" />
+            <h2 className="text-xl font-bold mb-4">Không chứng chỉ</h2>
+            <p className="text-gray-600 mb-2">
+          Bạn cần thêm những chứng chỉ liên quan để đảm bảo về chất lượng <br />
+          và xác minh nguồn gốc sản phẩm của mình.
+        </p>
+          </div>
+        ) : (
+          <div className="grid  grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
+            {renderedCertificate}
+          </div>
+        )}
       </div>
       <div className="flex justify-between mr-4 px-8">
-        <div>
+        <div className="flex justify-center space-x-4">
+          {addNewButton}
           {sendRequestButton}
           {abortButton}
         </div>

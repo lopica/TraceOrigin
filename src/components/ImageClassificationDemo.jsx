@@ -274,14 +274,14 @@ const ImageClassificationDemo = () => {
       {step === "choose" && (
         <div className="flex justify-around mt-4 mx-auto max-w-2xl">
           <div
-            className="bg-slate-200 border h-40 w-40 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
+            className="bg-slate-200 border h-40 w-40 md:w-60 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
             onClick={() => setStep("image")}
           >
             <FaCamera className="w-14 h-14" />
             <p className="text-center">Chọn ảnh</p>
           </div>
           <div
-            className="bg-slate-200 border h-40 w-40 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
+            className="bg-slate-200 border h-40 w-40 md:w-60 rounded-md hover:bg-slate-400 flex flex-col justify-center items-center p-4 cursor-pointer"
             onClick={() => setStep("video")}
           >
             <IoVideocam className="w-14 h-14" />
