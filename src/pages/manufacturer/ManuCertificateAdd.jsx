@@ -27,6 +27,7 @@ function ManuCertificateAdd() {
     trigger,
     getValues,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
@@ -110,6 +111,7 @@ function ManuCertificateAdd() {
             <Input
               label="Ngày cấp"
               type="date"
+              control={control}
               {...register("issuanceDate", { 
                 required: "Bạn cần chọn ngày cấp",
                 validate: value => {
