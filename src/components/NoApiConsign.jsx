@@ -571,7 +571,7 @@ export default function NoApiConsign({ productRecognition }) {
                   onChange={(e) => setIsChecked(e.target.checked)}
                 />
                 <label htmlFor="checkbox" className="hover:cursor-pointer">
-                  Thêm thông tin vận chuyển
+                  Thông tin vận chuyển
                 </label>
               </div>
               {isChecked && (
