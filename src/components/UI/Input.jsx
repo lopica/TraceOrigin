@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import { Controller } from "react-hook-form";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
+import { vi } from 'date-fns/locale';
 let options;
 const Input = React.forwardRef(
   (
@@ -182,6 +183,7 @@ const Input = React.forwardRef(
                 onBlur={onBlur}
                 placeholderText={placeholder}
                 dateFormat="dd/MM/yyyy"
+                locale={vi} 
                 className="input input-bordered w-full h-12"
               />
             )}

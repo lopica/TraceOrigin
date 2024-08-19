@@ -93,7 +93,9 @@ export default function useProduct() {
     }
   }, [isSuccess, isError, data]);
 
-  useEffect(()=>{},[])
+  useEffect(()=>{
+    if (!isAuthenticated) dispatch(productApi.util.resetApiState());
+  },[isAuthenticated])
 
   useEffect(()=>{
     if (user?.userId) {
