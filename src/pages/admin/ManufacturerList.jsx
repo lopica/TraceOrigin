@@ -9,13 +9,9 @@ import { useForm } from "react-hook-form";
 import Button from "../../components/UI/Button";
 import { useGetAllDistinctCityQuery } from "../../store/apis/mapApi";
 import useToast from "../../hooks/use-toast";
-<<<<<<< HEAD
-import { useSelector } from "react-redux";
 import ShowInfoManufacture from "./ShowInfoManufacture";
-=======
 import { useDispatch, useSelector } from "react-redux";
 import { requireLogin, updateUser } from "../../store";
->>>>>>> 4d9908d (add guideline new user certificate)
 
 function ManufacturerList() {
   const navigate = useNavigate();

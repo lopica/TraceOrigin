@@ -114,7 +114,9 @@ export default function AddressInputGroup({
     <div>
       <div className="flex mt-2">
         {message ? (
-          message
+          <p className={
+              required && 'after:content-["*"] after:ml-0.5 after:text-red-500'
+            }>{message}</p>
         ) : (
           <p
             className={

@@ -108,7 +108,7 @@ export default function AddItem() {
       >
         <h1 className="text-center text-2xl mb-4">Tạo nhật ký</h1>
         <Input
-          label="Số lượng sản phẩm"
+          label="Số nhật ký tạo"
           type="number"
           required
           unit="cái"
@@ -134,6 +134,7 @@ export default function AddItem() {
           control={control}
           required
           watch={watch}
+          message='Địa chỉ sản xuất'
         />
         <Input
           label="Mô tả tình trạng sản phẩm hiện tại"

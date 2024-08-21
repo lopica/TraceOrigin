@@ -105,7 +105,8 @@ export default function ItemList({ productId }) {
         saveAs(content, `${productName}.zip`);
       });
     } else {
-      getToast("Bạn hãy chọn ít nhất 1 mã để tải xuống");
+      if (itemsData.length === 0) getToast("Bạn chưa có nhật ký nào để tạo mã QR");
+      else getToast("Bạn hãy chọn ít nhất 1 nhật ký để tải xuống");
     }
   };
   
