@@ -134,6 +134,7 @@ function Wizzard({
                     handleWizzard={handleWizzard}
                     isLoading={isLoading}
                     reset={reset}
+                    isEdit={isEdit}
                   />
                 </div>
               </div>
@@ -185,6 +186,7 @@ Wizzard.Action = ({
   handleWizzard,
   isLoading,
   reset,
+  isEdit
 }) => {
   if (currentStep === 0) {
     return (
@@ -217,7 +219,7 @@ Wizzard.Action = ({
             isLoading={isLoading}
             onClick={(e) => handleWizzard("submit", e)}
           >
-            Đăng ký
+          {isEdit ? "Cập nhật" : "Đăng ký"}
           </Button>
         </div>
       </div>

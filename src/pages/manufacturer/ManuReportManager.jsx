@@ -74,12 +74,12 @@ const typeOptions = [
 
 Modal.setAppElement("#root");
 
-function ManuReportManager() {
+function ManuReportManager({reportTo}) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(6);
-  const userIdList = useSelector((state) => state.userSlice.userId);
+  const userIdList = reportTo !== null ? reportTo : useSelector((state) => state.userSlice.userId);
   const { list: products } = useSelector((state) => state.productSlice);
 
   const { data, error, isLoading, refetch } = useGetListReportsQuery({
@@ -132,7 +132,10 @@ function ManuReportManager() {
 
   const handleIssueClick = (issue) => {
     setSelectedIssue(issue);
-    navigate(`/manufacturer/reportManager/${issue.id}`);
+    if( reportTo === null)
+    {
+      navigate(`/manufacturer/reportManager/${issue.id}`);
+    }
   };
 
   const handleStatusChange = (event) => {

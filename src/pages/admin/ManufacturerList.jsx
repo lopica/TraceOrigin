@@ -10,6 +10,7 @@ import Button from "../../components/UI/Button";
 import { useGetAllDistinctCityQuery } from "../../store/apis/mapApi";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
+import ShowInfoManufacture from "./ShowInfoManufacture";
 
 function ManufacturerList() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function ManufacturerList() {
   const [page, setPage] = useState(0);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [modalContent, setModalContent] = useState({
     header: "",
@@ -85,10 +87,12 @@ function ManufacturerList() {
   }, [isError, isFetching]);
 
   const handleUserClick = (userId) => {
+    setIsInfoModalOpen(true);
     setSelectedUserId(userId);
   };
 
   const handleCloseModal = () => {
+    setIsInfoModalOpen(false);
     setSelectedUserId(null);
   };
 
@@ -184,17 +188,14 @@ function ManufacturerList() {
         {users.map((user, index) => (
           <tr key={user.userId} className="hover">
             <td>{index + 1 + page * 10}</td>
-            <td>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleUserClick(user.userId);
-                }}
-              >
-                {user.name}
-              </a>
+            <td className="text-blue-500 underline cursor-pointer" 
+              onClick={(e) => {
+                e.preventDefault();
+                handleUserClick(user.userId);
+              }}>
+              {user.orgName || "N/A"}
             </td>
+            <td>{user.name}</td>
             <td>{user.email}</td>
             <td>{user.city}</td>
             <td>{statusMap(user)}</td>
@@ -321,7 +322,8 @@ function ManufacturerList() {
         <thead>
           <tr className="text-black">
             <th className="p-4 border-b">#</th>
-            <th className="p-4 border-b">Tên</th>
+            <th className="p-4 border-b">Tên công ty</th>
+            <th className="p-4 border-b">Người Đại Diện</th>
             <th className="p-4 border-b">Email</th>
             <th className="p-4 border-b">Thành Phố</th>
             <th className="p-4 border-b">Trạng Thái</th>
@@ -332,7 +334,7 @@ function ManufacturerList() {
       <div className="flex justify-end mt-4">
         <Pagination active={page} totalPages={data?.totalPages || 0} onPageChange={handlePageChange} />
       </div>
-      {selectedUserId && <ProfileModal userId={selectedUserId} closeModal={handleCloseModal} />}
+      {selectedUserId && <ShowInfoManufacture id={selectedUserId} onClose={handleCloseModal} isOpen={isInfoModalOpen} />}
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
         onClose={closeModal}
