@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
-import { FaPlus, FaSearch, FaUndoAlt } from "react-icons/fa";
+import { FaPlus, FaSearch, FaUndoAlt, FaLock} from "react-icons/fa";
 import useCategoryEdit from "../../hooks/use-category-Edit";
 import useToast from "../../hooks/use-toast";
 import ManuProductEdit from "../manufacturer/ManuProductEdit";
@@ -281,7 +281,7 @@ function ManuProductList() {
   );
 
   return (
-    <div className="flex flex-col md:flex-row p-4">
+<div className={`relative flex flex-col md:flex-row p-4 ${user.status === 2 ? ' pointer-events-none' : ''}`}>
       <div className="md:w-1/4 p-4">
         <h2 className="text-lg font-semibold mb-4">Bộ lọc</h2>
 
@@ -388,7 +388,20 @@ function ManuProductList() {
           isLoading={isLoadingModal}
         />
       </div>
+      {user.status === 2 && (
+    <div className="absolute inset-0 flex items-center justify-center h-[92vh] bg-gray-800 bg-opacity-75">
+    <div className="flex flex-col items-center text-center justify-center h-[92vh]">
+      <FaLock className="text-red-600 text-4xl mb-4" />
+        <h2 className="text-xl font-bold mb-4 text-white">Tài khoản bị khoá</h2>
+        <p className="text-center text-gray-300">
+        Tài khoản của bạn đã bị khoá do một vài lý do, hãy gửi yêu cầu đến hỗ trợ hệ thống 
+        <br/>
+        để chúng tôi có thể cung cấp thêm thông tin cho bạn.
+        </p>
+      </div>
     </div>
+  )}
+</div>
   );
 }
 

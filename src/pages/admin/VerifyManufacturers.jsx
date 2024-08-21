@@ -8,6 +8,7 @@ import {  useNavigate } from "react-router-dom";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
 import { FaExclamationTriangle, } from "react-icons/fa";
+import { ImFilesEmpty } from "react-icons/im";
 
 function VerifyManufacturer() {
   const navigate = useNavigate();
@@ -157,7 +158,7 @@ function VerifyManufacturer() {
     <div className="table-responsive p-5">
         {data?.content.length === 0 ? 
       (<div className="flex flex-col items-center text-center justify-center h-[73vh]">
-      <FaExclamationTriangle className="text-yellow-500 text-4xl mb-4" />
+      <ImFilesEmpty className="text-4xl mb-4" />
         <h2 className="text-xl font-bold mb-4">Không có yêu cầu xác minh</h2>
         <p className="text-gray-600">
         Hiện tại hệ thống không nhận được bất kì thông báo nào cho việt xác minh nhà sản xuất.
