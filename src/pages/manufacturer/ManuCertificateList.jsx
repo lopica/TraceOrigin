@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/UI/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useGetListCertificateByManuIdQuery,
   useSendRequestVerifyCertMutation,
@@ -16,13 +16,15 @@ import {
   useUpdateStatusMutation,
 } from "../../store/apis/userApi";
 import useUser from "../../hooks/use-user";
-import { FaCertificate, } from "react-icons/fa";
+import { FaCertificate } from "react-icons/fa";
 import { ImFilesEmpty } from "react-icons/im";
 
 import { AiOutlinePlus } from "react-icons/ai";
+import { setRun, setStepIndex, setStepIndexNext, setTourActive } from "../../store";
 function ManuCertificateList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
+  const dispatch = useDispatch();
   const userIdList = useSelector((state) => state.userSlice.userId);
   const certificateSlice = useSelector((state) => state.certificateSlice);
   const { data: userId, refetch: refetchUserDetail } =
@@ -74,6 +76,26 @@ function ManuCertificateList() {
       navigate("/portal/login");
     }
   }, [isCertificateFetching, isAuthenticated, getToast, navigate]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(setRun(true));
+      dispatch(setStepIndexNext());
+    }, 600);
+  }, []);
+
+  useEffect(()=>{
+    console.log(certificateData)
+    console.log(isCertificateFetching)
+    console.log(isCertificateError)
+    if (!isCertificateFetching && !isCertificateError && isAuthenticated) {
+      if (certificateData?.length == 0) {
+        setTimeout(() => {
+          dispatch(setRun(false));
+        }, 600);
+      } 
+    }
+  },[isCertificateFetching, isCertificateError])
 
   const handleRequestVerifyCert = async () => {
     try {
@@ -150,7 +172,7 @@ function ManuCertificateList() {
 
   const sendRequestButton = userStatus === 7 && (
     <div onClick={handleRequestVerifyCert}>
-      <Button primary rounded isLoading={isSendingRequest}>
+      <Button primary rounded isLoading={isSendingRequest} id='verify-certificate'>
         Yêu cầu xác thực
       </Button>
     </div>
@@ -164,17 +186,14 @@ function ManuCertificateList() {
     </div>
   );
 
-  const addNewButton =
-    (userStatus === 7 || userStatus === 0) &&
-(
-      <Link to="add" className="w-fit">
-        <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-1.5 rounded-md flex items-center text-white">
-          <AiOutlinePlus size={25} className="mr-2" />
-          <span>Thêm mới chứng chỉ</span>
-        </button>
-      </Link>
-    
-    );
+  const addNewButton = (userStatus === 7 || userStatus === 0) && (
+    <Link to="add" className="w-fit" id="add-ceritficate">
+      <button className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 py-1.5 rounded-md flex items-center text-white">
+        <AiOutlinePlus size={25} className="mr-2" />
+        <span>Thêm mới chứng chỉ</span>
+      </button>
+    </Link>
+  );
 
   return (
     <div className="flex flex-col gap-8 justify-between py-4">
@@ -198,9 +217,10 @@ function ManuCertificateList() {
             <ImFilesEmpty className=" text-4xl mb-4" />
             <h2 className="text-xl font-bold mb-4">Không chứng chỉ</h2>
             <p className="text-gray-600 mb-2">
-          Bạn cần thêm những chứng chỉ liên quan để đảm bảo về chất lượng <br />
-          và xác minh nguồn gốc sản phẩm của mình.
-        </p>
+              Bạn cần thêm những chứng chỉ liên quan để đảm bảo về chất lượng{" "}
+              <br />
+              và xác minh nguồn gốc sản phẩm của mình.
+            </p>
           </div>
         ) : (
           <div className="grid  grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">

@@ -76,7 +76,7 @@ export default function AddItem() {
     addItem(request)
       .unwrap()
       .then((res) => {
-        console.log('vo day')
+        console.log("vo day");
         dispatch(updateCoordinate([]));
         setValue("province", "");
         setValue("district", "");
@@ -160,7 +160,12 @@ export default function AddItem() {
 
   return (
     <>
-      <Button primary onClick={handleClick} rounded>
+      <Button
+        primary
+        onClick={handleClick}
+        rounded
+        className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+      >
         Tạo mới
       </Button>
       {showModal && modal}

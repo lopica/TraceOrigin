@@ -28,7 +28,7 @@ function Avatar() {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   async function handleLogout() {
-    localStorage.setItem("lastUserId", data.userId);
+    if (data?.userId) localStorage.setItem("lastUserId", data?.userId);
     await logout().then(() => {
       getToast("Đăng xuất thành công");
     });

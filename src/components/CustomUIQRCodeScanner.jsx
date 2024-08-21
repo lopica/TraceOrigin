@@ -40,7 +40,6 @@ const QRCodeScanner = () => {
   const [isCameraLoading, setIsCameraLoading] = useState(false);
 
   const handleFileUpload = (event) => {
-    console.log("AAA");
     const file = event.target.files[0];
     if (file && file.type.startsWith("image/")) {
       const imageSrc = URL.createObjectURL(file);
@@ -80,14 +79,13 @@ const QRCodeScanner = () => {
 
   const checkCameraAvailability = async () => {
     try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoInputs = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
-      // console.log(videoInputs);
-      setListCamera(
-        videoInputs.map((device) => ({ id: device.id, label: device.label }))
-      );
+      Html5Qrcode.getCameras().then((devices) => {
+        console.log(devices);
+        setListCamera(
+          devices.map((device) => ({ id: device.id, label: device.label }))
+        );
+      });
+
       // console.log("vo day");
     } catch (error) {}
   };
@@ -185,7 +183,7 @@ const QRCodeScanner = () => {
   return (
     <section>
       <h2 className="text-center text-3xl mb-8 flex items-center justify-center">
-        <FaQrcode className="mr-2" /> 
+        <FaQrcode className="mr-2" />
         Tìm kiếm sản phẩm bằng QR code
       </h2>
       {step === "choose" && (

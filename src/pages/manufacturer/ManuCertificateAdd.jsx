@@ -92,17 +92,17 @@ function ManuCertificateAdd() {
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-2">
               <Input
-                label="Tên chứng chỉ"
+                label="Tên chứng chỉ/giấy phép"
                 type="text"
                 placeholder="Chứng nhận an toàn vệ sinh"
                 {...register("name", {
                   required: "Bạn cần điền tên chứng chỉ",
                   minLength: {
                       value: 3,
-                      message: "Tên chứng chỉ phải có ít nhất 3 kí tựu"
+                      message: "Tên chứng chỉ phải có ít nhất 3 kí tự"
                   },
                   maxLength: {
-                      value: 500,
+                      value: 50,
                       message: "Chứng chỉ không được vượt quá 500 ký tự"
                   }})}
                 error={errors.name?.message}

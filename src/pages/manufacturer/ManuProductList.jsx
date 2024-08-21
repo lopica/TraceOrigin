@@ -283,8 +283,7 @@ function ManuProductList() {
   return (
 <div className={`relative flex flex-col md:flex-row p-4 ${user.status === 2 ? ' pointer-events-none' : ''}`}>
       <div className="md:w-1/4 p-4">
-        <h2 className="text-lg font-semibold mb-4">Bộ lọc</h2>
-
+        <h2 className="text-lg font-semibold mb-4" id="test">Bộ lọc</h2>
         <form onKeyDown={handleKeyDown} onSubmit={handleSubmit(searchHandler)}>
           <Input
             label="Tên sản phẩm"

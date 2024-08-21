@@ -84,14 +84,23 @@ export default function ItemList({ productId }) {
             className="mx-auto"
           />
         );
-
-        const svgBlob = new Blob([svgString], {
-          type: "image/svg+xml;charset=utf-8",
-        });
-
+        
+        // Add xmlns attribute to the SVG string
+        const svgWithNamespace = svgString.replace(
+          /<svg /,
+          '<svg xmlns="http://www.w3.org/2000/svg" '
+        );
+  
+        // console.log(`SVG with xmlns for item ${item}:`, svgWithNamespace);
+        
+        // Create a Blob from the modified SVG string with the correct MIME type
+        const svgBlob = new Blob([svgWithNamespace], { type: "image/svg+xml" });
+        // console.log(`Blob for item ${item}:`, svgBlob);
+  
+        // Add the Blob directly to the ZIP file
         zip.file(`${item}.svg`, svgBlob);
       });
-
+  
       zip.generateAsync({ type: "blob" }).then((content) => {
         saveAs(content, `${productName}.zip`);
       });
@@ -99,6 +108,7 @@ export default function ItemList({ productId }) {
       getToast("Bạn hãy chọn ít nhất 1 mã để tải xuống");
     }
   };
+  
 
   function handleChooseFlip() {
     setListChooseAll((prev) => {

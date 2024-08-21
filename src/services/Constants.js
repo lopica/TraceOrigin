@@ -1,38 +1,125 @@
-import { FaProductHunt,FaLifeRing, FaUserShield,FaHeadset, FaRegLifeRing, FaBrain, FaCertificate, FaUserCog, FaCheckCircle, FaChartLine, FaInfo } from 'react-icons/fa';
+import {
+  FaProductHunt,
+  FaLifeRing,
+  FaUserShield,
+  FaHeadset,
+  FaRegLifeRing,
+  FaBrain,
+  FaCertificate,
+  FaUserCog,
+  FaCheckCircle,
+  FaChartLine,
+  FaInfo,
+} from "react-icons/fa";
 
 export const CONSTANTS = {
-    brand: 'TraceOrigin',
-    menu: [
-        {name: 'Sản phẩm', url: '/manufacturer/products', icon: FaProductHunt, role: '2'},
-        {name: 'Chứng chỉ', url: '/manufacturer/certificate', icon: FaCertificate, role: '2'},
-        {name: 'Hỗ trợ hệ thống', url: '/manufacturer/support', icon: FaLifeRing, role: '2'},
+  brand: "TraceOrigin",
+  menu: [
+    {
+      id: 1,
+      name: "Sản phẩm",
+      url: "/manufacturer/products",
+      icon: FaProductHunt,
+      role: "2",
+    },
+    {
+      id: 2,
+      name: "Chứng chỉ",
+      url: "/manufacturer/certificate",
+      icon: FaCertificate,
+      role: "2",
+    },
+    {
+      id: 3,
+      name: "Hỗ trợ hệ thống",
+      url: "/manufacturer/support",
+      icon: FaLifeRing,
+      role: "2",
+    },
 
-        // {name: 'Report', url: '/manufacturer/products'},
-        // {name: 'Warranty', url: '/manufacturer/products'},
-        {name: 'Chăm sóc khách hàng', url: '/admin/customerService',  icon: FaUserShield , role: '3'},
-        {name: 'Hỗ trợ hệ thống', url: '/admin/supportSystem',  icon: FaRegLifeRing , role: '3'},
+    // {name: 'Report', url: '/manufacturer/products'},
+    // {name: 'Warranty', url: '/manufacturer/products'},
+    {
+      id: 4,
+      name: "Chăm sóc khách hàng",
+      url: "/admin/customerService",
+      icon: FaUserShield,
+      role: "3",
+    },
+    {
+      id: 5,
+      name: "Hỗ trợ hệ thống",
+      url: "/admin/supportSystem",
+      icon: FaRegLifeRing,
+      role: "3",
+    },
 
-        {name: 'Màn giám sát', url: '/admin/adminMonitoring', icon: FaChartLine, role: '1'},
-        {name: 'Quản lí danh mục sản phẩm', url: '/admin/categoryManager',  icon: FaRegLifeRing , role: '1'},
-        {name: 'Tải tệp AI', url: '/admin/uploadFileAI',  icon: FaBrain , role: '1'},
-        {name: 'Quản lý tài khoản hỗ trợ khách hàng', url: '/admin/customerSupportList',  icon: FaHeadset , role: '1'},
+    {
+      id: 6,
+      name: "Màn giám sát",
+      url: "/admin/adminMonitoring",
+      icon: FaChartLine,
+      role: "1",
+    },
+    {
+      id: 7,
+      name: "Quản lí danh mục sản phẩm",
+      url: "/admin/categoryManager",
+      icon: FaRegLifeRing,
+      role: "1",
+    },
+    {
+      id: 8,
+      name: "Tải tệp AI",
+      url: "/admin/uploadFileAI",
+      icon: FaBrain,
+      role: "1",
+    },
+    {
+      id: 9,
+      name: "Quản lý tài khoản hỗ trợ khách hàng",
+      url: "/admin/customerSupportList",
+      icon: FaHeadset,
+      role: "1",
+    },
 
+    {
+      id: 10,
+      name: "Quản lý nhà sản xuất",
+      role: "1",
+      children: [
         {
-            name: 'Quản lý nhà sản xuất', role: '1',
-            children: [
-                {name: 'Danh sách nhà sản xuất', url: '/admin/ManufacturerList',  icon: FaUserCog , role: '1'},
-                {name: 'Xác minh nhà sản xuất', url: '/admin/VerifyManufacturers',  icon: FaCheckCircle , role: '1'},
-              
-
-            ],
-            icon: FaUserCog
+          name: "Danh sách nhà sản xuất",
+          url: "/admin/ManufacturerList",
+          icon: FaUserCog,
+          role: "1",
         },
-        {name: 'Xem báo cáo', url: '/manufacturer/reportManager', icon: FaInfo, role: '2'},
-        {name: 'Xem yêu cầu traning hình ảnh', url: '/admin/managerRequestTranningImage', icon: FaInfo, role: '1'},
-    ],
-    openCage_API_KEY: '322f7bf039244925a233610a1e61360a',
-    domain: 'https://traceorigin.click/api',
-    //domain: 'http://localhost:8080/api',
-    key_expire: 1,
-    
-}
+        {
+          name: "Xác minh nhà sản xuất",
+          url: "/admin/VerifyManufacturers",
+          icon: FaCheckCircle,
+          role: "1",
+        },
+      ],
+      icon: FaUserCog,
+    },
+    {
+      id: 11,
+      name: "Xem báo cáo",
+      url: "/manufacturer/reportManager",
+      icon: FaInfo,
+      role: "2",
+    },
+    {
+      id: 12,
+      name: "Xem yêu cầu traning hình ảnh",
+      url: "/admin/managerRequestTranningImage",
+      icon: FaInfo,
+      role: "1",
+    },
+  ],
+  openCage_API_KEY: "322f7bf039244925a233610a1e61360a",
+  domain: "https://traceorigin.click/api",
+  //domain: 'http://localhost:8080/api',
+  key_expire: 1,
+};

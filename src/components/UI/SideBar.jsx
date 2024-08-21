@@ -33,7 +33,7 @@ export default function SideBar() {
 
           return (
             <Fragment key={item.name}>
-              <li>
+              <li id={`menu-${item.id}`}>
                 <Link
                   to={hasChildren ? "#" : item.url}
                   onClick={() => handleItemClick(index)}

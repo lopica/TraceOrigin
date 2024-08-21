@@ -33,6 +33,7 @@ import { historySearchSliceReducer } from "./slices/historySeach";
 import { utilApi } from "./apis/utilApi";
 import { customercareApi } from "./apis/customercareApi";
 import { supportSystemApi } from "./apis/supportSystemApi";
+import { joyrideSliceReducer } from "./slices/joyrideSlice";
 
 // Define the persist configuration
 const persistConfig = {
@@ -61,6 +62,7 @@ const rootReducer = combineReducers({
   certificateSlice: certificateSliceReducer,
   productEditForm: productEditFormReducer,
   historySearchSlice: historySearchSliceReducer,
+  joyrideSlice: joyrideSliceReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
@@ -124,6 +126,14 @@ const persistor = persistStore(store);
 
 export { store, persistor };
 export {
+  setRun,
+  setStepIndex,
+  setSteps,
+  setStepsAdd,
+  setStepIndexNext,
+  setTourActive,
+} from "./slices/joyrideSlice";
+export {
   useGetAllTransportsQuery,
   useGetAllEventTypeQuery,
 } from "./apis/utilApi";
@@ -148,7 +158,7 @@ export {
   useSearchProductQuery,
   useViewProductDetailQuery,
   useDeleteProductByIdMutation,
-  useEditProductMutation
+  useEditProductMutation,
 } from "./apis/productApi";
 export { showToast, hideToast } from "./slices/toastSlice";
 export { updateRegisterForm } from "./slices/registerFormSlice";

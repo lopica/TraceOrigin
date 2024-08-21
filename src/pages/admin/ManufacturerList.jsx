@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useGetUsersQuery, useLockUserMutation } from "../../store/apis/userApi";
+import { useGetUsersQuery, useLockUserMutation, userApi } from "../../store/apis/userApi";
 import Pagination from "../../components/UI/Pagination";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,11 +9,17 @@ import { useForm } from "react-hook-form";
 import Button from "../../components/UI/Button";
 import { useGetAllDistinctCityQuery } from "../../store/apis/mapApi";
 import useToast from "../../hooks/use-toast";
+<<<<<<< HEAD
 import { useSelector } from "react-redux";
 import ShowInfoManufacture from "./ShowInfoManufacture";
+=======
+import { useDispatch, useSelector } from "react-redux";
+import { requireLogin, updateUser } from "../../store";
+>>>>>>> 4d9908d (add guideline new user certificate)
 
 function ManufacturerList() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [page, setPage] = useState(0);
@@ -58,25 +64,35 @@ function ManufacturerList() {
   const [lockUser] = useLockUserMutation();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      refetch();
+    if (!isAuthenticated) {
+      getToast("Phiên dăng nhập đã hết hạn");
+      navigate("/portal/login");
     }
-  }, [isAuthenticated, refetch]);
+  }, [isFetching, isAuthenticated]);
+
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     refetch();
+  //   }
+  // }, [isAuthenticated, refetch]);
 
   useEffect(() => {
     if (isError?.status === 401 && !isFetching) {
-      console.log('vo error 401');
-      navigate("/portal/login");
+      // console.log('vo error 401');
+      // navigate("/portal/login");
+      dispatch(userApi.util.resetApiState());
+      dispatch(updateUser({}));
+      dispatch(requireLogin());
     }
   }, [isError, navigate]);
 
-  useEffect(() => {
-    if (!isFetching && !isAuthenticated) {
-      console.log('vo timeout');
-      getToast('Phiên đăng nhập đã hết hạn');
-      navigate("/portal/login");
-    }
-  }, [isFetching, isAuthenticated, getToast, navigate]);
+  // useEffect(() => {
+  //   if (!isFetching && !isAuthenticated) {
+  //     console.log('vo timeout');
+  //     getToast('Phiên đăng nhập đã hết hạn');
+  //     navigate("/portal/login");
+  //   }
+  // }, [isFetching, isAuthenticated, getToast, navigate]);
 
   useEffect(() => {
     if (!isError && !isFetching) {
