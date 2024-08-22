@@ -92,7 +92,7 @@ export default function Layout() {
       user?.role &&
       user.role?.roleId == 2 &&
       currentPath === "/manufacturer/products" &&
-      (user?.status == 7 || user?.status == 0) &&
+      (user?.status === 7 || user?.status === 0 || user?.status === '7' || user?.status === '0') &&
       isAuthenticated
     ) {
       console.log("vo day nhe");

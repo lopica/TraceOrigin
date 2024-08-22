@@ -275,7 +275,7 @@ export default function ItemList({ productId }) {
         ]
       : []),
     {
-      label: "Mã Item",
+      label: "Mã nhật ký",
       render: (item) => (
         <Link to={`${item?.productRecognition}`}>
           <Button primary rounded>
@@ -397,7 +397,11 @@ export default function ItemList({ productId }) {
           </button>
         </div>
       </form>
-      <div className="flex justify-end mt-4 p-4 gap-4">
+      <div className="flex">
+      <div className="w-1/3 mt-4 p-4">
+        {showExport && <p>Số nhật ký đã chọn: {checkedItems.size}</p>}
+      </div>
+      <div className="flex justify-end mt-4 p-4 gap-4 w-2/3">
         {/* xuat qr */}
         {showExport && (
           <Button onClick={exportQr} primary rounded>
@@ -416,6 +420,7 @@ export default function ItemList({ productId }) {
         </Button>
         <AddItem />
       </div>
+      </div>
       {renderedListItem}
       <div className="join mt-4 flex justify-center">
         {/* {Array.from({ length: totalPages }).map((_, idx) => (
@@ -431,7 +436,7 @@ export default function ItemList({ productId }) {
           <ReactPaginate
             className="join mt-4 flex justify-center"
             pageLinkClassName="join-item btn"
-            breakLinkClassName="join-item btn"
+            breakLinkClassName="join-item btn btn-disabled"
             activeLinkClassName="join-item btn btn-active"
             previousLinkClassName="join-item btn"
             nextLinkClassName="join-item btn"

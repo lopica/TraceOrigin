@@ -65,7 +65,7 @@ function Avatar() {
       //   return;
       // }
       const lastUserId = localStorage.getItem("lastUserId");
-      if (lastUserId !== user.userId && !hasRefetched.current) {
+      if (lastUserId !== user.userId && !hasRefetched.current || !user) {
         // console.log('vo day')
         refetch();
         hasRefetched.current = true; // Set the ref to prevent further refetches

@@ -21,10 +21,12 @@ const productConfig = [
     label: "Thông số kĩ thuật",
     icon: (item) => item?.icon,
     render: (item) => item?.label,
+    center: true
   },
   {
     label: "Giá trị",
     render: (item) => item?.value,
+    center: true
   },
 ];
 
@@ -138,7 +140,7 @@ export default function ProductDetail({ productId }) {
             keyFn={(item) => item.label}
           />
           <p className="mt-4 text-center">
-            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn?
+            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn? 
             <a
               onClick={handleModalOpen}
               className="text-blue-500 underline cursor-pointer"
