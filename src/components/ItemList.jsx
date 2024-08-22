@@ -433,6 +433,8 @@ export default function ItemList({ productId }) {
             pageLinkClassName="join-item btn"
             breakLinkClassName="join-item btn"
             activeLinkClassName="join-item btn btn-active"
+            previousLinkClassName="join-item btn"
+            nextLinkClassName="join-item btn"
             // breakLabel="..."
             onPageChange={handlePageClick}
             pageRangeDisplayed={2}
@@ -440,8 +442,9 @@ export default function ItemList({ productId }) {
             pageCount={totalPages}
             // forcePage={currentPage}
             renderOnZeroPageCount={null}
-            previousClassName="hidden"
-            nextClassName="hidden"
+            previousLabel='«'
+            nextLabel='»'
+
           />
         )}
       </div>
