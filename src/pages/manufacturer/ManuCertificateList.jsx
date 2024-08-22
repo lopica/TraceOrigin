@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Card from "../../components/UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/UI/Button";
@@ -7,6 +7,7 @@ import {
   useGetListCertificateByManuIdQuery,
   useSendRequestVerifyCertMutation,
   useDeleteCertCertIdMutation,
+  certificateApi,
 } from "../../store/apis/certificateApi";
 import Pagination from "../../components/UI/Pagination";
 import useToast from "../../hooks/use-toast";
@@ -20,7 +21,13 @@ import { FaCertificate } from "react-icons/fa";
 import { ImFilesEmpty } from "react-icons/im";
 
 import { AiOutlinePlus } from "react-icons/ai";
-import { setRun, setStepIndex, setStepIndexNext, setTourActive } from "../../store";
+import {
+  requireLogin,
+  setRun,
+  setStepIndex,
+  setStepIndexNext,
+  setTourActive,
+} from "../../store";
 function ManuCertificateList() {
   const navigate = useNavigate();
   const { getToast } = useToast();
@@ -40,7 +47,10 @@ function ManuCertificateList() {
     useUpdateStatusMutation();
   const [deleteCertCertId] = useDeleteCertCertIdMutation();
   const { isFetching, isError, refetch } = useUser();
-
+  const { run, steps, stepIndex, tourActive } = useSelector(
+    (state) => state.joyrideSlice
+  );
+  const hasRun = useRef();
   const {
     isFetching: isCertificateFetching,
     isError: isCertificateError,
@@ -66,36 +76,129 @@ function ManuCertificateList() {
 
   useEffect(() => {
     if (isCertificateError?.status === 401) {
-      navigate("/portal/login");
+      dispatch(certificateApi.util.resetApiState())
+      dispatch(requireLogin())
     }
   }, [isCertificateError, navigate]);
 
-  useEffect(() => {
-    if (!isCertificateFetching && !isAuthenticated) {
+
+  useEffect(()=>{
+    if(!isAuthenticated){
       getToast("Phiên đăng nhập đã hết hạn");
       navigate("/portal/login");
     }
-  }, [isCertificateFetching, isAuthenticated, getToast, navigate]);
+  },[isAuthenticated])
 
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(setRun(true));
-      dispatch(setStepIndexNext());
-    }, 600);
-  }, []);
-
-  useEffect(()=>{
+    console.log(certificateData);
+    // // console.log(isCertificateFetching)
+    // // console.log(isCertificateError)
+    // if (stepIndex == 3) {
+    //   if (certificateData) {
+    //     setTimeout(() => {
+    //       dispatch(setRun(true));
+    //       dispatch(setStepIndexNext());
+    //     }, 600);
+    //   } else {
+    //     setTimeout(() => {
+    //       dispatch(setRun(false));
+    //       dispatch(setStepIndex(2));
+    //     }, 600);
+    //   }
+    // } else {
+    //   if (certificateData) {
+    //     dispatch(setTourActive(true))
+    //     setTimeout(() => {
+    //       dispatch(setRun(true));
+    //       dispatch(setStepIndex(3));
+    //     }, 600);
+    //   } else {
+    //     if (tourActive) {
+    //       setTimeout(() => {
+    //         dispatch(setRun(true));
+    //         dispatch(setStepIndexNext());
+    //       }, 600);
+    //     }
+    //   }
+    // }
+    // if (isAuthenticated) {
+    //   if (tourActive) {
+    //     //flow from product
+    //     if (stepIndex == 3) {
+    //       if (certificateData) {
+    //         setTimeout(() => {
+    //           dispatch(setRun(true));
+    //           dispatch(setStepIndex(3));
+    //         }, 600);
+    //       } else {
+    //         dispatch(setRun(false));
+    //         dispatch(setStepIndex(2));
+    //       }
+    //     } else {
+    //       if (certificateData) {
+    //         setTimeout(() => {
+    //           dispatch(setRun(true));
+    //           dispatch(setStepIndex(3));
+    //         }, 600);
+    //       } else {
+    //         if (!hasRun.current) {
+    //           hasRun.current = true;
+    //           setTimeout(() => {
+    //             dispatch(setRun(true));
+    //             dispatch(setStepIndex(2));
+    //           }, 600);
+    //         }
+    //       }
+    //     }
+    //   } else {
+    //     //flow in here
+    //     if (certificateData) {
+    //       dispatch(setTourActive(true));
+    //       setTimeout(() => {
+    //         dispatch(setRun(true));
+    //         dispatch(setStepIndex(3));
+    //       }, 600);
+    //     } else {
+    //       dispatch(setTourActive(true));
+    //       setTimeout(() => {
+    //         dispatch(setRun(true));
+    //         dispatch(setStepIndex(2));
+    //       }, 600);
+    //     }
+    //   }
+    // }
     console.log(certificateData)
-    console.log(isCertificateFetching)
-    console.log(isCertificateError)
-    if (!isCertificateFetching && !isCertificateError && isAuthenticated) {
-      if (certificateData?.length == 0) {
-        setTimeout(() => {
+    if (isAuthenticated) {
+      if (certificateData) {
+        //keep happen or make happen
+        if (tourActive) {
+          //continue
+          setTimeout(() => {
+            dispatch(setRun(true));
+            dispatch(setStepIndex(3));
+          }, 600);
+        } else {
+          dispatch(setTourActive(true));
+          setTimeout(() => {
+            dispatch(setRun(true));
+            dispatch(setStepIndex(3));
+          }, 600);
+        }
+      } else {
+        //stop or do not do
+        if (stepIndex < 2) {
+          if (!tourActive) dispatch(setTourActive(true))
+          setTimeout(() => {
+            dispatch(setRun(true));
+            dispatch(setStepIndex(2));
+          }, 600);    
+        } else {
           dispatch(setRun(false));
-        }, 600);
-      } 
+          dispatch(setStepIndex(2));
+        }
+      }
     }
-  },[isCertificateFetching, isCertificateError])
+  }, [certificateData, stepIndex, isCertificateError]);
 
   const handleRequestVerifyCert = async () => {
     try {
@@ -176,7 +279,12 @@ function ManuCertificateList() {
 
   const sendRequestButton = userStatus === 7 && (
     <div onClick={handleRequestVerifyCert}>
-      <Button primary rounded isLoading={isSendingRequest} id='verify-certificate'>
+      <Button
+        primary
+        rounded
+        isLoading={isSendingRequest}
+        id="verify-certificate"
+      >
         Yêu cầu xác thực
       </Button>
     </div>

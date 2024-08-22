@@ -102,8 +102,8 @@ function ManuCertificateAdd() {
                       message: "Tên chứng chỉ phải có ít nhất 3 kí tự"
                   },
                   maxLength: {
-                      value: 50,
-                      message: "Chứng chỉ không được vượt quá 500 ký tự"
+                      value: 255,
+                      message: "Chứng chỉ không được vượt quá 255 ký tự"
                   }})}
                 error={errors.name?.message}
               />

@@ -40,6 +40,8 @@ export default function Layout() {
       if (nav?.next) {
         dispatch(setRun(false));
         navigate(nav?.next);
+      } else if (stepIndex == 3) {
+        dispatch(setRun(false));
       } else {
         dispatch(setStepIndexNext());
       }
@@ -85,19 +87,19 @@ export default function Layout() {
   }, [tourActive]);
 
   useEffect(() => {
-    console.log("vo");
+    console.log(currentPath);
     if (
       user?.role &&
       user.role?.roleId == 2 &&
       currentPath === "/manufacturer/products" &&
-      user?.status == 7 &&
+      (user?.status == 7 || user?.status == 0) &&
       isAuthenticated
     ) {
       console.log("vo day nhe");
       dispatch(setTourActive(true));
       dispatch(setRun(true));
     }
-  }, [user, currentPath]);
+  }, [user]);
 
   useEffect(() => {
     if (!isAuthenticated) {
