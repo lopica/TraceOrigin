@@ -50,6 +50,7 @@ function ManuCertificateList() {
   const { run, steps, stepIndex, tourActive } = useSelector(
     (state) => state.joyrideSlice
   );
+  const user = useSelector(state=>state.userSlice)
   const hasRun = useRef();
   const {
     isFetching: isCertificateFetching,
@@ -186,7 +187,7 @@ function ManuCertificateList() {
         }
       } else {
         //stop or do not do
-        if (stepIndex < 2) {
+        if (stepIndex < 2 && user?.status != 8) {
           if (!tourActive) dispatch(setTourActive(true))
           setTimeout(() => {
             dispatch(setRun(true));
