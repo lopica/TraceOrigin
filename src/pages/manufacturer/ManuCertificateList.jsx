@@ -50,7 +50,7 @@ function ManuCertificateList() {
   const { run, steps, stepIndex, tourActive } = useSelector(
     (state) => state.joyrideSlice
   );
-  const user = useSelector(state=>state.userSlice)
+  const user = useSelector((state) => state.userSlice);
   const hasRun = useRef();
   const {
     isFetching: isCertificateFetching,
@@ -77,18 +77,17 @@ function ManuCertificateList() {
 
   useEffect(() => {
     if (isCertificateError?.status === 401) {
-      dispatch(certificateApi.util.resetApiState())
-      dispatch(requireLogin())
+      dispatch(certificateApi.util.resetApiState());
+      dispatch(requireLogin());
     }
   }, [isCertificateError, navigate]);
 
-
-  useEffect(()=>{
-    if(!isAuthenticated){
+  useEffect(() => {
+    if (!isAuthenticated) {
       getToast("Phiên đăng nhập đã hết hạn");
       navigate("/portal/login");
     }
-  },[isAuthenticated])
+  }, [isAuthenticated]);
 
   useEffect(() => {
     console.log(certificateData);
@@ -168,9 +167,14 @@ function ManuCertificateList() {
     //     }
     //   }
     // }
-    console.log(certificateData)
     if (isAuthenticated) {
-      if (certificateData) {
+      if (
+        certificateData &&
+        (user?.status === 7 ||
+          user?.status === "7" ||
+          user?.status === 0 ||
+          user?.status === "0")
+      ) {
         //keep happen or make happen
         if (tourActive) {
           //continue
@@ -187,12 +191,13 @@ function ManuCertificateList() {
         }
       } else {
         //stop or do not do
-        if (stepIndex < 2 && user?.status != 8) {
-          if (!tourActive) dispatch(setTourActive(true))
+        console.log(user?.status);
+        if (stepIndex < 2) {
+          if (!tourActive) dispatch(setTourActive(true));
           setTimeout(() => {
             dispatch(setRun(true));
             dispatch(setStepIndex(2));
-          }, 600);    
+          }, 600);
         } else {
           dispatch(setRun(false));
           dispatch(setStepIndex(2));
@@ -241,9 +246,9 @@ function ManuCertificateList() {
   };
 
   const getDescription = (note) => {
-    if(note && note.length > 0 && (userStatus === 7 || userStatus === 1)){
+    if (note && note.length > 0 && (userStatus === 7 || userStatus === 1)) {
       return note;
-    }else{
+    } else {
       switch (userStatus) {
         case 7:
           return "Chưa xác thực";
