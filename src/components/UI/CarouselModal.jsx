@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGetListCertificateByManuIdQuery, useGetCertificateByIdQuery } from '../../store/apis/certificateApi';
 import Carousel from './Carousel';
+import InputTextModal from './InputTextModal';
 
 const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onReject, onDelete }) => {
   const [selectedCertId, setSelectedCertId] = useState(null);
@@ -8,6 +9,8 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
   const [isAccepting, setIsAccepting] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [rejectNote, setRejectNote] = useState('');
 
   const { data: adminData, isError: adminError, isFetching: adminFetching, refetch: refetchAdmin } = useGetListCertificateByManuIdQuery(userId, { skip: !isAdmin });
   const { data: userData, isError: userError, isFetching: userFetching, refetch: refetchUser } = useGetCertificateByIdQuery(certId, { skip: isAdmin });
@@ -83,16 +86,15 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
     setIsAccepting(false);
   };
 
-  const handleReject = async () => {
-    setIsRejecting(true);
-    await onReject(userId);
-    setIsRejecting(false);
+  const handleReject = () => {
+    setIsRejectModalOpen(true);
   };
 
-  const handleDelete = async () => {
-    setIsDelete(true);
-    await onDelete(certId);
-    setIsDelete(false);
+  const confirmReject = async () => {
+    setIsRejecting(true);
+    await onReject(userId, rejectNote);
+    setIsRejecting(false);
+    setIsRejectModalOpen(false);
   };
 
   return (
@@ -116,7 +118,6 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
                         <div>{cert.certificateName}</div>
                         <div className="text-sm text-gray-300">Cơ quan cấp: {cert.issuingAuthority}</div>
                         <div className="text-sm text-gray-300">Ngày cấp: {formatDate(cert.issuanceDate)}</div>
-
                       </button>
                     </li>
                   ))}
@@ -147,17 +148,7 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
                     </button>
                   )}
                 </div>
-              ) : (
-                <>
-                </>
-              //   <button
-              //   type="button"
-              //   className="btn btn-error mt-2 w-full"
-              //   onClick={handleDelete}
-              // >
-              //   Xóa
-              // </button>
-              )}
+              ) : null}
             </div>
             <div className="relative bg-transparent w-2/3 flex items-center justify-center p-6">
               <div className="absolute top-4 right-4 z-50">
@@ -174,6 +165,17 @@ const CarouselModal = ({ isOpen, onClose, userId, certId, isAdmin, onAccept, onR
           </div>
         </div>
       </dialog>
+
+      {/* Reject Modal */}
+      <InputTextModal
+        isOpen={isRejectModalOpen}
+        onClose={() => setIsRejectModalOpen(false)}
+        onConfirm={confirmReject}
+        headerContent="Ghi chú"
+        isLoading={isRejecting}
+        textAreaValue={rejectNote}
+        setTextAreaValue={setRejectNote}
+      />
     </>
   );
 };

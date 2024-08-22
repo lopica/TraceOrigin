@@ -4,6 +4,7 @@ import ProfileModal from '../../components/UI/userProfile';
 import CarouselModal from '../../components/UI/CarouselModal';
 import Pagination from '../../components/UI/Pagination';
 import { useUpdateStatusMutation } from "../../store/apis/userApi";
+import { useReplyCertByAdminMutation } from "../../store/apis/certificateApi";
 import {  useNavigate } from "react-router-dom";
 import useToast from "../../hooks/use-toast";
 import { useSelector } from "react-redux";
@@ -55,6 +56,7 @@ function VerifyManufacturer() {
   }, [isFetching, isAuthenticated, getToast, navigate]);
 
   const [updateStatus] = useUpdateStatusMutation();
+  const [abortCer] = useReplyCertByAdminMutation();
 
   const handleOpenModalImage = (userId) => {
     setSelectedUserId(userId);
@@ -81,8 +83,8 @@ function VerifyManufacturer() {
     refetch();
   };
 
-  const handleReject = async (userId) => {
-    await updateStatus({ id: userId, status: 7 });
+  const handleReject = async (userId, rejectNote) => {
+    await abortCer({ manufacturerId: userId, isAccept: 0, note: rejectNote });
     handleCloseModalImage();
     refetch();
   };

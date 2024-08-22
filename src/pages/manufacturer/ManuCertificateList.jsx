@@ -136,14 +136,18 @@ function ManuCertificateList() {
     refetchCertificates();
   };
 
-  const getDescription = () => {
-    switch (userStatus) {
-      case 7:
-        return "Chưa xác thực";
-      case 8:
-        return "Đang chờ xác thực";
-      default:
-        return "Đã xác thực";
+  const getDescription = (note) => {
+    if(note && note.length > 0){
+      return note;
+    }else{
+      switch (userStatus) {
+        case 7:
+          return "Chưa xác thực";
+        case 8:
+          return "Đang chờ xác thực";
+        default:
+          return "Đã xác thực";
+      }
     }
   };
 
@@ -161,7 +165,7 @@ function ManuCertificateList() {
           card={{
             image: certi.images[0],
             name: certi.certificateName,
-            description: getDescription(),
+            description: getDescription(certi.note),
             status: userStatus === 7 || userStatus === 0 ? 3 : 1,
           }}
           handleDelete={() => handleDelete(certi.certId)}

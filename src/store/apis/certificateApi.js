@@ -88,9 +88,28 @@ const certificateApi = createApi({
           };
         },
       }),
+      replyCertByAdmin: builder.mutation({
+        query: (data) => {
+          return {
+            url: "/replyCertByAdmin",
+            method: "POST",
+            body: {
+              manufacturerId: data.manufacturerId,
+              isAccept: data.isAccept,
+              note: data.note
+            }
+          };
+        },
+      }),
     };
   },
 });
 
 export { certificateApi };
-export const { useGetListManuToVerifyQuery, useGetListCertificateByManuIdQuery, useAddCertificateMutation, useGetCertificateByIdQuery, useSendRequestVerifyCertMutation, useDeleteCertCertIdMutation} = certificateApi;
+export const { useGetListManuToVerifyQuery,
+   useGetListCertificateByManuIdQuery,
+    useAddCertificateMutation, 
+    useGetCertificateByIdQuery,
+     useSendRequestVerifyCertMutation, 
+     useDeleteCertCertIdMutation,
+     useReplyCertByAdminMutation} = certificateApi;
