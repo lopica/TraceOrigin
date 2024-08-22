@@ -1328,6 +1328,15 @@ export default function NoApiConsign({ productRecognition }) {
         </div>
       );
       break;
+    case 'disable':
+      form = <div>
+      <BackBtn step="email" />
+      <p>
+        Email này hiện đang bị đình chỉ quyền ghi nhật ký sản phẩm này. Bạn có thể thử
+        dùng email khác nhé.
+      </p>
+    </div>
+      break
     default:
       form = (
         <div>
