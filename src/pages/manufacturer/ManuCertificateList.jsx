@@ -137,7 +137,7 @@ function ManuCertificateList() {
   };
 
   const getDescription = (note) => {
-    if(note && note.length > 0){
+    if(note && note.length > 0 && userStatus !== 7 && userStatus !== 8){
       return note;
     }else{
       switch (userStatus) {
