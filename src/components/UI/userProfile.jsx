@@ -129,7 +129,7 @@ const ProfileModal = ({ userId, closeModal, isEditable }) => {
             <img
               src={
                 coverImage ||
-                "https://quyhyvong.com/wp-content/uploads/2021/11/Logo-Shopee.png"
+                "https://res.cloudinary.com/ds2d9tipg/image/upload/v1724251918/Ch%C6%B0a_c%E1%BA%ADp_nh%E1%BA%ADt_%E1%BA%A3nh_u9ijcq.jpg"
               }
               alt="Cover"
               className="absolute top-1/2 left-1/2 w-auto h-full transform -translate-x-1/2 -translate-y-1/2"
