@@ -223,7 +223,6 @@ function ManufacturerList() {
       ...prevParams,
       page: newPage.toString(),
     }));
-    refetch();
   };
 
   const closeModal = () => {
