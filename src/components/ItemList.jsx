@@ -306,7 +306,20 @@ export default function ItemList({ productId }) {
       renderedListItem = <p className="text-center">Bạn chưa có nhật ký nào</p>;
     }
   }
+  const { currentPage, totalPages } = paginate;
+    let pagesToShow = [];
 
+    if (totalPages <= 3) {
+      pagesToShow = Array.from({ length: totalPages }, (_, i) => i + 1);
+    } else {
+      if (currentPage < 2) {
+        pagesToShow = [1, 2, 3];
+      } else if (currentPage >= totalPages - 2) {
+        pagesToShow = [totalPages - 2, totalPages - 1, totalPages];
+      } else {
+        pagesToShow = [currentPage, currentPage + 1, currentPage + 2];
+      }
+    }
   return (
     <section>
       <div className="flex items-center mb-4">
@@ -390,15 +403,31 @@ export default function ItemList({ productId }) {
       </div>
       {renderedListItem}
       <div className="join mt-4 flex justify-center">
-        {Array.from({ length: paginate.totalPages }).map((_, idx) => (
+        <button
+          className="join-item btn"
+          disabled={currentPage === 0}
+          onClick={() => setCurrentPage(currentPage - 1)}
+        >
+          Trước
+        </button>
+
+        {pagesToShow.map((page, idx) => (
           <button
             key={idx}
-            className="join-item btn"
-            onClick={() => setCurrentPage(idx)}
+            className={`join-item btn ${currentPage === page - 1 ? 'btn-active' : ''}`}
+            onClick={() => setCurrentPage(page - 1)}
           >
-            {idx + 1}
+            {page}
           </button>
         ))}
+
+        <button
+          className="join-item btn"
+          disabled={currentPage === totalPages - 1}
+          onClick={() => setCurrentPage(currentPage + 1)}
+        >
+          Sau
+        </button>
       </div>
     </section>
   );
