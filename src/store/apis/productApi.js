@@ -201,6 +201,36 @@ const productApi = createApi({
           };
         },
       }),
+      disableProductById: builder.mutation({
+        invalidatesTags: ['Product'],
+        query: (id) => {
+          return {
+            url: "/disableProductById",
+            method: "POST",
+            body: {
+              id: id || -1
+            },
+            responseHandler: (response) => {
+              return response.text();
+            },
+          };
+        },
+      }),
+      checkStatus: builder.mutation({
+        invalidatesTags: ['Product'],
+        query: (id) => {
+          return {
+            url: `/checkStatus`,
+            method: "POST",
+            body: {
+              id: id || -1
+            },
+            responseHandler: (response) => {
+              return response.text();
+            },
+          };
+        },
+      }),
     };
   },
 });
@@ -219,5 +249,7 @@ export const {
   useRequestScanImageMutation,
   useApprovalImageRequestMutation,
   useGetImageHadUploadQuery,
-  useEditProductMutation
+  useEditProductMutation,
+  useDisableProductByIdMutation,
+  useCheckStatusMutation,
 } = productApi;

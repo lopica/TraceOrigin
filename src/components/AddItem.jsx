@@ -6,9 +6,11 @@ import Modal from "./UI/Modal";
 import AddressInputGroup from "./AddressInputGroup";
 import handleKeyDown from "../utils/handleKeyDown";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { updateCoordinate, useAddItemMutation } from "../store";
 import useToast from "../hooks/use-toast";
+import { useCheckStatusMutation } from "../../src/store/apis/productApi";
+import Tooltip from "./UI/Tooltip";
 
 let modal;
 let province, district, ward;
@@ -39,7 +41,8 @@ export default function AddItem() {
     (state) => state.locationData
   );
   const { getToast } = useToast();
-
+  const [checkStatus] = useCheckStatusMutation();
+  const [isDisable, setIsDisable] = useState(false);
   const onSubmit = (data) => {
     if (!verifyAddress) {
       getToast("Bạn cần xác thực địa chỉ để tạo nhật ký");
@@ -91,11 +94,25 @@ export default function AddItem() {
   };
 
   useEffect(() => {
-    if (productDetail) {
-      reset({
-        warranty: productDetail.warranty,
-      });
-    }
+    const fetchStatusAndSetDefaults = async () => {
+      if (productDetail && productDetail?.productId >= 1) {
+        reset({
+          warranty: productDetail.warranty,
+        });
+        try {
+          const statusMessage = await checkStatus(productDetail.productId).unwrap();
+          if (statusMessage === "1") {
+            setIsDisable(true);
+          } else {
+            setIsDisable(false);
+          }
+        } catch (error) {
+          setIsDisable(false);
+        }
+      }
+    };
+    
+    fetchStatusAndSetDefaults();
   }, [productDetail, reset]);
 
   modal = (
@@ -161,14 +178,24 @@ export default function AddItem() {
 
   return (
     <>
-      <Button
-        primary
-        onClick={handleClick}
-        rounded
-        className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
-      >
-        Tạo mới
-      </Button>
+      {!isDisable ? (
+        <Button
+          primary
+          onClick={handleClick}
+          rounded
+          className="bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+        >
+          Tạo mới
+        </Button>
+      ) : (
+        <Button
+          rounded
+          className="bg-gray-500 text-gray-300 cursor-not-allowed hover:bg-gray-500 focus:outline-none"
+          disabled
+        >
+          Sản phẩm đã bị khóa
+        </Button>
+      )}
       {showModal && modal}
     </>
   );

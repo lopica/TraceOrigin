@@ -1,7 +1,7 @@
 import { useViewProductByManufacturerIdQuery } from "../../store/apis/productApi";
 import { useGetDetailUserQuery } from "../../store/apis/userApi";
 import { useGetListCertificateByManuIdQuery } from "../../store";
-import ProductList from "../../components/UI/homepage/ProductList";
+import ProductListAdmin from "./ProductListAdmin";
 import CertificateList from "../../components/UI/homepage/CertificateList";
 import { useState } from "react";
 import { FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa"; // Import các biểu tượng
@@ -201,7 +201,7 @@ const ShowInfoManufacture = ({ id, isOpen, onClose }) => {
             </>
           ) : (
            <>
-            <ProductList data={dataProduct} />
+            <ProductListAdmin data={dataProduct} />
            </>
           )}
           </div>
@@ -258,12 +258,18 @@ const ShowInfoManufacture = ({ id, isOpen, onClose }) => {
                 Chọn danh mục
             </label>
               </div>
+              {dataReport?.content.length > 0 ? (
               <div
-                  className="block text-blue-500 underline cursor-pointer text-sm"
-                  onClick={() => setIsReportModalOpen(true)}
-                >
-                  Xem thêm
-                </div>
+                   className="block text-blue-500 underline cursor-pointer text-sm"
+                   onClick={() => setIsReportModalOpen(true)}
+                 >
+                   Xem thêm
+                 </div>
+              ) : (
+                <>
+                </>
+              )}
+             
             </div>
            </div>
             <select
