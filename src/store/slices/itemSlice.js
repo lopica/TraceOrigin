@@ -27,6 +27,8 @@ const itemSlice = createSlice({
     consignForm: {},
     receiveForm: {},
     updatedConsignForm: {},
+    totalPages: 0,
+    currentPage: 0,
   },
   reducers: {
     updateItemDetail(state, action) {
@@ -54,6 +56,12 @@ const itemSlice = createSlice({
     updateUpdateConsignForm(state, action) {
       state.updatedConsignForm = { ...action.payload };
     },
+    setTotalPages(state, action) {
+      state.totalPages = action.payload
+    },
+    setCurrentPage(state, action) {
+      state.currentPage = action.payload
+    }
   },
 });
 
@@ -66,5 +74,7 @@ export const {
   updateConsignForm,
   updateReceiveForm,
   updateUpdateConsignForm,
+  setTotalPages,
+  setCurrentPage,
 } = itemSlice.actions;
 export const itemSliceReducer = itemSlice.reducer;

@@ -6,7 +6,7 @@ import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./UI/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaList, FaSearch, FaUndoAlt } from "react-icons/fa";
 import useShow from "../hooks/use-show";
@@ -15,10 +15,11 @@ import { QRCodeSVG } from "qrcode.react";
 import ReactDOMServer from "react-dom/server";
 import { saveAs } from "file-saver";
 import useToast from "../hooks/use-toast";
-import { requireLogin, updateUser, useGetAllEventTypeQuery } from "../store";
-import { itemApi } from "../store/apis/itemApi";
+import { requireLogin, setCurrentPage, setTotalPages, updateItemList, updateUser, useGetAllEventTypeQuery } from "../store";
+import { itemApi, useSearchItemsQuery } from "../store/apis/itemApi";
 import { getEpochFromDate } from "../utils/getEpochFromDate.js";
 import { formatDate } from "../utils/formatDate.js";
+import ReactPaginate from "react-paginate";
 
 let renderedListItem;
 let eventTypeData;
@@ -27,18 +28,11 @@ export default function ItemList({ productId }) {
   const user = useSelector((state) => state.userSlice);
   const [inputSearch, setInputSearch] = useState({
     eventId: "",
-    startData: 0,
+    startDate: 0,
     endDate: 0,
   });
-  const {
-    itemsData,
-    isItemError,
-    isItemFetch,
-    error,
-    paginate,
-    setCurrentPage,
-    refetch,
-  } = useItem(productId, inputSearch);
+  const [itemsData, setItemsData] = useState([]);
+
   const {
     data: eventTypes,
     isError: isEventtypeError,
@@ -49,14 +43,69 @@ export default function ItemList({ productId }) {
     productDetail: { productName },
   } = useSelector((state) => state.productSlice);
   const navigate = useNavigate();
-  const { control, register, watch, getValues, setValue, reset, handleSubmit, formState: {errors} } =
-    useForm({
-      mode: "onTouched",
-    });
+  const {
+    control,
+    register,
+    watch,
+    getValues,
+    setValue,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+  });
   const { show: showExport, handleFlip } = useShow(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
   const [listChooseAll, setListChooseAll] = useState([]);
   const { getToast } = useToast();
+  const {currentPage, totalPages} = useSelector(state=>state.itemSlice)
+  const {
+    data,
+    isError: isItemError,
+    isFetching: isItemFetch,
+    isSuccess,
+    error,
+    refetch,
+  } = useSearchItemsQuery(
+    {
+      productId,
+      pageSize: 6,
+      pageNumber: currentPage,
+      startDate: inputSearch.startDate,
+      endDate: inputSearch.endDate,
+      name: "",
+      type: "",
+      productRecognition: "",
+      eventTypeId: inputSearch.eventId || 0,
+    },
+    {
+      skip: !isAuthenticated,
+      refetchOnMountOrArgChange: true,
+    }
+  );
+
+  useEffect(() => {
+    if (isItemError && isSuccess) {
+      getToast("Gặp lỗi khi tải dữ liệu item");
+      if (error.status === 401) {
+        dispatch(itemApi.util.resetApiState())
+        dispatch(updateUser({}));
+        dispatch(requireLogin());
+      }
+    }
+    if (!isItemError && !isItemFetch && data?.content) {
+      dispatch(updateItemList(data.content));
+      setItemsData(data.content);
+      // setPaginate((prev) => {
+      //   return {
+      //     ...prev,
+      //     totalPages: data.totalPages,
+      //   };
+      // });
+      dispatch(setTotalPages(data.totalPages))
+    }
+  }, [isItemError, isItemFetch]);
 
   const handleCheckboxChange = (item) => {
     setCheckedItems((prevCheckedItems) => {
@@ -84,37 +133,37 @@ export default function ItemList({ productId }) {
             className="mx-auto"
           />
         );
-        
+
         // Add xmlns attribute to the SVG string
         const svgWithNamespace = svgString.replace(
           /<svg /,
           '<svg xmlns="http://www.w3.org/2000/svg" '
         );
-  
+
         // console.log(`SVG with xmlns for item ${item}:`, svgWithNamespace);
-        
+
         // Create a Blob from the modified SVG string with the correct MIME type
         const svgBlob = new Blob([svgWithNamespace], { type: "image/svg+xml" });
         // console.log(`Blob for item ${item}:`, svgBlob);
-  
+
         // Add the Blob directly to the ZIP file
         zip.file(`${item}.svg`, svgBlob);
       });
-  
+
       zip.generateAsync({ type: "blob" }).then((content) => {
         saveAs(content, `${productName}.zip`);
       });
     } else {
-      if (itemsData.length === 0) getToast("Bạn chưa có nhật ký nào để tạo mã QR");
+      if (itemsData.length === 0)
+        getToast("Bạn chưa có nhật ký nào để tạo mã QR");
       else getToast("Bạn hãy chọn ít nhất 1 nhật ký để tải xuống");
     }
   };
-  
 
   function handleChooseFlip() {
     setListChooseAll((prev) => {
       const newList = [...prev];
-      newList[paginate.currentPage] = !prev[paginate.currentPage];
+      newList[currentPage] = !prev[currentPage];
       return newList;
     });
   }
@@ -133,16 +182,21 @@ export default function ItemList({ productId }) {
     });
   }
 
-  useEffect(() => {
-    if (paginate.totalPages && listChooseAll.length === 0)
-      setListChooseAll(
-        Array.from({ length: paginate.totalPages }).map(() => false)
-      );
-  }, [paginate]);
+  const handlePageClick = ({ selected: selectedPage }) => {
+    // console.log("Selected page:", selectedPage);
+    dispatch(setCurrentPage(selectedPage));
+  }  
 
   useEffect(() => {
-    console.log(paginate.currentPage);
-    if (listChooseAll[paginate.currentPage]) {
+    if (totalPages && listChooseAll.length === 0)
+      setListChooseAll(
+        Array.from({ length: totalPages }).map(() => false)
+      );
+  }, [totalPages]);
+
+  useEffect(() => {
+    console.log(currentPage);
+    if (listChooseAll[currentPage]) {
       const itemsOnPage = new Set(
         itemsData.map((item) => item.productRecognition)
       );
@@ -182,49 +236,10 @@ export default function ItemList({ productId }) {
     }
   }, [isEventtypeFetch, isEventtypeError]);
 
-  // useEffect(() => {
-  //   const status = watch("status");
-  //   if (status) {
-  //     setInputSearch((prev) => ({
-  //       ...prev,
-  //       eventId: status.split(",")[0],
-  //     }));
-  //   }
-  // }, [watch("status")]);
-
-  // useEffect(() => {
-  //   const startDate = watch("startDate");
-  //   if (startDate) {
-  //     console.log(startDate);
-  //     const dateObject = new Date(startDate);
-  //     const epochTime = dateObject.getTime() / 1000;
-  //     setInputSearch((prev) => ({
-  //       ...prev,
-  //       startDate: epochTime,
-  //     }));
-  //   }
-  // }, [watch("startDate")]);
-
-  // useEffect(() => {
-  //   const endDate = watch("endDate");
-  //   if (endDate) {
-  //     console.log(endDate);
-  //     const dateObject = new Date(endDate);
-  //     const epochTime = dateObject.getTime() / 1000;
-  //     setInputSearch((prev) => ({
-  //       ...prev,
-  //       endDate: epochTime,
-  //     }));
-  //   }
-  // }, [watch("endDate")]);
-
-  // useEffect(()=>{
-  //   if(inputSearch.eventId) refetch()
-  // },[inputSearch])
-
-  useEffect(()=>{
-    if (watch('startDate') && !watch('endDate')) setValue("endDate", formatDate(new Date()))
-  },[watch('startDate'), watch('endDate')])
+  useEffect(() => {
+    if (watch("startDate") && !watch("endDate"))
+      setValue("endDate", formatDate(new Date()));
+  }, [watch("startDate"), watch("endDate")]);
 
   useEffect(() => {
     if (error?.status === 401) {
@@ -306,20 +321,20 @@ export default function ItemList({ productId }) {
       renderedListItem = <p className="text-center">Bạn chưa có nhật ký nào</p>;
     }
   }
-  const { currentPage, totalPages } = paginate;
-    let pagesToShow = [];
+  // const { currentPage, totalPages } = paginate;
+  //   let pagesToShow = [];
 
-    if (totalPages <= 3) {
-      pagesToShow = Array.from({ length: totalPages }, (_, i) => i + 1);
-    } else {
-      if (currentPage < 2) {
-        pagesToShow = [1, 2, 3];
-      } else if (currentPage >= totalPages - 2) {
-        pagesToShow = [totalPages - 2, totalPages - 1, totalPages];
-      } else {
-        pagesToShow = [currentPage, currentPage + 1, currentPage + 2];
-      }
-    }
+  //   if (totalPages <= 3) {
+  //     pagesToShow = Array.from({ length: totalPages }, (_, i) => i + 1);
+  //   } else {
+  //     if (currentPage < 2) {
+  //       pagesToShow = [1, 2, 3];
+  //     } else if (currentPage >= totalPages - 2) {
+  //       pagesToShow = [totalPages - 2, totalPages - 1, totalPages];
+  //     } else {
+  //       pagesToShow = [currentPage, currentPage + 1, currentPage + 2];
+  //     }
+  //   }
   return (
     <section>
       <div className="flex items-center mb-4">
@@ -391,7 +406,7 @@ export default function ItemList({ productId }) {
         )}
         {showExport && (
           <Button onClick={handleChooseFlip} primary rounded>
-            {listChooseAll[paginate.currentPage]
+            {listChooseAll[currentPage]
               ? "Bỏ chọn tất cả"
               : "Chọn tất cả"}
           </Button>
@@ -403,15 +418,7 @@ export default function ItemList({ productId }) {
       </div>
       {renderedListItem}
       <div className="join mt-4 flex justify-center">
-        <button
-          className="join-item btn"
-          disabled={currentPage === 0}
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
-          Trước
-        </button>
-
-        {pagesToShow.map((page, idx) => (
+        {/* {Array.from({ length: totalPages }).map((_, idx) => (
           <button
             key={idx}
             className={`join-item btn ${currentPage === page - 1 ? 'btn-active' : ''}`}
@@ -419,15 +426,24 @@ export default function ItemList({ productId }) {
           >
             {page}
           </button>
-        ))}
-
-        <button
-          className="join-item btn"
-          disabled={currentPage === totalPages - 1}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          Sau
-        </button>
+        ))} */}
+        {totalPages > 0 && (
+          <ReactPaginate
+            className="join mt-4 flex justify-center"
+            pageLinkClassName="join-item btn"
+            breakLinkClassName="join-item btn"
+            activeLinkClassName="join-item btn btn-active"
+            // breakLabel="..."
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={1}
+            pageCount={totalPages}
+            // forcePage={currentPage}
+            renderOnZeroPageCount={null}
+            previousClassName="hidden"
+            nextClassName="hidden"
+          />
+        )}
       </div>
     </section>
   );

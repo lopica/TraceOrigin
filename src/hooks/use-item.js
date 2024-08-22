@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   requireLogin,
+  setTotalPages,
   updateItemList,
   updateUser,
   useSearchItemsQuery,
@@ -14,10 +15,8 @@ export default function useItem(productId, inputSearch) {
   const [itemsData, setItemsData] = useState([]);
   const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const [paginate, setPaginate] = useState({
-    totalPages: 0,
-    currentPage: 0,
-  });
+  const {currentPage} = useSelector(state=>state.itemSlice)
+
   const {
     data,
     isError: isItemError,
@@ -29,7 +28,7 @@ export default function useItem(productId, inputSearch) {
     {
       productId,
       pageSize: 6,
-      pageNumber: paginate.currentPage,
+      pageNumber: currentPage,
       startDate: inputSearch.startDate,
       endDate: inputSearch.endDate,
       name: "",
@@ -39,16 +38,12 @@ export default function useItem(productId, inputSearch) {
     },
     {
       skip: !isAuthenticated,
+      refetchOnMountOrArgChange: true,
     }
   );
 
   const setCurrentPage = (newPage) => {
-    setPaginate((prev) => {
-      return {
-        ...prev,
-        currentPage: newPage,
-      };
-    });
+    dispatch(setCurrentPage(newPage))
   };
 
   useEffect(() => {
@@ -63,12 +58,13 @@ export default function useItem(productId, inputSearch) {
     if (!isItemError && !isItemFetch && data?.content) {
       dispatch(updateItemList(data.content));
       setItemsData(data.content);
-      setPaginate((prev) => {
-        return {
-          ...prev,
-          totalPages: data.totalPages,
-        };
-      });
+      // setPaginate((prev) => {
+      //   return {
+      //     ...prev,
+      //     totalPages: data.totalPages,
+      //   };
+      // });
+      dispatch(setTotalPages(data.totalPages))
     }
   }, [isItemError, isItemFetch, data]);
 
@@ -78,8 +74,6 @@ export default function useItem(productId, inputSearch) {
     isItemError,
     isSuccess,
     error,
-    paginate,
-    setCurrentPage,
     refetch,
   };
 }
