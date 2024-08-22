@@ -74,13 +74,16 @@ const typeOptions = [
 
 Modal.setAppElement("#root");
 
-function ManuReportManager({reportTo}) {
+function ManuReportManager({reportTo = -1}) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(6);
-  const userIdList = reportTo !== null ? reportTo : useSelector((state) => state.userSlice.userId);
+  const userIdList = reportTo !== -1 ? reportTo : useSelector((state) => state.userSlice.userId);
   const { list: products } = useSelector((state) => state.productSlice);
+
+
+  
 
   const { data, error, isLoading, refetch } = useGetListReportsQuery({
     code: "",
@@ -300,6 +303,7 @@ function ManuReportManager({reportTo}) {
               >
                 <div className="flex items-center">
                   {getTypeIcon(issue.type)}
+                  
                   <span className="ml-2">{issue.code}</span>
                 </div>
                 <div className="ml-6">{issue.title}</div>
