@@ -35,13 +35,13 @@ const ProductDetailAI = ({ productId }) => {
           <div className="flex justify-between max-w-md mx-auto">
             <div className="flex flex-col">
               <div className="stat-title">Độ chính xác</div>
-              <div className="font-medium">{confidence}%</div>
+              <div className="font-medium">{confidence.toFixed(2)}%</div>
             </div>
           </div>
           <div className="flex flex-col">
-            <p><strong>Product Name:</strong> {product.productName}</p>
-            <p><strong>Category:</strong> {product.categoryName}</p>
-            <p><strong>Manufacturer Name:</strong> {product.nameManufacturer}</p>
+            <p><strong>Tên sản phẩm:</strong> {product.productName}</p>
+            <p><strong>Loại sản phẩm:</strong> {product.categoryName}</p>
+            <p><strong>Tên nhà sản xuát:</strong> {product.nameManufacturer}</p>
             <Link
               to={`/portal/detail/${product.userId}`}
               className="flex items-center text-blue-500 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
