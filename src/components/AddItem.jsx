@@ -10,11 +10,11 @@ import { useEffect, useState } from "react";
 import { updateCoordinate, useAddItemMutation } from "../store";
 import useToast from "../hooks/use-toast";
 import { useCheckStatusMutation } from "../../src/store/apis/productApi";
-import Tooltip from "./UI/Tooltip";
+import ConfirmationModal from "./UI/ConfirmModal";
 
-let modal;
 let province, district, ward;
 let request;
+
 export default function AddItem() {
   const { productDetail } = useSelector((state) => state.productSlice);
   const dispatch = useDispatch();
@@ -36,6 +36,7 @@ export default function AddItem() {
     handleOpen: handleClick,
     handleClose,
   } = useShow(false);
+
   const [addItem, { isLoading, isSuccess, isError }] = useAddItemMutation();
   const { coordinate, verifyAddress } = useSelector(
     (state) => state.locationData
@@ -43,6 +44,34 @@ export default function AddItem() {
   const { getToast } = useToast();
   const [checkStatus] = useCheckStatusMutation();
   const [isDisable, setIsDisable] = useState(false);
+  
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
+  const handleConfirm = () => {
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    addItem(request)
+      .unwrap()
+      .then((res) => {
+        dispatch(updateCoordinate([]));
+        setValue("province", "");
+        setValue("district", "");
+        setValue("ward", "");
+        setValue("address", "");
+        setValue("quantity", "");
+        setValue("descriptionOrigin", "");
+        handleClose();
+        setIsConfirmModalOpen(false);
+        getToast("Tạo nhật ký thành công");
+      })
+      .catch((res) => {
+        console.log(res);
+        setIsConfirmModalOpen(false);
+      });
+  };
+
   const onSubmit = (data) => {
     if (!verifyAddress) {
       getToast("Bạn cần xác thực địa chỉ để tạo nhật ký");
@@ -74,23 +103,8 @@ export default function AddItem() {
     delete request.address;
     delete request.warranty;
 
-    console.log(request);
-
-    addItem(request)
-      .unwrap()
-      .then((res) => {
-        console.log("vo day");
-        dispatch(updateCoordinate([]));
-        setValue("province", "");
-        setValue("district", "");
-        setValue("ward", "");
-        setValue("address", "");
-        setValue("quantity", "");
-        setValue("descriptionOrigin", "");
-        handleClose();
-        getToast("Tạo nhật ký thành công");
-      })
-      .catch((res) => console.log(res));
+    // Open confirmation modal before submitting
+    handleConfirm();
   };
 
   useEffect(() => {
@@ -101,80 +115,15 @@ export default function AddItem() {
         });
         try {
           const statusMessage = await checkStatus(productDetail.productId).unwrap();
-          if (statusMessage === "1") {
-            setIsDisable(true);
-          } else {
-            setIsDisable(false);
-          }
+          setIsDisable(statusMessage === "1");
         } catch (error) {
           setIsDisable(false);
         }
       }
     };
-    
+
     fetchStatusAndSetDefaults();
   }, [productDetail, reset]);
-
-  modal = (
-    <Modal onClose={handleClose}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        onKeyDown={handleKeyDown}
-        noValidate
-        className="p-4 px-8"
-      >
-        <h1 className="text-center text-2xl mb-4">Tạo nhật ký</h1>
-        <Input
-          label="Số nhật ký tạo"
-          type="number"
-          required
-          unit="cái"
-          {...register("quantity", {
-            required: "Bạn cần nhập số lượng",
-            min: {
-              value: 1,
-              message: "Số lượng nhật ký phải là 1 sô dương",
-            },
-            validate: (value) => {
-              return Number.isInteger(Number(value))
-                ? true
-                : "Số lượng phải là một số nguyên";
-            },
-          })}
-          error={errors.quantity?.message}
-        />
-        <AddressInputGroup
-          register={register}
-          getValues={getValues}
-          setValue={setValue}
-          errors={errors}
-          control={control}
-          required
-          watch={watch}
-          message='Địa chỉ sản xuất'
-        />
-        <Input
-          label="Mô tả tình trạng sản phẩm hiện tại"
-          type="text"
-          placeholder="Treo đồ, bàn tháo lắp nhanh,..."
-          {...register("descriptionOrigin")}
-          error={errors.descriptionOrigin?.message}
-        />
-        <Input
-          label="Thời gian bảo hành"
-          type="number"
-          unit="Tháng"
-          {...register("warranty")}
-          disabled
-        />
-        <div className="flex justify-end mt-8 pb-4">
-          <Button primary rounded isLoading={isLoading}>
-            Tạo nhật ký
-          </Button>
-        </div>
-      </form>
-    </Modal>
-  );
 
   return (
     <>
@@ -196,7 +145,70 @@ export default function AddItem() {
           Sản phẩm đã bị khóa
         </Button>
       )}
-      {showModal && modal}
+      {showModal && (
+        <Modal onClose={handleClose}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            onKeyDown={handleKeyDown}
+            noValidate
+            className="p-4 px-8"
+          >
+            <h1 className="text-center text-2xl mb-4">Tạo nhật ký</h1>
+            <Input
+              label="Số nhật ký tạo"
+              type="number"
+              required
+              unit="cái"
+              {...register("quantity", {
+                required: "Bạn cần nhập số lượng",
+                min: {
+                  value: 1,
+                  message: "Số lượng nhật ký phải là 1 sô dương",
+                },
+                validate: (value) => Number.isInteger(Number(value)) || "Số lượng phải là một số nguyên",
+              })}
+              error={errors.quantity?.message}
+            />
+            <AddressInputGroup
+              register={register}
+              getValues={getValues}
+              setValue={setValue}
+              errors={errors}
+              control={control}
+              required
+              watch={watch}
+              message='Địa chỉ sản xuất'
+            />
+            <Input
+              label="Mô tả tình trạng sản phẩm hiện tại"
+              type="text"
+              placeholder="Treo đồ, bàn tháo lắp nhanh,..."
+              {...register("descriptionOrigin")}
+              error={errors.descriptionOrigin?.message}
+            />
+            <Input
+              label="Thời gian bảo hành"
+              type="number"
+              unit="Tháng"
+              {...register("warranty")}
+              disabled
+            />
+            <div className="flex justify-end mt-8 pb-4">
+              <Button primary rounded isLoading={isLoading}>
+                Tạo nhật ký
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmSubmit}
+        headerContent="Xác nhận tạo nhật ký"
+        content="Bạn không thể xóa hay sửa đổi nhật kí, bạn có chắc chắn muốn tạo nhật ký với thông tin này không?"
+        isLoading={isLoading}
+      />
     </>
   );
 }
