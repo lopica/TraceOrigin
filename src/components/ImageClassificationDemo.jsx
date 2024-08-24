@@ -380,14 +380,14 @@ const ImageClassificationDemo = () => {
                         </div>
                         <div className="flex flex-col ">
                           <p>
-                            <strong>Product Name:</strong>{" "}
+                            <strong>Tên sản phẩm:</strong>{" "}
                             {product?.productName}
                           </p>
                           <p>
-                            <strong>Category:</strong> {product?.categoryName}
+                            <strong>Loại sản phẩm:</strong> {product?.categoryName}
                           </p>
                           <p>
-                            <strong>Manufacturer Name:</strong>{" "}
+                            <strong>Tên nhà sản xuất:</strong>{" "}
                             {product?.nameManufacturer}
                           </p>
                           <Link
@@ -465,20 +465,20 @@ const ImageClassificationDemo = () => {
                   <div className="flex ">
                     <div className="flex flex-col">
                       <div className="stat-title">Độ chính xác</div>
-                      <div className="font-medium">{confidence}%</div>
+                      <div className="font-medium">{confidence.toFixed(2)}%</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col ml-[10px]">
                   <p>
-                    <strong>Product Name:</strong> {product.productName}
+                    <strong>Tên sản phẩm:</strong> {product.productName}
                   </p>
                   <p>
-                    <strong>Category:</strong> {product.categoryName}
+                    <strong>Loại sản phẩm:</strong> {product.categoryName}
                   </p>
                   <p>
-                    <strong>Manufacturer Name:</strong>{" "}
+                    <strong>Tên nhà sản xuất:</strong>{" "}
                     {product.nameManufacturer}
                   </p>
                   <Link

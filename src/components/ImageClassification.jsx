@@ -275,7 +275,7 @@ export default function ImageClassification() {
                       <div className="flex">
                         <div className="flex flex-col">
                           <div className="stat-title">Độ chính xác</div>
-                          <div className="font-medium">{confidence}%</div>
+                          <div className="font-medium">{confidence.toFixed(2)}%</div>
                         </div>
                         <div className="stat-figure text-secondary"></div>
                       </div>
@@ -333,7 +333,7 @@ export default function ImageClassification() {
                 <div className="flex ">
                   <div className="flex flex-col">
                     <div className="stat-title">Độ chính xác</div>
-                    <div className="font-medium">{confidence}%</div>
+                    <div className="font-medium">{confidence.toFixed(2)}%</div>
                   </div>
                   <div className="stat-figure text-secondary"></div>
                 </div>

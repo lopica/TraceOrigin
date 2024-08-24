@@ -457,6 +457,7 @@ export default function useDiary(
           // 3 là currentOwner
           // 4 là party từng tham gia
           // 5 là exception
+          // 8 là disable
 
           // check Authorized
           // 0 sản phẩm abort
@@ -487,6 +488,10 @@ export default function useDiary(
             //party từng tham gia
             setRoleDiary("old");
             break;
+          case 8:
+            setRoleDiary('disable')
+            setStep('disable')
+            break
           default:
             //exception
             setRoleDiary("error");

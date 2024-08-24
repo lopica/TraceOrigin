@@ -104,10 +104,10 @@ function DetailManufacturer() {
               <strong>Email:</strong> {user.email}
             </p>
             <p className="text-gray-600">
-              <strong>Phone:</strong> {user.phone}
+              <strong>Số điện thoại:</strong> {user.phone}
             </p>
             <p className="text-gray-600">
-              <strong>Address:</strong> {user.location?.address},{" "}
+              <strong>Địa chỉ:</strong> {user.location?.address},{" "}
               {user.location?.ward}, {user.location?.district},{" "}
               {user.location?.city}, {user.location?.country}
             </p>

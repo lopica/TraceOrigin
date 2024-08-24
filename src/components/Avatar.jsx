@@ -58,20 +58,26 @@ function Avatar() {
   //   }
   // }, [isAuthenticated, refetch, dispatch]);
 
+  // useEffect(() => {
+  //   if (user?.userId) {
+  //     // if (isFirstRun.current) {
+  //     //   isFirstRun.current = false;
+  //     //   return;
+  //     // }
+  //     const lastUserId = Number(localStorage.getItem("lastUserId"));
+  //     console.log(lastUserId);
+  //     console.log(user.userId);
+  //     if (lastUserId !== user.userId && !hasRefetched.current) {
+  //       // console.log('vo day')
+  //       refetch();
+  //       hasRefetched.current = true; // Set the ref to prevent further refetches
+  //     }
+  //   }
+  // }, [user, refetch]);
+
   useEffect(() => {
-    if (user?.userId) {
-      // if (isFirstRun.current) {
-      //   isFirstRun.current = false;
-      //   return;
-      // }
-      const lastUserId = localStorage.getItem("lastUserId");
-      if (lastUserId !== user.userId && !hasRefetched.current) {
-        // console.log('vo day')
-        refetch();
-        hasRefetched.current = true; // Set the ref to prevent further refetches
-      }
-    }
-  }, [user, refetch]);
+    if (isAuthenticated)  refetch();
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isSuccess && !isFetching) {
@@ -85,7 +91,8 @@ function Avatar() {
       dispatch(userApi.util.resetApiState());
       hasRefetched.current = true;
       // dispatch(requireLogin());
-      if (matchPath("manufacturer/products/:productId/:itemId", currentPath)) dispatch(requireLogin());
+      if (matchPath("manufacturer/products/:productId/:itemId", currentPath))
+        dispatch(requireLogin());
     }
   }, [isError, error, dispatch]);
 

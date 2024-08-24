@@ -6,23 +6,22 @@ const Content3HomePage = () => {
     <div className="py-12 md:p-12">
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto">
         {/* Nửa trái: Biểu đồ */}
-        <div className="md:w-1/3 flex flex-col items-center justify-center text-center">
-          <img
-            className="object-contain h-3/4 w-auto"
-            src="/phone_homepage.png"
-            alt="Data Analysis Graph"
-          />
-          
-           {/* <ThreeDModelViewer/> */}
+        <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
+        <iframe
+        className="w-full h-full"
+              src="https://www.youtube.com/embed/SqnHanMQDGI"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+
+          {/* <ThreeDModelViewer/> */}
         </div>
         {/* Nửa phải: Nội dung */}
-        <div className="md:w-2/3 flex flex-col items-center justify-center text-justify text-lg">
+        <div className="md:w-1/2 flex flex-col items-center justify-center text-justify text-lg">
           <div className="container mx-auto px-4 py-8">
-            <img 
-              src="/logo_full.png" // Đường dẫn tới logo của hãng
-              alt="Logo"
-              className="h-20 w-auto object-contain" // Điều chỉnh kích thước logo theo ý muốn
-            />
+            
             <h1 className="text-xl font-semibold mb-8">
               HỆ THỐNG TRUY XUẤT NGUỒN GỐC
             </h1>
@@ -50,7 +49,8 @@ const Content3HomePage = () => {
                   Áp dụng WebXR
                 </h3>
                 <p className="text-md">
-                  Tạo ra môi trường ảo hoàn toàn, nơi người dùng có thể tương tác như trong thế giới thực.
+                  Tạo ra môi trường ảo hoàn toàn, nơi người dùng có thể tương
+                  tác như trong thế giới thực.
                 </p>
               </div>
             </div>
