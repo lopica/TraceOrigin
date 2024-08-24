@@ -87,19 +87,25 @@ export default function Layout() {
   }, [tourActive]);
 
   useEffect(() => {
-    console.log(currentPath);
+    console.log(user?.userId);
+    const lastUserId = Number(localStorage.getItem("lastUserId"));
+    console.log(lastUserId);
+    console.log(user?.userId !== lastUserId);
     if (
       user?.role &&
+      user?.userId !== lastUserId &&
       user.role?.roleId == 2 &&
       currentPath === "/manufacturer/products" &&
       (user?.status === 7 || user?.status === 0 || user?.status === '7' || user?.status === '0') &&
-      isAuthenticated
+      isAuthenticated  && stepIndex < 3
     ) {
       console.log("vo day nhe");
       dispatch(setTourActive(true));
       dispatch(setRun(true));
     }
-  }, [user]);
+    if (currentPath === "/manufacturer/certificate") return
+    // else dispatch(setSteps([]))
+  }, [user, isAuthenticated, currentPath]);
 
   useEffect(() => {
     if (!isAuthenticated) {

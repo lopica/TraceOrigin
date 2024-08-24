@@ -167,7 +167,7 @@ function ManuCertificateList() {
     //     }
     //   }
     // }
-    if (isAuthenticated) {
+    if (isAuthenticated && stepIndex < 3 && !isCertificateFetching) {
       if (
         certificateData &&
         (user?.status === 7 ||
