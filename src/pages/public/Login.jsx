@@ -41,12 +41,12 @@ function Login() {
   useEffect(() => {
     if (isAuthenticated && role) {
       if (role == 1) {
-        navigate("/admin/ManufacturerList");
+        navigate("/admin/ManufacturerList", { replace: true });
       } else if (role == 2) {
-        navigate("/manufacturer/products");
+        navigate("/manufacturer/products", { replace: true });
       }
       else if (role == 3) {
-        navigate("/admin/customerService");
+        navigate("/admin/customerService", { replace: true });
       }
     }
   }, [isAuthenticated, role]);
