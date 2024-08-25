@@ -76,16 +76,6 @@ function Avatar() {
   // }, [user, refetch]);
 
   useEffect(() => {
-    if (isAuthenticated)  refetch();
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (isSuccess && !isFetching) {
-      dispatch(updateUser(data));
-    }
-  }, [isSuccess, isFetching, dispatch]);
-
-  useEffect(() => {
     if (isError && error.status === 401 && !isFetching) {
       console.log("vo day");
       dispatch(userApi.util.resetApiState());
@@ -95,6 +85,15 @@ function Avatar() {
         dispatch(requireLogin());
     }
   }, [isError, error, dispatch]);
+  useEffect(() => {
+    if (isAuthenticated) refetch();
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      dispatch(updateUser(data));
+    }
+  }, [isSuccess, isFetching, dispatch]);
 
   const renderAvatar = (profileIMG, firstName) => {
     if (profileIMG) {

@@ -29,83 +29,83 @@ export default function Layout() {
   );
   const { isAuthenticated } = useSelector((state) => state.authSlice);
 
-  const handleJoyrideCallback = (data) => {
-    const {
-      action,
-      index,
-      step: { nav },
-      type,
-    } = data;
-    if (type === "step:after") {
-      if (nav?.next) {
-        dispatch(setRun(false));
-        navigate(nav?.next);
-      } else if (stepIndex == 3) {
-        dispatch(setRun(false));
-      } else {
-        dispatch(setStepIndexNext());
-      }
-    }
-  };
+  // const handleJoyrideCallback = (data) => {
+  //   const {
+  //     action,
+  //     index,
+  //     step: { nav },
+  //     type,
+  //   } = data;
+  //   if (type === "step:after") {
+  //     if (nav?.next) {
+  //       dispatch(setRun(false));
+  //       navigate(nav?.next);
+  //     } else if (stepIndex == 3) {
+  //       dispatch(setRun(false));
+  //     } else {
+  //       dispatch(setStepIndexNext());
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    if (tourActive) {
-      dispatch(
-        setSteps([
-          {
-            target: "body",
-            content:
-              "Chào bạn, để có thể sử dụng dịch vụ của chúng tôi, đầu tiên bạn sẽ cần xác thực về tổ chức của bạn",
-            placement: "center",
-            nav: {},
-          },
-          {
-            target: "#menu-2",
-            content: "Đầu tiên, bạn cần xác thực về tổ chức của bạn tại đây",
-            nav: {
-              next: "/manufacturer/certificate",
-            },
-          },
-          {
-            target: "#add-ceritficate",
-            content:
-              "Tại đây bạn sẽ tải lên hình ảnh giấy tờ từ cơ quan bạn để chứng minh sự hợp pháp của tổ chức của bạn",
-            nav: {
-              previous: "/manufacturer/products",
-            },
-          },
-          {
-            target: "#verify-certificate",
-            content:
-              "Sau khi điền thông tin chứng chỉ, bạn hãy bấm vào xác minh để admin phê duyệt, thời gian duyệt từ 1-2 ngày giờ hành chính",
-          },
-        ])
-      );
-    } else {
-      dispatch(setSteps([]));
-    }
-  }, [tourActive]);
+  // useEffect(() => {
+  //   if (tourActive) {
+  //     dispatch(
+  //       setSteps([
+  //         {
+  //           target: "body",
+  //           content:
+  //             "Chào bạn, để có thể sử dụng dịch vụ của chúng tôi, đầu tiên bạn sẽ cần xác thực về tổ chức của bạn",
+  //           placement: "center",
+  //           nav: {},
+  //         },
+  //         {
+  //           target: "#menu-2",
+  //           content: "Đầu tiên, bạn cần xác thực về tổ chức của bạn tại đây",
+  //           nav: {
+  //             next: "/manufacturer/certificate",
+  //           },
+  //         },
+  //         {
+  //           target: "#add-ceritficate",
+  //           content:
+  //             "Tại đây bạn sẽ tải lên hình ảnh giấy tờ từ cơ quan bạn để chứng minh sự hợp pháp của tổ chức của bạn",
+  //           nav: {
+  //             previous: "/manufacturer/products",
+  //           },
+  //         },
+  //         {
+  //           target: "#verify-certificate",
+  //           content:
+  //             "Sau khi điền thông tin chứng chỉ, bạn hãy bấm vào xác minh để admin phê duyệt, thời gian duyệt từ 1-2 ngày giờ hành chính",
+  //         },
+  //       ])
+  //     );
+  //   } else {
+  //     dispatch(setSteps([]));
+  //   }
+  // }, [tourActive]);
 
-  useEffect(() => {
-    console.log(user?.userId);
-    const lastUserId = Number(localStorage.getItem("lastUserId"));
-    console.log(lastUserId);
-    console.log(user?.userId !== lastUserId);
-    if (
-      user?.role &&
-      // user?.userId !== lastUserId &&
-      user.role?.roleId == 2 &&
-      currentPath === "/manufacturer/products" &&
-      (user?.status === 7 || user?.status === 0 || user?.status === '7' || user?.status === '0') &&
-      isAuthenticated  && stepIndex < 3
-    ) {
-      console.log("vo day nhe");
-      dispatch(setTourActive(true));
-      dispatch(setRun(true));
-    }
-    if (currentPath === "/manufacturer/certificate") return
-    // else dispatch(setSteps([]))
-  }, [user, isAuthenticated, currentPath]);
+  // useEffect(() => {
+  //   console.log(user?.userId);
+  //   const lastUserId = Number(localStorage.getItem("lastUserId"));
+  //   console.log(lastUserId);
+  //   console.log(user?.userId !== lastUserId);
+  //   if (
+  //     user?.role &&
+  //     // user?.userId !== lastUserId &&
+  //     user.role?.roleId == 2 &&
+  //     currentPath === "/manufacturer/products" &&
+  //     (user?.status === 7 || user?.status === 0 || user?.status === '7' || user?.status === '0') &&
+  //     isAuthenticated  && stepIndex < 3
+  //   ) {
+  //     console.log("vo day nhe");
+  //     dispatch(setTourActive(true));
+  //     dispatch(setRun(true));
+  //   }
+  //   if (currentPath === "/manufacturer/certificate") return
+  //   // else dispatch(setSteps([]))
+  // }, [user, isAuthenticated, currentPath]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -119,7 +119,7 @@ export default function Layout() {
 
   return (
     <Fragment>
-      <Joyride
+      {/* <Joyride
         steps={steps}
         run={run}
         continuous={true}
@@ -130,7 +130,7 @@ export default function Layout() {
         hideCloseButton
         hideBackButton
         debug
-      />
+      /> */}
       <Toast show={show}>{content}</Toast>
       <header className="fixed top-0 left-0 right-0 w-full h-[8vh] z-10">
         <Header />
