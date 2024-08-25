@@ -54,7 +54,7 @@ const CarouselHomePage = () => {
             <span className="block">TRUY XUẤT NGUỒN GỐC</span>
           </h1>
         </div>
-        <p className="text-lg text-white text-justify mb-8">
+        <p className="text-lg text-black text-justify mb-8">
           Giải pháp dành cho tất cả mọi người thực hiện truy xuất nguồn gốc sản
           phẩm nhằm tăng giá trị và sự khác biệt so với các sản phẩm khác trên
           thị trường. Chứng nhận về chất lượng, nguồn.

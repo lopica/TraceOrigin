@@ -5,12 +5,12 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend, ChartDataLabels); // Register the plugin
 
-import { useGetNumberVisitsDiagramQuery } from '../../store/apis/elkApi';
+import { useGetNumberVisitsDiagramByUserQuery } from '../../store/apis/elkApi';
 import TimeSelect from './monitoring/TimeSelect';
 
-const ChartVisit = ({selectedTime}) => {
+const ChartVisitByUser = ({selectedTime}) => {
 
-  const { data: apiData, error, isLoading, refetch } = useGetNumberVisitsDiagramQuery(selectedTime);
+  const { data: apiData, error, isLoading, refetch } = useGetNumberVisitsDiagramByUserQuery(selectedTime);
 
   const getDateFromTimestamp = (timestamp) => {
     const date = new Date(timestamp);
@@ -18,7 +18,6 @@ const ChartVisit = ({selectedTime}) => {
     const month = date.getMonth() + 1;
     return `${day}/${month}`;
   };
-
   useEffect(() => {
     refetch();
 }, [selectedTime, refetch]);
@@ -93,4 +92,4 @@ const ChartVisit = ({selectedTime}) => {
   );
 };
 
-export default ChartVisit;
+export default ChartVisitByUser;

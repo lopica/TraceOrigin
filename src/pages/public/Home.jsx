@@ -68,7 +68,7 @@ function Home() {
           backgroundSize: "cover", // Ensure the image covers the area
         }}
       >
-        <div className="hero-overlay bg-opacity-50">
+        <div className="hero-overlay bg-opacity-5">
           <section className="flex justify-center gap-0 md:gap-6 my-12">
             <div className="md:w-3/5 ml-0 md:ml-16">
               <CarouselHomePage />
@@ -80,23 +80,97 @@ function Home() {
         </div>
       </div>
       {/* ============================ */}
-      <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
-        <ActiveMethodHomePage />
+      <div
+        className="hero"
+        style={{
+          backgroundImage: "url(/hero2.jpg)",
+          backgroundAttachment: "fixed", // Keep background in place
+          backgroundPosition: bgPosition, // Change position based on scroll
+          backgroundSize: "cover", // Ensure the image covers the area
+        }}
+      >
+        <div className="hero-overlay bg-opacity-5">
+          <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
+            <ActiveMethodHomePage />
+          </div>
+        </div>
       </div>
-      <Content1HomePage />
-      <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
-        <Content2HomePage />
-      </div>
-
-      <Content3HomePage />
       {/* ============================ */}
-      <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
-        <Top5Carousel/>
+      <div
+        className="hero"
+        style={{
+          backgroundImage: "url(/hero2.jpg)",
+          backgroundAttachment: "fixed", // Keep background in place
+          backgroundPosition: bgPosition, // Change position based on scroll
+          backgroundSize: "cover", // Ensure the image covers the area
+        }}
+      >
+        <div className="hero-overlay bg-opacity-5">
+          <Content1HomePage />
+        </div>
       </div>
-      <div>
-        <ConsultationForm/>
+      {/* ============================ */}
+      <div
+        className="hero"
+        style={{
+          backgroundImage: "url(/hero2.jpg)",
+          backgroundAttachment: "fixed", // Keep background in place
+          backgroundPosition: bgPosition, // Change position based on scroll
+          backgroundSize: "cover", // Ensure the image covers the area
+        }}
+      >
+        <div className="hero-overlay bg-opacity-5">
+          <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
+            <Content2HomePage />
+          </div>
+        </div>
       </div>
-
+      {/* ============================ */}
+      <div
+        className="hero"
+        style={{
+          backgroundImage: "url(/hero2.jpg)",
+          backgroundAttachment: "fixed", // Keep background in place
+          backgroundPosition: bgPosition, // Change position based on scroll
+          backgroundSize: "cover", // Ensure the image covers the area
+        }}
+      >
+        <div className="hero-overlay bg-opacity-5">
+          <Content3HomePage />
+        </div>
+      </div>
+      {/* ============================ */}
+      <div
+        className="hero"
+        style={{
+          backgroundImage: "url(/hero2.jpg)",
+          backgroundAttachment: "fixed", // Keep background in place
+          backgroundPosition: bgPosition, // Change position based on scroll
+          backgroundSize: "cover", // Ensure the image covers the area
+        }}
+      >
+        <div className="hero-overlay bg-opacity-5">
+          <div className="bg-colorBgHomePage m-6 rounded-box shadow-md">
+            <Top5Carousel />
+          </div>
+        </div>
+      </div>
+      {/* ============================ */}
+      <div
+        className="hero"
+        style={{
+          backgroundImage: "url(/hero2.jpg)",
+          backgroundAttachment: "fixed", // Keep background in place
+          backgroundPosition: bgPosition, // Change position based on scroll
+          backgroundSize: "cover", // Ensure the image covers the area
+        }}
+      >
+        <div className="hero-overlay bg-opacity-5">
+          <div>
+            <ConsultationForm />
+          </div>
+        </div>
+      </div>
       <Footer />
     </main>
   );

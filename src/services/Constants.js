@@ -36,6 +36,13 @@ export const CONSTANTS = {
       icon: FaLifeRing,
       role: "2",
     },
+    {
+      id: 3,
+      name: "Màn giám sát",
+      url: "/manufacturer/manuMonitoring",
+      icon: FaChartLine,
+      role: "2",
+    },
 
     // {name: 'Report', url: '/manufacturer/products'},
     // {name: 'Warranty', url: '/manufacturer/products'},

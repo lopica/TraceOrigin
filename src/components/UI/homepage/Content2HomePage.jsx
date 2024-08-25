@@ -27,7 +27,7 @@ const Content2HomePage = () => {
   },
 ];
   return (
-    <div className="py-12 md:p-24">
+    <div className="py-12 md:p-12">
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto ">
         {/* Nửa trái: Nội dung */}
         <div className="md:w-1/2 flex flex-col items-center justify-center text-center">

@@ -36,6 +36,15 @@ const elkApi = createApi({
           }
         }),
       }),
+      getNumberVisitsDiagramByUser: builder.query({
+        query: (type) => ({
+          url: '/getNumberVisitsDiagramByUser',
+          method: 'POST',
+          body: {
+            "type": type || ""
+          }
+        }),
+      }),
       getHistoryUploadAI: builder.query({
         query: () => ({
           url: '/getHistoryUploadAI',
@@ -48,4 +57,4 @@ const elkApi = createApi({
 });
 
 export { elkApi };
-export const { useGetNumberVisitsAllTimeQuery, useGetNumberVisitsDiagramQuery, useGetHistoryUploadAIQuery } = elkApi;
+export const { useGetNumberVisitsAllTimeQuery, useGetNumberVisitsDiagramQuery, useGetNumberVisitsDiagramByUserQuery, useGetHistoryUploadAIQuery } = elkApi;

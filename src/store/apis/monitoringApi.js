@@ -29,6 +29,14 @@ const monitoringApi = createApi({
           };
         },
       }),
+      manufacturer: builder.query({
+        query: () => {
+          return {
+            url: "/manufacturer",
+            method: "GET",
+          };
+        },
+      }),
     };
   },
 });
@@ -37,5 +45,6 @@ export { monitoringApi };
 export const {
 
   useAdminQuery,
+  useManufacturerQuery,
 
 } = monitoringApi;

@@ -13,7 +13,7 @@ import {
 
 const ActiveMethodHomePage = () => {
   return (
-    <div className="flex flex-col items-center justify-center md:p-24 py-12">
+    <div className="flex flex-col items-center justify-center md:p-12 py-12">
       {/* Tên nội dung */}
       <h2 className="text-xl font-bold mb-4 text-center">PHƯƠNG THỨC HOẠT ĐỘNG</h2>
 

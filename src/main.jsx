@@ -35,6 +35,7 @@ import UpdateFileAI from "./pages/admin/UpdateFileAI";
 import ManagerRequestTranningImage from "./pages/admin/ManagerRequestTranningImage";
 import CustomerSupportList from "./pages/admin/CustomerSupportList";
 import DetailMaufactor from "./components/UI/homepage/DetailMaufactor"
+import ManuMonitoring from "./pages/manufacturer/ManuMonitoring";
 const persistor = persistStore(store);
 
 function AppRouter() {
@@ -81,6 +82,7 @@ function AppRouter() {
             { path: "reportManager/:id", element: <ManuReportManager reportTo={null}/>},
             { path: "createReport", element: <ManuReportManager />},
             { path: "support", element: <ManuSupportSystem /> },
+            { path: "manuMonitoring", element: <ManuMonitoring /> },
           ],
         },
         {

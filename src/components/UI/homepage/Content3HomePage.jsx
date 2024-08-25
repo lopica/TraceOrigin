@@ -4,11 +4,11 @@ import ThreeDModelViewer from "../ThreeDModelViewer";
 const Content3HomePage = () => {
   return (
     <div className="py-12 md:p-12">
-      <div className="flex flex-col md:flex-row max-w-6xl mx-auto">
+      <div className="flex flex-col md:flex-row gap-16 max-w-6xl mx-auto">
         {/* Nửa trái: Biểu đồ */}
         <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
         <iframe
-        className="w-full h-full"
+        className="w-full h-full rounded-box"
               src="https://www.youtube.com/embed/SqnHanMQDGI"
               title="YouTube video player"
               frameBorder="0"
