@@ -5,7 +5,6 @@ import {
   useGetItemLogHistoryQuery,
 } from "../store";
 import { useSelector } from "react-redux";
-import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import Map from "./Map";
 import { Link } from "react-router-dom";
 import useShow from "../hooks/use-show";
@@ -14,6 +13,8 @@ import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import SortableTable from "./SortableTable";
+import { getFullTimeFromEpoch } from "../utils/getFullTimeFromEpoch";
+import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 
 let event, history;
 
@@ -128,7 +129,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 <li>
                   <p>
                     Thời gian diễn ra:{" "}
-                    {getDateFromEpochTime(historyDetail?.timeReceive) ||
+                    {getFullTimeFromEpoch(historyDetail?.timeReceive) ||
                       "không có"}
                   </p>
                 </li>
@@ -177,7 +178,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 <li>
                   <p>
                     Thời gian ghi nhận:{" "}
-                    {getDateFromEpochTime(historyDetail?.timeReceive) ||
+                    {getFullTimeFromEpoch(historyDetail?.timeReceive) ||
                       "không có"}
                   </p>
                 </li>
@@ -215,7 +216,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 <li>
                   <p>
                     Thời gian diễn ra:{" "}
-                    {getDateFromEpochTime(historyDetail?.timeReceive) ||
+                    {getFullTimeFromEpoch(historyDetail?.timeReceive) ||
                       "không có"}
                   </p>
                 </li>
@@ -337,7 +338,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               <li>
                 <p>
                   Thời gian diễn ra:{" "}
-                  {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
+                  {getFullTimeFromEpoch(eventData?.timeReceive) || "không có"}
                 </p>
               </li>
               <li>
@@ -383,7 +384,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               <li>
                 <p>
                   Thời gian ghi nhận:{" "}
-                  {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
+                  {getFullTimeFromEpoch(eventData?.timeReceive) || "không có"}
                 </p>
               </li>
               {/* <li>
@@ -417,7 +418,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               <li>
                 <p>
                   Thời gian diễn ra:{" "}
-                  {getDateFromEpochTime(eventData?.timeReceive) || "không có"}
+                  {getFullTimeFromEpoch(eventData?.timeReceive) || "không có"}
                 </p>
               </li>
               <li>
