@@ -10,11 +10,12 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../components/UI/Pagination";
 import { FiPlus, FiEdit, FiTrash } from "react-icons/fi";
-import { FaPlus, FaSearch, FaUndoAlt, FaLock} from "react-icons/fa";
+import { FaPlus, FaSearch, FaUndoAlt, FaLock } from "react-icons/fa";
 import useCategoryEdit from "../../hooks/use-category-Edit";
 import useToast from "../../hooks/use-toast";
 import ManuProductEdit from "../manufacturer/ManuProductEdit";
 import ConfirmationModal from "../../components/UI/ConfirmModal";
+import { ImFilesEmpty } from "react-icons/im";
 import {
   productApi,
   useDeleteProductByIdMutation,
@@ -251,11 +252,12 @@ function ManuProductList() {
     }
   };
 
-  useEffect(()=>{
-    if (watch('startDate') && !watch('endDate')) setValue("endDate", formatDate(new Date()))
+  useEffect(() => {
+    if (watch("startDate") && !watch("endDate"))
+      setValue("endDate", formatDate(new Date()));
     // console.log(new Date())
     //update end date to current date
-  },[watch('startDate'), watch('endDate')])
+  }, [watch("startDate"), watch("endDate")]);
 
   const addNewButton = (
     <div className="flex justify-center md:justify-start px-8">
@@ -281,9 +283,15 @@ function ManuProductList() {
   );
 
   return (
-<div className={`relative flex flex-col md:flex-row p-4 ${user.status === 2 ? ' pointer-events-none' : ''}`}>
+    <div
+      className={`relative flex flex-col md:flex-row p-4 ${
+        user.status === 2 ? " pointer-events-none" : ""
+      }`}
+    >
       <div className="md:w-1/4 p-4">
-        <h2 className="text-lg font-semibold mb-4" id="test">Bộ lọc</h2>
+        <h2 className="text-lg font-semibold mb-4" id="test">
+          Bộ lọc
+        </h2>
         <form onKeyDown={handleKeyDown} onSubmit={handleSubmit(searchHandler)}>
           <Input
             label="Tên sản phẩm"
@@ -307,7 +315,7 @@ function ManuProductList() {
               control={control}
               {...register("startDate", {
                 validate: (value) => {
-                  if (!value) return true
+                  if (!value) return true;
                   const startDate = getEpochFromDate(value);
                   const endDate = getValues("endDate")
                     ? getEpochFromDate(new Date(getValues("endDate")))
@@ -349,11 +357,28 @@ function ManuProductList() {
           </div>
         </form>
       </div>
-      <div className="md:w-3/4 p-4">
+
+      {products.length == 0 ? (
+        <div className="md:w-3/4 p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Danh sách sản phẩm</h2>
           {addNewButton}
-        </div>{" "}
+        </div>
+        <div className="flex flex-col items-center text-center justify-center mt-16">
+          <ImFilesEmpty className=" text-4xl mb-4" />
+          <h2 className="text-xl font-bold mb-4">Thêm chứng chỉ</h2>
+          <p className="text-gray-600 mb-2">
+            Bạn cần thêm những chứng chỉ liên quan để đăng ký được sản phẩm của
+            bạn.
+          </p>
+        </div>
+        </div>
+      ) : (
+        <div className="md:w-3/4 p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Danh sách sản phẩm</h2>
+          {addNewButton}
+        </div>
         <div className="flex justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 gap-y-4 sm:gap-4 sm:gap-y-8 px-8">
             {renderedProducts}
@@ -387,20 +412,25 @@ function ManuProductList() {
           isLoading={isLoadingModal}
         />
       </div>
+      )}
+ 
       {user.status === 2 && (
-    <div className="absolute inset-0 flex items-center justify-center h-[92vh] bg-gray-800 bg-opacity-75">
-    <div className="flex flex-col items-center text-center justify-center h-[92vh]">
-      <FaLock className="text-red-600 text-4xl mb-4" />
-        <h2 className="text-xl font-bold mb-4 text-white">Tài khoản bị khoá</h2>
-        <p className="text-center text-gray-300">
-        Tài khoản của bạn đã bị khoá do một vài lý do, hãy gửi yêu cầu đến hỗ trợ hệ thống 
-        <br/>
-        để chúng tôi có thể cung cấp thêm thông tin cho bạn.
-        </p>
-      </div>
+        <div className="absolute inset-0 flex items-center justify-center h-[92vh] bg-gray-800 bg-opacity-75">
+          <div className="flex flex-col items-center text-center justify-center h-[92vh]">
+            <FaLock className="text-red-600 text-4xl mb-4" />
+            <h2 className="text-xl font-bold mb-4 text-white">
+              Tài khoản bị khoá
+            </h2>
+            <p className="text-center text-gray-300">
+              Tài khoản của bạn đã bị khoá do một vài lý do, hãy gửi yêu cầu đến
+              hỗ trợ hệ thống
+              <br />
+              để chúng tôi có thể cung cấp thêm thông tin cho bạn.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
-  )}
-</div>
   );
 }
 
