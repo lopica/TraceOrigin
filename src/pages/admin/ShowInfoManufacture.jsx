@@ -201,7 +201,7 @@ const ShowInfoManufacture = ({ id, isOpen, onClose }) => {
             </>
           ) : (
            <>
-            <ProductListAdmin data={dataProduct} />
+            <ProductListAdmin data={dataProduct} refetch={refetch}/>
            </>
           )}
           </div>
