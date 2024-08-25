@@ -53,7 +53,7 @@ function Login() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-cover bg-center" style={{ backgroundImage: "url('/hero2.jpg')" }}>
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-black opacity-5"></div>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm bg-white p-6 rounded-box shadow-lg relative z-10">
         <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
           Đăng nhập
