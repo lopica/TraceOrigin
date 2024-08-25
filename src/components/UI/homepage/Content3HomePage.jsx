@@ -9,7 +9,7 @@ const Content3HomePage = () => {
         <div className="md:w-1/2 flex flex-col items-center justify-center text-center">
         <iframe
         className="w-full h-full rounded-box"
-              src="https://www.youtube.com/embed/SqnHanMQDGI"
+              src="https://www.youtube.com/embed/AnirNoGb97k"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
