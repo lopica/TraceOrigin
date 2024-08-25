@@ -1320,7 +1320,7 @@ export default function NoApiConsign({ productRecognition }) {
     case "no-permission":
       form = (
         <div>
-          <BackBtn step="email" />
+          {!email && <BackBtn step="email" />}
           <p>
             Email này không có quyền ghi nhật ký sản phẩm này. Bạn có thể thử
             dùng email khác nhé.
@@ -1330,7 +1330,7 @@ export default function NoApiConsign({ productRecognition }) {
       break;
     case 'disable':
       form = <div>
-      <BackBtn step="email" />
+      {!email && <BackBtn step="email" />}
       <p>
         Email này hiện đang bị đình chỉ quyền ghi nhật ký sản phẩm này. Bạn có thể thử
         dùng email khác nhé.
@@ -1340,7 +1340,7 @@ export default function NoApiConsign({ productRecognition }) {
     default:
       form = (
         <div>
-          <BackBtn step="email" />
+          {!email && <BackBtn step="email" />}
           <p>Hệ thống đang gặp lỗi, bạn hãy thử lại sau nhé.</p>
         </div>
       );

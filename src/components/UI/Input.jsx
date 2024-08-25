@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { Controller } from "react-hook-form";
-import Select from "react-select";
+import CreatableSelect from 'react-select/creatable';
 import "react-datepicker/dist/react-datepicker.css";
-import { vi } from 'date-fns/locale';
+import { vi } from "date-fns/locale";
 let options;
 const Input = React.forwardRef(
   (
@@ -85,7 +85,7 @@ const Input = React.forwardRef(
             name={name}
             control={props.control}
             render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Select
+              <CreatableSelect
                 ref={ref}
                 options={options}
                 aria-errormessage={error}
@@ -100,6 +100,12 @@ const Input = React.forwardRef(
                 }
                 placeholder={placeholder}
                 isDisabled={disabled}
+                isClearable={true} // Allow the selection to be cleared
+                onCreateOption={(inputValue) => {
+                  const newOption = { value: inputValue, label: inputValue };
+                  options.push(newOption);
+                  onChange(inputValue);
+                }}
                 styles={{
                   menu: (provided) => ({
                     ...provided,
@@ -179,13 +185,13 @@ const Input = React.forwardRef(
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <DatePicker
                 // ref={ref}
-                selected={value ? parseDate(value) : now ? currentDate : null} 
+                selected={value ? parseDate(value) : now ? currentDate : null}
                 onChange={(date) => onChange(date ? formatDate(date) : "")}
                 onBlur={onBlur}
                 placeholderText={placeholder}
                 dateFormat="dd/MM/yyyy"
                 maxDate={currentDate}
-                locale={vi} 
+                locale={vi}
                 className="input input-bordered w-full h-12"
               />
             )}

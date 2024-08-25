@@ -93,7 +93,7 @@ export default function Layout() {
     console.log(user?.userId !== lastUserId);
     if (
       user?.role &&
-      user?.userId !== lastUserId &&
+      // user?.userId !== lastUserId &&
       user.role?.roleId == 2 &&
       currentPath === "/manufacturer/products" &&
       (user?.status === 7 || user?.status === 0 || user?.status === '7' || user?.status === '0') &&

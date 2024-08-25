@@ -199,7 +199,11 @@ function ManuCertificateList() {
             dispatch(setStepIndex(2));
           }, 600);
         } else {
-          dispatch(setRun(false));
+          if (stepIndex === 3) {
+            dispatch(setRun(false));
+            dispatch(setStepIndex(2));
+          }
+          dispatch(setRun(true));
           dispatch(setStepIndex(2));
         }
       }
