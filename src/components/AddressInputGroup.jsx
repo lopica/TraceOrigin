@@ -112,15 +112,15 @@ export default function AddressInputGroup({
 
   return (
     <div>
-      <div className="flex mt-2">
+      <div className="flex mt-2 ml-2">
         {message ? (
           <p className={
-              required && 'after:content-["*"] after:ml-0.5 after:text-red-500'
+              required && 'after:content-["*"] after:ml-0.5 after:text-red-500 text-start'
             }>{message}</p>
         ) : (
           <p
             className={
-              required && 'after:content-["*"] after:ml-0.5 after:text-red-500'
+              required && 'after:content-["*"] after:ml-0.5 after:text-red-500 text-start'
             }
           >
             Địa chỉ

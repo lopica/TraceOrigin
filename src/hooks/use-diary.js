@@ -451,6 +451,8 @@ export default function useDiary(
   useEffect(() => {
     if (isCheckRoleSuccess && !isCheckRoleFetch) {
       if (isCheckPendingSuccess && !isCheckPendingFetch) {
+        console.log(roleCode)
+        console.log(guestEmail)
         switch (roleCode) {
           // 1 là không có chức năng gì
           // 2 là người được ủy quyền

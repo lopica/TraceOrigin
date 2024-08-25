@@ -89,122 +89,58 @@ function ManuCertificateList() {
     }
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    console.log(certificateData);
-    // // console.log(isCertificateFetching)
-    // // console.log(isCertificateError)
-    // if (stepIndex == 3) {
-    //   if (certificateData) {
-    //     setTimeout(() => {
-    //       dispatch(setRun(true));
-    //       dispatch(setStepIndexNext());
-    //     }, 600);
-    //   } else {
-    //     setTimeout(() => {
-    //       dispatch(setRun(false));
-    //       dispatch(setStepIndex(2));
-    //     }, 600);
-    //   }
-    // } else {
-    //   if (certificateData) {
-    //     dispatch(setTourActive(true))
-    //     setTimeout(() => {
-    //       dispatch(setRun(true));
-    //       dispatch(setStepIndex(3));
-    //     }, 600);
-    //   } else {
-    //     if (tourActive) {
-    //       setTimeout(() => {
-    //         dispatch(setRun(true));
-    //         dispatch(setStepIndexNext());
-    //       }, 600);
-    //     }
-    //   }
-    // }
-    // if (isAuthenticated) {
-    //   if (tourActive) {
-    //     //flow from product
-    //     if (stepIndex == 3) {
-    //       if (certificateData) {
-    //         setTimeout(() => {
-    //           dispatch(setRun(true));
-    //           dispatch(setStepIndex(3));
-    //         }, 600);
-    //       } else {
-    //         dispatch(setRun(false));
-    //         dispatch(setStepIndex(2));
-    //       }
-    //     } else {
-    //       if (certificateData) {
-    //         setTimeout(() => {
-    //           dispatch(setRun(true));
-    //           dispatch(setStepIndex(3));
-    //         }, 600);
-    //       } else {
-    //         if (!hasRun.current) {
-    //           hasRun.current = true;
-    //           setTimeout(() => {
-    //             dispatch(setRun(true));
-    //             dispatch(setStepIndex(2));
-    //           }, 600);
-    //         }
-    //       }
-    //     }
-    //   } else {
-    //     //flow in here
-    //     if (certificateData) {
-    //       dispatch(setTourActive(true));
-    //       setTimeout(() => {
-    //         dispatch(setRun(true));
-    //         dispatch(setStepIndex(3));
-    //       }, 600);
-    //     } else {
-    //       dispatch(setTourActive(true));
-    //       setTimeout(() => {
-    //         dispatch(setRun(true));
-    //         dispatch(setStepIndex(2));
-    //       }, 600);
-    //     }
-    //   }
-    // }
-    if (isAuthenticated && stepIndex < 3 && !isCertificateFetching) {
-      if (
-        certificateData &&
-        (user?.status === 7 ||
-          user?.status === "7" ||
-          user?.status === 0 ||
-          user?.status === "0")
-      ) {
-        //keep happen or make happen
-        if (tourActive) {
-          //continue
-          setTimeout(() => {
-            dispatch(setRun(true));
-            dispatch(setStepIndex(3));
-          }, 600);
-        } else {
-          dispatch(setTourActive(true));
-          setTimeout(() => {
-            dispatch(setRun(true));
-            dispatch(setStepIndex(3));
-          }, 600);
-        }
-      } else {
-        //stop or do not do
-        console.log(user?.status);
-        if (stepIndex < 2) {
-          if (!tourActive) dispatch(setTourActive(true));
-          setTimeout(() => {
-            dispatch(setRun(true));
-            dispatch(setStepIndex(2));
-          }, 600);
-        } else {
-          dispatch(setRun(false));
-          dispatch(setStepIndex(2));
-        }
-      }
-    }
-  }, [certificateData, stepIndex, isCertificateError]);
+  // useEffect(() => {
+  //   console.log(certificateData);
+  //   if (
+  //     isAuthenticated &&
+  //     stepIndex < 3 &&
+  //     !isCertificateFetching &&
+  //     (user?.status === 7 ||
+  //       user?.status === "7" ||
+  //       user?.status === 0 ||
+  //       user?.status === "0")
+  //   ) {
+  //     if (certificateData) {
+  //       //keep happen or make happen
+  //       if (tourActive) {
+  //         //continue
+  //         setTimeout(() => {
+  //           dispatch(setRun(true));
+  //           dispatch(setStepIndex(3));
+  //         }, 600);
+  //       } else {
+  //         dispatch(setTourActive(true));
+  //         setTimeout(() => {
+  //           dispatch(setRun(true));
+  //           dispatch(setStepIndex(3));
+  //         }, 600);
+  //       }
+  //     } else {
+  //       //stop or do not do
+  //       console.log(stepIndex);
+  //       if (stepIndex < 2) {
+  //         if (!tourActive) dispatch(setTourActive(true));
+  //         setTimeout(() => {
+  //           dispatch(setRun(true));
+  //           dispatch(setStepIndex(2));
+  //         }, 600);
+  //       } else {
+  //         console.log(stepIndex);
+  //         if (!stepIndex) {
+  //           console.log(stepIndex);
+
+  //           dispatch(setRun(false));
+  //           dispatch(setStepIndex(2));
+  //         } else {
+  //           console.log(stepIndex);
+
+  //           dispatch(setRun(true));
+  //           dispatch(setStepIndex(2));
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [certificateData, stepIndex]);
 
   const handleRequestVerifyCert = async () => {
     try {
@@ -246,7 +182,7 @@ function ManuCertificateList() {
   };
 
   const getDescription = (note) => {
-    if(note && note.length > 0 && (userStatus === 7 || userStatus === 8)){
+    if (note && note.length > 0 && (userStatus === 7 || userStatus === 8)) {
       return note;
     } else {
       switch (userStatus) {

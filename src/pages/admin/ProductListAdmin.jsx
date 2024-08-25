@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDisableProductByIdMutation, useCheckStatusMutation } from "../../store/apis/productApi";
 
-const ProductListAdmin = ({ data = [] }) => {
+const ProductListAdmin = ({ data = [], refetch}) => {
   const [disableProductById] = useDisableProductByIdMutation();
   const [checkStatus] = useCheckStatusMutation();
 
@@ -13,6 +13,7 @@ const ProductListAdmin = ({ data = [] }) => {
       } else if (statusMessage === "2") {
         await disableProductById(id).unwrap();
         alert("Sản phẩm đã được khóa thành công.");
+        refetch();
       } else {
         alert("Không có item");
       }
@@ -27,6 +28,7 @@ const ProductListAdmin = ({ data = [] }) => {
       if (statusMessage === "1") {
         await disableProductById(id).unwrap();
         alert("Sản phẩm đã được mở khóa thành công.");
+        refetch();
       } else if (statusMessage === "2") {
         alert("Sản phẩm chưa bị khóa.");
       } else {
@@ -59,13 +61,15 @@ const ProductListAdmin = ({ data = [] }) => {
           <div className='flex space-x-2'>
             <button
               className='btn btn-error btn-sm'
-              onClick={() => handleDisable(product.productId)} 
+              onClick={() => handleDisable(product.productId)}
+              disabled={product.checkStatusDisable === 1} 
             >
               Khóa
             </button>
             <button
               className='btn btn-success btn-sm'
-              onClick={() => handleEnable(product.productId)} 
+              onClick={() => handleEnable(product.productId)}
+              disabled={product.checkStatusDisable === 0} 
             >
               Mở khóa
             </button>

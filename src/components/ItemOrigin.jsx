@@ -17,6 +17,7 @@ import {
 import QR from "./QR";
 import { convertLinkToBase64 } from "../utils/convertLinkToBase64";
 import Canvas3D from "./Canvas3D";
+import { getFullTimeFromEpoch } from "../utils/getFullTimeFromEpoch";
 
 let origin;
 let thumb3D
@@ -125,8 +126,8 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
             <li className="flex items-center">
               <FaCalendarAlt className="mr-2 text-lg" />
               <p>
-                <strong>Thời gian tạo: </strong>{" "}
-                {getDateFromEpochTime(originData.createAt) || "không rõ"}
+                <strong>Thời gian: </strong>{" "}
+                {getFullTimeFromEpoch(originData.createAt) || "không rõ"}
               </p>
             </li>
             <li className="flex items-center">
