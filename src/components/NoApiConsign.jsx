@@ -21,6 +21,7 @@ import SortableTable from "./SortableTable";
 import { getDateFromEpochTime } from "../utils/getDateFromEpochTime";
 import { ImCross } from "react-icons/im";
 import CreateReportBlock from "./UI/CreateReportBlock";
+import { useCheckEmailMutation } from "../store";
 let form;
 export default function NoApiConsign({ productRecognition }) {
   const {
@@ -123,6 +124,7 @@ export default function NoApiConsign({ productRecognition }) {
   const [inputsDisabled, setInputsDisabled] = useState(false);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [checkEmail] = useCheckEmailMutation();
   // const [pendingAction, setPendingAction] = useState('')
 
   const openModal = () => {
@@ -430,9 +432,20 @@ export default function NoApiConsign({ productRecognition }) {
                         value: emailRegex,
                         message: "Email chưa đúng format",
                       },
-                      validate: (value) =>
-                        value !== guestEmail ||
-                        "Bạn không thể nhập email của mình.",
+                      validate: async (value) => {
+                        if (value === guestEmail) {
+                          return "Bạn không thể nhập email của mình.";
+                        }
+
+                        try {
+                          const res = await checkEmail(value).unwrap(); // Await the result of the API call
+                          console.log(res); // This will now correctly log the response
+                          return res === "<span style='color:green'><b>Valid!</b>" ? true : "Email không hợp lệ";
+                        } catch (err) {
+                          console.log(err)
+                          return "Email này không hợp lệ";
+                        }
+                      },
                     })}
                     type="email"
                     className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-sky-600"
@@ -1328,15 +1341,17 @@ export default function NoApiConsign({ productRecognition }) {
         </div>
       );
       break;
-    case 'disable':
-      form = <div>
-      {!email && <BackBtn step="email" />}
-      <p>
-        Email này hiện đang bị đình chỉ quyền ghi nhật ký sản phẩm này. Bạn có thể thử
-        dùng email khác nhé.
-      </p>
-    </div>
-      break
+    case "disable":
+      form = (
+        <div>
+          {!email && <BackBtn step="email" />}
+          <p>
+            Email này hiện đang bị đình chỉ quyền ghi nhật ký sản phẩm này. Bạn
+            có thể thử dùng email khác nhé.
+          </p>
+        </div>
+      );
+      break;
     default:
       form = (
         <div>

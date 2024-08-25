@@ -136,6 +136,7 @@ export {
 export {
   useGetAllTransportsQuery,
   useGetAllEventTypeQuery,
+  useCheckEmailMutation,
 } from "./apis/utilApi";
 export { updateQRList, updateAIList } from "./slices/historySeach";
 export {
