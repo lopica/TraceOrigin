@@ -208,7 +208,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
                     {...register("width", {
                       required: "Bạn cần điền chiều rộng sản phẩm",
                       min: {
-                        value: 1,
+                        value: 0.000000000001,
                         message: "Chiều rộng sản phẩm phải là 1 số dương",
                       },
                     })}
@@ -222,7 +222,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
                     {...register("height", {
                       required: "Bạn cần điền chiều cao sản phẩm",
                       min: {
-                        value: 1,
+                        value: 0.000000000001,
                         message: "Chiều cao sản phẩm phải là 1 số dương",
                       },
                     })}
@@ -253,7 +253,7 @@ const ManuProductEdit = ({ productId, closeModal }) => {
                 {...register("weight", {
                   required: "Bạn cần điền cân nặng sản phẩm",
                   min: {
-                    value: 0.1,
+                    value: 0.001,
                     message: "Cân nặng sản phẩm phải là 1 số dương",
                   },
                 })}
