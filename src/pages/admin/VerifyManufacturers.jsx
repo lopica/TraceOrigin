@@ -78,7 +78,7 @@ function VerifyManufacturer() {
   };
 
   const handleAccept = async (userId) => {
-    await updateStatus({ id: userId, status: 1 });
+    await abortCer({ manufacturerId: userId, isAccept: 1, note: "Đã xác thực" });
     handleCloseModalImage();
     refetch();
   };
