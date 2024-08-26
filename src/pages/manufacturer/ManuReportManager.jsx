@@ -29,6 +29,7 @@ import InputTextModal from "../../components/UI/InputTextModal";
 import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
 import { ImFilesEmpty } from "react-icons/im";
+import { useViewProductByManufacturerIdQuery } from "../../store/apis/productApi";
 
 
 const statusOptions = [
@@ -81,11 +82,7 @@ function ManuReportManager({reportTo = -1}) {
   const [size, setSize] = useState(6);
   const userIdList = reportTo !== -1 ? reportTo : useSelector((state) => state.userSlice.userId);
   const { list: products } = useSelector((state) => state.productSlice);
-
-
-  
-
-  const { data, error, isLoading, refetch } = useGetListReportsQuery({
+  const [bodyReport, setBodyReport] = useState({
     code: "",
     title: "",
     reportTo: userIdList,
@@ -100,6 +97,28 @@ function ManuReportManager({reportTo = -1}) {
     emailReport: "",
     productId: "",
   });
+  const [tempBodyReport, setTempBodyReport] = useState({
+    code: "",
+    title: "",
+    reportTo: userIdList,
+    type: 0,
+    dateFrom: 0,
+    dateTo: 0,
+    status: 0,
+    orderBy: "reportId",
+    isAsc: false,
+    page,
+    size,
+    emailReport: "",
+    productId: "",
+  });
+
+
+  
+
+  const { data, error, isLoading, refetch } = useGetListReportsQuery({
+    bodyReport
+  });
   const { getToast } = useToast();
   const [replyReport] = useReplyReportMutation();
   const [selectedIssue, setSelectedIssue] = useState(null);
@@ -113,6 +132,7 @@ function ManuReportManager({reportTo = -1}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
   const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const [isLoadingInput, setIsLoadingInput] = useState(false);
 
   useEffect(() => {
     if (error?.status === 401) navigate("/portal/login");
@@ -234,6 +254,7 @@ function ManuReportManager({reportTo = -1}) {
   };
 
   const confirmChange = async () => {
+    setIsLoadingInput(true);
     try {
       await replyReport({
         reportId: selectedIssue.id,
@@ -242,8 +263,11 @@ function ManuReportManager({reportTo = -1}) {
       refetch();
       console.log("Reply sent successfully");
       closeConfirmModal();
+      setIsLoadingInput(false);
+      useToast("Trả lời báo cáo thành công")
     } catch (error) {
       console.error("Failed to send reply:", error);
+      setIsLoadingInput(false);
     }
   };
 
@@ -254,7 +278,7 @@ function ManuReportManager({reportTo = -1}) {
         onClose={closeConfirmModal}
         onConfirm={confirmChange}
         headerContent="Trả lời: "
-        isLoading={false}
+        isLoading={isLoadingInput}
         textAreaValue={textAreaValue}
         setTextAreaValue={setTextAreaValue}
       />
