@@ -108,7 +108,7 @@ const itemApi = createApi({
         }
       }),
       consign: builder.mutation({
-        invalidatesTags: ['consign'],
+        // invalidatesTags: ['consign'],
         query: (request) => {
           return {
             url: 'authorized',

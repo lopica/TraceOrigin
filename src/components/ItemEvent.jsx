@@ -342,7 +342,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 </p>
               </li>
               <li>
-                <p>Ghi chú: {eventData?.descriptionItemLog || "Không rõ"}</p>
+                <p>Ghi chú: {eventData?.descriptionItemLog || "Không có"}</p>
               </li>
               {/* <li>
                 <p>Mô tả sự kiện: {eventData?.descriptionItemLog || "không có"}</p>
