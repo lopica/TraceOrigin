@@ -6,7 +6,7 @@ import { requireLogin, updateUser, useFetchUserQuery } from "../store";
 import { userApi } from "../store/apis/userApi";
 import ProfileModal from "../components/UI/userProfile";
 import ChangePassword from "../components/UI/ChangePassword";
-import { matchPath, useLocation, useNavigate } from "react-router-dom";
+import { matchPath, useLocation } from "react-router-dom";
 
 let avatar;
 function Avatar() {
@@ -14,7 +14,6 @@ function Avatar() {
   const currentPath = location.pathname;
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const hasRefetched = useRef(false);
-  const navigate = useNavigate();
   // const isFirstRun = useRef(true);
   const dispatch = useDispatch();
   const { data, isError, isFetching, error, isSuccess, refetch } =
@@ -81,11 +80,20 @@ function Avatar() {
       console.log("vo day");
       dispatch(userApi.util.resetApiState());
       hasRefetched.current = true;
-      navigate("/portal/login");
-       dispatch(requireLogin());
-      if (matchPath("manufacturer/products/:productId/:itemId", currentPath)) dispatch(requireLogin());
+      // dispatch(requireLogin());
+      if (matchPath("manufacturer/products/:productId/:itemId", currentPath))
+        dispatch(requireLogin());
     }
-  }, [isError, error, dispatch, navigate]);
+  }, [isError, error, dispatch]);
+  useEffect(() => {
+    if (isAuthenticated) refetch();
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      dispatch(updateUser(data));
+    }
+  }, [isSuccess, isFetching, dispatch]);
 
   const renderAvatar = (profileIMG, firstName) => {
     if (profileIMG) {
