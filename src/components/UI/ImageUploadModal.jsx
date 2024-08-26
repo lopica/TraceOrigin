@@ -23,7 +23,8 @@ export default function TextUploadModal({
   const [texts, setTexts] = useState([]);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [error, setError] = useState(""); // Thêm trạng thái thông báo lỗi
+  const [error, setError] = useState("");
+  const [hasNewLinks, setHasNewLinks] = useState(false); // Track if there are new links
   const [requestScanImage] = useRequestScanImageMutation();
   const {
     data: uploadedTexts,
@@ -44,7 +45,7 @@ export default function TextUploadModal({
 
   const handleInputChange = (event) => {
     setInputText(event.target.value);
-    setError(""); // Xóa lỗi khi người dùng chỉnh sửa
+    setError("");
   };
 
   const handleAddText = () => {
@@ -58,6 +59,7 @@ export default function TextUploadModal({
       setTexts(updatedTexts);
       onTextReportsChange && onTextReportsChange(updatedTexts);
       setInputText("");
+      setHasNewLinks(true);
     }
   };
 
@@ -70,6 +72,8 @@ export default function TextUploadModal({
   const handleSubmitTexts = async () => {
     const newTexts = texts.filter((text) => !uploadedTexts.includes(text));
 
+    if (newTexts.length === 0) return; // Do nothing if there are no new links
+
     const data = {
       productId,
       image: newTexts,
@@ -80,6 +84,7 @@ export default function TextUploadModal({
       await requestScanImage(data).unwrap();
       setIsLoadingButton(false);
       setTexts([]);
+      setHasNewLinks(false); // Reset hasNewLinks after submission
       getToast(
         "Quản trị viên đã nhận được yêu cầu, quản trị viên sẽ nhắn tin lại cho bạn sớm nhất"
       );
@@ -143,7 +148,7 @@ export default function TextUploadModal({
                 rows="3"
               />
               {error && (
-                <p className="text-red-500 mt-2">{error}</p> // Hiển thị thông báo lỗi
+                <p className="text-red-500 mt-2">{error}</p>
               )}
               <div className="flex justify-between mt-4">
                 <button
@@ -158,7 +163,12 @@ export default function TextUploadModal({
                   ) : (
                     <button
                       onClick={handleSubmitTexts}
-                      className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
+                      disabled={!hasNewLinks}
+                      className={`p-2 ${
+                        hasNewLinks
+                          ? "bg-blue-500 hover:bg-blue-700"
+                          : "bg-gray-300"
+                      } text-white rounded-md`}
                     >
                       Gửi yêu cầu
                     </button>
