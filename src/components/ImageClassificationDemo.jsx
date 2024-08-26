@@ -10,7 +10,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { CONSTANTS } from "../services/Constants";
-
+//Merge ho thanh
 const MOBILE_NET_INPUT_HEIGHT = 224;
 const MOBILE_NET_INPUT_WIDTH = 224;
 
