@@ -265,7 +265,7 @@ export default function NoApiConsign({ productRecognition }) {
     </div>
   );
   // firstPartyCode && firstPartyCode === 3 &&
-  let reportBtn =  (
+  let reportBtn = firstPartyCode && firstPartyCode === 3 && (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
       onClick={() => setStep("report")}
@@ -542,7 +542,7 @@ export default function NoApiConsign({ productRecognition }) {
                       htmlFor="old-address"
                       className="absolute left-0 -top-3.5 text-sky-600 text-sm transition-all select-none pointer-events-none peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sky-600 peer-focus:text-sm"
                     >
-                      Địa chỉ gửi cũ
+                      Địa chỉ xuất hàng
                     </label>
                     <span className="label-text-alt text-left text-error text-sm">
                       {consignFormErrors.description?.message}

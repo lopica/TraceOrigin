@@ -349,13 +349,14 @@ export default function useDiary(
       ];
 
       const allEmptyOrUndefined = values.every(
-        (value) => value === "" || value === undefined
+        (value) => value === "" || value === undefined || value === null
       );
       const allValuesPresent =
         values
           .slice(0, 4)
           .every((value) => value !== "" && value !== undefined) &&
         coordinate.length === 2;
+        console.log(allEmptyOrUndefined)
       dispatch(updateVerifyAddress(allEmptyOrUndefined || allValuesPresent));
 
       console.log("province: " + consignWatch("province"));
@@ -521,14 +522,14 @@ export default function useDiary(
         .catch(() => getToast("Gặp lỗi khi gửi otp"));
   }, [step]);
 
-  useEffect(() => {
-    console.log(identifier);
-  }, [identifier]);
+  // useEffect(() => {
+  //   console.log(identifier);
+  // }, [identifier]);
 
-  useEffect(() => {
-    console.log(updateReceiveId);
-    console.log(packReceiveId.receiveId);
-  }, [updateReceiveId, packReceiveId]);
+  // useEffect(() => {
+  //   console.log(updateReceiveId);
+  //   console.log(packReceiveId.receiveId);
+  // }, [updateReceiveId, packReceiveId]);
 
   function onEmailSubmit(data) {
     const email = data.email;
