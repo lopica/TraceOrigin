@@ -32,6 +32,7 @@ import { ImFilesEmpty } from "react-icons/im";
 import { useViewProductByManufacturerIdQuery } from "../../store/apis/productApi";
 
 
+
 const statusOptions = [
   {
     value: 0,
@@ -97,25 +98,16 @@ function ManuReportManager({reportTo = -1}) {
     emailReport: "",
     productId: "",
   });
-  const [tempBodyReport, setTempBodyReport] = useState({
-    code: "",
-    title: "",
-    reportTo: userIdList,
-    type: 0,
-    dateFrom: 0,
-    dateTo: 0,
-    status: 0,
-    orderBy: "reportId",
-    isAsc: false,
-    page,
-    size,
-    emailReport: "",
-    productId: "",
+
+  const [body, setBody] = useState({
+    id: userIdList,
+    categoryId: 0,
   });
 
+  const { data: dataProduct, error: errPro } = 
+  useViewProductByManufacturerIdQuery(body);
 
   
-
   const { data, error, isLoading, refetch } = useGetListReportsQuery({
     bodyReport
   });
@@ -133,6 +125,7 @@ function ManuReportManager({reportTo = -1}) {
   const [textAreaValue, setTextAreaValue] = useState("");
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [isLoadingInput, setIsLoadingInput] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState('');
 
   useEffect(() => {
     if (error?.status === 401) navigate("/portal/login");
@@ -271,6 +264,11 @@ function ManuReportManager({reportTo = -1}) {
     }
   };
 
+  const handleChangeDDProduct = (event) => {
+    setSelectedProduct(event.target.value);
+    setBodyReport((prevData) => ({ ...prevData, productId: event.target.value }));
+};
+
   return (
     <div className="flex h-screen font-sans bg-gray-100">
       <InputTextModal
@@ -283,13 +281,25 @@ function ManuReportManager({reportTo = -1}) {
         setTextAreaValue={setTextAreaValue}
       />
       <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
-        {/* <form  className="p-2">
-          <input
-            type="text"
-            placeholder="Mã báo cáo"
-            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
-          />
+        <form  className="p-2">
           <select
+             id="productSelect"
+             name="productSelected"
+             value={selectedProduct}
+             onChange={handleChangeDDProduct}
+              className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+          >
+             <option value="" disabled>Chọn một sản phẩm</option>
+                <option  value={0}>
+                       Tất cả
+                    </option>
+                {dataProduct?.map((product) => (
+                    <option key={product.productId} value={product.productId}>
+                        {product.productName}
+                    </option>
+                ))}
+          </select>
+          {/* <select
             className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
           >
             <option value="">Trạng thái</option>
@@ -298,21 +308,8 @@ function ManuReportManager({reportTo = -1}) {
                 {option.label}
               </option>
             ))}
-          </select>
-          <select
-            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
-          >
-            <option value="">Trạng thái</option>
-            {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <Button primary rounded className="whitespace-nowrap w-full">
-            Tìm kiếm
-          </Button>
-        </form> */}
+          </select> */}
+        </form>
         <div className="p-0">
           <ul className="list-none p-0 m-0">
             {data.content.map((issue) => (
