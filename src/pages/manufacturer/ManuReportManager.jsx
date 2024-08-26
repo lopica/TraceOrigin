@@ -269,6 +269,9 @@ function ManuReportManager({reportTo = -1}) {
     setBodyReport((prevData) => ({ ...prevData, productId: event.target.value }));
 };
 
+useEffect(() => {
+  refetch();
+}, []);
   return (
     <div className="flex h-screen font-sans bg-gray-100">
       <InputTextModal
