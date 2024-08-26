@@ -60,12 +60,12 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
       sortValue: (item) => item?.timeReceive,
       center: true
     },
-    {
-      label: "Đủ thông tin",
-      render: (item) => (item.checkPoint ? <FaCheck color='green' /> : <ImCross color="red" />),
-      sortValue: (item) => item?.checkPoint,
-      center: true
-    },
+    // {
+    //   label: "Đủ thông tin",
+    //   render: (item) => (item.checkPoint ? <FaCheck color='green' /> : <ImCross color="red" />),
+    //   sortValue: (item) => item?.checkPoint,
+    //   center: true
+    // },
   ];
 
   let backBtn = (
@@ -124,11 +124,11 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 <p>Người gửi: {eventData?.sender}</p>
               </li> */}
                 <li>
-                  <p>Người nhận: {historyDetail?.receiverName || 'Không có'}</p>
+                  <p>Người nhận: {historyDetail?.receiverName || 'Không rõ'}</p>
                 </li>
                 <li>
                   <p>
-                    Thời gian diễn ra:{" "}
+                    Thời gian:{" "}
                     {getFullTimeFromEpoch(historyDetail?.timeReceive) ||
                       "không có"}
                   </p>
@@ -222,7 +222,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
                 </li>
                 <li>
                   <p>
-                    Ghi chú: {historyDetail?.descriptionItemLog || "Không rõ"}
+                    Ghi chú: {historyDetail?.descriptionItemLog || "Không ghi"}
                   </p>
                 </li>
                 {/* <li>

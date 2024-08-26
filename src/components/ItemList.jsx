@@ -339,7 +339,7 @@ export default function ItemList({ productId }) {
     <section>
       <div className="flex items-center mb-4">
         <FaList className="text-2xl mr-2" />
-        <h2 className="text-xl font-bold">Danh sách nhật ký</h2>
+        <h2 className="text-xl font-bold">Danh sách sản phẩm</h2>
       </div>
       <form
         className="flex flex-col justify-center gap-2 mb-4"

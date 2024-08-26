@@ -112,6 +112,7 @@ export default function NoApiConsign({ productRecognition }) {
     laterBtnHandler,
     handleFlip,
     onUpdateConsignHandler,
+    firstPartyCode,
   } = useDiary(
     productRecognition,
     consignWatch,
@@ -145,8 +146,8 @@ export default function NoApiConsign({ productRecognition }) {
   }
 
   useEffect(() => {
-    console.log(step);
-  }, [step]);
+    console.log(lastStep);
+  }, [lastStep]);
 
   const historyConfig = [
     {
@@ -263,8 +264,8 @@ export default function NoApiConsign({ productRecognition }) {
       <p>Các sự kiện đã tham gia</p>
     </div>
   );
-
-  let reportBtn = (
+  // firstPartyCode && firstPartyCode === 3 &&
+  let reportBtn =  (
     <div
       className="w-full h-20 bg-slate-300 hover:bg-slate-400 flex justify-center items-center cursor-pointer"
       onClick={() => setStep("report")}
@@ -440,9 +441,12 @@ export default function NoApiConsign({ productRecognition }) {
                         try {
                           const res = await checkEmail(value).unwrap(); // Await the result of the API call
                           console.log(res); // This will now correctly log the response
-                          return res === "<span style='color:green'><b>Valid!</b>" ? true : "Email không hợp lệ";
+                          return res ===
+                            "<span style='color:green'><b>Valid!</b>"
+                            ? true
+                            : "Email không hợp lệ";
                         } catch (err) {
-                          console.log(err)
+                          console.log(err);
                           return "Email này không hợp lệ";
                         }
                       },
@@ -568,7 +572,7 @@ export default function NoApiConsign({ productRecognition }) {
                     noValidate
                     message={
                       roleDiary === "current-owner" ? (
-                        <p>Địa chỉ gửi</p>
+                        <p>Địa chỉ xuất hàng</p>
                       ) : (
                         <p className="text-sky-600 text-sm">
                           Cập nhật địa chỉ gửi đi mới
@@ -1020,20 +1024,20 @@ export default function NoApiConsign({ productRecognition }) {
       form = (
         <div>
           <h2 className="text-center text-2xl">
-            {roleDiary === "pending-receiver"
+            {lastStep === "success"
               ? "Thông tin nhận hàng"
               : "Cập nhật thông tin nhận hàng"}
           </h2>
           {lastStep === "success" && <BackBtn step={"history-list"} />}
-          {roleDiary !== "pending-receiver" ? (
+          {updateReceiveData ? (
             <>
               {updateReceiveData?.checkPoint ? (
-                <div className="flex justify-end items-center gap-2">
+                <div className="flex justify-end items-center gap-2 mr-2 mt-2">
                   <FaCheck color="green" />
                   <p>Đủ Thông tin</p>
                 </div>
               ) : (
-                <div className="flex justify-end items-center gap-2">
+                <div className="flex justify-end items-center gap-2 mr-2 mt-2">
                   <ImCross color="red" />
                   <p>Không đủ Thông tin</p>
                 </div>

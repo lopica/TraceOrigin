@@ -153,9 +153,9 @@ export default function AddItem() {
             noValidate
             className="p-4 px-8"
           >
-            <h1 className="text-center text-2xl mb-4">Tạo nhật ký</h1>
+            <h1 className="text-center text-2xl mb-4">Tạo sản phẩm</h1>
             <Input
-              label="Số nhật ký tạo"
+              label="Số lượng"
               type="number"
               required
               unit="cái"

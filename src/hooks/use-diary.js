@@ -9,6 +9,7 @@ import {
   useAddReceiveLocationMutation,
   useCheckConsignRoleQuery,
   useCheckOTPMutation,
+  useCheckPartyFirstQuery,
   // useCheckPartyFirstQuery,
   useConsignMutation,
   useCreateTransportEventMutation,
@@ -76,8 +77,8 @@ export default function useDiary(
   const [updateConsignId, setUpdateConsignId] = useState();
   const [updateTransportId, setUpdateTransportId] = useState();
   const [historyData, setHistoryData] = useState([]);
-  const [nextStep, setNextStep] = useState("");
-  const [lastStep, setLastStep] = useState("");
+  const [nextStep, setNextStep] = useState("option");
+  const [lastStep, setLastStep] = useState("option");
   const [isChecked, setIsChecked] = useState(false);
   const [isCancelValid, setIsCancelValid] = useState(false);
   const [currentItemLogId, setCurrentItemLogId] = useState("");
@@ -180,19 +181,19 @@ export default function useDiary(
   const [updateConsign] = useUpdateConsignMutation();
   const [updateTransport] = useUpdateTransportEventMutation();
 
-  // const {
-  //   data: firstPartyCode,
-  //   isSuccess: isCheckFirstSuccess,
-  //   isFetching: isCheckFirstFetch,
-  // } = useCheckPartyFirstQuery(
-  //   {
-  //     email: guestEmail,
-  //     productRecognition,
-  //   },
-  //   {
-  //     skip: !guestEmail,
-  //   }
-  // );
+  const {
+    data: firstPartyCode,
+    // isSuccess: isCheckFirstSuccess,
+    // isFetching: isCheckFirstFetch,
+  } = useCheckPartyFirstQuery(
+    {
+      email: guestEmail,
+      productRecognition,
+    },
+    {
+      skip: !guestEmail,
+    }
+  );
 
   const {
     data: transports,
@@ -511,7 +512,8 @@ export default function useDiary(
   ]);
 
   useEffect(() => {
-    if (step === "email" || lastStep === 'option') setLastStep("");
+    if (step === "email" ) setLastStep("");
+    if (step === "option") setLastStep("option")
     if (step === "otp")
       sendOtp(guestEmail)
         .unwrap()
@@ -1084,5 +1086,6 @@ export default function useDiary(
     handleFlip,
     laterBtnHandler,
     onUpdateConsignHandler,
+    firstPartyCode
   };
 }

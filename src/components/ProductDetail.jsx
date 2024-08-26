@@ -86,9 +86,7 @@ export default function ProductDetail({ productId }) {
               </div>,
             ]);
             thumb3D = (
-              <div className="sm:w-[32rem] aspect-video">
-                <Canvas3D modelBase64={res} />
-              </div>
+                <p>3D</p>
             );
           })
           .catch((err) => console.log(err));
@@ -140,7 +138,7 @@ export default function ProductDetail({ productId }) {
             keyFn={(item) => item.label}
           />
           <p className="mt-4 text-center">
-            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn? 
+            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn? &nbsp;
             <a
               onClick={handleModalOpen}
               className="text-blue-500 underline cursor-pointer"

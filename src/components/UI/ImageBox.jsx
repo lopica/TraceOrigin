@@ -112,7 +112,7 @@ function ImageBox({
       ) : (
         <div className="indicator">
           {isAvatar(image) && (
-            <span className="indicator-item indicator-center badge badge-info">
+            <span className="indicator-item indicator-center badge badge-info text-white">
               Ảnh chính
             </span>
           )}

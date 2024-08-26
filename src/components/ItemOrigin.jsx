@@ -35,15 +35,19 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
 
   useEffect(() => {
     if (originData) {
+      const imageSlides = originData?.image.map((image, idx) => (
+        <img src={image} alt={`${name} ${idx}`} />
+      ));
+      setSlides([
+        ...imageSlides,
+      ]);
+
       if (originData?.model3D) {
         // console.log("vod day " + model3D);
         convertLinkToBase64(
           originData.model3D
         )
           .then((res) => {
-            const imageSlides = originData?.image.map((image, idx) => (
-              <img src={image} alt={`${originData?.productName} ${idx}`} />
-            ));
             setSlides([
               ...imageSlides,
               <div className="sm:w-[32rem] aspect-video">
@@ -51,9 +55,7 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
               </div>,
             ]);
             thumb3D = (
-              <div className="sm:w-[32rem] aspect-video">
-                <Canvas3D modelBase64={res} />
-              </div>
+              <p>3D</p>
             );
           })
           .catch((err) => console.log(err));
@@ -113,8 +115,8 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
                 {originData.orgName.trim() || "không rõ"}
               </p>
             </li>
-            <li>
-              <p className="mb-4">
+            <li className="mb-2">
+              <p className="">
                 <strong>Hình ảnh của sản phẩm:</strong>{" "}
               </p>
               <Carousel
@@ -123,7 +125,7 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
               />
             </li>
 
-            <li className="flex items-center">
+            <li className="flex items-center mt-4">
               <FaCalendarAlt className="mr-2 text-lg" />
               <p>
                 <strong>Thời gian: </strong>{" "}
