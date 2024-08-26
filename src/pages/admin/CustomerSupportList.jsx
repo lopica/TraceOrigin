@@ -11,6 +11,7 @@ import useToast from "../../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { parseJSON } from "date-fns";
+import ConfirmDeleteModal from "../../components/UI/supportSystem/ConfirmationDialog";
 
 function CustomerSupportList() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -69,7 +70,6 @@ function CustomerSupportList() {
       const result = await signupForCustomerSupport(formData).unwrap();
     } catch (error) {
       if (error.originalStatus != 200) {
-        console.log(error);
         if (error.data == "email already exists") {
           getToast("Email đã tồn tại");
         } else {
@@ -84,22 +84,30 @@ function CustomerSupportList() {
     refetch();
   };
   // ==================================== handle delete
-  const handleDelete = async (id) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  
+  const handleDelete = async () => {
     getToast("Hệ thống đang xử lý");
     try {
       const deleteData = {
-        id: id,
+        id: deleteId,
       };
       const result = await deleteSupporter(deleteData).unwrap();
     } catch (error) {
       if (error.originalStatus != 200) {
         getToast("Đã xảy ra lỗi khi xoá tài khoản");
-      } else {
+      }else{
         getToast("Xoá tài khoản thành công");
       }
     }
     setShouldFetch(true);
     refetch();
+    setShowConfirm(false); // Close the modal after deletion
+  };
+  const openConfirmModal = (id) => {
+    setDeleteId(id);
+    setShowConfirm(true);
   };
 
   return (
@@ -195,11 +203,16 @@ function CustomerSupportList() {
                 <td>
                   <div className="flex items-center justify-center gap-1">
                     <button
-                      onClick={() => handleDelete(item.userId)}
+                      onClick={() => openConfirmModal(item.userId)}
                       className="p-0 whitespace-nowrap rounded-full text-red-500 hover:text-red-400"
                     >
                       <FaTrashAlt size={24} />
                     </button>
+                    <ConfirmDeleteModal
+                      show={showConfirm}
+                      onClose={() => setShowConfirm(false)}
+                      onConfirm={handleDelete}
+                    />
                   </div>
                 </td>
               </tr>
