@@ -18,12 +18,23 @@ import QR from "./QR";
 import { convertLinkToBase64 } from "../utils/convertLinkToBase64";
 import Canvas3D from "./Canvas3D";
 import { getFullTimeFromEpoch } from "../utils/getFullTimeFromEpoch";
+import useShow from "../hooks/use-show";
+import ShowInfoHomePage from "./UI/homepage/ShowInfoHomePage";
+import Modal from "./UI/Modal";
+import ProductDetail from "./ProductDetail";
 
 let origin;
-let thumb3D
+let thumb3D;
 export default function ItemOrigin({ goToItemLine, productRecognition }) {
   const { itemLine } = useSelector((state) => state.itemSlice);
   const [slides, setSlides] = useState([]);
+  const { show, handleOpen, handleClose } = useShow();
+  const {
+    show: showProduct,
+    handleOpen: handleOpenProduct,
+    handleClose: handleCloseProduct,
+  } = useShow();
+
   // const [thumb3D, setThumb3D] = useState();
   const {
     data: originData,
@@ -38,15 +49,11 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
       const imageSlides = originData?.image.map((image, idx) => (
         <img src={image} alt={`${name} ${idx}`} />
       ));
-      setSlides([
-        ...imageSlides,
-      ]);
+      setSlides([...imageSlides]);
 
       if (originData?.model3D) {
         // console.log("vod day " + model3D);
-        convertLinkToBase64(
-          originData.model3D
-        )
+        convertLinkToBase64(originData.model3D)
           .then((res) => {
             setSlides([
               ...imageSlides,
@@ -54,9 +61,7 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
                 <Canvas3D full modelBase64={res} />
               </div>,
             ]);
-            thumb3D = (
-              <p>3D</p>
-            );
+            thumb3D = <p>3D</p>;
           })
           .catch((err) => console.log(err));
       } else {
@@ -102,20 +107,39 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
           <ul className="space-y-2 lg:pb-12 mt-2">
             <li>
               <p>
+                <strong>Tên sản phẩm: </strong>
+                <Button
+                  link
+                  className="inline-block p-0"
+                  onClick={() => handleOpenProduct()}
+                >
+                  {originData?.productName || "không rõ"}
+                </Button>
+              </p>
+            </li>
+            {/* <li>
+              <p>
                 <strong>Tên sản phẩm:</strong>{" "}
                 {originData.productName || "không rõ"}
               </p>
-            </li>
+            </li> */}
             <li>
               {/* <p>Mã sản phẩm: {productRecognition || "không rõ"}</p> */}
             </li>
             <li>
               <p>
-                <strong>Đơn vị sản xuất: </strong>{" "}
-                {originData.orgName.trim() || "không rõ"}
+                <strong>Đơn vị sản xuất: </strong>
+                <Button
+                  link
+                  className="inline-block p-0"
+                  onClick={() => handleOpen()}
+                >
+                  {originData.orgName.trim() || "không rõ"}
+                </Button>
               </p>
             </li>
-            <li className="mb-2">
+
+            {/* <li className="mb-2">
               <p className="">
                 <strong>Hình ảnh của sản phẩm:</strong>{" "}
               </p>
@@ -123,7 +147,7 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
                 slides={slides}
                 thumb3D={originData?.model3D ? thumb3D : undefined}
               />
-            </li>
+            </li> */}
 
             <li className="flex items-center mt-4">
               <FaCalendarAlt className="mr-2 text-lg" />
@@ -176,6 +200,21 @@ export default function ItemOrigin({ goToItemLine, productRecognition }) {
           <IoIosArrowBack /> Quay lại
         </Button>
       </div>
+      {showProduct && (
+        <Modal onClose={handleCloseProduct}>
+          <div className="h-full">
+            <ProductDetail productId={originData?.productId} rework />
+          </div>
+        </Modal>
+      )}
+      {originData && (
+        <ShowInfoHomePage
+          rework
+          id={originData?.orgNameId}
+          isOpen={show}
+          onClose={handleClose}
+        />
+      )}
       <div className="card-body">{origin}</div>
     </div>
   );

@@ -82,6 +82,7 @@ export default function ItemDetail() {
                   productRecognition={productRecognition}
                   goToItemOrigin={goToItemOrigin}
                   goToEvent={goToEvent}
+                  showQr
                 />
               </div>
             </div>
@@ -103,6 +104,7 @@ export default function ItemDetail() {
               productRecognition={productRecognition}
               goToItemOrigin={goToItemOrigin}
               goToEvent={goToEvent}
+              showQr
             />
           </div>
         </div>

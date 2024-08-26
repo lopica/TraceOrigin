@@ -21,18 +21,18 @@ const productConfig = [
     label: "Thông số kĩ thuật",
     icon: (item) => item?.icon,
     render: (item) => item?.label,
-    center: true
+    center: true,
   },
   {
     label: "Giá trị",
     render: (item) => item?.value,
-    center: true
+    center: true,
   },
 ];
 
 let renderedProductDetail;
 let thumb3D;
-export default function ProductDetail({ productId }) {
+export default function ProductDetail({ productId, rework }) {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [slides, setSlides] = useState([]);
@@ -85,9 +85,7 @@ export default function ProductDetail({ productId }) {
                 <Canvas3D full modelBase64={res} />
               </div>,
             ]);
-            thumb3D = (
-                <p>3D</p>
-            );
+            thumb3D = <p>3D</p>;
           })
           .catch((err) => console.log(err));
       } else {
@@ -137,15 +135,17 @@ export default function ProductDetail({ productId }) {
             config={productConfig}
             keyFn={(item) => item.label}
           />
-          <p className="mt-4 text-center">
-            Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn? &nbsp;
-            <a
-              onClick={handleModalOpen}
-              className="text-blue-500 underline cursor-pointer"
-            >
-              Đăng kí quét hình ảnh sản phẩm
-            </a>
-          </p>
+          {!rework && (
+            <p className="mt-4 text-center">
+              Bạn muốn sản phẩm của bạn dễ dàng truy cập hơn? &nbsp;
+              <a
+                onClick={handleModalOpen}
+                className="text-blue-500 underline cursor-pointer"
+              >
+                Đăng kí quét hình ảnh sản phẩm
+              </a>
+            </p>
+          )}
         </div>
       );
     }
@@ -155,24 +155,28 @@ export default function ProductDetail({ productId }) {
     <section className="py-6 px-4 md:grid lg:grid-cols-2 gap-6 pb-12">
       <Carousel slides={slides} thumb3D={model3D ? thumb3D : undefined} />
       {renderedProductDetail}
-      <button
-        onClick={openModal}
-        className="add-button w-fit flex items-center p-2 text-green-500 rounded-md hover:bg-green-500 hover:text-white border-2 border-dashed border-green-500"
-      >
-        <FaUpload className="mr-2" />
-        Upload Model 3D
-      </button>
-      <UploadModel3DModal
-        isOpen={modalIsOpen}
-        onClose={closeModal}
-        onSubmit={handleUploadModel3D}
-      />
-      <ImageUploadModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        imageReports={imageReports}
-        productId={productId}
-      />
+      {!rework && (
+        <>
+          <button
+            onClick={openModal}
+            className="add-button w-fit flex items-center p-2 text-green-500 rounded-md hover:bg-green-500 hover:text-white border-2 border-dashed border-green-500"
+          >
+            <FaUpload className="mr-2" />
+            Upload Model 3D
+          </button>
+          <UploadModel3DModal
+            isOpen={modalIsOpen}
+            onClose={closeModal}
+            onSubmit={handleUploadModel3D}
+          />
+          <ImageUploadModal
+            isOpen={isModalOpen}
+            onClose={handleModalClose}
+            imageReports={imageReports}
+            productId={productId}
+          />
+        </>
+      )}
     </section>
   );
 }
