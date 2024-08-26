@@ -245,9 +245,10 @@ function ManuReportManager({reportTo = -1}) {
       console.log("Reply sent successfully");
       closeConfirmModal();
       setIsLoadingInput(false);
-      useToast("Trả lời báo cáo thành công")
+      getToast("Trả lời báo cáo thành công")
     } catch (error) {
       console.error("Failed to send reply:", error);
+      getToast("Trả lời báo cáo thành công")
       setIsLoadingInput(false);
     }
   };
