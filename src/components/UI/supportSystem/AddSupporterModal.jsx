@@ -37,7 +37,6 @@ const AddSupporterModal = ({ isOpen, onClose, onSubmit }) => {
       setError('Mật khẩu phải có ít nhất 8 ký tự và bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.');
       return;
     }
-    console.log(body?.password + "DFDF");
 
     onSubmit(body);
     onClose();

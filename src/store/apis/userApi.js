@@ -158,6 +158,7 @@ const userApi = createApi({
             },
           };
         },
+        responseHandler: (res) => res.text(),
       }),
       listAllCustomerSupport: builder.query({
         query: (options) => {

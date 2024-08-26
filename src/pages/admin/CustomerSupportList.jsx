@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useListAllBySupporterQuery } from "../../store/apis/supportSystemApi";
-import { useDeleteSupporterMutation, useListAllCustomerSupportQuery } from "../../store/apis/userApi";
+import {
+  useDeleteSupporterMutation,
+  useListAllCustomerSupportQuery,
+} from "../../store/apis/userApi";
 import { FaTrashAlt, FaSearch, FaPlus } from "react-icons/fa";
 import AddSupporterModal from "../../components/UI/supportSystem/AddSupporterModal";
 import { useSignupForCustomerSupportMutation } from "../../store/apis/authApi";
 import useToast from "../../hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { parseJSON } from "date-fns";
 
 function CustomerSupportList() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -26,16 +30,16 @@ function CustomerSupportList() {
     useListAllCustomerSupportQuery(body, {
       skip: !shouldFetch,
     });
-    // =============================== handle logout
-    const navigate = useNavigate();
-    const { isAuthenticated } = useSelector((state) => state.authSlice);
-  
-    useEffect(() => {
-      if (!isAuthenticated) {
-        getToast("Phiên đăng nhập đã hết hạn");
-        navigate("/portal/login");
-      }
-    }, [isAuthenticated, getToast, navigate]);
+  // =============================== handle logout
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      getToast("Phiên đăng nhập đã hết hạn");
+      navigate("/portal/login");
+    }
+  }, [isAuthenticated, getToast, navigate]);
   // ==================================== handle onchange
   const handleChange = (e) => {
     if (shouldFetch) {
@@ -61,36 +65,42 @@ function CustomerSupportList() {
   const handleSubmit = async (formData) => {
     getToast("Hệ thống đang xử lý");
     try {
-   console.log(formData);
+      console.log(formData);
       const result = await signupForCustomerSupport(formData).unwrap();
-      getToast("Tạo tài khoảng thành công");
     } catch (error) {
-      if(error.data == 'email already exists'){
-        getToast("Email đã tồn tại");
-      }else{
-        getToast("Đã xảy ra lỗi khi tạo tài khoản");
+      if (error.originalStatus != 200) {
+        console.log(error);
+        if (error.data == "email already exists") {
+          getToast("Email đã tồn tại");
+        } else {
+          getToast("Đã xảy ra lỗi khi tạo tài khoản");
+        }
+      } else {
+        getToast("Tạo tài khoảng thành công");
       }
     }
 
     setShouldFetch(true);
     refetch();
   };
-    // ==================================== handle delete
-    const handleDelete = async (id) => {
-      getToast("Hệ thống đang xử lý");
-      try {
-        const deleteData = {
-          id: id
-        };        
-        const result = await deleteSupporter(deleteData).unwrap();
-        getToast("Xoá tài khoản thành công");
-      } catch (error) {
+  // ==================================== handle delete
+  const handleDelete = async (id) => {
+    getToast("Hệ thống đang xử lý");
+    try {
+      const deleteData = {
+        id: id,
+      };
+      const result = await deleteSupporter(deleteData).unwrap();
+    } catch (error) {
+      if (error.originalStatus != 200) {
         getToast("Đã xảy ra lỗi khi xoá tài khoản");
+      } else {
+        getToast("Xoá tài khoản thành công");
       }
-      setShouldFetch(true);
-      refetch();
     }
-
+    setShouldFetch(true);
+    refetch();
+  };
 
   return (
     <div className="flex flex-col md:flex-row p-4">
@@ -184,7 +194,10 @@ function CustomerSupportList() {
 
                 <td>
                   <div className="flex items-center justify-center gap-1">
-                    <button onClick={() => handleDelete(item.userId)} className="p-0 whitespace-nowrap rounded-full text-red-500 hover:text-red-400">
+                    <button
+                      onClick={() => handleDelete(item.userId)}
+                      className="p-0 whitespace-nowrap rounded-full text-red-500 hover:text-red-400"
+                    >
                       <FaTrashAlt size={24} />
                     </button>
                   </div>
