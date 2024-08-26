@@ -29,8 +29,6 @@ import InputTextModal from "../../components/UI/InputTextModal";
 import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
 import { ImFilesEmpty } from "react-icons/im";
-import { useViewProductByManufacturerIdQuery } from "../../store/apis/productApi";
-
 
 
 const statusOptions = [
@@ -83,7 +81,11 @@ function ManuReportManager({reportTo = -1}) {
   const [size, setSize] = useState(6);
   const userIdList = reportTo !== -1 ? reportTo : useSelector((state) => state.userSlice.userId);
   const { list: products } = useSelector((state) => state.productSlice);
-  const [bodyReport, setBodyReport] = useState({
+
+
+  
+
+  const { data, error, isLoading, refetch } = useGetListReportsQuery({
     code: "",
     title: "",
     reportTo: userIdList,
@@ -97,19 +99,6 @@ function ManuReportManager({reportTo = -1}) {
     size,
     emailReport: "",
     productId: "",
-  });
-
-  const [body, setBody] = useState({
-    id: userIdList,
-    categoryId: 0,
-  });
-
-  const { data: dataProduct, error: errPro } = 
-  useViewProductByManufacturerIdQuery(body);
-
-  
-  const { data, error, isLoading, refetch } = useGetListReportsQuery({
-    bodyReport
   });
   const { getToast } = useToast();
   const [replyReport] = useReplyReportMutation();
@@ -125,7 +114,6 @@ function ManuReportManager({reportTo = -1}) {
   const [textAreaValue, setTextAreaValue] = useState("");
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [isLoadingInput, setIsLoadingInput] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState('');
 
   useEffect(() => {
     if (error?.status === 401) navigate("/portal/login");
@@ -148,7 +136,7 @@ function ManuReportManager({reportTo = -1}) {
 
   const handleIssueClick = (issue) => {
     setSelectedIssue(issue);
-    if( reportTo === null)
+    if( reportTo === -1)
     {
       navigate(`/manufacturer/reportManager/${issue.id}`);
     }
@@ -264,14 +252,6 @@ function ManuReportManager({reportTo = -1}) {
     }
   };
 
-  const handleChangeDDProduct = (event) => {
-    setSelectedProduct(event.target.value);
-    setBodyReport((prevData) => ({ ...prevData, productId: event.target.value }));
-};
-
-useEffect(() => {
-  refetch();
-}, []);
   return (
     <div className="flex h-screen font-sans bg-gray-100">
       <InputTextModal
@@ -284,25 +264,13 @@ useEffect(() => {
         setTextAreaValue={setTextAreaValue}
       />
       <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
-        <form  className="p-2">
+        {/* <form  className="p-2">
+          <input
+            type="text"
+            placeholder="Mã báo cáo"
+            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+          />
           <select
-             id="productSelect"
-             name="productSelected"
-             value={selectedProduct}
-             onChange={handleChangeDDProduct}
-              className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
-          >
-             <option value="" disabled>Chọn một sản phẩm</option>
-                <option  value={0}>
-                       Tất cả
-                    </option>
-                {dataProduct?.map((product) => (
-                    <option key={product.productId} value={product.productId}>
-                        {product.productName}
-                    </option>
-                ))}
-          </select>
-          {/* <select
             className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
           >
             <option value="">Trạng thái</option>
@@ -311,8 +279,21 @@ useEffect(() => {
                 {option.label}
               </option>
             ))}
-          </select> */}
-        </form>
+          </select>
+          <select
+            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+          >
+            <option value="">Trạng thái</option>
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <Button primary rounded className="whitespace-nowrap w-full">
+            Tìm kiếm
+          </Button>
+        </form> */}
         <div className="p-0">
           <ul className="list-none p-0 m-0">
             {data.content.map((issue) => (

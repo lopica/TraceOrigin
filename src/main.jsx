@@ -79,7 +79,7 @@ function AppRouter() {
             { path: "products/add", element: <ManuProductAdd /> },
             { path: "products/:productId/:itemId", element: <ManuItemDetail /> },
             { path: "reportManager", element: <ManuReportManager /> },
-            { path: "reportManager/:id", element: <ManuReportManager reportTo={null}/>},
+            { path: "reportManager/:id", element: <ManuReportManager reportTo={-1}/>},
             { path: "createReport", element: <ManuReportManager />},
             { path: "support", element: <ManuSupportSystem /> },
             { path: "manuMonitoring", element: <ManuMonitoring /> },
