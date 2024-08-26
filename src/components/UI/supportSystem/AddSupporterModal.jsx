@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const AddSupporterModal = ({ isOpen, onClose, onSubmit }) => {
 
   if (!isOpen) return null;
+  const [error, setError] = useState('');
 
   const [body, setBody] = useState({
     email: "",
@@ -11,17 +12,33 @@ const AddSupporterModal = ({ isOpen, onClose, onSubmit }) => {
     lastName: "",
     phone: "",
   });
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     let convertedValue = value;
 
     setBody((prevData) => ({ ...prevData, [name]: convertedValue }));
+    
+    if (name === 'password') {
+      if (!passwordRegex.test(value)) {
+        setError('Mật khẩu phải có ít nhất 8 ký tự và bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.');
+      } else {
+        setError(''); // Clear error if the password is valid
+      }
+    }
   };
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    if (!passwordRegex.test(body.password)) {
+      setError('Mật khẩu phải có ít nhất 8 ký tự và bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.');
+      return;
+    }
+    console.log(body?.password + "DFDF");
+
     onSubmit(body);
     onClose();
   };
@@ -90,6 +107,7 @@ const AddSupporterModal = ({ isOpen, onClose, onSubmit }) => {
               rows="4"
               required
             />
+                  {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
 
           <div className="mb-4">

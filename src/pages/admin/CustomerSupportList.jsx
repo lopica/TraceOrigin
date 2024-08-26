@@ -65,7 +65,11 @@ function CustomerSupportList() {
       const result = await signupForCustomerSupport(formData).unwrap();
       getToast("Tạo tài khoảng thành công");
     } catch (error) {
-      getToast("Email đã tồn tại");
+      if(error.data == 'email already exists'){
+        getToast("Email đã tồn tại");
+      }else{
+        getToast("Đã xảy ra lỗi khi tạo tài khoản");
+      }
     }
 
     setShouldFetch(true);
@@ -81,7 +85,7 @@ function CustomerSupportList() {
         const result = await deleteSupporter(deleteData).unwrap();
         getToast("Xoá tài khoản thành công");
       } catch (error) {
-        getToast("Email đã tồn tại");
+        getToast("Đã xảy ra lỗi khi xoá tài khoản");
       }
       setShouldFetch(true);
       refetch();
