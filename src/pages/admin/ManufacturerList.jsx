@@ -80,7 +80,7 @@ function ManufacturerList() {
       dispatch(updateUser({}));
       dispatch(requireLogin());
     }
-  }, [isError, navigate]);
+  }, [isError, navigate, dispatch, isFetching]);
 
   // useEffect(() => {
   //   if (!isFetching && !isAuthenticated) {
@@ -93,7 +93,7 @@ function ManufacturerList() {
   useEffect(() => {
     if (!isError && !isFetching) {
       if (data) {
-        console.log(data);
+        console.log('dsasda',data);
       }
     }
   }, [isError, isFetching]);
