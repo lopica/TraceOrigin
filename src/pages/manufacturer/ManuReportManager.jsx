@@ -152,10 +152,10 @@ function ManuReportManager({reportTo = -1}) {
         setStatus(1);
         setIsModalOpen(true);
       }
-      setSelectedIssue({
-        ...selectedIssue,
-        status: parseInt(event.target.value),
-      });
+      // setSelectedIssue({
+      //   ...selectedIssue,
+      //   status: parseInt(event.target.value),
+      // });
     }
   };
 
