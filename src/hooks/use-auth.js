@@ -5,6 +5,7 @@ import {
   updateUser,
   useLoginMutation,
   useLogoutMutation,
+  resetCertiState
 } from "../store";
 import { useEffect } from "react";
 import { requireLoginAfterTimeout } from "../store/slices/authSlice";
@@ -47,6 +48,7 @@ export default function useAuth() {
       .then(() => {
         dispatch(requireLogin());
         dispatch(updateUser({}));
+        dispatch(resetCertiState());
       })
       .catch((res) => console.log(res));
   }
