@@ -8,6 +8,7 @@ import useToast from "../../hooks/use-toast";
 import { useForm } from "react-hook-form";
 import Button from "../../components/UI/Button";
 import handleKeyDown from "../../utils/handleKeyDown";
+import ConfirmationModal from "../../components/UI/ConfirmModal";
 
 const formatDate = (timestamp) => {
   if (!timestamp) return "N/A";
@@ -18,6 +19,8 @@ const formatDate = (timestamp) => {
 const ManagerRequestTranningImage = () => {
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); // State to control the modal visibility
+  const [selectedProductId, setSelectedProductId] = useState(null); // State to hold the selected product ID
   const navigate = useNavigate();
   const { getToast } = useToast();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
@@ -66,12 +69,12 @@ const ManagerRequestTranningImage = () => {
     }
   }, [isFetching, isAuthenticated, getToast, navigate]);
 
-  const handleApproval = async (productId) => {
+  const handleApproval = async () => {
     try {
       setIsLoading(true);
       await approvalImageRequest({
         type: 3,
-        productId: [productId]
+        productId: [selectedProductId],
       }).unwrap();
       getToast("Yêu cầu hình ảnh đã được phê duyệt.");
       refetch();
@@ -80,7 +83,13 @@ const ManagerRequestTranningImage = () => {
       refetch();
     } finally {
       setIsLoading(false);
+      setModalOpen(false); // Close the modal after handling the request
     }
+  };
+
+  const openConfirmationModal = (productId) => {
+    setSelectedProductId(productId);
+    setModalOpen(true);
   };
 
   const handlePageChange = (newPage) => {
@@ -99,7 +108,7 @@ const ManagerRequestTranningImage = () => {
       manufactorName: data.manufactorName,
       orderBy: data.orderBy,
       desc: data.desc,
-      page: 0
+      page: 0,
     });
   };
 
@@ -116,7 +125,7 @@ const ManagerRequestTranningImage = () => {
       manufactorName: "",
       orderBy: "productId",
       desc: false,
-      page: 0
+      page: 0,
     });
     refetch();
   };
@@ -164,11 +173,15 @@ const ManagerRequestTranningImage = () => {
             </td>
             <td className="flex justify-center space-x-2">
               <button
-                onClick={() => handleApproval(request.productId)}
+                onClick={() => openConfirmationModal(request.productId)} // Open modal on click
                 className="btn btn-info text-white btn-xs"
                 disabled={isLoading}
               >
-                {isLoading ? <span className="loading loading-spinner loading-xs"></span> : "Phê Duyệt"}
+                {isLoading ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : (
+                  "Phê Duyệt"
+                )}
               </button>
             </td>
           </tr>
@@ -179,7 +192,7 @@ const ManagerRequestTranningImage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <form
+            <form
         className="flex flex-col md:flex-row md:flex-wrap items-end gap-4 mx-auto"
         onKeyDown={handleKeyDown}
         onSubmit={handleSubmit(searchHandler)}
@@ -244,7 +257,6 @@ const ManagerRequestTranningImage = () => {
           </Button>
         </div>
       </form>
-
       <div className="overflow-x-auto mt-8">
         <table className="table table-zebra mt-4 min-w-full bg-white border border-gray-100 text-xs">
           <thead className="text-black">
@@ -268,6 +280,16 @@ const ManagerRequestTranningImage = () => {
           onPageChange={handlePageChange}
         />
       </div>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleApproval}
+        headerContent="Xác nhận phê duyệt"
+        content="Bạn không thể hoàn tác hành động này, hãy xác nhận bạn đã tranning hình ảnh cho nhà máy"
+        isLoading={isLoading}
+      />
     </div>
   );
 };
