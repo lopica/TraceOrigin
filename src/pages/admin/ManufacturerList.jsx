@@ -32,7 +32,7 @@ function ManufacturerList() {
   const { handleSubmit, register, control, reset } = useForm({
     mode: "onTouched",
     defaultValues: {
-      nameSearch: "",
+      emailSearch: "",
       citySearch: "",
       statusSearch: "",
     },
@@ -241,7 +241,7 @@ function ManufacturerList() {
 
   const resetHandler = () => {
     reset({
-      nameSearch: "",
+      emailSearch: "",
       citySearch: "",
       statusSearch: ""
     });
@@ -271,18 +271,18 @@ function ManufacturerList() {
         onKeyDown={handleKeyDown}
         onSubmit={handleSubmit(searchHandler)}
       >
-        {/* <div className="w-full md:w-1/3 lg:w-1/4">
-          <label htmlFor="nameSearch" className="block text-sm font-medium text-gray-700">
-            Tên đăng kí
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          <label htmlFor="emailSearch" className="block text-sm font-medium text-gray-700">
+            Email
           </label>
           <input
-            id="nameSearch"
-            {...register("nameSearch")}
+            id="emailSearch"
+            {...register("emailSearch")}
             type="search"
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Tên đăng kí"
+            placeholder="Địa chỉ Email"
           />
-        </div> */}
+        </div>
         <div className="w-full md:w-1/3 lg:w-1/4">
           <label htmlFor="citySearch" className="block text-sm font-medium text-gray-700">
             Thành phố
