@@ -271,7 +271,7 @@ function ManufacturerList() {
         onKeyDown={handleKeyDown}
         onSubmit={handleSubmit(searchHandler)}
       >
-        <div className="w-full md:w-1/3 lg:w-1/4">
+        {/* <div className="w-full md:w-1/3 lg:w-1/4">
           <label htmlFor="nameSearch" className="block text-sm font-medium text-gray-700">
             Tên đăng kí
           </label>
@@ -282,7 +282,7 @@ function ManufacturerList() {
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             placeholder="Tên đăng kí"
           />
-        </div>
+        </div> */}
         <div className="w-full md:w-1/3 lg:w-1/4">
           <label htmlFor="citySearch" className="block text-sm font-medium text-gray-700">
             Thành phố
