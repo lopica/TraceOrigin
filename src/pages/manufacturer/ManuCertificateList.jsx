@@ -3,6 +3,8 @@ import Card from "../../components/UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/UI/Button";
 import { useDispatch, useSelector } from "react-redux";
+import { FaExclamationCircle } from 'react-icons/fa';
+
 import {
   useGetListCertificateByManuIdQuery,
   useSendRequestVerifyCertMutation,
@@ -250,7 +252,7 @@ function ManuCertificateList() {
   );
 
   return (
-    <div className="flex flex-col gap-8 justify-between py-4">
+    <div className="flex flex-col gap-2  py-4">
       {/* <form className="flex flex-col sm:flex-row sm:justify-between sm:items-end xl:justify-around gap-2 sm:gap-12 px-4 mx-auto" onKeyDown={handleKeyDown}>
         <Input label="Tên chứng chỉ" type="search" placeholder="sản phẩm A" />
         <Button primary rounded className="h-[5svh] w-fit mb-2 sm:p-6 lg:w-auto mt-6 sm:mt-0">
@@ -265,7 +267,17 @@ function ManuCertificateList() {
           {addNewButton}
         </div> */}
       </div>
+      {userStatus === 1 &&
+      <div className="flex items-center">
+              <FaExclamationCircle className="text-blue-500 mx-2" />
+              <span className="text-gray-700 text-xs">
+                Nếu bạn muốn thay đổi chứng chỉ khi đã được xác minh, hãy liên
+                hệ với chúng tôi trong phần HỖ TRỢ HỆ THỐNG.
+              </span>
+            </div>
+      }
       <div className="flex bg-white p-4 mx-4 rounded-box justify-center">
+     
         {isCertificateError ? (
           <div className="flex flex-col items-center text-center justify-center">
             <ImFilesEmpty className=" text-4xl mb-4" />

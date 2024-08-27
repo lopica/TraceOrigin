@@ -231,7 +231,7 @@ function ManuReportManager({reportTo = -1}) {
         name="productSelected"
         value={selectedProduct}
         onChange={handleChangeDDProduct}
-        className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+        className="mt-2 mb-2 p-2 border border-gray-300 rounded-lg w-full"
       >
         <option value="" disabled>Chọn một sản phẩm</option>
         <option value={0}>Tất cả</option>
@@ -329,7 +329,7 @@ function ManuReportManager({reportTo = -1}) {
             name="productSelected"
             value={selectedProduct}
             onChange={handleChangeDDProduct}
-            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+            className="mt-2 mb-2 p-2 border border-gray-300 rounded-lg w-full"
           >
               <option value="" disabled>Chọn một sản phẩm</option>
                 <option  value={0}>
