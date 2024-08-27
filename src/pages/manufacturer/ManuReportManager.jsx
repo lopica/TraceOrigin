@@ -223,70 +223,60 @@ function ManuReportManager({reportTo = -1}) {
   if (data.content.length < 1) {
     return (
       <>
-      <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto h-max">
-        <form  className="p-2">
-          <select
-            id="productSelect"
-            name="productSelected"
-            value={selectedProduct}
-            onChange={handleChangeDDProduct}
-            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+      <div className="flex h-screen">
+  <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
+    <form className="p-2">
+      <select
+        id="productSelect"
+        name="productSelected"
+        value={selectedProduct}
+        onChange={handleChangeDDProduct}
+        className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+      >
+        <option value="" disabled>Chọn một sản phẩm</option>
+        <option value={0}>Tất cả</option>
+        {products?.map((product) => (
+          <option key={product.productId} value={product.productId}>
+            {product.productName}
+          </option>
+        ))}
+      </select>
+    </form>
+    <div className="p-2">
+      <ul className="list-none p-0 m-0">
+        {data.content.map((issue) => (
+          <li
+            key={issue.id}
+            className={`p-3 cursor-pointer border-b border-gray-200 ${
+              selectedIssue && selectedIssue.id === issue.id
+                ? "bg-gray-300 text-gray-800"
+                : "hover:bg-gray-200"
+            }`}
+            onClick={() => handleIssueClick(issue)}
           >
-              <option value="" disabled>Chọn một sản phẩm</option>
-                <option  value={0}>
-                       Tất cả
-                    </option>
-                {products?.map((product) => (
-                    <option key={product.productId} value={product.productId}>
-                        {product.productName}
-                    </option>
-                ))}
-          </select>
-        </form>
-        <div className="p-0 h-max">
-          <ul className="list-none p-0 m-0">
-            {data.content.map((issue) => (
-              <li
-                key={issue.id}
-                className={`p-3 cursor-pointer border-b border-gray-200 ${
-                  selectedIssue && selectedIssue.id === issue.id
-                    ? "bg-gray-300 text-gray-800"
-                    : "hover:bg-gray-200"
-                }`}
-                onClick={() => handleIssueClick(issue)}
-              >
-                <div className="flex items-center">
-                  {getTypeIcon(issue.type)}
-                  
-                  <span className="ml-2">{issue.code}</span>
-                </div>
-                <div className="ml-6">{issue.title}</div>
-                <div className="ml-6 text-gray-600">
-                  <span>{issue.itemId}</span>
-                  <span> - {issue.productName}</span>
-                </div>
-                <FaChevronRight className="ml-auto" />
-              </li>
-            ))}
-          </ul>
-          <div className="p-2 text-right">
-            {data.totalPages > 1 && (
-              <Pagination
-                active={page}
-                totalPages={data.totalPages || 0}
-                onPageChange={handlePageChange}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col items-center justify-center h-[92vh]">
-      <ImFilesEmpty className="text-4xl mb-4" />
-        <h2 className="text-xl font-bold mb-4">Không có phản hồi</h2>
-        <p className="text-gray-600">
-        Bạn chưa có phản hồi nào về các sản phẩm mà bạn đã đăng ký từ người dùng.
-        </p>
-      </div>
+            <div className="flex items-center">
+              {getTypeIcon(issue.type)}
+              <span className="ml-2">{issue.code}</span>
+            </div>
+            <div className="ml-6">{issue.title}</div>
+            <div className="ml-6 text-gray-600">
+              <span>{issue.itemId}</span>
+              <span> - {issue.productName}</span>
+            </div>
+            <FaChevronRight className="ml-auto" />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  <div className="flex flex-col items-center w-3/4 justify-center h-[92vh]">
+  <ImFilesEmpty className="text-4xl mb-4" />
+    <h2 className="text-xl font-bold mb-4">Không có phản hồi</h2>
+    <p className="text-gray-600">
+    Bạn chưa có phản hồi nào về sản phẩm mà bạn đã đăng ký từ người dùng.
+    </p>
+  </div>
+</div>
       </>
     );
   }
