@@ -63,6 +63,7 @@ function ManuCertificateAdd() {
       .unwrap()
       .then(() => {
         getToast('Tạo mới thành công chứng chỉ');
+        dispatch(resetCertiState());
         navigate('/manufacturer/certificate');
       })
       .catch((err) => {
