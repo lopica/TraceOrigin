@@ -160,6 +160,7 @@ export {
   useViewProductDetailQuery,
   useDeleteProductByIdMutation,
   useEditProductMutation,
+  useViewProductDetailPublicQuery,
 } from "./apis/productApi";
 export { showToast, hideToast } from "./slices/toastSlice";
 export { updateRegisterForm } from "./slices/registerFormSlice";

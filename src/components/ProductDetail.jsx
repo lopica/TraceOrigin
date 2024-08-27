@@ -53,16 +53,16 @@ export default function ProductDetail({ productId, rework }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [saveModel3D] = useSaveModel3DMutation();
 
-  useEffect(() => {
-    if (error?.status === 401) navigate("/portal/login");
-  }, [error]);
+  // useEffect(() => {
+  //   if (error?.status === 401) navigate("/portal/login");
+  // }, [error]);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      getToast("Phiên đăng nhập đã hết hạn");
-      navigate("/portal/login");
-    }
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     getToast("Phiên đăng nhập đã hết hạn");
+  //     navigate("/portal/login");
+  //   }
+  // }, [isAuthenticated]);
 
   useEffect(() => {
     if (images.length > 0) {

@@ -15,6 +15,7 @@ function Header() {
   let location = useLocation();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
 
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen); // Toggle the state between true and false
   };
@@ -63,7 +64,7 @@ function Header() {
       </Link>
     );
     userContent = (
-      <Link to={isAuthenticated ? "/manufacturer/products" : "/portal/login"}>
+      <Link to={isAuthenticated ? user?.role &&  user?.role?.roleId === 1 ? "/admin/ManufacturerList" : "/manufacturer/products" : "/portal/login"}>
         <p className="btn btn-ghost text-xl ml-4">Portal</p>
       </Link>
     );

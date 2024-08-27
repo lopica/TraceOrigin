@@ -1,23 +1,28 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { CONSTANTS } from "../../services/Constants";
 
-// DEV ONLY!!!
-const pause = (duration) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, duration);
-  });
-};
 
 const productApi = createApi({
   reducerPath: "product",
   baseQuery: fetchBaseQuery({
     baseUrl: `${CONSTANTS.domain}/product`,
-    credentials: "include",
-    // fetchFn: async (...args) => {
-    //   // REMOVE FOR PRODUCTION
-    //   await pause(3000);
-    //   return fetch(...args);
-    // },
+    // credentials: "include",
+    fetchFn: async (input, init, ...args) => {
+      // REMOVE FOR PRODUCTION
+      // await pause(3000);
+
+      // Determine the endpoint based on the URL or some other method
+      const url = typeof input === "string" ? input : input.url;
+      if (!url.includes("/findProductDetailByIdPublic") ) {
+        // Customize fetch options for this specific endpoint
+        init = {
+          ...init,
+          credentials: "include", // Include credentials specifically for this endpoint
+        };
+      }
+
+      return fetch(input, init, ...args);
+    },
   }),
   endpoints(builder) {
     return {
@@ -50,6 +55,17 @@ const productApi = createApi({
         query: (productId) => {
           return {
             url: "/findProductDetailById",
+            method: "POST",
+            body: {
+              id: productId,
+            },
+          };
+        },
+      }),
+      viewProductDetailPublic: builder.query({
+        query: (productId) => {
+          return {
+            url: "/findProductDetailByIdPublic",
             method: "POST",
             body: {
               id: productId,
@@ -252,4 +268,5 @@ export const {
   useEditProductMutation,
   useDisableProductByIdMutation,
   useCheckStatusMutation,
+  useViewProductDetailPublicQuery,
 } = productApi;
