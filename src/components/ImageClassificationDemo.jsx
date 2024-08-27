@@ -1,3 +1,4 @@
+
 import * as tf from "@tensorflow/tfjs";
 import { memo, useEffect, useRef, useState, useCallback } from "react";
 import { FaCamera, FaInfoCircle, FaSpinner, FaExclamationTriangle, FaImage } from "react-icons/fa";
@@ -10,7 +11,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { CONSTANTS } from "../services/Constants";
-
+//Merge ho thanh
 const MOBILE_NET_INPUT_HEIGHT = 224;
 const MOBILE_NET_INPUT_WIDTH = 224;
 
@@ -172,9 +173,18 @@ const ImageClassificationDemo = () => {
               }
             );
             const productId = response.data.productName;
-            setPredictionResult(response.data.productName);
-            setProductId(productId);
-            setConfidence(response.data.confidence);
+            if (response.data.productName === "Not Determined") {
+              setProductId("");
+              setPredictionResult("Not Determined");
+              setConfidence(0); // Hoặc một giá trị mặc định
+            } else {
+              setProductId(productId);
+              setPredictionResult(response.data.productName);
+              setConfidence(response.data.confidence);
+            }
+            
+           // setProductId("");
+
           } catch (error) {
             console.error("Error predicting video frame:", error);
           }
@@ -209,6 +219,7 @@ const ImageClassificationDemo = () => {
 
           setPredictionResult(classNamesRef.current[highestIndex]);
           setConfidence(Math.floor(predictionArray[highestIndex] * 100));
+        
         });
       } catch (error) {
         console.error("Failed to load image or make prediction:", error);
@@ -257,6 +268,7 @@ const ImageClassificationDemo = () => {
     if (videoContainerRef.current) {
       videoContainerRef.current.querySelector("video").onloadeddata = () => {
         console.log("Video loaded");
+
         animationFrameId.current = requestAnimationFrame(predictVideoFrame);
       };
     }
@@ -456,7 +468,7 @@ const ImageClassificationDemo = () => {
               <IoIosArrowBack />
               Quay lại
             </Button>
-            {product !== null && product.productName ? (
+            {product !== null && product.productName && confidence !== 0? (
               <>
                 <h3 className="text-center text-3xl mb-6">
                   {product.productName}

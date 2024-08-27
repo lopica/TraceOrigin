@@ -19,7 +19,7 @@ import { useSearchAllManufacturerQuery } from "../../../store/apis/userApi";
 import ShowInfoHomePage from "./ShowInfoHomePage";
 
 const ActionButtonHomePage = () => {
-  const user = useSelector(state=>state.userSlice)
+  const user = useSelector((state) => state.userSlice);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const { data: data } = useSearchAllManufacturerQuery();
@@ -81,7 +81,7 @@ const ActionButtonHomePage = () => {
 
   return (
     <div className=" p-6 space-y-2">
-    <ShowInfoHomePage
+      <ShowInfoHomePage
         id={selectedId}
         isOpen={isPopupOpen}
         onClose={handleClosePopup}
@@ -119,7 +119,13 @@ const ActionButtonHomePage = () => {
       </div>
 
       <Link
-        to={isAuthenticated ? user.role.roleId === 1 ? "/admin/ManufacturerList" : "/manufacturer/products" : "/portal/login"}
+        to={
+          isAuthenticated
+            ? user?.role.roleId === 1
+              ? "/admin/ManufacturerList"
+              : "/manufacturer/products"
+            : "/portal/login"
+        }
         className="w-full h-16  bg-white text-black text-left border border-white rounded-lg px-4 py-2 flex items-center justify-between hover:bg-color1 hover:text-white hover:border-color1"
       >
         <div className="flex items-center">

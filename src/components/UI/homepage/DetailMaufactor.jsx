@@ -155,16 +155,16 @@ function DetailManufacturer() {
                       {product.productName}
                     </h3>
                     <p className="text-gray-600 mb-1">
-                      <strong>Description:</strong> {product.description}
+                      <strong>Mô tả:</strong> {product.description}
                     </p>
                     <p className="text-gray-600 mb-1">
-                      <strong>Dimensions:</strong> {product.dimensions}
+                      <strong>Kích thước:</strong> {product.dimensions}
                     </p>
                     <p className="text-gray-600 mb-1">
-                      <strong>Material:</strong> {product.material}
+                      <strong>Chất liệu:</strong> {product.material}
                     </p>
                     <p className="text-gray-600">
-                      <strong>Weight:</strong> {product.weight} kg
+                      <strong>Cân nặng:</strong> {product.weight} kg
                     </p>
                   </div>
                 </div>

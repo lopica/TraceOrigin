@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { requireLogin, updateAvatar, updateProductDetail, updateUser, useViewProductDetailQuery } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRuler, FaDumbbell, FaHammer, FaCheckCircle, FaClock } from 'react-icons/fa';
-import { productApi } from "../store/apis/productApi";
+import { productApi, useViewProductDetailPublicQuery } from "../store/apis/productApi";
 
 export default function useProductDetail(productId) {
   const dispatch = useDispatch();
@@ -18,15 +18,13 @@ export default function useProductDetail(productId) {
     isSuccess,
     error,
     refetch,
-  } = useViewProductDetailQuery(productId, {
-    skip: !isAuthenticated
-  });
+  } = useViewProductDetailPublicQuery(productId);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      refetch(); 
-    }
-  }, [isAuthenticated, refetch]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     refetch(); 
+  //   }
+  // }, [isAuthenticated, refetch]);
 
   useEffect(() => {
     if (!isProductError && !isProductFetch && isSuccess) {
@@ -45,11 +43,11 @@ export default function useProductDetail(productId) {
       console.log(productDetail.listImages)
       console.log(productDetail.avatar)
     }
-    if (error?.status === 401 && isProductError) {
-      dispatch(productApi.util.resetApiState());
-      dispatch(updateUser({}))
-      dispatch(requireLogin()) 
-    }
+    // if (error?.status === 401 && isProductError) {
+    //   dispatch(productApi.util.resetApiState());
+    //   dispatch(updateUser({}))
+    //   dispatch(requireLogin()) 
+    // }
   }, [isProductFetch, isProductError, productDetail]);
 
   return { productData, name, images, isProductFetch, isProductError, error, model3D, refetch };
