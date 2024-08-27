@@ -29,7 +29,7 @@ import InputTextModal from "../../components/UI/InputTextModal";
 import { useSelector } from "react-redux";
 import useToast from "../../hooks/use-toast";
 import { ImFilesEmpty } from "react-icons/im";
-
+import { useViewProductByManufacturerIdQuery } from "../../store/apis/productApi";
 
 const statusOptions = [
   {
@@ -80,10 +80,8 @@ function ManuReportManager({reportTo = -1}) {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(6);
   const userIdList = reportTo !== -1 ? reportTo : useSelector((state) => state.userSlice.userId);
-  const { list: products } = useSelector((state) => state.productSlice);
+  const [selectedProduct, setSelectedProduct] = useState('');
 
-
-  
 
   const { data, error, isLoading, refetch } = useGetListReportsQuery({
     code: "",
@@ -98,7 +96,7 @@ function ManuReportManager({reportTo = -1}) {
     page,
     size,
     emailReport: "",
-    productId: "",
+    productId: selectedProduct,
   });
   const { getToast } = useToast();
   const [replyReport] = useReplyReportMutation();
@@ -114,6 +112,11 @@ function ManuReportManager({reportTo = -1}) {
   const [textAreaValue, setTextAreaValue] = useState("");
   const { isAuthenticated } = useSelector((state) => state.authSlice);
   const [isLoadingInput, setIsLoadingInput] = useState(false);
+  const { data: products, error: errPro } =
+  useViewProductByManufacturerIdQuery({
+    id: userIdList,
+    categoryId: 0,
+  });
 
   useEffect(() => {
     if (error?.status === 401) navigate("/portal/login");
@@ -209,12 +212,74 @@ function ManuReportManager({reportTo = -1}) {
     );
   }
 
+  const handleChangeDDProduct = (event) => {
+    setSelectedProduct(event.target.value);
+};
+
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
   if (data.content.length < 1) {
     return (
+      <>
+      <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto h-max">
+        <form  className="p-2">
+          <select
+            id="productSelect"
+            name="productSelected"
+            value={selectedProduct}
+            onChange={handleChangeDDProduct}
+            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
+          >
+              <option value="" disabled>Chọn một sản phẩm</option>
+                <option  value={0}>
+                       Tất cả
+                    </option>
+                {products?.map((product) => (
+                    <option key={product.productId} value={product.productId}>
+                        {product.productName}
+                    </option>
+                ))}
+          </select>
+        </form>
+        <div className="p-0 h-max">
+          <ul className="list-none p-0 m-0">
+            {data.content.map((issue) => (
+              <li
+                key={issue.id}
+                className={`p-3 cursor-pointer border-b border-gray-200 ${
+                  selectedIssue && selectedIssue.id === issue.id
+                    ? "bg-gray-300 text-gray-800"
+                    : "hover:bg-gray-200"
+                }`}
+                onClick={() => handleIssueClick(issue)}
+              >
+                <div className="flex items-center">
+                  {getTypeIcon(issue.type)}
+                  
+                  <span className="ml-2">{issue.code}</span>
+                </div>
+                <div className="ml-6">{issue.title}</div>
+                <div className="ml-6 text-gray-600">
+                  <span>{issue.itemId}</span>
+                  <span> - {issue.productName}</span>
+                </div>
+                <FaChevronRight className="ml-auto" />
+              </li>
+            ))}
+          </ul>
+          <div className="p-2 text-right">
+            {data.totalPages > 1 && (
+              <Pagination
+                active={page}
+                totalPages={data.totalPages || 0}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </div>
+        </div>
+      </div>
       <div className="flex flex-col items-center justify-center h-[92vh]">
       <ImFilesEmpty className="text-4xl mb-4" />
         <h2 className="text-xl font-bold mb-4">Không có phản hồi</h2>
@@ -222,6 +287,7 @@ function ManuReportManager({reportTo = -1}) {
         Bạn chưa có phản hồi nào về các sản phẩm mà bạn đã đăng ký từ người dùng.
         </p>
       </div>
+      </>
     );
   }
 
@@ -253,6 +319,8 @@ function ManuReportManager({reportTo = -1}) {
     }
   };
 
+
+
   return (
     <div className="flex h-screen font-sans bg-gray-100">
       <InputTextModal
@@ -265,36 +333,25 @@ function ManuReportManager({reportTo = -1}) {
         setTextAreaValue={setTextAreaValue}
       />
       <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
-        {/* <form  className="p-2">
-          <input
-            type="text"
-            placeholder="Mã báo cáo"
-            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
-          />
+        <form  className="p-2">
           <select
+            id="productSelect"
+            name="productSelected"
+            value={selectedProduct}
+            onChange={handleChangeDDProduct}
             className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
           >
-            <option value="">Trạng thái</option>
-            {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+              <option value="" disabled>Chọn một sản phẩm</option>
+                <option  value={0}>
+                       Tất cả
+                    </option>
+                {products?.map((product) => (
+                    <option key={product.productId} value={product.productId}>
+                        {product.productName}
+                    </option>
+                ))}
           </select>
-          <select
-            className="mb-2 p-2 border border-gray-300 rounded-lg w-full"
-          >
-            <option value="">Trạng thái</option>
-            {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <Button primary rounded className="whitespace-nowrap w-full">
-            Tìm kiếm
-          </Button>
-        </form> */}
+        </form>
         <div className="p-0">
           <ul className="list-none p-0 m-0">
             {data.content.map((issue) => (
