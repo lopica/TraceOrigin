@@ -401,6 +401,47 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
             </ul>
           </>
         );
+      } else if (eventData.eventType === "TIÊU HỦY") {
+        event = (
+          <>
+            {/* {renderedCheckPoint} */}
+            {header}
+            {historyBtn}
+            <ul className="space-y-2">
+              {/* uy quyen, giao hang, nhan */}
+              {/* <li>
+                <p>Người gửi: {eventData?.sender}</p>
+              </li> */}
+              <li>
+                <p>Người hủy: {eventData?.partyFullname}</p>
+              </li>
+              <li>
+                <p>
+                  Thời gian:{" "}
+                  {getFullTimeFromEpoch(eventData?.timeReceive) || "không có"}
+                </p>
+              </li>
+              <li>
+                <p>
+                  Mô tả sự kiện: {eventData?.descriptionItemLog || "không có"}
+                </p>
+              </li>
+              <li>
+                <p className="mb-2">
+                  Địa điểm: {`${eventData.addressInParty || "Không ghi"}`}
+                </p>
+                {eventData.addressInParty && (
+                  <Map
+                    location={{
+                      lat: eventData.coordinateX,
+                      lng: eventData.coordinateY,
+                    }}
+                  />
+                )}
+              </li>
+            </ul>
+          </>
+        );
       } else {
         event = (
           <>
@@ -458,7 +499,7 @@ export default function ItemEvent({ goToItemLine, eventId, core }) {
               <IoIosArrowBack /> Quay lại
             </Button>
           </div>
-          {renderedCheckPoint}
+          {eventData.eventType !== "TIÊU HỦY" && renderedCheckPoint}
         </>
       )}
       <div className="card-body">{event}</div>
